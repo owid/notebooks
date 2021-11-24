@@ -6,7 +6,7 @@ The folder structure is sorted by author first, then by project. Jupyter noteboo
 
 See below how to install a local setup for running these notebooks.
 
-To run and modify these notebooks from your browser, one of the easiest ways is using [Nextjournal.com](https://github.nextjournal.com/). Just open the This repository in nextjournal by [clicking this link](https://githubnj.com/owid/notebooks).
+To run and modify these notebooks from your browser, one of the easiest ways is using [Nextjournal.com](https://github.nextjournal.com/). Just open the This repository in nextjournal by [clicking this link](https://github.nextjournal.com/owid/notebooks/tree/main).
 
 
 ### Local setup for running these notebooks
