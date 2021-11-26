@@ -41,7 +41,7 @@ You may have to restart your terminal session in between for newly installed pac
 
 Whenever you are asked to paste something in the terminal from now on you can either do so in the Windows Terminal or in a terminal window in VS Code.
 
-You may have to restart your terminal session in between for newly installed packages to be found on your system
+You may have to restart your terminal session in between for newly installed packages to be found on your system.
 
 * Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) (Use the Python 3.9 Windows 64-bit version unless you have a good reason to pick something else)
 * Install common libraries: `conda install pandas matplotlib ipython jupyter jupyterlab ipywidgets altair` - pip install should work well for most libraries but for some with compiled dependencies like pandas, conda is the easier way to get them installed
