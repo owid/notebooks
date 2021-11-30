@@ -4,8 +4,8 @@ This repository contains the code written and datasets created for my projects a
 
 
 The data are used in the following posts:
-- 200 years ago, everyone lacked democratic rights. Now, more than a billion people have them.
-- The ‘Regimes of the World’ data: how do researchers identify which countries are democracies?
+- [200 years ago, everyone lacked democratic rights. Now, more than a billion people have them.](https://ourworldindata.org/democratic-rights)
+- [The ‘Regimes of the World’ data: how do researchers identify which countries are democracies?](https://ourworldindata.org/regimes-of-the-world-data)
 
 
 `regimes_owid.csv` and `regimes_owid.dta` include the following variables:
