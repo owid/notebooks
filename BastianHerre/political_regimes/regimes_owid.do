@@ -455,21 +455,21 @@ drop if _merge == 2
 
 erase "Political regimes/vdem_temp.dta"
 
-rename country_name country_name_regime_imputed
+rename country_name regime_row_imputed_country_name
 rename country_name_temp country_name
 rename v2x_regime_owid v2x_regime_owid_imputed
 rename v2x_regime_owid_temp v2x_regime_owid
 
 sort country_name year
-keep country_name year v2x_regime_owid country_name_regime_imputed v2x_regime_owid_imputed
-order country_name year v2x_regime_owid country_name_regime_imputed v2x_regime_owid_imputed
+keep country_name year v2x_regime_owid regime_row_imputed_country_name v2x_regime_owid_imputed
+order country_name year v2x_regime_owid regime_row_imputed_country_name v2x_regime_owid_imputed
 
 * Check if there are any observations with imputed regimes even though there is no need for imputation:
 list if v2x_regime_owid != . & v2x_regime_owid_imputed != .
 
 * Check if there are any observations with imputed country but without imputed regime:
-list if v2x_regime_owid_imputed == . & country_name_regime_imputed != ""
-replace country_name_regime_imputed = "" if v2x_regime_owid_imputed == .
+list if v2x_regime_owid_imputed == . & regime_row_imputed_country_name != ""
+replace regime_row_imputed_country_name = "" if v2x_regime_owid_imputed == .
 
 * Reformat variables:
 replace v2x_regime_owid = v2x_regime_owid_imputed if v2x_regime_owid == .
@@ -478,13 +478,13 @@ drop v2x_regime_owid_imputed
 rename v2x_regime_owid regime_row_owid
 label values regime_row_owid
 
-generate regime_imputed = ""
-replace regime_imputed = "yes" if country_name_regime_imputed != ""
-replace regime_imputed = "no" if country_name_regime_imputed == ""
-order regime_imputed, after(regime_row_owid)
+generate regime_row_imputed = ""
+replace regime_row_imputed = "yes" if regime_row_imputed_country_name != ""
+replace regime_row_imputed = "no" if regime_row_imputed_country_name == ""
+order regime_row_imputed, after(regime_row_owid)
 
-label variable regime_imputed "Regime imputed from another country"
-label variable country_name_regime_imputed "Name of the country from which regime was imputed"
+label variable regime_row_imputed "Regime imputed from another country"
+label variable regime_row_imputed_country_name "Name of the country from which regime was imputed"
 
 erase "Political regimes/master.dta"
 
@@ -506,8 +506,8 @@ bysort country_name: egen number_years_missing_regime = total(missing_regime)
 drop if number_years == number_years_missing_regime
 drop number_years missing_regime number_years_missing_regime
 
-save "Political regimes/regimes.dta", replace
-export delimited "Political regimes/regimes.csv", replace
+save "Political regimes/regimes_owid.dta", replace
+export delimited "Political regimes/regimes_owid.csv", replace
 
 restore
 
@@ -537,8 +537,8 @@ collapse (sum) population_owid, by(year regime_row_owid)
 
 reshape wide population_owid, i(year) j(regime_row_owid)
 
-generate entity = "World"
-order entity, before(year)
+generate entity_name = "World"
+order entity_name, before(year)
 
 rename population_owid0 population_closed_aut
 rename population_owid1 population_electoral_aut
@@ -555,8 +555,8 @@ label variable population_electoral_dem "Number of people living in electoral de
 label variable population_liberal_dem "Number of people living in liberal democracies"
 label variable population_missing_data "Number of people living in countries without regime data"
 
-save "Political regimes/regimes_population.dta", replace
-export delimited "Political regimes/regimes_population.csv", replace
+save "Political regimes/regimes_population_owid.dta", replace
+export delimited "Political regimes/regimes_population_owid.csv", replace
 
 restore
 

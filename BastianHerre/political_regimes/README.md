@@ -9,16 +9,16 @@ The data are used in the following posts:
 - [The short history of global living conditions and why it matters that we know it.](https://ourworldindata.org/a-history-of-global-living-conditions-in-5-charts)
 
 
-`regimes.csv` and `regimes.dta` include the following variables:
+`regimes_owid.csv` and `regimes_owid.dta` include the following variables:
 - `country_name`: country name
 - `year`: year
 - `regime_row_owid`: political regime based on [Lührmann et al. (2018)](https://www.cogitatiopress.com/politicsandgovernance/article/view/1214/0), using data from [V-Dem (v11.1)](https://www.v-dem.net/en/data/data/v-dem-dataset-v111/) and my coding in `regimes_owid.do`; 0 = closed autocracy, 1 = electoral autocracy, 2 = electoral democracy, 3 = liberal democracy.
-- `regime_imputed`: regime imputed from another country; 1 = yes, 0 = no.
-- `country_name_regime_imputed`: name of the country from which regime was imputed.
+- `regime_row_imputed`: regime imputed from another country; 1 = yes, 0 = no.
+- `regime_row_imputed_country_name`: name of the country from which regime was imputed.
 
 
-`regimes_population.csv` and `regimes_population.dta` include the following variables:
-- `entity`: entity name
+`regimes_population_owid.csv` and `regimes_population_owid.dta` include the following variables:
+- `entity_name`: entity name
 - `year`: Year
 - `population_closed_aut`: number of people living in closed autocracies.
 - `population_electoral_aut`: number of people living in electoral autocracies.
