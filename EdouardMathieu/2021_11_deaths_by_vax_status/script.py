@@ -1,4 +1,5 @@
 import datetime
+import requests
 
 import epiweeks
 import pandas as pd
@@ -7,6 +8,7 @@ import pandas as pd
 SOURCE_USA = "https://data.cdc.gov/api/views/3rge-nu2a/rows.csv?accessType=DOWNLOAD"
 SOURCE_CHL = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto89/incidencia_en_vacunados_edad.csv"
 SOURCE_ENG = "input/datasetfinalcorrected3.xlsx"
+SOURCE_CHE = "https://www.covid19.admin.ch/api/data/context"
 
 VACCINE_MAPPING = {
     "Janssen": "Johnson&Johnson",
@@ -233,7 +235,96 @@ def process_eng(source: str):
     )
 
 
+def process_che(source: str):
+    response = requests.get(source).json()
+    context = response["sources"]["individual"]["csv"]
+    data_url = context["weekly"]["byAge"]["deathVaccPersons"]
+    df = pd.read_csv(data_url)
+
+    df = df[
+        (df.vaccine == "all")
+        & (df.vaccination_status.isin(["not_vaccinated", "fully_vaccinated"]))
+        & (df.geoRegion == "CHFL")
+        & (df.type == "COVID19Death")
+        & (df.timeframe_all == True)
+    ][["date", "altersklasse_covid19", "vaccination_status", "entries", "pop"]].rename(
+        columns={
+            "date": "Year",
+            "altersklasse_covid19": "Entity",
+        }
+    )
+
+    df["Year"] = df.Year.mod(100).apply(epiweek_to_date)
+    df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
+
+    df = df[-df.Entity.isin(["all", "Unbekannt"])]
+    df["Entity"] = df.Entity.replace(
+        {
+            "0 - 9": "00-09",
+            "10 - 19": "10-19",
+            "20 - 29": "20-29",
+            "30 - 39": "30-39",
+            "40 - 49": "40-49",
+            "50 - 59": "50-59",
+            "60 - 69": "60-69",
+            "70 - 79": "70-79",
+            "80+": "80+",
+        }
+    )
+
+    df["rate"] = 100000 * df.entries / df["pop"]
+
+    # Age standardization based on single-year population estimates by the United Nations
+    age_pyramid = {
+        "00-09": 892899,
+        "10-19": 841842,
+        "20-29": 1027126,
+        "30-39": 1220774,
+        "40-49": 1163760,
+        "50-59": 1323318,
+        "60-69": 1006299,
+        "70-79": 765354,
+        "80+": 474122,
+    }
+    df["age_group_standard"] = df.Entity.replace(age_pyramid)
+    df["age_group_proportion"] = df.age_group_standard / sum(age_pyramid.values())
+    df["age_specific_adjusted_rate"] = df.rate * df.age_group_proportion
+    all_ages = (
+        df[["Year", "vaccination_status", "age_specific_adjusted_rate"]]
+        .groupby(["Year", "vaccination_status"], as_index=False)
+        .sum()
+        .rename(columns={"age_specific_adjusted_rate": "rate"})
+        .assign(Entity="All ages")
+    )
+    df = df.drop(
+        columns=[
+            "age_group_standard",
+            "age_group_proportion",
+            "age_specific_adjusted_rate",
+        ]
+    )
+    df = pd.concat([df, all_ages], ignore_index=True)
+
+    df = (
+        df.drop(columns=["entries", "pop"])
+        .pivot(index=["Entity", "Year"], columns="vaccination_status", values="rate")
+        .reset_index()
+        .rename(
+            columns={
+                "fully_vaccinated": "Fully vaccinated",
+                "not_vaccinated": "Unvaccinated",
+            }
+        )
+    )
+
+    df.to_csv(
+        "output/COVID-19 - Deaths by vaccination status - Switzerland and Liechtenstein.csv",
+        index=False,
+    )
+
+
 def main():
+    process_che(SOURCE_CHE)
     process_usa(SOURCE_USA)
     process_chl(SOURCE_CHL)
     process_eng(SOURCE_ENG)
