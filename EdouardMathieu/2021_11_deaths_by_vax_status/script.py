@@ -101,6 +101,7 @@ def process_chl(source: str):
         }
     )
 
+    df = df[df.Entity != "Total"]
     df["Entity"] = df.Entity.replace(
         {
             "06 - 11 años": "06-11",
@@ -112,9 +113,40 @@ def process_chl(source: str):
             "61 - 70 años": "61-70",
             "71 - 80 años": "71-80",
             "80 años o más": "80+",
-            "Total": "All ages",
         }
     )
+
+    # Age standardization based on single-year population estimates by the United Nations
+    age_pyramid = {
+        "06-11": 1521945,
+        "12-20": 2244380,
+        "21-30": 2980833,
+        "31-40": 2932270,
+        "41-50": 2574347,
+        "51-60": 2345262,
+        "61-70": 1774551,
+        "71-80": 964821,
+        "80+": 494118,
+    }
+    df["age_group_standard"] = df.Entity.replace(age_pyramid)
+    df["age_group_proportion"] = df.age_group_standard / sum(age_pyramid.values())
+    df["age_specific_adjusted_rate"] = df.rate * df.age_group_proportion
+    all_ages = (
+        df[["Year", "status", "age_specific_adjusted_rate"]]
+        .groupby(["Year", "status"], as_index=False)
+        .sum()
+        .rename(columns={"age_specific_adjusted_rate": "rate"})
+        .assign(Entity="All ages")
+    )
+    df = df.drop(
+        columns=[
+            "age_group_standard",
+            "age_group_proportion",
+            "age_specific_adjusted_rate",
+        ]
+    )
+    df = pd.concat([df, all_ages], ignore_index=True)
+
     df["status"] = df.status.replace(
         {
             "sin esquema completo": "Unvaccinated or not fully vaccinated",
