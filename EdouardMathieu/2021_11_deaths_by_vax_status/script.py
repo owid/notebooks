@@ -147,13 +147,13 @@ def process_chl(source: str):
     )
     df = pd.concat([df, all_ages], ignore_index=True)
 
-    df["status"] = df.status.replace(
-        {
-            "sin esquema completo": "Unvaccinated or not fully vaccinated",
-            "con esquema completo": "Fully vaccinated",
-            "con dosis refuerzo > 14 dias": "Fully vaccinated + booster dose",
-        }
-    )
+    status_mapping = {
+        "sin esquema completo": "Unvaccinated or not fully vaccinated",
+        "con esquema completo": "Fully vaccinated",
+        "con dosis refuerzo > 14 dias": "Fully vaccinated + booster dose",
+    }
+    assert set(status_mapping.keys()) == set(df.status)
+    df["status"] = df.status.replace(status_mapping)
 
     df["Year"] = pd.to_datetime(df.Year.apply(epiweek_to_date))
     df["Year"] = (df.Year - pd.to_datetime("20210101")).dt.days
