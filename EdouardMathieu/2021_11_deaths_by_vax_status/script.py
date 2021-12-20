@@ -35,7 +35,7 @@ def process_usa(source: str):
         "Age adjusted unvax IR"
     ]
 
-    vax = df[["Age group", "Week date", "Vaccine product", "Crude vax IR"]].rename(
+    vax = df[["Age group", "MMWR week", "Vaccine product", "Crude vax IR"]].rename(
         columns={
             "Crude vax IR": "incidence_rate",
             "Vaccine product": "vaccine_product",
@@ -43,7 +43,7 @@ def process_usa(source: str):
     )
 
     unvax = (
-        df[["Age group", "Week date", "Vaccine product", "Crude unvax IR"]]
+        df[["Age group", "MMWR week", "Vaccine product", "Crude unvax IR"]]
         .rename(
             columns={
                 "Crude unvax IR": "incidence_rate",
@@ -57,25 +57,22 @@ def process_usa(source: str):
     df = pd.concat([vax, unvax], ignore_index=True).rename(
         columns={
             "Age group": "age_group",
-            "Week date": "week_date",
+            "MMWR week": "epiweek",
         }
     )
 
     df = (
         df.pivot(
-            index=["age_group", "week_date"],
+            index=["age_group", "epiweek"],
             columns="vaccine_product",
             values="incidence_rate",
         )
         .reset_index()
-        .rename(columns={"week_date": "Year", "age_group": "Entity"})
+        .rename(columns={"epiweek": "Year", "age_group": "Entity"})
     )
 
-    assert datetime.datetime.now().year == 2021
-    df["Year"] = pd.to_datetime(
-        df.Year.str.extract("-(.*)", expand=False) + " 2021", format="%b %d %Y"
-    )
-    df["Year"] = (df.Year - pd.to_datetime("20210101")).dt.days
+    df["Year"] = df.Year.apply(epiweek_to_date)
+    df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
 
     df["Entity"] = df.Entity.replace({"all_ages_adj": "All ages"})
 
@@ -102,6 +99,12 @@ def process_chl(source: str):
             "incidencia_def": "rate",
         }
     )
+
+    assert set(df.status) == {
+        "sin esquema completo",
+        "con esquema completo",
+        "con dosis refuerzo > 14 dias",
+    }
 
     df = df[df.Entity != "Total"]
     df["Entity"] = df.Entity.replace(
@@ -240,6 +243,13 @@ def process_che(source: str):
     context = response["sources"]["individual"]["csv"]
     data_url = context["weekly"]["byAge"]["deathVaccPersons"]
     df = pd.read_csv(data_url)
+
+    assert set(df.vaccination_status) == {
+        "not_vaccinated",
+        "fully_vaccinated",
+        "partially_vaccinated",
+        "unknown",
+    }
 
     df = df[
         (df.vaccine == "all")
