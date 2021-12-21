@@ -1,0 +1,153 @@
+---
+title: "Plotting povcal full distributions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+Load data prepared by Shahid.
+```{r}
+df<- read.csv("full_distribution.csv")
+
+```
+
+
+
+
+Rearranging slightly, this is stored in the following format:
+```{r}
+
+df<- df %>%
+  pivot_longer(
+    cols = !c(CountryName, RequestYear),
+    names_to = "percentile",
+    names_prefix = "P",
+    names_transform = list(percentile = as.numeric),
+    values_to = "daily_income_or_consumption"
+  )
+
+head(df)
+```
+
+I'm not totally sure how Shahid calculated this, and hence not exactly sure what the percentile '0.0' corresponds to.
+
+In any case, it looks like there's some kinky behaviour at this 0.0 value.
+
+Moreover, steps of 1/10th of a percentile is too high a resolution: it results in e.g. the income threshold of P10.1 and P10.2 being exactly the same (to 2 d.p.).
+
+Let's only keep whole-number percentiles (i.e. P1, P2... P99).
+
+
+```{r}
+
+perc_keep<- seq(1,99,1) # The set of fractiles to keep
+
+df<- df %>%
+  filter(percentile %in% perc_keep)
+```
+
+## Calculate densities to plot
+
+The classic Gapminder incomes plot is the density (y axis) of log income (x axis).
+
+To calculate (discrete) densities:
+
+- Find the width of the 'bin' (distance between the incomes of two adjacent percentiles). 
+
+```{r}
+df<- df %>%
+  group_by(CountryName, RequestYear) %>%
+  mutate(lag_inc=lag(daily_income_or_consumption)) %>%
+  mutate(bin_width = daily_income_or_consumption - lag_inc)
+```
+
+
+
+- The area of each bin is proportional to the 'step' in the percentiles. I divide by 100 (%) so that the areas sum to 1. (If you wanted, you could scale by total population at this step).
+
+```{r}
+df<- df %>%group_by(CountryName, RequestYear) %>%
+  mutate(lag_percentile=lag(percentile)) %>%
+  mutate(percentile_step = percentile - lag_percentile,
+         bin_area = percentile_step/100)
+```
+
+
+- The chart will plot the density on the y axis. Plotted against incomes on a linear scale, this is just the area divided by the bin width.
+
+But plotted against incomes shown on a log scale requires a transformation: you need to multiply the density by income (think chain rule).
+
+```{r}
+df<- df %>%
+  group_by(CountryName, RequestYear) %>%
+  mutate(density = 1/bin_width) %>% # For linear scale
+  mutate(density_for_logs = density * daily_income_or_consumption) # For log scale
+
+```
+
+These density values will be plotted at the midpoint between the income range of the bin.
+```{r}
+df<- df %>%
+  group_by(CountryName, RequestYear) %>%
+  mutate(midpoint_inc = (lag_inc + daily_income_or_consumption)/2)
+```
+
+
+## Plot densities
+
+
+Filter for countries and years.
+
+```{r}
+
+select_countries<- c("Mozambique", "United States")
+select_years<- c(1981, 2019)
+
+selected_data<- df %>%
+  filter(CountryName %in% select_countries,
+         RequestYear  %in% select_years)
+
+```
+
+
+Plot on a log scale (using transformed density):
+```{r}
+
+# tick marks
+axis_breaks<- log(c(0.5, 1, 2, 5, 10, 20, 50, 100))
+axis_labels<- c("$0.5", "$1", "$2", "$5", "$10", "$20", "$50", "$100")
+
+ggplot(selected_data,
+       aes(x=log(midpoint_inc), y = density_for_logs, colour = as.factor(RequestYear)))+
+  geom_point() +
+  geom_line() +
+  facet_wrap(~CountryName) +
+  scale_x_continuous(breaks=axis_breaks,
+                    labels = axis_labels) +
+  theme_bw() +
+  theme(legend.title = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+
+
+
+```
+
+On a linear scale:
+```{r}
+
+ggplot(selected_data,
+       aes(x=midpoint_inc, y = density, colour = as.factor(RequestYear))) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~CountryName) +
+  scale_x_continuous(labels=scales::dollar_format()) +
+  theme_bw() +
+  theme(legend.title = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+```
+
