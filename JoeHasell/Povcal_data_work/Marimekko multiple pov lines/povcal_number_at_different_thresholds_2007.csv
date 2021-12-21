@@ -1,669 +1,167 @@
-,Entity,metric,value
-0,Albania,threshold below $1.90 per day,36393.68
-1,Algeria,threshold below $1.90 per day,136301.21
-2,Angola,threshold below $1.90 per day,13438187.68
-3,Argentina (Urban),threshold below $1.90 per day,375209.23
-4,Armenia,threshold below $1.90 per day,25937.68
-5,Australia,threshold below $1.90 per day,122636.29
-6,Austria,threshold below $1.90 per day,27984.14
-7,Azerbaijan,threshold below $1.90 per day,0.0
-8,Bangladesh,threshold below $1.90 per day,18125294.77
-9,Belarus,threshold below $1.90 per day,0.0
-10,Belgium,threshold below $1.90 per day,16820.29
-11,Belize,threshold below $1.90 per day,51334.37
-12,Benin,threshold below $1.90 per day,5333790.77
-13,Bhutan,threshold below $1.90 per day,11501.19
-14,Bolivia,threshold below $1.90 per day,732718.47
-15,Bosnia and Herzegovina,threshold below $1.90 per day,1976.95
-16,Botswana,threshold below $1.90 per day,308381.42
-17,Brazil,threshold below $1.90 per day,9183006.89
-18,Bulgaria,threshold below $1.90 per day,97065.44
-19,Burkina Faso,threshold below $1.90 per day,7375399.4
-20,Burundi,threshold below $1.90 per day,8475545.97
-21,Cameroon,threshold below $1.90 per day,5812051.11
-22,Canada,threshold below $1.90 per day,90265.88
-23,Cape Verde,threshold below $1.90 per day,15060.2
-24,Central African Republic,threshold below $1.90 per day,3326297.13
-25,Chad,threshold below $1.90 per day,6133916.28
-26,Chile,threshold below $1.90 per day,53119.36
-27,China,threshold below $1.90 per day,4892188.67
-28,Colombia,threshold below $1.90 per day,1969910.97
-29,Comoros,threshold below $1.90 per day,151739.75
-30,Congo,threshold below $1.90 per day,2466578.11
-31,Costa Rica,threshold below $1.90 per day,52367.59
-32,Cote d'Ivoire,threshold below $1.90 per day,6230183.65
-33,Croatia,threshold below $1.90 per day,21850.26
-34,Cyprus,threshold below $1.90 per day,387.28
-35,Czechia,threshold below $1.90 per day,0.0
-36,Democratic Republic of Congo,threshold below $1.90 per day,59138432.37
-37,Denmark,threshold below $1.90 per day,8123.16
-38,Djibouti,threshold below $1.90 per day,160562.48
-39,Dominican Republic,threshold below $1.90 per day,72746.18
-40,Ecuador,threshold below $1.90 per day,541061.84
-41,Egypt,threshold below $1.90 per day,2860944.45
-42,El Salvador,threshold below $1.90 per day,121679.35
-43,Estonia,threshold below $1.90 per day,3539.89
-44,Eswatini,threshold below $1.90 per day,321772.04
-45,Ethiopia,threshold below $1.90 per day,26239043.92
-46,Fiji,threshold below $1.90 per day,1857.97
-47,Finland,threshold below $1.90 per day,3623.18
-48,France,threshold below $1.90 per day,9110.91
-49,Gabon,threshold below $1.90 per day,69899.23
-50,Gambia,threshold below $1.90 per day,223787.71
-51,Georgia,threshold below $1.90 per day,185509.58
-52,Germany,threshold below $1.90 per day,0.0
-53,Ghana,threshold below $1.90 per day,3594853.39
-54,Greece,threshold below $1.90 per day,95401.92
-55,Guatemala,threshold below $1.90 per day,1191995.15
-56,Guinea,threshold below $1.90 per day,2936053.96
-57,Guinea-Bissau,threshold below $1.90 per day,1173883.81
-58,Guyana,threshold below $1.90 per day,49300.23
-59,Haiti,threshold below $1.90 per day,2257279.27
-60,Honduras,threshold below $1.90 per day,1455394.56
-61,Hungary,threshold below $1.90 per day,57938.75
-62,Iceland,threshold below $1.90 per day,0.0
-63,India,threshold below $1.90 per day,141279509.99
-64,Indonesia,threshold below $1.90 per day,11790469.11
-65,Iran,threshold below $1.90 per day,287126.82
-66,Iraq,threshold below $1.90 per day,464086.28
-67,Ireland,threshold below $1.90 per day,11691.38
-68,Israel,threshold below $1.90 per day,21033.44
-69,Italy,threshold below $1.90 per day,858463.2
-70,Jamaica,threshold below $1.90 per day,53639.63
-71,Japan,threshold below $1.90 per day,922858.48
-72,Jordan,threshold below $1.90 per day,10182.32
-73,Kazakhstan,threshold below $1.90 per day,3502.46
-74,Kenya,threshold below $1.90 per day,17632357.4
-75,Kiribati,threshold below $1.90 per day,12746.19
-76,Kosovo,threshold below $1.90 per day,7884.73
-77,Kyrgyzstan,threshold below $1.90 per day,67102.83
-78,Laos,threshold below $1.90 per day,745345.88
-79,Latvia,threshold below $1.90 per day,14606.76
-80,Lebanon,threshold below $1.90 per day,0.0
-81,Lesotho,threshold below $1.90 per day,568817.01
-82,Liberia,threshold below $1.90 per day,2094622.04
-83,Lithuania,threshold below $1.90 per day,28920.62
-84,Luxembourg,threshold below $1.90 per day,1688.41
-85,Madagascar,threshold below $1.90 per day,19896905.11
-86,Malawi,threshold below $1.90 per day,12138950.88
-87,Malaysia,threshold below $1.90 per day,2840.81
-88,Maldives,threshold below $1.90 per day,0.0
-89,Mali,threshold below $1.90 per day,8252743.79
-90,Malta,threshold below $1.90 per day,748.27
-91,Mauritania,threshold below $1.90 per day,247073.09
-92,Mauritius,threshold below $1.90 per day,2654.79
-93,Mexico,threshold below $1.90 per day,2405691.83
-94,Micronesia (country),threshold below $1.90 per day,17156.79
-95,Moldova,threshold below $1.90 per day,1687.38
-96,Mongolia,threshold below $1.90 per day,16190.85
-97,Montenegro,threshold below $1.90 per day,14992.67
-98,Morocco,threshold below $1.90 per day,249961.29
-99,Mozambique,threshold below $1.90 per day,17823234.83
-100,Myanmar,threshold below $1.90 per day,728152.28
-101,Namibia,threshold below $1.90 per day,354961.53
-102,Nauru,threshold below $1.90 per day,84.56
-103,Nepal,threshold below $1.90 per day,1648619.34
-104,Netherlands,threshold below $1.90 per day,32338.1
-105,Nicaragua,threshold below $1.90 per day,137381.39
-106,Niger,threshold below $1.90 per day,9219695.26
-107,Nigeria,threshold below $1.90 per day,78947052.9
-108,North Macedonia,threshold below $1.90 per day,94836.21
-109,Norway,threshold below $1.90 per day,13271.26
-110,Pakistan,threshold below $1.90 per day,8351444.8
-111,Palestine,threshold below $1.90 per day,39770.59
-112,Panama,threshold below $1.90 per day,103618.35
-113,Papua New Guinea,threshold below $1.90 per day,2277774.21
-114,Paraguay,threshold below $1.90 per day,60953.87
-115,Peru,threshold below $1.90 per day,1076442.68
-116,Philippines,threshold below $1.90 per day,5903427.89
-117,Poland,threshold below $1.90 per day,0.0
-118,Portugal,threshold below $1.90 per day,42282.32
-119,Romania,threshold below $1.90 per day,601771.69
-120,Russia,threshold below $1.90 per day,62558.75
-121,Rwanda,threshold below $1.90 per day,6747154.53
-122,Saint Lucia,threshold below $1.90 per day,8106.61
-123,Samoa,threshold below $1.90 per day,1092.0
-124,Sao Tome and Principe,threshold below $1.90 per day,73803.5
-125,Senegal,threshold below $1.90 per day,4716518.81
-126,Serbia,threshold below $1.90 per day,379492.4
-127,Seychelles,threshold below $1.90 per day,572.0
-128,Sierra Leone,threshold below $1.90 per day,3294328.54
-129,Slovakia,threshold below $1.90 per day,40643.22
-130,Slovenia,threshold below $1.90 per day,0.0
-131,Solomon Islands,threshold below $1.90 per day,144734.26
-132,Somalia,threshold below $1.90 per day,10010433.42
-133,South Africa,threshold below $1.90 per day,10858072.91
-134,South Korea,threshold below $1.90 per day,116419.53
-135,South Sudan,threshold below $1.90 per day,8533100.58
-136,Spain,threshold below $1.90 per day,320448.15
-137,Sri Lanka,threshold below $1.90 per day,176204.23
-138,Sudan,threshold below $1.90 per day,4171169.88
-139,Suriname,threshold below $1.90 per day,110488.64
-140,Sweden,threshold below $1.90 per day,24978.29
-141,Switzerland,threshold below $1.90 per day,0.0
-142,Syria,threshold below $1.90 per day,4334958.46
-143,Taiwan,threshold below $1.90 per day,0.0
-144,Tajikistan,threshold below $1.90 per day,248271.6
-145,Tanzania,threshold below $1.90 per day,26854676.97
-146,Thailand,threshold below $1.90 per day,20657.47
-147,Timor,threshold below $1.90 per day,268241.02
-148,Togo,threshold below $1.90 per day,3687845.9
-149,Tonga,threshold below $1.90 per day,595.65
-150,Trinidad and Tobago,threshold below $1.90 per day,3830.24
-151,Tunisia,threshold below $1.90 per day,28147.36
-152,Turkey,threshold below $1.90 per day,112445.58
-153,Turkmenistan,threshold below $1.90 per day,134826.7
-154,Tuvalu,threshold below $1.90 per day,83.58
-155,Uganda,threshold below $1.90 per day,17022539.82
-156,Ukraine,threshold below $1.90 per day,10285.07
-157,United Arab Emirates,threshold below $1.90 per day,0.0
-158,United Kingdom,threshold below $1.90 per day,196892.0
-159,United States,threshold below $1.90 per day,4062069.0
-160,Uruguay,threshold below $1.90 per day,1860.86
-161,Uzbekistan,threshold below $1.90 per day,4112021.03
-162,Vanuatu,threshold below $1.90 per day,42211.25
-163,Vietnam,threshold below $1.90 per day,1698982.18
-164,Yemen,threshold below $1.90 per day,14870981.36
-165,Zambia,threshold below $1.90 per day,9842772.89
-166,Zimbabwe,threshold below $1.90 per day,4820944.83
-167,Albania,threshold $1.90 - $10 per day,1990457.55
-168,Algeria,threshold $1.90 - $10 per day,28416471.619999997
-169,Angola,threshold $1.90 - $10 per day,15246999.830000002
-170,Argentina (Urban),threshold $1.90 - $10 per day,11030731.79
-171,Armenia,threshold $1.90 - $10 per day,2390126.7399999998
-172,Australia,threshold $1.90 - $10 per day,241025.45
-173,Austria,threshold $1.90 - $10 per day,82461.12
-174,Azerbaijan,threshold $1.90 - $10 per day,429375.79
-175,Bangladesh,threshold $1.90 - $10 per day,135700428.44
-176,Belarus,threshold $1.90 - $10 per day,1092042.01
-177,Belgium,threshold $1.90 - $10 per day,60366.23
-178,Belize,threshold $1.90 - $10 per day,229610.38
-179,Benin,threshold $1.90 - $10 per day,5449187.040000001
-180,Bhutan,threshold $1.90 - $10 per day,517911.96
-181,Bolivia,threshold $1.90 - $10 per day,4963036.15
-182,Bosnia and Herzegovina,threshold $1.90 - $10 per day,467156.06
-183,Botswana,threshold $1.90 - $10 per day,1404445.36
-184,Brazil,threshold $1.90 - $10 per day,77032036.16
-185,Bulgaria,threshold $1.90 - $10 per day,1557283.8900000001
-186,Burkina Faso,threshold $1.90 - $10 per day,11402806.799999999
-187,Burundi,threshold $1.90 - $10 per day,2314525.3999999985
-188,Cameroon,threshold $1.90 - $10 per day,15873598.09
-189,Canada,threshold $1.90 - $10 per day,457815.95999999996
-190,Cape Verde,threshold $1.90 - $10 per day,356395.32
-191,Central African Republic,threshold $1.90 - $10 per day,1173805.79
-192,Chad,threshold $1.90 - $10 per day,8443272.23
-193,Chile,threshold $1.90 - $10 per day,3557568.87
-194,China,threshold $1.90 - $10 per day,712068537.5500001
-195,Colombia,threshold $1.90 - $10 per day,25177864.77
-196,Comoros,threshold $1.90 - $10 per day,554628.57
-197,Congo,threshold $1.90 - $10 per day,2453079.2100000004
-198,Costa Rica,threshold $1.90 - $10 per day,1434743.13
-199,Cote d'Ivoire,threshold $1.90 - $10 per day,16793553.33
-200,Croatia,threshold $1.90 - $10 per day,542082.84
-201,Cyprus,threshold $1.90 - $10 per day,8726.92
-202,Czechia,threshold $1.90 - $10 per day,182273.17
-203,Democratic Republic of Congo,threshold $1.90 - $10 per day,21841445.449999996
-204,Denmark,threshold $1.90 - $10 per day,10701.93
-205,Djibouti,threshold $1.90 - $10 per day,698576.84
-206,Dominican Republic,threshold $1.90 - $10 per day,4864671.15
-207,Ecuador,threshold $1.90 - $10 per day,7970861.859999999
-208,Egypt,threshold $1.90 - $10 per day,86741361.2
-209,El Salvador,threshold $1.90 - $10 per day,3970894.65
-210,Estonia,threshold $1.90 - $10 per day,46654.8
-211,Eswatini,threshold $1.90 - $10 per day,636155.8
-212,Ethiopia,threshold $1.90 - $10 per day,77140145.08
-213,Fiji,threshold $1.90 - $10 per day,571632.8200000001
-214,Finland,threshold $1.90 - $10 per day,18738.079999999998
-215,France,threshold $1.90 - $10 per day,252418.28
-216,Gabon,threshold $1.90 - $10 per day,1269708.79
-217,Gambia,threshold $1.90 - $10 per day,1843659.42
-218,Georgia,threshold $1.90 - $10 per day,2688384.1
-219,Germany,threshold $1.90 - $10 per day,1028698.63
-220,Ghana,threshold $1.90 - $10 per day,20114960.09
-221,Greece,threshold $1.90 - $10 per day,1716775.47
-222,Guatemala,threshold $1.90 - $10 per day,10714048.73
-223,Guinea,threshold $1.90 - $10 per day,8865943.670000002
-224,Guinea-Bissau,threshold $1.90 - $10 per day,592097.73
-225,Guyana,threshold $1.90 - $10 per day,402031.65
-226,Haiti,threshold $1.90 - $10 per day,7918629.630000001
-227,Honduras,threshold $1.90 - $10 per day,5656323.459999999
-228,Hungary,threshold $1.90 - $10 per day,823895.03
-229,Iceland,threshold $1.90 - $10 per day,793.63
-230,India,threshold $1.90 - $10 per day,1127569739.29
-231,Indonesia,threshold $1.90 - $10 per day,211104246.76
-232,Iran,threshold $1.90 - $10 per day,32383725.81
-233,Iraq,threshold $1.90 - $10 per day,31885336.32
-234,Ireland,threshold $1.90 - $10 per day,23015.030000000006
-235,Israel,threshold $1.90 - $10 per day,891788.42
-236,Italy,threshold $1.90 - $10 per day,2636130.3200000003
-237,Jamaica,threshold $1.90 - $10 per day,1774675.61
-238,Japan,threshold $1.90 - $10 per day,2466445.37
-239,Jordan,threshold $1.90 - $10 per day,5582751.64
-240,Kazakhstan,threshold $1.90 - $10 per day,8944058.76
-241,Kenya,threshold $1.90 - $10 per day,30760787.810000002
-242,Kiribati,threshold $1.90 - $10 per day,91566.26
-243,Kosovo,threshold $1.90 - $10 per day,1319789.73
-244,Kyrgyzstan,threshold $1.90 - $10 per day,5656404.3
-245,Laos,threshold $1.90 - $10 per day,5639066.44
-246,Latvia,threshold $1.90 - $10 per day,197881.19
-247,Lebanon,threshold $1.90 - $10 per day,828502.91
-248,Lesotho,threshold $1.90 - $10 per day,1340654.28
-249,Liberia,threshold $1.90 - $10 per day,2565260.05
-250,Lithuania,threshold $1.90 - $10 per day,274372.99
-251,Luxembourg,threshold $1.90 - $10 per day,8314.02
-252,Madagascar,threshold $1.90 - $10 per day,5539934.210000001
-253,Malawi,threshold $1.90 - $10 per day,5374623.389999999
-254,Malaysia,threshold $1.90 - $10 per day,4294455.670000001
-255,Maldives,threshold $1.90 - $10 per day,107937.95
-256,Mali,threshold $1.90 - $10 per day,10122569.630000003
-257,Malta,threshold $1.90 - $10 per day,3712.03
-258,Mauritania,threshold $1.90 - $10 per day,3589927.7800000003
-259,Mauritius,threshold $1.90 - $10 per day,584052.5499999999
-260,Mexico,threshold $1.90 - $10 per day,67909399.77
-261,Micronesia (country),threshold $1.90 - $10 per day,83799.29000000001
-262,Moldova,threshold $1.90 - $10 per day,1824857.01
-263,Mongolia,threshold $1.90 - $10 per day,2165477.1599999997
-264,Montenegro,threshold $1.90 - $10 per day,207853.4
-265,Morocco,threshold $1.90 - $10 per day,22543091.86
-266,Mozambique,threshold $1.90 - $10 per day,9915507.270000003
-267,Myanmar,threshold $1.90 - $10 per day,46521165.19
-268,Namibia,threshold $1.90 - $10 per day,1380287.01
-269,Nauru,threshold $1.90 - $10 per day,9188.460000000001
-270,Nepal,threshold $1.90 - $10 per day,23983909.19
-271,Netherlands,threshold $1.90 - $10 per day,144857.06
-272,Nicaragua,threshold $1.90 - $10 per day,3853903.21
-273,Niger,threshold $1.90 - $10 per day,12144404.26
-274,Nigeria,threshold $1.90 - $10 per day,109218185.73999998
-275,North Macedonia,threshold $1.90 - $10 per day,875445.55
-276,Norway,threshold $1.90 - $10 per day,37258.18
-277,Pakistan,threshold $1.90 - $10 per day,187307943.31
-278,Palestine,threshold $1.90 - $10 per day,2514250.19
-279,Panama,threshold $1.90 - $10 per day,1132227.73
-280,Papua New Guinea,threshold $1.90 - $10 per day,5661228.91
-281,Paraguay,threshold $1.90 - $10 per day,2934390.59
-282,Peru,threshold $1.90 - $10 per day,15139264.94
-283,Philippines,threshold $1.90 - $10 per day,84306814.81
-284,Poland,threshold $1.90 - $10 per day,7007460.46
-285,Portugal,threshold $1.90 - $10 per day,786280.8200000001
-286,Romania,threshold $1.90 - $10 per day,5694664.529999999
-287,Russia,threshold $1.90 - $10 per day,35082053.95
-288,Rwanda,threshold $1.90 - $10 per day,5009058.430000001
-289,Saint Lucia,threshold $1.90 - $10 per day,64906.69
-290,Samoa,threshold $1.90 - $10 per day,127878.16
-291,Sao Tome and Principe,threshold $1.90 - $10 per day,122495.42000000001
-292,Senegal,threshold $1.90 - $10 per day,9960732.010000002
-293,Serbia,threshold $1.90 - $10 per day,2860527.5500000003
-294,Seychelles,threshold $1.90 - $10 per day,17985.23
-295,Sierra Leone,threshold $1.90 - $10 per day,4067057.4799999995
-296,Slovakia,threshold $1.90 - $10 per day,342782.32999999996
-297,Slovenia,threshold $1.90 - $10 per day,16580.11
-298,Solomon Islands,threshold $1.90 - $10 per day,466793.69999999995
-299,Somalia,threshold $1.90 - $10 per day,4525268.98
-300,South Africa,threshold $1.90 - $10 per day,30916417.62
-301,South Korea,threshold $1.90 - $10 per day,1294965.21
-302,South Sudan,threshold $1.90 - $10 per day,2336009.869999999
-303,Spain,threshold $1.90 - $10 per day,2739852.43
-304,Sri Lanka,threshold $1.90 - $10 per day,16308926.52
-305,Sudan,threshold $1.90 - $10 per day,34416749.18
-306,Suriname,threshold $1.90 - $10 per day,294615.61
-307,Sweden,threshold $1.90 - $10 per day,98308.47
-308,Switzerland,threshold $1.90 - $10 per day,32297.69
-309,Syria,threshold $1.90 - $10 per day,12053458.850000001
-310,Taiwan,threshold $1.90 - $10 per day,175697.89
-311,Tajikistan,threshold $1.90 - $10 per day,6910678.11
-312,Tanzania,threshold $1.90 - $10 per day,26658761.53
-313,Thailand,threshold $1.90 - $10 per day,26405590.35
-314,Timor,threshold $1.90 - $10 per day,959443.54
-315,Togo,threshold $1.90 - $10 per day,3841494.3699999996
-316,Tonga,threshold $1.90 - $10 per day,63172.15
-317,Trinidad and Tobago,threshold $1.90 - $10 per day,297381.89
-318,Tunisia,threshold $1.90 - $10 per day,6320086.64
-319,Turkey,threshold $1.90 - $10 per day,24512546.220000003
-320,Turkmenistan,threshold $1.90 - $10 per day,3796510.27
-321,Tuvalu,threshold $1.90 - $10 per day,8310.76
-322,Uganda,threshold $1.90 - $10 per day,22673471.200000003
-323,Ukraine,threshold $1.90 - $10 per day,16539244.98
-324,United Arab Emirates,threshold $1.90 - $10 per day,77597.28
-325,United Kingdom,threshold $1.90 - $10 per day,1264456.79
-326,United States,threshold $1.90 - $10 per day,5668167.029999999
-327,Uruguay,threshold $1.90 - $10 per day,520064.63
-328,Uzbekistan,threshold $1.90 - $10 per day,26450681.36
-329,Vanuatu,threshold $1.90 - $10 per day,224117.84999999998
-330,Vietnam,threshold $1.90 - $10 per day,57438080.19
-331,Yemen,threshold $1.90 - $10 per day,12702749.02
-332,Zambia,threshold $1.90 - $10 per day,6260942.85
-333,Zimbabwe,threshold $1.90 - $10 per day,8589698.8
-334,Albania,threshold $10 - $30 per day,824128.1499999999
-335,Algeria,threshold $10 - $30 per day,12431998.899999999
-336,Angola,threshold $10 - $30 per day,1022416.2799999975
-337,Argentina (Urban),threshold $10 - $30 per day,20856373.17
-338,Armenia,threshold $10 - $30 per day,493307.93000000017
-339,Australia,threshold $10 - $30 per day,4307653.33
-340,Austria,threshold $10 - $30 per day,1401958.39
-341,Azerbaijan,threshold $10 - $30 per day,8237187.11
-342,Bangladesh,threshold $10 - $30 per day,5511493.560000002
-343,Belarus,threshold $10 - $30 per day,7471963.24
-344,Belgium,threshold $10 - $30 per day,2280312.7
-345,Belize,threshold $10 - $30 per day,76480.26000000001
-346,Benin,threshold $10 - $30 per day,377624.6699999999
-347,Bhutan,threshold $10 - $30 per day,207245.68999999994
-348,Bolivia,threshold $10 - $30 per day,4587618.430000001
-349,Bosnia and Herzegovina,threshold $10 - $30 per day,2159348.29
-350,Botswana,threshold $10 - $30 per day,418124.4600000002
-351,Brazil,threshold $10 - $30 per day,88290284.63000001
-352,Bulgaria,threshold $10 - $30 per day,4381220.47
-353,Burkina Faso,threshold $10 - $30 per day,397381.58999999985
-354,Burundi,threshold $10 - $30 per day,35220.31000000052
-355,Cameroon,threshold $10 - $30 per day,2669056.5700000003
-356,Canada,threshold $10 - $30 per day,6482999.29
-357,Cape Verde,threshold $10 - $30 per day,146682.76999999996
-358,Central African Republic,threshold $10 - $30 per day,78369.62999999989
-359,Chad,threshold $10 - $30 per day,424507.6500000004
-360,Chile,threshold $10 - $30 per day,10831272.299999999
-361,China,threshold $10 - $30 per day,587010872.8
-362,Colombia,threshold $10 - $30 per day,17525864.400000002
-363,Comoros,threshold $10 - $30 per day,98213.4900000001
-364,Congo,threshold $10 - $30 per day,173323.83000000007
-365,Costa Rica,threshold $10 - $30 per day,2366838.33
-366,Cote d'Ivoire,threshold $10 - $30 per day,1347017.7300000004
-367,Croatia,threshold $10 - $30 per day,2754610.92
-368,Cyprus,threshold $10 - $30 per day,417842.31
-369,Czechia,threshold $10 - $30 per day,6078073.48
-370,Democratic Republic of Congo,threshold $10 - $30 per day,400604.0200000107
-371,Denmark,threshold $10 - $30 per day,795000.99
-372,Djibouti,threshold $10 - $30 per day,77485.72000000009
-373,Dominican Republic,threshold $10 - $30 per day,4693956.35
-374,Ecuador,threshold $10 - $30 per day,6837721.59
-375,Egypt,threshold $10 - $30 per day,6395638.769999996
-376,El Salvador,threshold $10 - $30 per day,2117656.05
-377,Estonia,threshold $10 - $30 per day,633726.3999999999
-378,Eswatini,threshold $10 - $30 per day,143401.62
-379,Ethiopia,threshold $10 - $30 per day,2887143.370000005
-380,Fiji,threshold $10 - $30 per day,276861.13
-381,Finland,threshold $10 - $30 per day,957439.3
-382,France,threshold $10 - $30 per day,14354656.31
-383,Gabon,threshold $10 - $30 per day,678312.1099999999
-384,Gambia,threshold $10 - $30 per day,136892.81000000006
-385,Georgia,threshold $10 - $30 per day,796454.1299999999
-386,Germany,threshold $10 - $30 per day,16726587.47
-387,Ghana,threshold $10 - $30 per day,5042705.960000001
-388,Greece,threshold $10 - $30 per day,6771407.240000001
-389,Guatemala,threshold $10 - $30 per day,3648867.709999999
-390,Guinea,threshold $10 - $30 per day,253598.12999999896
-391,Guinea-Bissau,threshold $10 - $30 per day,62164.45999999996
-392,Guyana,threshold $10 - $30 per day,278026.5
-393,Haiti,threshold $10 - $30 per day,752083.4100000001
-394,Honduras,threshold $10 - $30 per day,2011363.1100000013
-395,Hungary,threshold $10 - $30 per day,6667470.72
-396,Iceland,threshold $10 - $30 per day,33211.26
-397,India,threshold $10 - $30 per day,64233402.339999914
-398,Indonesia,threshold $10 - $30 per day,39195087.84
-399,Iran,threshold $10 - $30 per day,39410419.04000001
-400,Iraq,threshold $10 - $30 per day,5088570.809999995
-401,Ireland,threshold $10 - $30 per day,999025.27
-402,Israel,threshold $10 - $30 per day,3421846.23
-403,Italy,threshold $10 - $30 per day,19796911.32
-404,Jamaica,threshold $10 - $30 per day,919921.1900000002
-405,Japan,threshold $10 - $30 per day,34295796.449999996
-406,Jordan,threshold $10 - $30 per day,3791734.4899999993
-407,Kazakhstan,threshold $10 - $30 per day,8688062.56
-408,Kenya,threshold $10 - $30 per day,1743845.2299999967
-409,Kiribati,threshold $10 - $30 per day,9303.220000000001
-410,Kosovo,threshold $10 - $30 per day,443727.80000000005
-411,Kyrgyzstan,threshold $10 - $30 per day,459703.7599999998
-412,Laos,threshold $10 - $30 per day,527306.3599999994
-413,Latvia,threshold $10 - $30 per day,1146347.98
-414,Lebanon,threshold $10 - $30 per day,4574085.53
-415,Lesotho,threshold $10 - $30 per day,172444.24
-416,Liberia,threshold $10 - $30 per day,38945.73000000045
-417,Lithuania,threshold $10 - $30 per day,1589231.0
-418,Luxembourg,threshold $10 - $30 per day,67964.85999999999
-419,Madagascar,threshold $10 - $30 per day,132133.2100000009
-420,Malawi,threshold $10 - $30 per day,142779.2400000021
-421,Malaysia,threshold $10 - $30 per day,16616122.440000001
-422,Maldives,threshold $10 - $30 per day,339886.35
-423,Mali,threshold $10 - $30 per day,137054.65999999642
-424,Malta,threshold $10 - $30 per day,132109.39
-425,Mauritania,threshold $10 - $30 per day,435011.01999999955
-426,Mauritius,threshold $10 - $30 per day,599974.9
-427,Mexico,threshold $10 - $30 per day,45419707.07000001
-428,Micronesia (country),threshold $10 - $30 per day,10047.059999999998
-429,Moldova,threshold $10 - $30 per day,910080.76
-430,Mongolia,threshold $10 - $30 per day,891372.4900000002
-431,Montenegro,threshold $10 - $30 per day,339619.98000000004
-432,Morocco,threshold $10 - $30 per day,11243667.550000004
-433,Mozambique,threshold $10 - $30 per day,746269.3899999969
-434,Myanmar,threshold $10 - $30 per day,5897461.990000002
-435,Namibia,threshold $10 - $30 per day,496796.7999999998
-436,Nauru,threshold $10 - $30 per day,3319.67
-437,Nepal,threshold $10 - $30 per day,1933868.289999999
-438,Netherlands,threshold $10 - $30 per day,2669604.81
-439,Nicaragua,threshold $10 - $30 per day,2048589.6599999997
-440,Niger,threshold $10 - $30 per day,234287.44999999925
-441,Nigeria,threshold $10 - $30 per day,2641343.050000012
-442,North Macedonia,threshold $10 - $30 per day,1058623.34
-443,Norway,threshold $10 - $30 per day,337902.9
-444,Pakistan,threshold $10 - $30 per day,11348913.76999998
-445,Palestine,threshold $10 - $30 per day,1801598.8800000004
-446,Panama,threshold $10 - $30 per day,1892811.1600000001
-447,Papua New Guinea,threshold $10 - $30 per day,487578.0100000007
-448,Paraguay,threshold $10 - $30 per day,3096747.62
-449,Peru,threshold $10 - $30 per day,13074972.62
-450,Philippines,threshold $10 - $30 per day,14030250.14
-451,Poland,threshold $10 - $30 per day,26672074.740000002
-452,Portugal,threshold $10 - $30 per day,6184694.82
-453,Romania,threshold $10 - $30 per day,11350438.900000002
-454,Russia,threshold $10 - $30 per day,87157861.53
-455,Rwanda,threshold $10 - $30 per day,201140.75999999978
-456,Saint Lucia,threshold $10 - $30 per day,77814.55999999998
-457,Samoa,threshold $10 - $30 per day,59396.56
-458,Sao Tome and Principe,threshold $10 - $30 per day,8490.789999999979
-459,Senegal,threshold $10 - $30 per day,720584.6799999997
-460,Serbia,threshold $10 - $30 per day,3522563.8499999996
-461,Seychelles,threshold $10 - $30 per day,62532.48000000001
-462,Sierra Leone,threshold $10 - $30 per day,121948.35000000056
-463,Slovakia,threshold $10 - $30 per day,3730144.8600000003
-464,Slovenia,threshold $10 - $30 per day,833213.6900000001
-465,Solomon Islands,threshold $10 - $30 per day,23430.170000000042
-466,Somalia,threshold $10 - $30 per day,52544.169999999925
-467,South Africa,threshold $10 - $30 per day,9996704.89
-468,South Korea,threshold $10 - $30 per day,15665526.15
-469,South Sudan,threshold $10 - $30 per day,38532.44000000134
-470,Spain,threshold $10 - $30 per day,17917022.619999997
-471,Sri Lanka,threshold $10 - $30 per day,4435423.3500000015
-472,Sudan,threshold $10 - $30 per day,2059305.1999999955
-473,Suriname,threshold $10 - $30 per day,132884.15000000002
-474,Sweden,threshold $10 - $30 per day,1481926.8699999999
-475,Switzerland,threshold $10 - $30 per day,942365.9600000001
-476,Syria,threshold $10 - $30 per day,643733.3499999996
-477,Taiwan,threshold $10 - $30 per day,7183926.12
-478,Tajikistan,threshold $10 - $30 per day,1656195.7299999995
-479,Tanzania,threshold $10 - $30 per day,1069231.4699999988
-480,Thailand,threshold $10 - $30 per day,36378646.16
-481,Timor,threshold $10 - $30 per day,15147.270000000019
-482,Togo,threshold $10 - $30 per day,164208.48000000045
-483,Tonga,threshold $10 - $30 per day,33932.229999999996
-484,Trinidad and Tobago,threshold $10 - $30 per day,750468.2000000001
-485,Tunisia,threshold $10 - $30 per day,4775581.07
-486,Turkey,threshold $10 - $30 per day,43676499.370000005
-487,Turkmenistan,threshold $10 - $30 per day,1660647.0399999996
-488,Tuvalu,threshold $10 - $30 per day,2679.09
-489,Uganda,threshold $10 - $30 per day,1384676.509999998
-490,Ukraine,threshold $10 - $30 per day,27084949.88
-491,United Arab Emirates,threshold $10 - $30 per day,520996.93999999994
-492,United Kingdom,threshold $10 - $30 per day,18922988.23
-493,United States,threshold $10 - $30 per day,63385303.019999996
-494,Uruguay,threshold $10 - $30 per day,1861936.66
-495,Uzbekistan,threshold $10 - $30 per day,1764945.5
-496,Vanuatu,threshold $10 - $30 per day,18046.600000000035
-497,Vietnam,threshold $10 - $30 per day,33021814.71
-498,Yemen,threshold $10 - $30 per day,244612.41000000015
-499,Zambia,threshold $10 - $30 per day,666593.6899999995
-500,Zimbabwe,threshold $10 - $30 per day,757604.1199999992
-501,Albania,threshold Above $30 per day,22477.62000000011
-502,Algeria,threshold Above $30 per day,404426.2700000033
-503,Angola,threshold Above $30 per day,109144.2100000009
-504,Argentina (Urban),threshold Above $30 per day,8148359.809999999
-505,Armenia,threshold Above $30 per day,35436.64999999991
-506,Australia,threshold Above $30 per day,19930544.93
-507,Austria,threshold Above $30 per day,7285162.35
-508,Azerbaijan,threshold Above $30 per day,1187470.0999999996
-509,Bangladesh,threshold Above $30 per day,333376.2299999893
-510,Belarus,threshold Above $30 per day,934258.75
-511,Belgium,threshold Above $30 per day,9017658.78
-512,Belize,threshold Above $30 per day,18343.98999999999
-513,Benin,threshold Above $30 per day,14601.519999999553
-514,Bhutan,threshold Above $30 per day,8909.160000000033
-515,Bolivia,threshold Above $30 per day,909480.9499999993
-516,Bosnia and Herzegovina,threshold Above $30 per day,723045.7000000002
-517,Botswana,threshold Above $30 per day,74176.75999999978
-518,Brazil,threshold Above $30 per day,33328503.319999993
-519,Bulgaria,threshold Above $30 per day,1040377.2000000002
-520,Burkina Faso,threshold Above $30 per day,17696.210000000894
-521,Burundi,threshold Above $30 per day,1732.320000000298
-522,Cameroon,threshold Above $30 per day,211339.23000000045
-523,Canada,threshold Above $30 per day,29512239.87
-524,Cape Verde,threshold Above $30 per day,19358.71000000002
-525,Central African Republic,threshold Above $30 per day,17555.450000000186
-526,Chad,threshold Above $30 per day,15076.839999999851
-527,Chile,threshold Above $30 per day,4028478.4700000007
-528,China,threshold Above $30 per day,82423400.98000002
-529,Colombia,threshold Above $30 per day,4236203.859999999
-530,Comoros,threshold Above $30 per day,9310.189999999944
-531,Congo,threshold Above $30 per day,17720.849999999627
-532,Costa Rica,threshold Above $30 per day,1096004.9500000002
-533,Cote d'Ivoire,threshold Above $30 per day,66714.2899999991
-534,Croatia,threshold Above $30 per day,805986.98
-535,Cyprus,threshold Above $30 per day,752723.49
-536,Czechia,threshold Above $30 per day,4334091.35
-537,Democratic Republic of Congo,threshold Above $30 per day,18282.159999996424
-538,Denmark,threshold Above $30 per day,4951153.92
-539,Djibouti,threshold Above $30 per day,7471.959999999963
-540,Dominican Republic,threshold Above $30 per day,881757.3200000003
-541,Ecuador,threshold Above $30 per day,1435715.710000001
-542,Egypt,threshold Above $30 per day,444648.5799999982
-543,El Salvador,threshold Above $30 per day,177891.9500000002
-544,Estonia,threshold Above $30 per day,633462.91
-545,Eswatini,threshold Above $30 per day,23423.540000000037
-546,Ethiopia,threshold Above $30 per day,133691.62999999523
-547,Fiji,threshold Above $30 per day,27107.079999999958
-548,Finland,threshold Above $30 per day,4528413.4399999995
-549,France,threshold Above $30 per day,52248193.5
-550,Gabon,threshold Above $30 per day,46902.87000000011
-551,Gambia,threshold Above $30 per day,9554.060000000056
-552,Georgia,threshold Above $30 per day,57656.189999999944
-553,Germany,threshold Above $30 per day,64901715.9
-554,Ghana,threshold Above $30 per day,368951.55999999866
-555,Greece,threshold Above $30 per day,2171094.369999999
-556,Guatemala,threshold Above $30 per day,532506.4100000001
-557,Guinea,threshold Above $30 per day,11943.240000000224
-558,Guinea-Bissau,threshold Above $30 per day,0.0
-559,Guyana,threshold Above $30 per day,45862.619999999995
-560,Haiti,threshold Above $30 per day,54373.68999999948
-561,Honduras,threshold Above $30 per day,305931.8699999992
-562,Hungary,threshold Above $30 per day,2238661.5
-563,Iceland,threshold Above $30 per day,309395.11
-564,India,threshold Above $30 per day,5576183.380000114
-565,Indonesia,threshold Above $30 per day,2556082.2900000215
-566,Iran,threshold Above $30 per day,8592679.329999998
-567,Iraq,threshold Above $30 per day,114787.59000000358
-568,Ireland,threshold Above $30 per day,3773656.32
-569,Israel,threshold Above $30 per day,4378631.91
-570,Italy,threshold Above $30 per day,37245204.16
-571,Jamaica,threshold Above $30 per day,172616.56999999983
-572,Japan,threshold Above $30 per day,89100696.7
-573,Jordan,threshold Above $30 per day,394504.55000000075
-574,Kazakhstan,threshold Above $30 per day,402152.2199999988
-575,Kenya,threshold Above $30 per day,84482.56000000238
-576,Kiribati,threshold Above $30 per day,542.3300000000017
-577,Kosovo,threshold Above $30 per day,19600.73999999999
-578,Kyrgyzstan,threshold Above $30 per day,14989.110000000335
-579,Laos,threshold Above $30 per day,41316.3200000003
-580,Latvia,threshold Above $30 per day,583412.0700000001
-581,Lebanon,threshold Above $30 per day,1409284.5599999996
-582,Lesotho,threshold Above $30 per day,9496.469999999972
-583,Liberia,threshold Above $30 per day,3400.179999999702
-584,Lithuania,threshold Above $30 per day,935878.3899999999
-585,Luxembourg,threshold Above $30 per day,518368.71
-586,Madagascar,threshold Above $30 per day,1567.469999998808
-587,Malawi,threshold Above $30 per day,13906.48999999836
-588,Malaysia,threshold Above $30 per day,10191609.079999998
-589,Maldives,threshold Above $30 per day,48577.70000000001
-590,Mali,threshold Above $30 per day,25.92000000178814
-591,Malta,threshold Above $30 per day,331429.31
-592,Mauritania,threshold Above $30 per day,10562.110000000335
-593,Mauritius,threshold Above $30 per day,77930.76000000001
-594,Mexico,threshold Above $30 per day,9042525.329999998
-595,Micronesia (country),threshold Above $30 per day,455.8600000000006
-596,Moldova,threshold Above $30 per day,18532.850000000093
-597,Mongolia,threshold Above $30 per day,40738.5
-598,Montenegro,threshold Above $30 per day,59906.94999999995
-599,Morocco,threshold Above $30 per day,1544573.299999997
-600,Mozambique,threshold Above $30 per day,163995.51000000164
-601,Myanmar,threshold Above $30 per day,235801.5399999991
-602,Namibia,threshold Above $30 per day,170557.66000000015
-603,Nauru,threshold Above $30 per day,283.3099999999995
-604,Nepal,threshold Above $30 per day,60727.1799999997
-605,Netherlands,threshold Above $30 per day,14284496.03
-606,Nicaragua,threshold Above $30 per day,344980.7400000002
-607,Niger,threshold Above $30 per day,4085.030000001192
-608,Nigeria,threshold Above $30 per day,66729.31000000238
-609,North Macedonia,threshold Above $30 per day,53090.89999999991
-610,Norway,threshold Above $30 per day,4888535.66
-611,Pakistan,threshold Above $30 per day,888384.1200000048
-612,Palestine,threshold Above $30 per day,99185.33999999985
-613,Panama,threshold Above $30 per day,978113.7599999998
-614,Papua New Guinea,threshold Above $30 per day,11447.86999999918
-615,Paraguay,threshold Above $30 per day,774969.9199999999
-616,Peru,threshold Above $30 per day,2153616.7600000016
-617,Philippines,threshold Above $30 per day,932771.1599999964
-618,Poland,threshold Above $30 per day,4295290.799999997
-619,Portugal,threshold Above $30 per day,3287042.04
-620,Romania,threshold Above $30 per day,1940414.879999999
-621,Russia,threshold Above $30 per day,22194265.769999996
-622,Rwanda,threshold Above $30 per day,23583.27999999933
-623,Saint Lucia,threshold Above $30 per day,30127.140000000014
-624,Samoa,threshold Above $30 per day,6985.279999999999
-625,Sao Tome and Principe,threshold Above $30 per day,2299.290000000008
-626,Senegal,threshold Above $30 per day,21545.5
-627,Serbia,threshold Above $30 per day,258274.2000000002
-628,Seychelles,threshold Above $30 per day,14753.289999999994
-629,Sierra Leone,threshold Above $30 per day,5096.629999999888
-630,Slovakia,threshold Above $30 per day,1325661.5899999999
-631,Slovenia,threshold Above $30 per day,1216594.2
-632,Solomon Islands,threshold Above $30 per day,1079.8699999999953
-633,Somalia,threshold Above $30 per day,872.429999999702
-634,South Africa,threshold Above $30 per day,5229255.579999998
-635,South Korea,threshold Above $30 per day,34285000.11
-636,South Sudan,threshold Above $30 per day,3116.109999999404
-637,Spain,threshold Above $30 per day,25615912.8
-638,Sri Lanka,threshold Above $30 per day,523445.8999999985
-639,Sudan,threshold Above $30 per day,166171.7400000021
-640,Suriname,threshold Above $30 per day,-537987.829504
-641,Sweden,threshold Above $30 per day,8452484.370000001
-642,Switzerland,threshold Above $30 per day,7477176.35
-643,Syria,threshold Above $30 per day,35851.33999999985
-644,Taiwan,threshold Above $30 per day,16192845.99
-645,Tajikistan,threshold Above $30 per day,65122.56000000052
-646,Tanzania,threshold Above $30 per day,81236.03000000119
-647,Thailand,threshold Above $30 per day,6404964.020000003
-648,Timor,threshold Above $30 per day,429.1699999999255
-649,Togo,threshold Above $30 per day,4926.25
-650,Tonga,threshold Above $30 per day,4297.970000000001
-651,Trinidad and Tobago,threshold Above $30 per day,332391.6699999999
-652,Tunisia,threshold Above $30 per day,309627.9299999997
-653,Turkey,threshold Above $30 per day,12800400.829999998
-654,Turkmenistan,threshold Above $30 per day,165684.99000000022
-655,Tuvalu,threshold Above $30 per day,296.5699999999997
-656,Uganda,threshold Above $30 per day,81777.46999999881
-657,Ukraine,threshold Above $30 per day,1196655.0700000003
-658,United Arab Emirates,threshold Above $30 per day,8888608.78
-659,United Kingdom,threshold Above $30 per day,45674521.980000004
-660,United States,threshold Above $30 per day,251869999.95
-661,Uruguay,threshold Above $30 per day,1052783.85
-662,Uzbekistan,threshold Above $30 per day,60952.109999999404
-663,Vanuatu,threshold Above $30 per day,1134.2999999999884
-664,Vietnam,threshold Above $30 per day,2437764.920000002
-665,Yemen,threshold Above $30 per day,16478.210000000894
-666,Zambia,threshold Above $30 per day,83378.5700000003
-667,Zimbabwe,threshold Above $30 per day,68497.25
+,Entity,threshold below $1.90 per day,threshold $1.90 - $10 per day,threshold $10 - $30 per day,threshold Above $30 per day,share below $1.90 per day,share $1.90 - $10 per day,share $10 - $30 per day,share Above $30 per day,Population,cum_pop
+2415,Guinea-Bissau,1173883.81,592097.73,62164.45999999996,0.0,0.6421171011505646,0.32387879852046825,0.03400410032896714,0.0,1828146.0,1828146.0
+3839,Mali,8252743.79,10122569.630000003,137054.65999999642,25.92000000178814,0.4457955999640025,0.5467995997708347,0.007403400122101789,1.400143061010269e-06,18512394.0,20340540.0
+5532,Somalia,10010433.42,4525268.98,52544.169999999925,872.429999999702,0.686157499983378,0.31018110003763766,0.0036015999321137846,5.980004687052741e-05,14589119.0,34929659.0
+3683,Madagascar,19896905.11,5539934.210000001,132133.2100000009,1567.469999998808,0.7781182998090771,0.21665300028861342,0.005167400062728472,6.129983958097122e-05,25570540.0,60500199.0
+816,Burundi,8475545.97,2314525.3999999985,35220.31000000052,1732.320000000298,0.7828140004123018,0.21377299985665485,0.003253000085711505,0.00015999964533193036,10827024.0,71327223.0
+4513,Niger,9219695.26,12144404.26,234287.44999999925,4085.030000001192,0.4267888998999744,0.5621765999742993,0.010845400007924985,0.0001891001178013883,21602472.0,92929695.0
+1518,Democratic Republic of Congo,59138432.37,21841445.449999996,400604.0200000107,18282.159999996424,0.7265273999737882,0.26832650001909114,0.004921500036536313,0.000224599970584276,81398764.0,174328459.0
+5661,South Sudan,8533100.58,2336009.869999999,38532.44000000134,3116.109999999404,0.7820812997519238,0.2141015001797766,0.003531600322214187,0.00028559974608543767,10910759.0,185239218.0
+6187,Timor,268241.02,959443.54,15147.270000000019,429.1699999999255,0.21575599974582974,0.7717153035444689,0.012183499683493667,0.00034519702620763095,1243261.0,186482479.0
+4552,Nigeria,78947052.9,109218185.73999998,2641343.050000012,66729.31000000238,0.4136096999962452,0.5722025000132155,0.013838199988053919,0.0003496000024854307,190873311.0,377355790.0
+6914,Yemen,14870981.36,12702749.02,244612.41000000015,16478.210000000894,0.5342581998281936,0.45636180020701406,0.00878800010964684,0.000591999855145499,27834821.0,405190611.0
+6226,Togo,3687845.9,3841494.3699999996,164208.48000000045,4926.25,0.4790358999672013,0.4989941995005504,0.02133000107164087,0.000639899460607458,7698475.0,412889086.0
+5410,Sierra Leone,3294328.54,4067057.4799999995,121948.35000000056,5096.629999999888,0.4399224002998759,0.5431120991833936,0.016284900001081744,0.0006806005156487238,7488431.0,420377517.0
+3566,Liberia,2094622.04,2565260.05,38945.73000000045,3400.179999999702,0.4454531001048865,0.5455414007997911,0.008282399322193745,0.0007230997731287598,4702228.0,425079745.0
+3722,Malawi,12138950.88,5374623.389999999,142779.2400000021,13906.48999999836,0.6869706999217895,0.3041621000483297,0.008080200291337087,0.0007869997385436525,17670260.0,442750005.0
+777,Burkina Faso,7375399.4,11402806.799999999,397381.58999999985,17696.210000000894,0.38426979979038506,0.5941040001283782,0.020704199969114188,0.0009220001121225995,19193284.0,461943289.0
+2376,Guinea,2936053.96,8865943.670000002,253598.12999999896,11943.240000000224,0.24330179997760934,0.7346935999129567,0.021014900386897357,0.0009896997225366517,12067539.0,474010828.0
+1011,Chad,6133916.28,8443272.23,424507.6500000004,15076.839999999851,0.4084709997281041,0.5622561005616853,0.028268899716337215,0.0010039999938735074,15016773.0,489027601.0
+1908,Ethiopia,26239043.92,77140145.08,2887143.370000005,133691.62999999523,0.2466075000133459,0.7250011999997293,0.027134799988391026,0.00125649999853379,106400024.0,595427625.0
+504,Benin,5333790.77,5449187.040000001,377624.6699999999,14601.519999999553,0.47728800029064344,0.48761409993052485,0.033791299917209555,0.0013065998616221728,11175204.0,606602829.0
+4825,Papua New Guinea,2277774.21,5661228.91,487578.0100000007,11447.86999999918,0.26994150055658733,0.6709183993086537,0.05778340060220233,0.0013566995325566174,8438029.0,615040858.0
+5293,Senegal,4716518.81,9960732.010000002,720584.6799999997,21545.5,0.3058825000822017,0.6459878000290674,0.04673239995820842,0.0013972999305225029,15419381.0,630460239.0
+6128,Tanzania,26854676.97,26658761.53,1069231.4699999988,81236.03000000119,0.49126889999408385,0.4876848999776928,0.01956010004114962,0.0014860999870737594,54663906.0,685124145.0
+3234,Kenya,17632357.4,30760787.810000002,1743845.2299999967,84482.56000000238,0.3510920000295491,0.6125026999905001,0.034723100017396875,0.0016821999625539136,50221473.0,735345618.0
+5523,Solomon Islands,144734.26,466793.69999999995,23430.170000000042,1079.8699999999953,0.22755599508205487,0.7339085086111207,0.036837688943113525,0.0016978073637109658,636038.0,735981656.0
+6724,Uzbekistan,4112021.03,26450681.36,1764945.5,60952.109999999404,0.1269589000450776,0.8166663999061398,0.05449279993577987,0.0018819001130027048,32388600.0,768370256.0
+5137,Rwanda,6747154.53,5009058.430000001,201140.75999999978,23583.27999999933,0.5631575001187303,0.4180856998079533,0.016788399772071232,0.0019684003012451637,11980937.0,780351193.0
+6490,Uganda,17022539.82,22673471.200000003,1384676.509999998,81777.46999999881,0.4135451999776981,0.5508287999759004,0.03363930002734282,0.0019867000190585964,41162465.0,821513658.0
+348,Bangladesh,18125294.77,135700428.44,5511493.560000002,333376.2299999893,0.11351679999084115,0.8498774000294469,0.034517899986755876,0.0020878999929560558,159670593.0,981184251.0
+6011,Syria,4334958.46,12053458.850000001,643733.3499999996,35851.33999999985,0.2539816001896414,0.7062020996950904,0.03771580000986639,0.0021005001054019007,17068002.0,998252253.0
+4396,Nepal,1648619.34,23983909.19,1933868.289999999,60727.1799999997,0.05967394000186194,0.8681290600498265,0.06999889999407825,0.0021980999542333722,27627124.0,1025879377.0
+3332,Kyrgyzstan,67102.83,5656404.3,459703.7599999998,14989.110000000335,0.010826180181342971,0.9125882191604013,0.07416730018392433,0.0024183004743313116,6198200.0,1032077577.0
+3917,Mauritania,247073.09,3589927.7800000003,435011.01999999955,10562.110000000335,0.057692661002471876,0.8382640393370904,0.10157700018727045,0.0024662994731673837,4282574.0,1036360151.0
+1362,Cote d'Ivoire,6230183.65,16793553.33,1347017.7300000004,66714.2899999991,0.25494389987768373,0.687205100086265,0.0551210000511919,0.002729999984859279,24437469.0,1060797620.0
+2922,Iraq,464086.28,31885336.32,5088570.809999995,114787.59000000358,0.01235823999293155,0.849080559972376,0.13550449991972618,0.003056700114966281,37552781.0,1098350401.0
+1284,Congo,2466578.11,2453079.2100000004,173323.83000000007,17720.849999999627,0.4826300007317977,0.4799887001824799,0.03391389871684948,0.003467400368872931,5110702.0,1103461103.0
+114,Angola,13438187.68,15246999.830000002,1022416.2799999975,109144.2100000009,0.450692600011242,0.5113569001555771,0.03428999970083919,0.0036605001323417596,29816748.0,1133277851.0
+972,Central African Republic,3326297.13,1173805.79,78369.62999999989,17555.450000000186,0.7237329994508301,0.25539570037432324,0.01705159977267325,0.0038197004021733954,4596028.0,1137873879.0
+6763,Vanuatu,42211.25,224117.84999999998,18046.600000000035,1134.2999999999884,0.14784508423522819,0.7849737312178207,0.06320829393016018,0.003972890616790964,285510.0,1138159389.0
+5817,Sudan,4171169.88,34416749.18,2059305.1999999955,166171.7400000021,0.10220099988738991,0.8432709000740836,0.05045660008297265,0.00407149995555386,40813396.0,1178972785.0
+4029,Micronesia (country),17156.79,83799.29000000001,10047.059999999998,455.8600000000006,0.15392915780690658,0.7518396002117371,0.0901413075660108,0.004089934415345558,111459.0,1179084244.0
+2649,India,141279509.99,1127569739.29,64233402.339999914,5576183.380000114,0.10553809999692716,0.8423130000034699,0.04798339999750565,0.0041655000020973335,1338658835.0,2517743079.0
+4708,Pakistan,8351444.8,187307943.31,11348913.76999998,888384.1200000048,0.040171130000600394,0.9009664699994304,0.05458919999330812,0.004273200006661024,207896686.0,2725639765.0
+2142,Gambia,223787.71,1843659.42,136892.81000000006,9554.060000000056,0.10108329938109051,0.8327677025187294,0.06183349790008016,0.00431550020009994,2213894.0,2727853659.0
+4302,Myanmar,728152.28,46521165.19,5897461.990000002,235801.5399999991,0.013640259919242196,0.8714671400020917,0.11047540001859411,0.004417200060072013,53382581.0,2781236240.0
+3527,Lesotho,568817.01,1340654.28,172444.24,9496.469999999972,0.2719775013244641,0.641028300497463,0.08245350031461997,0.004540697863453003,2091412.0,2783327652.0
+1752,Egypt,2860944.45,86741361.2,6395638.769999996,444648.5799999982,0.029664740038667356,0.8994092599729251,0.06631549993683802,0.0046105000515695195,96442593.0,2879770245.0
+3273,Kiribati,12746.19,91566.26,9303.220000000001,542.3300000000017,0.11165393577322659,0.802101123004958,0.08149424481858478,0.0047506964032306255,114158.0,2879884403.0
+6992,Zimbabwe,4820944.83,8589698.8,757604.1199999992,68497.25,0.3386269003202628,0.6033470993545225,0.05321470041080312,0.004811299914411616,14236745.0,2894121148.0
+6953,Zambia,9842772.89,6260942.85,666593.6899999995,83378.5700000003,0.5840130000033228,0.3714880001338579,0.039551799582382176,0.004947200280437154,16853688.0,2910974836.0
+2493,Haiti,2257279.27,7918629.630000001,752083.4100000001,54373.68999999948,0.20553670037949928,0.721031299630699,0.06848100036003173,0.0049509996297700766,10982366.0,2921957202.0
+4263,Mozambique,17823234.83,9915507.270000003,746269.3899999969,163995.51000000164,0.6221239999697022,0.34610300000973865,0.02604870004743958,0.0057242999731195445,28649007.0,2950606209.0
+3371,Laos,745345.88,5639066.44,527306.3599999994,41316.3200000003,0.10719719949633505,0.8110223003335953,0.07583830082834322,0.005942199341726353,6953035.0,2957559244.0
+4107,Moldova,1687.38,1824857.01,910080.76,18532.850000000093,0.000612444005026209,0.6623420544302723,0.3303189000413044,0.00672660152339724,2755158.0,2960314402.0
+6089,Tajikistan,248271.6,6910678.11,1656195.7299999995,65122.56000000052,0.027957669746003163,0.7782060304936743,0.1865028994620432,0.007333400298279345,8880268.0,2969194670.0
+36,Albania,36393.68,1990457.55,824128.1499999999,22477.62000000011,0.01266546880638896,0.6927048325414301,0.2868071977412573,0.007822500910923711,2873457.0,2972068127.0
+1596,Djibouti,160562.48,698576.84,77485.72000000009,7471.959999999963,0.17006989747875484,0.7399418068270527,0.0820738970677802,0.00791439862641229,944097.0,2973012224.0
+855,Cameroon,5812051.11,15873598.09,2669056.5700000003,211339.23000000045,0.23658880011007064,0.6461600998451318,0.10864819998497928,0.008602900059818357,24566045.0,2997578269.0
+4942,Philippines,5903427.89,84306814.81,14030250.14,932771.1599999964,0.05613049995291579,0.8015993000844778,0.1334012999729665,0.008868899989639918,105173264.0,3102751533.0
+2766,Indonesia,11790469.11,211104246.76,39195087.84,2556082.2900000215,0.044551870003374995,0.7976857299795697,0.14810390001679452,0.009658500000260806,264645886.00000003,3367397419.0
+75,Algeria,136301.21,28416471.619999997,12431998.899999999,404426.2700000033,0.0032931590025010874,0.686567341072905,0.30036819993467856,0.009771299989915322,41389198.0,3408786617.0
+3293,Kosovo,7884.73,1319789.73,443727.80000000005,19600.73999999999,0.00440241026955287,0.7368997874375419,0.24775380052406393,0.010944001768841253,1791003.0,3410577620.0
+5254,Sao Tome and Principe,73803.5,122495.42000000001,8490.789999999979,2299.290000000008,0.35638541882958535,0.5915109928581431,0.041000680866680406,0.011102907445591066,207089.0,3410784709.0
+1245,Comoros,151739.75,554628.57,98213.4900000001,9310.189999999944,0.18643720542774717,0.6814522934246804,0.12067140357688748,0.011439097570684986,813892.0,3411598601.0
+543,Bhutan,11501.19,517911.96,207245.68999999994,8909.160000000033,0.015426077835958625,0.6946542233572257,0.2779702052663204,0.011949493540495343,745568.0,3412344169.0
+192,Armenia,25937.68,2390126.7399999998,493307.93000000017,35436.64999999991,0.008807932874424114,0.8116406666782123,0.16751780166387706,0.012033598783486435,2944809.0,3415288978.0
+2259,Ghana,3594853.39,20114960.09,5042705.960000001,368951.55999999866,0.12344339988869381,0.690726099996803,0.17316110027546344,0.012669399839039678,29121471.0,3444410449.0
+4146,Mongolia,16190.85,2165477.1599999997,891372.4900000002,40738.5,0.0051997428205405715,0.6954498569102046,0.2862671018078034,0.013083298461451504,3113779.0,3447524228.0
+2181,Georgia,185509.58,2688384.1,796454.1299999999,57656.189999999944,0.04976110004173815,0.7211323002872315,0.2136409000634119,0.015465699607618432,3728004.0,3451252232.0
+1869,Eswatini,321772.04,636155.8,143401.62,23423.540000000037,0.28608240209183705,0.565596001966654,0.1274960991435453,0.020825496797963673,1124753.0,3452376985.0
+4357,Nauru,84.56,9188.460000000001,3319.67,283.3099999999995,0.006567256912084499,0.7136113699906804,0.25781842187014603,0.022002951227089118,12876.0,3452389861.0
+4747,Palestine,39770.59,2514250.19,1801598.8800000004,99185.33999999985,0.008927571464968724,0.5643906276481238,0.40441700141757053,0.02226479946933701,4454805.0,3456844666.0
+3195,Kazakhstan,3502.46,8944058.76,8688062.56,402152.2199999988,0.00019417360543783226,0.4958515262635482,0.481659299904822,0.022295000226191897,18037776.0,3474882442.0
+2103,Gabon,69899.23,1269708.79,678312.1099999999,46902.87000000011,0.033852407688213466,0.6149237924994055,0.3285085985578424,0.02271520125453858,2064823.0,3476947265.0
+5739,Sri Lanka,176204.23,16308926.52,4435423.3500000015,523445.8999999985,0.00821694786420444,0.7605356519306099,0.20683750000000006,0.02440990020518553,21444000.0,3498391265.0
+4591,North Macedonia,94836.21,875445.55,1058623.34,53090.89999999991,0.045550620654410484,0.42048378094866656,0.5084655974363064,0.025500000960616595,2081996.0,3500473261.0
+6836,Vietnam,1698982.18,57438080.19,33021814.71,2437764.920000002,0.01796028002769908,0.6071894200007649,0.3490802000138652,0.025770099957670822,94596642.0,3595069903.0
+6451,Tuvalu,83.58,8310.76,2679.09,296.5699999999997,0.007350923482849604,0.7309375549692173,0.2356279683377309,0.02608355321020226,11370.0,3595081273.0
+6529,Ukraine,10285.07,16539244.98,27084949.88,1196655.0700000003,0.0002294180149576851,0.36892318206978253,0.6041548999372869,0.026692499977972906,44831135.0,3639912408.0
+6343,Tunisia,28147.36,6320086.64,4775581.07,309627.9299999997,0.0024618446079627985,0.5527719550445128,0.4176853000447897,0.02708090030273468,11433443.0,3651345851.0
+1791,El Salvador,121679.35,3970894.65,2117656.05,177891.9500000002,0.019047749870775794,0.6216059508569185,0.33149899923639525,0.027847300035910426,6388122.0,3657733973.0
+6421,Turkmenistan,134826.7,3796510.27,1660647.0399999996,165684.99000000022,0.023416889717001795,0.6593832104624284,0.2884234991625951,0.028776400657974648,5757669.0,3663491642.0
+1986,Fiji,1857.97,571632.8200000001,276861.13,27107.079999999958,0.002117443664034445,0.6514638518722813,0.31552600178469875,0.03089270267898552,877459.0,3664369101.0
+2532,Honduras,1455394.56,5656323.459999999,2011363.1100000013,305931.8699999992,0.15435280023476478,0.5998849996282749,0.21331640013647252,0.032445800000487766,9429013.0,3673798114.0
+2337,Guatemala,1191995.15,10714048.73,3648867.709999999,532506.4100000001,0.07409487028931554,0.6659893296736618,0.22681499977187136,0.033100800265151324,16087418.0,3689885532.0
+660,Botswana,308381.42,1404445.36,418124.4600000002,74176.75999999978,0.13984740114859545,0.6368996992464837,0.1896145983362418,0.03363830126867909,2205128.0,3692090660.0
+5215,Samoa,1092.0,127878.16,59396.56,6985.279999999999,0.005589909496703386,0.6546037921290798,0.3040488963512019,0.03575740202301486,195352.0,3692286012.0
+933,Cape Verde,15060.2,356395.32,146682.76999999996,19358.71000000002,0.02801913313004538,0.6630647612916909,0.2728996999053017,0.03601640567296194,537497.0,3692823509.0
+5332,Serbia,379492.4,2860527.5500000003,3522563.8499999996,258274.2000000002,0.0540521400660717,0.4074327596427674,0.501728399862239,0.03678670042892196,7020858.0,3699844367.0
+3156,Jordan,10182.32,5582751.64,3791734.4899999993,394504.55000000075,0.001041225060646744,0.5708817749721781,0.38773570014560527,0.04034129982156986,9779173.0,3709623540.0
+6265,Tonga,595.65,63172.15,33932.229999999996,4297.970000000001,0.005839820388635071,0.6193469479793722,0.33267544461656107,0.04213778701543169,101998.0,3709725538.0
+4224,Morocco,249961.29,22543091.86,11243667.550000004,1544573.299999997,0.0070250758727324536,0.633565824222132,0.31599939985319264,0.04340970005194294,35581294.0,3745306832.0
+465,Belize,51334.37,229610.38,76480.26000000001,18343.98999999999,0.13661150866622845,0.6110413046313028,0.203529987838273,0.0488171988641958,375769.0,3745682601.0
+4474,Nicaragua,137381.39,3853903.21,2048589.6599999997,344980.7400000002,0.02151675958185425,0.6036007411288119,0.32085139913122535,0.05403110015810856,6384855.0,3752067456.0
+3078,Jamaica,53639.63,1774675.61,919921.1900000002,172616.56999999983,0.018364371640750148,0.6075881292211557,0.31494949934145955,0.059097999796634694,2920853.0,3754988309.0
+2454,Guyana,49300.23,402031.65,278026.5,45862.619999999995,0.06359506514916392,0.5186026307336876,0.35864160026624664,0.059160703850901865,775221.0,3755763530.0
+1089,China,4892188.67,712068537.5500001,587010872.8,82423400.98000002,0.0035287119976630038,0.513611588003419,0.4234081000003606,0.059451599998557425,1386395000.0,5142158530.0
+3956,Mauritius,2654.79,584052.5499999999,599974.9,77930.76000000001,0.0020992904548664294,0.4618429116259282,0.4744336014258908,0.06162419649331456,1264613.0,5143423143.0
+4903,Peru,1076442.68,15139264.94,13074972.62,2153616.7600000016,0.0342333199562388,0.48146298007552846,0.41581379987601563,0.06848990009221709,31444297.0,5174867440.0
+4341,Namibia,354961.53,1380287.01,496796.7999999998,170557.66000000015,0.14774040072371508,0.5744964981730232,0.20677440259585117,0.07098869850741056,2402603.0,5177270043.0
+3995,Mexico,2405691.83,67909399.77,45419707.07000001,9042525.329999998,0.019279879972421914,0.5442447200582695,0.36400609993847927,0.07246930003082931,124777324.0,5302047367.0
+582,Bolivia,732718.47,4963036.15,4587618.430000001,909480.9499999993,0.06546305973436266,0.44341113982188995,0.4098703002826625,0.08125550016108485,11192854.0,5313240221.0
+1635,Dominican Republic,72746.18,4864671.15,4693956.35,881757.3200000003,0.0069195542222388355,0.4627233456902611,0.4464851003949251,0.08387199969257496,10513131.0,5323753352.0
+1713,Ecuador,541061.84,7970861.859999999,6837721.59,1435715.710000001,0.032234149745126124,0.47486984998416176,0.4073622003125223,0.08553379995818981,16785361.0,5340538713.0
+1206,Colombia,1969910.97,25177864.77,17525864.400000002,4236203.859999999,0.0402763699266757,0.514781130154494,0.35832999998936826,0.08661249992946204,48909844.0,5389448557.0
+5571,South Africa,10858072.91,30916417.62,9996704.89,5229255.579999998,0.1904909999747195,0.5423890000449295,0.1753793998928184,0.09174060008753261,57000451.0,5446449008.0
+6167,Thailand,20657.47,26405590.35,36378646.16,6404964.020000003,0.00029847583273469514,0.3815293241896263,0.5256280999738505,0.09254410000378853,69209858.0,5515658866.0
+4185,Montenegro,14992.67,207853.4,339619.98000000004,59906.94999999995,0.024089525091866133,0.3339691792542414,0.5456855936873869,0.09625570196650554,622373.0,5516281239.0
+3800,Maldives,0.0,107937.95,339886.35,48577.70000000001,0.0,0.21744060257613787,0.6846997997590661,0.09785959766479589,496402.0,5516777641.0
+387,Belarus,0.0,1092042.01,7471963.24,934258.75,0.0,0.1149728002927693,0.7866661992128245,0.09836100049440613,9498264.0,5526275905.0
+5059,Romania,601771.69,5694664.529999999,11350438.900000002,1940414.879999999,0.030722559884496525,0.29073263989045955,0.5794798004216001,0.09906499980344391,19587290.0,5545863195.0
+2883,Iran,287126.82,32383725.81,39410419.04000001,8592679.329999998,0.003559101995636733,0.4014148979761757,0.4885148000251036,0.10651120000308399,80673951.0,5626537146.0
+4864,Paraguay,60953.87,2934390.59,3096747.62,774969.9199999999,0.008876266152832173,0.42731383377636606,0.4509567002598783,0.1128531998109235,6867062.0,5633404208.0
+4981,Poland,0.0,7007460.46,26672074.740000002,4295290.799999997,0.0,0.18452909988316998,0.7023620000260173,0.11310890009081272,37974826.0,5671379034.0
+309,Azerbaijan,0.0,429375.79,8237187.11,1187470.0999999996,0.0,0.043573609911799566,0.8359203901590344,0.12050599992916602,9854033.0,5681233067.0
+738,Bulgaria,97065.44,1557283.8900000001,4381220.47,1040377.2000000002,0.013717660689092217,0.22008133893597565,0.6191708996689771,0.147030100705955,7075947.0,5688309014.0
+5098,Russia,62558.75,35082053.95,87157861.53,22194265.769999996,0.00043294229336938674,0.2427878577053019,0.6031822000274886,0.15359699997384021,144496740.0,5832805754.0
+5371,Seychelles,572.0,17985.23,62532.48000000001,14753.289999999994,0.005968093653161942,0.1876530367371639,0.6524470227350981,0.15393184687457606,95843.0,5832901597.0
+6382,Turkey,112445.58,24512546.220000003,43676499.370000005,12800400.829999998,0.0013864729567591345,0.30224382706139585,0.5385385999379645,0.1578311000438806,81101892.0,5914003489.0
+699,Brazil,9183006.89,77032036.16,88290284.63000001,33328503.319999993,0.044184370012406694,0.3706424300093857,0.4248118999933173,0.1603612999848903,207833831.0,6121837320.0
+5176,Saint Lucia,8106.61,64906.69,77814.55999999998,30127.140000000014,0.04479903843497002,0.3586896742283993,0.4300216075819954,0.16648967975463522,180955.0,6122018275.0
+1401,Croatia,21850.26,542082.84,2754610.92,805986.98,0.005297635052324737,0.1314289648932206,0.6678603991581104,0.19541300089634434,4124531.0,6126142806.0
+153,Argentina (Urban),375209.23,11030731.79,20856373.17,8148359.809999999,0.0092849040330285,0.2729657958686856,0.5161105001614178,0.20163879993686812,40410674.0,6166553480.0
+2298,Greece,95401.92,1716775.47,6771407.240000001,2171094.369999999,0.008870736169810368,0.159630563590043,0.6296243002696781,0.2018743999704686,10754679.0,6177308159.0
+3488,Lebanon,0.0,828502.91,4574085.53,1409284.5599999996,0.0,0.12162630013800904,0.6714872003632482,0.2068864994987428,6811873.0,6184120032.0
+621,Bosnia and Herzegovina,1976.95,467156.06,2159348.29,723045.7000000002,0.0005898654553581099,0.13938603508191938,0.6442878992172821,0.2157362002454404,3351527.0,6187471559.0
+1050,Chile,53119.36,3557568.87,10831272.299999999,4028478.4700000007,0.0028759121534685777,0.19260878802068537,0.5864112000803012,0.2181040997455448,18470439.0,6205941998.0
+1323,Costa Rica,52367.59,1434743.13,2366838.33,1096004.9500000002,0.010579409424814857,0.28984979052330584,0.4781536010233631,0.22141719902851625,4949954.0,6210891952.0
+2571,Hungary,57938.75,823895.03,6667470.72,2238661.5,0.005919386111476072,0.08417428401365513,0.6811906293912341,0.2287157004836347,9787966.0,6220679918.0
+4786,Panama,103618.35,1132227.73,1892811.1600000001,978113.7599999998,0.02523110005403272,0.2756978000477748,0.4609000988854748,0.23817100101271774,4106771.0,6224786689.0
+6304,Trinidad and Tobago,3830.24,297381.89,750468.2000000001,332391.6699999999,0.0027673704836164593,0.21486013010883828,0.5422176013964592,0.24015489801108608,1384072.0,6226170761.0
+5445,Slovakia,40643.22,342782.32999999996,3730144.8600000003,1325661.5899999999,0.007472235050830706,0.06302035471184167,0.6857852101178991,0.2437222001194286,5439232.0,6231609993.0
+3449,Latvia,14606.76,197881.19,1146347.98,583412.0700000001,0.007520543205605051,0.10188255567775073,0.5902170989492588,0.30037980216738547,1942248.0,6233552241.0
+6685,Uruguay,1860.86,520064.63,1861936.66,1052783.85,0.0005414756131414176,0.15132912438464713,0.5417889011553706,0.30634049884684084,3436646.0,6236988887.0
+5020,Portugal,42282.32,786280.8200000001,6184694.82,3287042.04,0.00410496004970729,0.07633572031882567,0.6004383192722542,0.31912100035921287,10300300.0,6247289187.0
+3761,Malaysia,2840.81,4294455.670000001,16616122.440000001,10191609.079999998,9.132960754769293e-05,0.13806307038206173,0.5341941000663945,0.3276514999439961,31105028.0,6278394215.0
+3605,Lithuania,28920.62,274372.99,1589231.0,935878.3899999999,0.010225070472630668,0.09700632830611479,0.5618828010011303,0.3308858002201242,2828403.0,6281222618.0
+1479,Czechia,0.0,182273.17,6078073.48,4334091.35,0.0,0.017204609626296365,0.5737041908216368,0.4090911995520668,10594438.0,6291817056.0
+1830,Estonia,3539.89,46654.8,633726.3999999999,633462.91,0.002687060113072574,0.03541473101236997,0.4810491094472074,0.48084909942735,1317384.0,6293134440.0
+3000,Israel,21033.44,891788.42,3421846.23,4378631.91,0.0024139464955872055,0.10234795312912445,0.3927153007471337,0.5025227996281547,8713300.0,6301847740.0
+5700,Spain,320448.15,2739852.43,17917022.619999997,25615912.8,0.006877568022963677,0.05880365188629526,0.3845412801978381,0.5497774998929029,46593236.0,6348440976.0
+5484,Slovenia,0.0,16580.11,833213.6900000001,1216594.2,0.0,0.008023715778450126,0.4032222844886827,0.5887539997328671,2066388.0,6350507364.0
+3039,Italy,858463.2,2636130.3200000003,19796911.32,37245204.16,0.014180869990801778,0.0435459800102447,0.3270232499754818,0.6152499000234717,60536709.0,6411044073.0
+1440,Cyprus,387.28,8726.92,417842.31,752723.49,0.00032829241828292413,0.0073977010714770105,0.3541997067001221,0.638074299810118,1179680.0,6412223753.0
+5649,South Korea,116419.53,1294965.21,15665526.15,34285000.11,0.0022666510597707315,0.02521255897195881,0.3050027899078755,0.667518000060395,51361911.0,6463585664.0
+6050,Taiwan,0.0,175697.89,7183926.12,16192845.99,0.0,0.007459849858634785,0.30501795013431715,0.6875222000070481,23552470.0,6487138134.0
+6607,United Kingdom,196892.0,1264456.79,18922988.23,45674521.980000004,0.0029805540540747155,0.019141365884021704,0.28645648012176533,0.6914215999401383,66058859.0,6553196993.0
+3117,Japan,922858.48,2466445.37,34295796.449999996,89100696.7,0.007278879037215817,0.019453640931089467,0.27050188003313963,0.702765599998555,126785797.0,6679982790.0
+3878,Malta,748.27,3712.03,132109.39,331429.31,0.001598870937758414,0.007931704982275604,0.2822856245419328,0.7081837995380332,467999.0,6680450789.0
+6646,United States,4062069.0,5668167.029999999,63385303.019999996,251869999.95,0.012499230004200279,0.017441289995368068,0.19504037999672347,0.7750191000037081,324985539.0,7005436328.0
+2064,France,9110.91,252418.28,14354656.31,52248193.5,0.0001362595471050438,0.0037750785063000434,0.21468316201665463,0.7814054999299402,66864379.0,7072300707.0
+2961,Ireland,11691.38,23015.030000000006,999025.27,3773656.32,0.0024319609734017723,0.004787429265122767,0.20781040972769413,0.7849702000337813,4807388.0,7077108095.0
+2220,Germany,0.0,1028698.63,16726587.47,64901715.9,0.0,0.012445390046931536,0.20236140998677887,0.7851931999662896,82657002.0,7159765097.0
+426,Belgium,16820.29,60366.23,2280312.7,9017658.78,0.0014786862740719733,0.005306847605984902,0.2004642660787657,0.7927502000411774,11375158.0,7171140255.0
+894,Canada,90265.88,457815.95999999996,6482999.29,29512239.87,0.002470106096815886,0.012528033782151326,0.17740586002022093,0.8075960001008119,36543321.0,7207683576.0
+231,Australia,122636.29,241025.45,4307653.33,19930544.93,0.004984838138254587,0.009797041768386618,0.17509462008157106,0.8101235000117877,24601860.0,7232285436.0
+2025,Finland,3623.18,18738.079999999998,957439.3,4528413.4399999995,0.0006577776389951444,0.0034018431382658696,0.1738202800399549,0.8221200991827841,5508214.0,7237793650.0
+270,Austria,27984.14,82461.12,1401958.39,7285162.35,0.0031808957159287013,0.009373174352997182,0.15935753025325414,0.8280883996778199,8797566.0,7246591216.0
+4435,Netherlands,32338.1,144857.06,2669604.81,14284496.03,0.0018876622060584325,0.008455697689188255,0.15583204037803094,0.8338245997267223,17131296.0,7263722512.0
+5933,Sweden,24978.29,98308.47,1481926.8699999999,8452484.370000001,0.0024834997034112577,0.00977445037621929,0.14734254995526808,0.8403994999651014,10057698.0,7273780210.0
+1557,Denmark,8123.16,10701.93,795000.99,4951153.92,0.0014090525899482739,0.0018563689726590552,0.1379017776297576,0.858832800807635,5764980.0,7279545190.0
+3644,Luxembourg,1688.41,8314.02,67964.85999999999,518368.71,0.0028313065117651793,0.01394183815835368,0.113970748034665,0.8692561072952162,596336.0,7280141526.0
+5972,Switzerland,0.0,32297.69,942365.9600000001,7477176.35,0.0,0.0038213797232318643,0.11149831989247312,0.884680300384295,8451840.0,7288593366.0
+2610,Iceland,0.0,793.63,33211.26,309395.11,0.0,0.002311094933022714,0.0967130460104834,0.9009758590564938,343400.0,7288936766.0
+4630,Norway,13271.26,37258.18,337902.9,4888535.66,0.0025149403975919505,0.007060527939528912,0.06403353213436201,0.9263909995285171,5276968.0,7294213734.0
+6568,United Arab Emirates,0.0,77597.28,520996.93999999994,8888608.78,0.0,0.008179152485722083,0.054915757573649464,0.9369050899406284,9487203.0,7303700937.0
