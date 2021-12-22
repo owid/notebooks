@@ -222,8 +222,10 @@ def process_eng(source: str):
         columns={"Month": "Year"}
     )
     by_age = by_age[
-        by_age["Vaccination status"].isin(["Unvaccinated", "Second dose"])
-    ].replace({"Second dose": "Fully vaccinated"})
+        by_age["Vaccination status"].isin(
+            ["Unvaccinated", "21 days or more after second dose"]
+        )
+    ].replace({"21 days or more after second dose": "Fully vaccinated"})
     by_age = (
         by_age[by_age["Unnamed: 6"] != "u"][
             [
