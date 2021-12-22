@@ -7,7 +7,7 @@ import pandas as pd
 
 SOURCE_USA = "https://data.cdc.gov/api/views/3rge-nu2a/rows.csv?accessType=DOWNLOAD"
 SOURCE_CHL = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto89/incidencia_en_vacunados_edad.csv"
-SOURCE_ENG = "input/datasetfinalcorrected3.xlsx"
+SOURCE_ENG = "input/referencetable2.xlsx"
 SOURCE_CHE = "https://www.covid19.admin.ch/api/data/context"
 
 VACCINE_MAPPING = {
@@ -176,28 +176,40 @@ def process_chl(source: str):
 def process_eng(source: str):
     # All ages
     df = pd.read_excel(source, sheet_name="Table 1", skiprows=4)
-    df = df[df.index < df.index[df["Week ending"].isna()].min()].rename(
-        columns={"Week ending": "Year"}
+    df = df[df.index < df.index[df["Month"].isna()].min()].rename(
+        columns={"Month": "Year"}
     )
 
     unvax = df[
-        ["Year", "Age-standardised mortality rate per 100,000", "Unnamed: 5"]
+        [
+            "Year",
+            "Age-standardised mortality rate per 100,000 person-years",
+            "Unnamed: 4",
+        ]
     ].assign(Entity="All ages")
     unvax = (
-        unvax[unvax["Unnamed: 5"] != "u"]
-        .drop(columns="Unnamed: 5")
-        .rename(columns={"Age-standardised mortality rate per 100,000": "Unvaccinated"})
+        unvax[unvax["Unnamed: 4"] != "u"]
+        .drop(columns="Unnamed: 4")
+        .rename(
+            columns={
+                "Age-standardised mortality rate per 100,000 person-years": "Unvaccinated"
+            }
+        )
     )
 
     vax = df[
-        ["Year", "Age-standardised mortality rate per 100,000.3", "Unnamed: 26"]
+        [
+            "Year",
+            "Age-standardised mortality rate per 100,000 person-years.4",
+            "Unnamed: 32",
+        ]
     ].assign(Entity="All ages")
     vax = (
-        vax[vax["Unnamed: 26"] != "u"]
-        .drop(columns="Unnamed: 26")
+        vax[vax["Unnamed: 32"] != "u"]
+        .drop(columns="Unnamed: 32")
         .rename(
             columns={
-                "Age-standardised mortality rate per 100,000.3": "Fully vaccinated"
+                "Age-standardised mortality rate per 100,000 person-years.4": "Fully vaccinated"
             }
         )
     )
@@ -205,24 +217,29 @@ def process_eng(source: str):
     df = pd.merge(vax, unvax, how="outer", on=["Year", "Entity"])
 
     # Age groups
-    by_age = pd.read_excel(source, sheet_name="Table 3", skiprows=3, na_values=":")
-    by_age = by_age[
-        by_age.index < by_age.index[by_age["Week ending"].isna()].min()
-    ].rename(columns={"Week ending": "Year"})
+    by_age = pd.read_excel(source, sheet_name="Table 5", skiprows=3, na_values=":")
+    by_age = by_age[by_age.index < by_age.index[by_age["Month"].isna()].min()].rename(
+        columns={"Month": "Year"}
+    )
     by_age = by_age[
         by_age["Vaccination status"].isin(["Unvaccinated", "Second dose"])
     ].replace({"Second dose": "Fully vaccinated"})
     by_age = (
-        by_age[by_age["Unnamed: 8"] != "u"][
-            ["Year", "Vaccination status", "Age group", "Age-specific rate per 100,000"]
+        by_age[by_age["Unnamed: 6"] != "u"][
+            [
+                "Year",
+                "Vaccination status",
+                "Age-group",
+                "Age-standardised mortality rate per 100,000 person-years",
+            ]
         ]
         .pivot(
-            index=["Year", "Age group"],
+            index=["Year", "Age-group"],
             columns="Vaccination status",
-            values="Age-specific rate per 100,000",
+            values="Age-standardised mortality rate per 100,000 person-years",
         )
         .reset_index()
-        .rename(columns={"Age group": "Entity"})
+        .rename(columns={"Age-group": "Entity"})
     )
     by_age = by_age[by_age.Entity != "10-59"]
 
@@ -230,6 +247,9 @@ def process_eng(source: str):
     df = pd.concat([df, by_age], ignore_index=True)[
         ["Entity", "Year", "Unvaccinated", "Fully vaccinated"]
     ]
+
+    assert datetime.date.today().year == 2021
+    df["Year"] = pd.to_datetime("15 " + df.Year + " 2021")
     df["Year"] = (df.Year - pd.to_datetime("20210101")).dt.days
 
     df.to_csv(
