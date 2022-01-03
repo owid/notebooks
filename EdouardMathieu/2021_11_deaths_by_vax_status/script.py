@@ -17,10 +17,8 @@ VACCINE_MAPPING = {
 }
 
 
-def epiweek_to_date(epiweek_number: int):
-    assert datetime.datetime.now().year == 2021
-    week = epiweeks.Week(2021, epiweek_number)
-    return week.enddate()
+def epiweek_to_date(row):
+    return epiweeks.Week(row.Year, row.Week).enddate()
 
 
 def process_usa(source: str):
@@ -68,11 +66,26 @@ def process_usa(source: str):
             values="incidence_rate",
         )
         .reset_index()
-        .rename(columns={"epiweek": "Year", "age_group": "Entity"})
+        .rename(columns={"epiweek": "Week", "age_group": "Entity"})
     )
 
-    df["Year"] = df.Year.apply(epiweek_to_date)
+    assert (
+        df.Week.min() == 14
+    ), "New data for 2022 has been added! Revise epiweek_to_date for USA"
+    df = df.assign(Year=2021)
+    df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
+    df = df.drop(columns="Week")[
+        [
+            "Entity",
+            "Year",
+            "Fully vaccinated (all vaccines)",
+            "Johnson&Johnson",
+            "Moderna",
+            "Pfizer/BioNTech",
+            "Unvaccinated",
+        ]
+    ]
 
     df["Entity"] = df.Entity.replace({"all_ages_adj": "All ages"})
 
@@ -93,7 +106,7 @@ def process_chl(source: str):
         ],
     ).rename(
         columns={
-            "semana_epidemiologica": "Year",
+            "semana_epidemiologica": "Week",
             "grupo_edad": "Entity",
             "estado_vacunacion": "status",
             "incidencia_def": "rate",
@@ -137,8 +150,8 @@ def process_chl(source: str):
     df["age_group_proportion"] = df.age_group_standard / sum(age_pyramid.values())
     df["age_specific_adjusted_rate"] = df.rate * df.age_group_proportion
     all_ages = (
-        df[["Year", "status", "age_specific_adjusted_rate"]]
-        .groupby(["Year", "status"], as_index=False)
+        df[["Week", "status", "age_specific_adjusted_rate"]]
+        .groupby(["Week", "status"], as_index=False)
         .sum()
         .rename(columns={"age_specific_adjusted_rate": "rate"})
         .assign(Entity="All ages")
@@ -160,8 +173,13 @@ def process_chl(source: str):
     assert set(status_mapping.keys()) == set(df.status)
     df["status"] = df.status.replace(status_mapping)
 
-    df["Year"] = pd.to_datetime(df.Year.apply(epiweek_to_date))
-    df["Year"] = (df.Year - pd.to_datetime("20210101")).dt.days
+    assert (
+        df.Week.min() == 31
+    ), "New data for 2022 has been added! Revise epiweek_to_date for Chile"
+    df = df.assign(Year=2021)
+    df["Year"] = df.apply(epiweek_to_date, axis=1)
+    df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
+    df = df.drop(columns="Week")
 
     df = df.pivot(
         index=["Entity", "Year"], columns="status", values="rate"
@@ -250,7 +268,9 @@ def process_eng(source: str):
         ["Entity", "Year", "Unvaccinated", "Fully vaccinated"]
     ]
 
-    assert datetime.date.today().year == 2021
+    assert (
+        len(df.Year.unique()) < 12
+    ), "New data for 2022 has been added! Revise epiweek_to_date for England"
     df["Year"] = pd.to_datetime("15 " + df.Year + " 2021")
     df["Year"] = (df.Year - pd.to_datetime("20210101")).dt.days
 
@@ -286,8 +306,12 @@ def process_che(source: str):
         }
     )
 
-    df["Year"] = df.Year.mod(100).apply(epiweek_to_date)
+    df[["Year", "Week"]] = (
+        df.Year.astype(str).str.extract(r"(\d{4})(\d{2})").astype(int)
+    )
+    df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
+    df = df.drop(columns="Week")
 
     df = df[-df.Entity.isin(["all", "Unbekannt"])]
     df["Entity"] = df.Entity.replace(
