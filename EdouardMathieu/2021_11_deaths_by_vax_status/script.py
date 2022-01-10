@@ -268,6 +268,11 @@ def process_eng(source: str):
         ["Entity", "Year", "Unvaccinated", "Fully vaccinated"]
     ]
 
+    # The data is reported in 100,000 person-years. To get monthly death rates, we divide by 12
+    df[["Unvaccinated", "Fully vaccinated"]] = (
+        df[["Unvaccinated", "Fully vaccinated"]].div(12).round(1)
+    )
+
     assert (
         len(df.Year.unique()) < 12
     ), "New data for 2022 has been added! Revise epiweek_to_date for England"
