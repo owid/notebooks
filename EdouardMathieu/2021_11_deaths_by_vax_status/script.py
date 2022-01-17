@@ -168,7 +168,7 @@ def process_chl(source: str):
     status_mapping = {
         "sin esquema completo": "Unvaccinated or not fully vaccinated",
         "con esquema completo": "Fully vaccinated",
-        "con dosis refuerzo > 14 dias": "Fully vaccinated + booster dose",
+        "con dosis refuerzo > 14 dias": "Fully vaccinated + booster",
     }
     assert set(status_mapping.keys()) == set(df.status)
     df["status"] = df.status.replace(status_mapping)
@@ -389,7 +389,7 @@ def process_che(source: str):
             columns={
                 "fully_vaccinated_no_booster": "Fully vaccinated, no booster",
                 "not_vaccinated": "Unvaccinated",
-                "fully_vaccinated_first_booster": "Fully vaccinated + booster dose",
+                "fully_vaccinated_first_booster": "Fully vaccinated + booster",
             }
         )
     )
