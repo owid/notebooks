@@ -130,7 +130,7 @@ def process_chl(source: str):
             "51 - 60 años": "51-60",
             "61 - 70 años": "61-70",
             "71 - 80 años": "71-80",
-            "80 años o más": "80+",
+            "81 años o más": "81+",
         }
     )
 
@@ -144,7 +144,7 @@ def process_chl(source: str):
         "51-60": 2345262,
         "61-70": 1774551,
         "71-80": 964821,
-        "80+": 494118,
+        "81+": 494118,
     }
     df["age_group_standard"] = df.Entity.replace(age_pyramid)
     df["age_group_proportion"] = df.age_group_standard / sum(age_pyramid.values())
@@ -173,13 +173,15 @@ def process_chl(source: str):
     assert set(status_mapping.keys()) == set(df.status)
     df["status"] = df.status.replace(status_mapping)
 
-    assert (
-        df.Week.min() == 31
-    ), "New data for 2022 has been added! Revise epiweek_to_date for Chile"
-    df = df.assign(Year=2021)
+    df.loc[df.Week >= 31, "Year"] = 2021
+    df.loc[df.Week <= 20, "Year"] = 2022
+    assert df.Week.notnull().all(), "Revise epiweek_to_date for Chile"
+    df["Year"] = df.Year.astype(int)
+    if df.Week.min() == 0:
+        df["Week"] = df.Week + 1
     df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
-    df = df.drop(columns="Week")
+    df = df[df.Year < df.Year.max()].drop(columns="Week")
 
     df = df.pivot(
         index=["Entity", "Year"], columns="status", values="rate"
@@ -293,17 +295,30 @@ def process_che(source: str):
 
     assert set(df.vaccination_status) == {
         "not_vaccinated",
-        "fully_vaccinated",
+        "fully_vaccinated_no_booster",
+        "fully_vaccinated_first_booster",
         "partially_vaccinated",
+        "fully_vaccinated",
         "unknown",
-    }
+    }, f"New vaccination_status: {set(df.vaccination_status)}"
 
     df = df[
         (df.vaccine == "all")
-        & (df.vaccination_status.isin(["not_vaccinated", "fully_vaccinated"]))
+        & (
+            df.vaccination_status.isin(
+                [
+                    "not_vaccinated",
+                    "fully_vaccinated_no_booster",
+                    "fully_vaccinated_first_booster",
+                ]
+            )
+        )
         & (df.geoRegion == "CHFL")
         & (df.type == "COVID19Death")
         & (df.timeframe_all == True)
+        & (df["pop"].notnull())
+        & (df["pop"] >= 100)
+        & (df.date < df.date.max())
     ][["date", "altersklasse_covid19", "vaccination_status", "entries", "pop"]].rename(
         columns={
             "date": "Year",
@@ -372,8 +387,9 @@ def process_che(source: str):
         .reset_index()
         .rename(
             columns={
-                "fully_vaccinated": "Fully vaccinated",
+                "fully_vaccinated_no_booster": "Fully vaccinated, no booster",
                 "not_vaccinated": "Unvaccinated",
+                "fully_vaccinated_first_booster": "Fully vaccinated + booster dose",
             }
         )
     )
