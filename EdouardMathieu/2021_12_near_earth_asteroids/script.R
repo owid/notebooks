@@ -7,7 +7,8 @@ library(lubridate)
 # Scroll down and click "CSV" under the table
 df <- fread("Discovery StatisticsPrintDownload.csv", select = c("Date", "NEA-km", "NEA-140m", "NEA"))
 setorder(df, -Date)
-df[, Year := str_sub(Date, 1, 4)]
+df[, Year := as.integer(str_sub(Date, 1, 4))]
+df <- df[Year < year(today())]
 df <- df[, .SD[1], Year]
 
 df[, larger_than_1km := `NEA-km`]
