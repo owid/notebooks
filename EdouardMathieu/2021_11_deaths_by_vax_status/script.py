@@ -1,20 +1,13 @@
-import datetime
 import requests
 
 import epiweeks
 import pandas as pd
 
 
-SOURCE_USA = "https://data.cdc.gov/api/views/3rge-nu2a/rows.csv?accessType=DOWNLOAD"
+SOURCE_USA = "https://data.cdc.gov/api/views/d6p8-wqjm/rows.csv?accessType=DOWNLOAD"
 SOURCE_CHL = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto89/incidencia_en_vacunados_edad.csv"
 SOURCE_ENG = "input/referencetable2.xlsx"
 SOURCE_CHE = "https://www.covid19.admin.ch/api/data/context"
-
-VACCINE_MAPPING = {
-    "Janssen": "Johnson&Johnson",
-    "Pfizer": "Pfizer/BioNTech",
-    "all_types": "Fully vaccinated (all vaccines)",
-}
 
 
 def epiweek_to_date(row):
@@ -23,68 +16,33 @@ def epiweek_to_date(row):
 
 def process_usa(source: str):
     df = pd.read_csv(source)
-    df = df[df.outcome == "death"]
-    df["Vaccine product"] = df["Vaccine product"].replace(VACCINE_MAPPING)
-
-    df.loc[df["Age adjusted vax IR"].notnull(), "crude_vax_ir"] = df[
-        "Age adjusted vax IR"
-    ]
-    df.loc[df["Age adjusted unvax IR"].notnull(), "crude_unvax_ir"] = df[
-        "Age adjusted unvax IR"
-    ]
-
-    vax = df[["Age group", "MMWR week", "Vaccine product", "Crude vax IR"]].rename(
+    df = df[(df.outcome == "death") & (df.vaccine_product == "all_types")].rename(
         columns={
-            "Crude vax IR": "incidence_rate",
-            "Vaccine product": "vaccine_product",
+            "age_group": "Entity",
+            "crude_unvax_ir": "unvaccinated",
+            "crude_vax_ir": "fully_vaccinated",
+            "crude_booster_ir": "boosted",
         }
     )
 
-    unvax = (
-        df[["Age group", "MMWR week", "Vaccine product", "Crude unvax IR"]]
-        .rename(
-            columns={
-                "Crude unvax IR": "incidence_rate",
-                "Vaccine product": "vaccine_product",
-            }
-        )
-        .assign(vaccine_product="Unvaccinated")
-        .drop_duplicates()
-    )
+    df.loc[df.Entity == "all_ages", "unvaccinated"] = df.age_adj_unvax_ir
+    df.loc[df.Entity == "all_ages", "fully_vaccinated"] = df.age_adj_vax_ir
+    df.loc[df.Entity == "all_ages", "boosted"] = df.age_adj_booster_ir
 
-    df = pd.concat([vax, unvax], ignore_index=True).rename(
-        columns={
-            "Age group": "age_group",
-            "MMWR week": "epiweek",
-        }
-    )
-
-    df = (
-        df.pivot(
-            index=["age_group", "epiweek"],
-            columns="vaccine_product",
-            values="incidence_rate",
-        )
-        .reset_index()
-        .rename(columns={"epiweek": "Week", "age_group": "Entity"})
-    )
-
-    df = df.assign(Week=df.Week.mod(100), Year=df.Week.div(100).astype(int))
+    df = df.assign(Week=df.mmwr_week.mod(100), Year=df.mmwr_week.div(100).astype(int))
     df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
-    df = df.drop(columns="Week")[
+    df = df.drop(columns="mmwr_week")[
         [
             "Entity",
             "Year",
-            "Fully vaccinated (all vaccines)",
-            "Johnson&Johnson",
-            "Moderna",
-            "Pfizer/BioNTech",
-            "Unvaccinated",
+            "unvaccinated",
+            "fully_vaccinated",
+            "boosted",
         ]
     ]
 
-    df["Entity"] = df.Entity.replace({"all_ages_adj": "All ages"})
+    df["Entity"] = df.Entity.replace({"all_ages": "All ages"})
 
     df.to_csv(
         "output/COVID-19 - Deaths by vaccination status - United States.csv",
