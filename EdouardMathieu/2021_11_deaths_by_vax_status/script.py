@@ -69,10 +69,7 @@ def process_usa(source: str):
         .rename(columns={"epiweek": "Week", "age_group": "Entity"})
     )
 
-    assert (
-        df.Week.min() == 14
-    ), "New data for 2022 has been added! Revise epiweek_to_date for USA"
-    df = df.assign(Year=2021)
+    df = df.assign(Week=df.Week.mod(100), Year=df.Week.div(100).astype(int))
     df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
     df = df.drop(columns="Week")[
@@ -130,7 +127,7 @@ def process_chl(source: str):
             "51 - 60 años": "51-60",
             "61 - 70 años": "61-70",
             "71 - 80 años": "71-80",
-            "81 años o más": "81+",
+            "80 años o más": "80+",
         }
     )
 
@@ -144,7 +141,7 @@ def process_chl(source: str):
         "51-60": 2345262,
         "61-70": 1774551,
         "71-80": 964821,
-        "81+": 494118,
+        "80+": 494118,
     }
     df["age_group_standard"] = df.Entity.replace(age_pyramid)
     df["age_group_proportion"] = df.age_group_standard / sum(age_pyramid.values())
@@ -173,12 +170,7 @@ def process_chl(source: str):
     assert set(status_mapping.keys()) == set(df.status)
     df["status"] = df.status.replace(status_mapping)
 
-    df.loc[df.Week >= 31, "Year"] = 2021
-    df.loc[df.Week <= 20, "Year"] = 2022
-    assert df.Week.notnull().all(), "Revise epiweek_to_date for Chile"
-    df["Year"] = df.Year.astype(int)
-    if df.Week.min() == 0:
-        df["Week"] = df.Week + 1
+    df[["Year", "Week"]] = df.Week.str.split("-", expand=True).astype(int)
     df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
     df = df[df.Year < df.Year.max()].drop(columns="Week")
