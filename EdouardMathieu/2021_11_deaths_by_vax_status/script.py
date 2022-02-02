@@ -1,80 +1,48 @@
-import datetime
 import requests
 
 import epiweeks
 import pandas as pd
 
 
-SOURCE_USA = "https://data.cdc.gov/api/views/3rge-nu2a/rows.csv?accessType=DOWNLOAD"
+SOURCE_USA = "https://data.cdc.gov/api/views/d6p8-wqjm/rows.csv?accessType=DOWNLOAD"
 SOURCE_CHL = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto89/incidencia_en_vacunados_edad.csv"
-SOURCE_ENG = "input/datasetfinalcorrected3.xlsx"
+SOURCE_ENG = "input/referencetable2.xlsx"
 SOURCE_CHE = "https://www.covid19.admin.ch/api/data/context"
 
-VACCINE_MAPPING = {
-    "Janssen": "Johnson&Johnson",
-    "Pfizer": "Pfizer/BioNTech",
-    "all_types": "Fully vaccinated (all vaccines)",
-}
 
-
-def epiweek_to_date(epiweek_number: int):
-    assert datetime.datetime.now().year == 2021
-    week = epiweeks.Week(2021, epiweek_number)
-    return week.enddate()
+def epiweek_to_date(row):
+    return epiweeks.Week(row.Year, row.Week).enddate()
 
 
 def process_usa(source: str):
     df = pd.read_csv(source)
-    df = df[df.outcome == "death"]
-    df["Vaccine product"] = df["Vaccine product"].replace(VACCINE_MAPPING)
-
-    df.loc[df["Age adjusted vax IR"].notnull(), "crude_vax_ir"] = df[
-        "Age adjusted vax IR"
-    ]
-    df.loc[df["Age adjusted unvax IR"].notnull(), "crude_unvax_ir"] = df[
-        "Age adjusted unvax IR"
-    ]
-
-    vax = df[["Age group", "MMWR week", "Vaccine product", "Crude vax IR"]].rename(
+    df = df[(df.outcome == "death") & (df.vaccine_product == "all_types")].rename(
         columns={
-            "Crude vax IR": "incidence_rate",
-            "Vaccine product": "vaccine_product",
+            "age_group": "Entity",
+            "crude_unvax_ir": "unvaccinated",
+            "crude_vax_ir": "fully_vaccinated",
+            "crude_booster_ir": "boosted",
         }
     )
 
-    unvax = (
-        df[["Age group", "MMWR week", "Vaccine product", "Crude unvax IR"]]
-        .rename(
-            columns={
-                "Crude unvax IR": "incidence_rate",
-                "Vaccine product": "vaccine_product",
-            }
-        )
-        .assign(vaccine_product="Unvaccinated")
-        .drop_duplicates()
-    )
+    df.loc[df.Entity == "all_ages", "unvaccinated"] = df.age_adj_unvax_ir
+    df.loc[df.Entity == "all_ages", "fully_vaccinated"] = df.age_adj_vax_ir
+    df.loc[df.Entity == "all_ages", "boosted"] = df.age_adj_booster_ir
 
-    df = pd.concat([vax, unvax], ignore_index=True).rename(
-        columns={
-            "Age group": "age_group",
-            "MMWR week": "epiweek",
-        }
-    )
-
-    df = (
-        df.pivot(
-            index=["age_group", "epiweek"],
-            columns="vaccine_product",
-            values="incidence_rate",
-        )
-        .reset_index()
-        .rename(columns={"epiweek": "Year", "age_group": "Entity"})
-    )
-
-    df["Year"] = df.Year.apply(epiweek_to_date)
+    df = df.assign(Week=df.mmwr_week.mod(100), Year=df.mmwr_week.div(100).astype(int))
+    df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
+    df = df.drop(columns="mmwr_week")[
+        [
+            "Entity",
+            "Year",
+            "unvaccinated",
+            "fully_vaccinated",
+            "boosted",
+        ]
+    ]
 
-    df["Entity"] = df.Entity.replace({"all_ages_adj": "All ages"})
+    df["Entity"] = df.Entity.replace({"all_ages": "All ages"})
 
     df.to_csv(
         "output/COVID-19 - Deaths by vaccination status - United States.csv",
@@ -93,7 +61,7 @@ def process_chl(source: str):
         ],
     ).rename(
         columns={
-            "semana_epidemiologica": "Year",
+            "semana_epidemiologica": "Week",
             "grupo_edad": "Entity",
             "estado_vacunacion": "status",
             "incidencia_def": "rate",
@@ -137,8 +105,8 @@ def process_chl(source: str):
     df["age_group_proportion"] = df.age_group_standard / sum(age_pyramid.values())
     df["age_specific_adjusted_rate"] = df.rate * df.age_group_proportion
     all_ages = (
-        df[["Year", "status", "age_specific_adjusted_rate"]]
-        .groupby(["Year", "status"], as_index=False)
+        df[["Week", "status", "age_specific_adjusted_rate"]]
+        .groupby(["Week", "status"], as_index=False)
         .sum()
         .rename(columns={"age_specific_adjusted_rate": "rate"})
         .assign(Entity="All ages")
@@ -155,13 +123,15 @@ def process_chl(source: str):
     status_mapping = {
         "sin esquema completo": "Unvaccinated or not fully vaccinated",
         "con esquema completo": "Fully vaccinated",
-        "con dosis refuerzo > 14 dias": "Fully vaccinated + booster dose",
+        "con dosis refuerzo > 14 dias": "Fully vaccinated + booster",
     }
     assert set(status_mapping.keys()) == set(df.status)
     df["status"] = df.status.replace(status_mapping)
 
-    df["Year"] = pd.to_datetime(df.Year.apply(epiweek_to_date))
-    df["Year"] = (df.Year - pd.to_datetime("20210101")).dt.days
+    df[["Year", "Week"]] = df.Week.str.split("-", expand=True).astype(int)
+    df["Year"] = df.apply(epiweek_to_date, axis=1)
+    df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
+    df = df[df.Year < df.Year.max()].drop(columns="Week")
 
     df = df.pivot(
         index=["Entity", "Year"], columns="status", values="rate"
@@ -176,28 +146,40 @@ def process_chl(source: str):
 def process_eng(source: str):
     # All ages
     df = pd.read_excel(source, sheet_name="Table 1", skiprows=4)
-    df = df[df.index < df.index[df["Week ending"].isna()].min()].rename(
-        columns={"Week ending": "Year"}
+    df = df[df.index < df.index[df["Month"].isna()].min()].rename(
+        columns={"Month": "Year"}
     )
 
     unvax = df[
-        ["Year", "Age-standardised mortality rate per 100,000", "Unnamed: 5"]
+        [
+            "Year",
+            "Age-standardised mortality rate per 100,000 person-years",
+            "Unnamed: 4",
+        ]
     ].assign(Entity="All ages")
     unvax = (
-        unvax[unvax["Unnamed: 5"] != "u"]
-        .drop(columns="Unnamed: 5")
-        .rename(columns={"Age-standardised mortality rate per 100,000": "Unvaccinated"})
+        unvax[unvax["Unnamed: 4"] != "u"]
+        .drop(columns="Unnamed: 4")
+        .rename(
+            columns={
+                "Age-standardised mortality rate per 100,000 person-years": "Unvaccinated"
+            }
+        )
     )
 
     vax = df[
-        ["Year", "Age-standardised mortality rate per 100,000.3", "Unnamed: 26"]
+        [
+            "Year",
+            "Age-standardised mortality rate per 100,000 person-years.4",
+            "Unnamed: 32",
+        ]
     ].assign(Entity="All ages")
     vax = (
-        vax[vax["Unnamed: 26"] != "u"]
-        .drop(columns="Unnamed: 26")
+        vax[vax["Unnamed: 32"] != "u"]
+        .drop(columns="Unnamed: 32")
         .rename(
             columns={
-                "Age-standardised mortality rate per 100,000.3": "Fully vaccinated"
+                "Age-standardised mortality rate per 100,000 person-years.4": "Fully vaccinated"
             }
         )
     )
@@ -205,24 +187,31 @@ def process_eng(source: str):
     df = pd.merge(vax, unvax, how="outer", on=["Year", "Entity"])
 
     # Age groups
-    by_age = pd.read_excel(source, sheet_name="Table 3", skiprows=3, na_values=":")
+    by_age = pd.read_excel(source, sheet_name="Table 5", skiprows=3, na_values=":")
+    by_age = by_age[by_age.index < by_age.index[by_age["Month"].isna()].min()].rename(
+        columns={"Month": "Year"}
+    )
     by_age = by_age[
-        by_age.index < by_age.index[by_age["Week ending"].isna()].min()
-    ].rename(columns={"Week ending": "Year"})
-    by_age = by_age[
-        by_age["Vaccination status"].isin(["Unvaccinated", "Second dose"])
-    ].replace({"Second dose": "Fully vaccinated"})
+        by_age["Vaccination status"].isin(
+            ["Unvaccinated", "21 days or more after second dose"]
+        )
+    ].replace({"21 days or more after second dose": "Fully vaccinated"})
     by_age = (
-        by_age[by_age["Unnamed: 8"] != "u"][
-            ["Year", "Vaccination status", "Age group", "Age-specific rate per 100,000"]
+        by_age[by_age["Unnamed: 6"] != "u"][
+            [
+                "Year",
+                "Vaccination status",
+                "Age-group",
+                "Age-standardised mortality rate per 100,000 person-years",
+            ]
         ]
         .pivot(
-            index=["Year", "Age group"],
+            index=["Year", "Age-group"],
             columns="Vaccination status",
-            values="Age-specific rate per 100,000",
+            values="Age-standardised mortality rate per 100,000 person-years",
         )
         .reset_index()
-        .rename(columns={"Age group": "Entity"})
+        .rename(columns={"Age-group": "Entity"})
     )
     by_age = by_age[by_age.Entity != "10-59"]
 
@@ -230,6 +219,16 @@ def process_eng(source: str):
     df = pd.concat([df, by_age], ignore_index=True)[
         ["Entity", "Year", "Unvaccinated", "Fully vaccinated"]
     ]
+
+    # The data is reported in 100,000 person-years. To get monthly death rates, we divide by 12
+    df[["Unvaccinated", "Fully vaccinated"]] = (
+        df[["Unvaccinated", "Fully vaccinated"]].div(12).round(1)
+    )
+
+    assert (
+        len(df.Year.unique()) < 12
+    ), "New data for 2022 has been added! Revise epiweek_to_date for England"
+    df["Year"] = pd.to_datetime("15 " + df.Year + " 2021")
     df["Year"] = (df.Year - pd.to_datetime("20210101")).dt.days
 
     df.to_csv(
@@ -246,17 +245,30 @@ def process_che(source: str):
 
     assert set(df.vaccination_status) == {
         "not_vaccinated",
-        "fully_vaccinated",
+        "fully_vaccinated_no_booster",
+        "fully_vaccinated_first_booster",
         "partially_vaccinated",
+        "fully_vaccinated",
         "unknown",
-    }
+    }, f"New vaccination_status: {set(df.vaccination_status)}"
 
     df = df[
         (df.vaccine == "all")
-        & (df.vaccination_status.isin(["not_vaccinated", "fully_vaccinated"]))
+        & (
+            df.vaccination_status.isin(
+                [
+                    "not_vaccinated",
+                    "fully_vaccinated_no_booster",
+                    "fully_vaccinated_first_booster",
+                ]
+            )
+        )
         & (df.geoRegion == "CHFL")
         & (df.type == "COVID19Death")
         & (df.timeframe_all == True)
+        & (df["pop"].notnull())
+        & (df["pop"] >= 100)
+        & (df.date < df.date.max())
     ][["date", "altersklasse_covid19", "vaccination_status", "entries", "pop"]].rename(
         columns={
             "date": "Year",
@@ -264,8 +276,12 @@ def process_che(source: str):
         }
     )
 
-    df["Year"] = df.Year.mod(100).apply(epiweek_to_date)
+    df[["Year", "Week"]] = (
+        df.Year.astype(str).str.extract(r"(\d{4})(\d{2})").astype(int)
+    )
+    df["Year"] = df.apply(epiweek_to_date, axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
+    df = df.drop(columns="Week")
 
     df = df[-df.Entity.isin(["all", "Unbekannt"])]
     df["Entity"] = df.Entity.replace(
@@ -321,8 +337,9 @@ def process_che(source: str):
         .reset_index()
         .rename(
             columns={
-                "fully_vaccinated": "Fully vaccinated",
+                "fully_vaccinated_no_booster": "Fully vaccinated, no booster",
                 "not_vaccinated": "Unvaccinated",
+                "fully_vaccinated_first_booster": "Fully vaccinated + booster",
             }
         )
     )
