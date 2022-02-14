@@ -10,8 +10,8 @@ SOURCE_ENG = "input/referencetable2.xlsx"
 SOURCE_CHE = "https://www.covid19.admin.ch/api/data/context"
 
 
-def epiweek_to_date(row):
-    return epiweeks.Week(row.Year, row.Week).enddate()
+def epiweek_to_date(row, system):
+    return epiweeks.Week(row.Year, row.Week, system=system).enddate()
 
 
 def process_usa(source: str):
@@ -30,7 +30,7 @@ def process_usa(source: str):
     df.loc[df.Entity == "all_ages", "boosted"] = df.age_adj_booster_ir
 
     df = df.assign(Week=df.mmwr_week.mod(100), Year=df.mmwr_week.div(100).astype(int))
-    df["Year"] = df.apply(epiweek_to_date, axis=1)
+    df["Year"] = df.apply(epiweek_to_date, system="cdc", axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
     df = df.drop(columns="mmwr_week")[
         [
@@ -129,7 +129,7 @@ def process_chl(source: str):
     df["status"] = df.status.replace(status_mapping)
 
     df[["Year", "Week"]] = df.Week.str.split("-", expand=True).astype(int)
-    df["Year"] = df.apply(epiweek_to_date, axis=1)
+    df["Year"] = df.apply(epiweek_to_date, system="iso", axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
     df = df[df.Year < df.Year.max()].drop(columns="Week")
 
@@ -279,7 +279,7 @@ def process_che(source: str):
     df[["Year", "Week"]] = (
         df.Year.astype(str).str.extract(r"(\d{4})(\d{2})").astype(int)
     )
-    df["Year"] = df.apply(epiweek_to_date, axis=1)
+    df["Year"] = df.apply(epiweek_to_date, system="iso", axis=1)
     df["Year"] = (pd.to_datetime(df.Year) - pd.to_datetime("20210101")).dt.days
     df = df.drop(columns="Week")
 
