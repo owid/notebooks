@@ -22,6 +22,7 @@ pre_1961 = pd.read_csv("inputs/daily-calories-pre1960.csv", encoding="latin1")
 # Item: select 'Items aggregated': 'Grand Total +(Total)'
 # Elements: select 'Food supply (kcal/capita/day)'
 # Years: select all years
+# We take this data directly in this format from our Global Food Explorer: https://ourworldindata.org/explorers/global-food
 post_1961 = pd.read_csv("inputs/global-food.csv", usecols=["Country", "Year", "Food supply (kcal per capita per day)"],encoding="latin1")
 
 
