@@ -10,8 +10,9 @@ def main():
     land_area = (
         site.get_chart_data(slug="land-area-km")
         .rename(columns={"value": "land_area"})
+        .sort_values("year")
         .groupby("entity", as_index=False)
-        .head(1)
+        .tail(1)
         .drop(columns=["year", "variable"])
     )
 
