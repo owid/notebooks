@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 .virtual_documents
+
+# Mac folder attributes
+.DS_Store
