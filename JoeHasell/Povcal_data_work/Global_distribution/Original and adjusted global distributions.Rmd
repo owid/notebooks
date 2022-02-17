@@ -1,0 +1,51 @@
+---
+title: "Original and adjusted global distributions"
+author: "Joe Hasell"
+date: "25/01/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load data prepared by Shahid.
+```{r}
+df<- read.csv("full_distribution.csv")
+
+```
+
+
+
+
+Rearranging slightly, this is stored in the following format:
+```{r}
+
+df<- df %>%
+  pivot_longer(
+    cols = !c(CountryName, RequestYear),
+    names_to = "percentile",
+    names_prefix = "P",
+    names_transform = list(percentile = as.numeric),
+    values_to = "daily_income_or_consumption"
+  )
+
+head(df)
+```
+
+I'm not totally sure how Shahid calculated this, and hence not exactly sure what the percentile '0.0' corresponds to.
+
+In any case, it looks like there's some kinky behaviour at this 0.0 value.
+
+Moreover, steps of 1/10th of a percentile is too high a resolution: it results in e.g. the income threshold of P10.1 and P10.2 being exactly the same (to 2 d.p.).
+
+Let's only keep whole-number percentiles (i.e. P1, P2... P99).
+
+
+```{r}
+
+perc_keep<- seq(1,99,1) # The set of fractiles to keep
+
+df<- df %>%
+  filter(percentile %in% perc_keep)
+```

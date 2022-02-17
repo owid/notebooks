@@ -1,0 +1,1308 @@
+---
+title: "Test gpinter for global distribution"
+author: "Joe Hasell"
+date: "24/01/2022"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(gpinter)
+library(dineq)
+```
+
+
+# Steps I need to implement
+
+We need full coverage on the WID data -  so this will need interpolating for missing countries/years.
+-> For pre-tax: a model based on region, year, and povcal top share
+-> For post-tax: a model based on region, year, povcal top share and WID pre-tax share
+Yes. But povcal top10% share isn't universally availbale in the 'main' dataset.
+So first we need to pass the the distributions through gpinter, and get the shares out.
+
+Here we should also output the average income in small bins, to use in calculating the baseline global distribution.
+
+Then make the model for interpolating a full WID dataset.
+
+Then rerun gpinter with the adjusted pre-and post tax shares.
+
+
+Pull in national accounts means (gdp and NNI).
+
+Compute:
+  - a third distribution shifting the povcal distribution to national accounts mean
+  - A fourth distribution shifting on the top-adjusted distribution to national accounts mean
+
+
+
+##Set-up
+
+Grab location of parent directories to refer to data files
+```{r}
+# The path of the (grand)parent directory where the data file is
+wd <- getwd()
+parent<- dirname(wd)
+grandparent<- dirname(parent)
+
+```
+
+
+
+
+## Povcal main data
+
+Take population, top 10% share and mean income/consumption from povcal.
+
+```{r}
+# read in the main variables dataset
+fp<- paste0(grandparent, "/", "Poverty_and_inequality_measures_from_PovCal_2021.csv")
+df_main_vars<- read.csv(fp) 
+
+df_main_vars<- df_main_vars %>%
+  select(Entity, Year, Mean.income.or.consumption.per.day, Decile.10...share.of.income.or.consumption, Population) %>%
+  rename(country = Entity,
+         year = Year,
+         average = Mean.income.or.consumption.per.day,
+         povcal_top10_share = Decile.10...share.of.income.or.consumption,
+         population =  Population) %>%
+  mutate(povcal_top10_share = povcal_top10_share/100)
+
+# Assume Argentina (Urban) as a proxy for Argentina (in order to match with WID)
+df_main_vars<- df_main_vars %>%
+  mutate(country = if_else(country == "Argentina (Urban)",
+                          "Argentina",
+                          country))
+
+
+```
+
+Filter for country entities
+```{r}
+country_list<- read.csv("data/country_names_standardization/povcal country entities (OWID names).csv")
+
+country_list<- country_list %>%
+  rename(country = Countries.in.povcal)
+
+df_main_vars<- left_join (country_list, df_main_vars)
+
+```
+
+
+
+
+## Povcal/OWID global distribution data
+
+```{r}
+
+
+
+# read in the full distribution dataset
+fp<- paste0(parent, "/", "full_distribution.csv")
+df_full_dist<- read.csv(fp) %>%
+  rename(year = RequestYear)
+
+
+
+# Standardise country names, keep only country entities
+    # NB Argentina Urban will be treated as all Argentia
+df_entity_list<- read.csv("data/country_names_standardization/povcal_global_dist_entity_names_match countries_only.csv") %>%
+  rename(CountryName = Country) %>%
+  mutate(Our.World.In.Data.Name = if_else(Our.World.In.Data.Name=="Argentina (Urban)",
+                           "Argentina",
+                           Our.World.In.Data.Name))
+
+
+df_full_dist<- left_join(df_entity_list, df_full_dist) %>%
+  relocate(Our.World.In.Data.Name)
+
+df_full_dist<- df_full_dist %>%
+  select(-CountryName) %>%
+  rename(country = Our.World.In.Data.Name)
+
+
+# pivot longer
+df_full_dist<- df_full_dist %>%
+  pivot_longer(
+    cols = !c(country, year),
+    names_to = "p",
+    names_prefix = "P",
+    names_transform = list(p = as.numeric),
+    values_to = "q"
+  )
+
+
+```
+
+###Keep only a certain set of percentiles.
+
+At the top I use 1 % point steps.
+
+For the rest of the distribution, I use a lower resolution - steps of 2% points.
+
+The reason for not using a higher resolution is that this can lead to steps which are <1 cent apart. Since our Q values are to the cent, this results in a distribution that isn't strictly increasing -  which breaks the interpolation.
+
+There are also some NAs in the global dist dataset, which breaks the gpinter interpolation later. (I'm not sure why we have these... we should check.) I drop NAs here.
+```{r}
+
+perc_keep<- c(seq(2,80,2),seq(81,99,1))
+
+df_full_dist<- df_full_dist %>%
+  filter(p %in% perc_keep) %>%
+  drop_na()
+
+
+```
+
+
+
+
+##Merge the two povcal datasets together
+
+```{r}
+df<- left_join(df_full_dist, df_main_vars)
+
+
+
+
+```
+
+
+##Tidying
+
+```{r}
+# Drop Suriname, as there is a problem with the population data
+df<- df %>%
+  filter(country!= "Suriname")
+```
+
+```{r}
+# express p as percentage -  needed for the interpolation function
+df<- df %>%
+  mutate(p = p/100)
+```
+
+
+
+
+
+```{r}
+# replace this with all years when I'm happy with the process
+year_list<- c(1981, 1988, 1990,2000, 2006, 2017)
+```
+
+
+
+
+## Merge in WID data
+Pull in clean WID data.
+
+NB the raw data was fetched using the WID Stata package. Ideally I'd use the R package that they have made, but that doesn't seem to have been updated to be compatible with the latest (my current) version of R.
+```{r}
+
+wid_top10_shares<- read.csv("data/WID/clean/WID_top10_shares.csv")
+
+df_main_vars<-left_join(df_main_vars, wid_top10_shares)
+
+```
+
+
+
+
+
+## Functions needed to interpolate povcal top incomes and for adjusting them to match WID shares
+
+A function that, following gpinter, returns the average income within a very fine-grained set of income brackets (to be used to compute mld later) 
+```{r}
+high_freq_output<- function(distribution){
+
+#choose the lower bracket thresholds, begin from 0 (NB computationally expensive to go very fine-grained!) 
+# p <- c(seq(0,99,1), seq(99.1,99.9,0.01))/100
+p <- c(seq(0,99,1))/100
+
+# This calculates the upper brakect thresholds (up to 1)
+p_1<- c(tail(p, length(p)-1),1)
+
+average_in_bracket<- bracket_average(distribution, p, p_1)
+
+q<- fitted_quantile(distribution, p)
+
+average_above<- top_average(distribution, p)
+
+share_above<- top_share(distribution, p)
+
+# size of bracket (share of population)
+share_of_pop<- p_1 - p
+
+output <- data.frame(p, q, average_in_bracket, average_above, share_above, share_of_pop)
+
+return(output)
+
+}
+
+
+
+```
+
+
+
+
+# Function to replace average income above a threshold with the average that would yield a given (higher) top income share.
+```{r}
+
+# Arguments:
+  # Thr: percentile above which to adjust the distribution
+  # A_t_1: original average above percentile
+  # S_t_1: original share above percentile
+  # S_adj_t_1: target adjusted share above percentile
+  # A_0_1: original overall average
+
+# For the derivation see here: https://imgur.com/a/O1Ko5jT
+
+adjusted_averages<- function(Thr, A_t_1, S_t_1, S_adj_t_1, A_0_1){
+
+
+# Ratio of adjusted to unadjusted top share
+K = S_adj_t_1/S_t_1
+
+# Calculate original average below percentile (reverse the weighted average)
+A_0_t <- (A_0_1 - (1-Thr) * A_t_1) / Thr
+
+
+# Calculate adjusted average above percentile
+A_adj_t_1 = (Thr * A_0_t)/(A_0_1/(K * A_t_1)-(1-Thr)) 
+
+# Calculate adjusted overall average (weighted average)
+A_adj_0_1 = Thr * A_0_t + (1-Thr) * A_adj_t_1
+
+outputs<- list()
+outputs[["Adjusted top average"]]<- A_adj_t_1
+outputs[["Adjusted overall average"]]<- A_adj_0_1
+
+return(outputs)
+
+}
+
+
+check<- adjusted_averages(0.9, 30, 10, 20, 10)
+
+
+```
+
+
+
+
+
+
+
+initialise a dataframe to store the top shares
+```{r}
+df_povcal_top10_gpinter<- data.frame(country = character(),
+                         year = numeric(),
+                         povcal_top10_gpinter = numeric())
+
+
+```
+
+
+initialise a dataframe to store the fine-grained average incomes by bracket
+```{r}
+df_bracket_avg_original<- data.frame(country = character(),
+                         year = numeric(),
+                         average_in_bracket = numeric(),
+                        share_of_pop = numeric())
+
+df_bracket_avg_adj<- data.frame(country = character(),
+                         year = numeric(),
+                         average_in_bracket = numeric(),
+                        share_of_pop = numeric())
+
+
+```
+
+
+
+I need to add a sense check on the full distribution data: available? uniformly increasing?
+e.g. Some non-increasing data points here! Look into what on earth is happening here
+```{r}
+# Drop these:
+# Australia, 1984 p = 0.83
+
+```
+
+
+Run Gpinter on every year and country in the povcal data, storing the results (both top10 share and fine-grained averrages)
+```{r}
+
+for (select_year in year_list){
+
+  # list of countries to go through
+selected_year_df<- df %>%
+  filter(year == select_year)
+
+country_list<- unique(selected_year_df$country)
+
+
+# loop on each country
+for(select_entity in country_list){
+  print(paste0("Country is: ", select_entity))
+  # Test on a single country
+
+
+selected_year_country_df<- selected_year_df %>%
+  filter(country == select_entity)
+
+
+p<- selected_year_country_df$p
+q<- selected_year_country_df$q
+
+
+average_inc<- df_main_vars %>%
+  filter(year == select_year,
+         country==select_entity) %>%
+  select(average) %>%
+  as.numeric()
+
+pop<- df_main_vars %>%
+  filter(year == select_year,
+         country==select_entity) %>%
+  select(population) %>%
+  as.numeric()
+
+
+
+### Run Gpinter on original distribution
+
+  # Original distribution
+original_distribution <- thresholds_fit(p, q, average = average_inc)
+
+
+# gpinter top10 share
+
+sh_estimate<- top_share(original_distribution, .9)
+
+# Return averages, quantiles and shares from the gpinter distribution
+bracket_avgs<- high_freq_output(original_distribution)
+
+
+# ### Adjust distribution
+# 
+# 
+# # Percentile to apply adjustment from
+# Thr<- 0.90
+# 
+# avg_90_100<- bracket_avgs %>%
+#   filter(p == Thr) %>%
+#   select(average_above) %>%
+#   as.numeric()
+# 
+# share_90_100<- bracket_avgs %>%
+#   filter(p == Thr) %>%
+#   select(share_above) %>%
+#   as.numeric()
+# 
+#   # Grab WID pre-tax share
+# share_adj_90_100<- df_main_vars %>%
+#   filter(year == select_year,
+#          country==select_entity) %>%
+#   select(pre_tax_top10) %>%
+#   as.numeric()
+#   
+# 
+#   # Run function to calculate adjusted top and overall average
+# output_adjusted_avgs<- adjusted_averages(Thr, avg_90_100, share_90_100, share_adj_90_100, average_inc)
+# 
+# 
+#   # Replace adjusted top average in Gpinter output
+#   
+#   output_adj<- bracket_avgs %>%
+#     filter(p<= Thr) %>%
+#     mutate(average_in_bracket = if_else(p==Thr,
+#                                         output_adjusted_avgs[["Adjusted top average"]],
+#                                         average_in_bracket),
+#            share_above = if_else(p==Thr,
+#                                  share_adj_90_100,
+#                                  share_above),
+#            average_above = if_else(p==Thr,
+#                                  output_adjusted_avgs[["Adjusted top average"]],
+#                                  average_above))
+#   
+#   
+# 
+# 
+# # re-run gpinter on adjusted distribution
+# adj_distribution<- tabulation_fit(output_adj$p, output_adj$q, bracketavg = output_adj$average_in_bracket, average = output_adjusted_avgs[["Adjusted overall average"]])  
+#   
+# 
+# # Adjusted bracket avgs output
+# bracket_avgs_adj<- high_freq_output(adj_distribution)
+
+
+### Add to running lists
+
+
+# Make a one row dataframe of estimate to append to running list
+this_povcal_top10_record<- data.frame(country = select_entity,
+                         year = select_year,
+                         povcal_top10_gpinter = sh_estimate)
+  
+
+# Add to running list
+df_povcal_top10_gpinter<- rbind(df_povcal_top10_gpinter, this_povcal_top10_record)
+
+
+# Make a dataframe of bracket avgs for this country
+
+this_bracket_avg_original<- bracket_avgs %>%
+  mutate(country = select_entity,
+         year = select_year)
+
+# this_bracket_avg_adj<- df_bracket_avg_adj %>%
+#   mutate(country = select_entity,
+#          year = select_year)
+
+# Add to running lists
+df_bracket_avg_original<- rbind(df_bracket_avg_original,
+                                this_bracket_avg_original)
+
+
+# df_bracket_avg_adj<- rbind(df_bracket_avg_adj,
+#                                 this_bracket_avg_adj)
+
+
+}
+
+}
+```
+
+
+
+
+
+## MLD decomposition based on povcal data alone
+
+
+```{r}
+
+mld_original<- data.frame(
+              year = numeric(),
+              mld_total = numeric(),
+              mld_within = numeric(),
+              mld_between = numeric()
+                                   )
+
+# run mld decomposition, year by year
+for(y in year_list){
+  
+  brackets_avgs_this_year<- df_bracket_avg_original %>%
+    filter(year == y)
+  
+ mld_results<- mld_decomp(brackets_avgs_this_year$average_in_bracket,
+                   brackets_avgs_this_year$country, 
+                   weights = brackets_avgs_this_year$share_of_pop)
+
+ mld_decomp_this_year<- data.frame(
+              year = y,
+              mld_total = mld_results[["mld_decomp"]][["mld_total"]],
+              mld_within = mld_results[["mld_decomp"]][["mld_within"]],
+              mld_between = mld_results[["mld_decomp"]][["mld_between"]]
+                                   )
+  
+ mld_original<- rbind(mld_original, mld_decomp_this_year)
+    
+}
+
+# Within between shares
+
+mld_original<- mld_original %>%
+  mutate(within_share = mld_within/mld_total,
+         between_share = mld_between/mld_total,
+         )
+
+```
+
+
+
+
+
+
+
+## Global distribution based on povcal data, with top adjustment (average free to change)
+
+
+
+
+
+## Global distribution based on povcal data, with top adjustment and shifted to match National accounts means.
+
+
+
+
+
+
+## Compare gpinter povcal top10 and original observations
+
+
+Merge interpolated top shares into povcal main vars
+```{r}
+df_main_vars<- left_join(df_main_vars, df_povcal_top10_gpinter)
+
+```
+
+
+Check gpinter povcal shares with observed shares
+```{r}
+
+df_main_vars %>%
+  ggplot(aes(x = povcal_top10_share, y = povcal_top10_gpinter)) +
+  geom_point()
+
+```
+
+Compare gpinter povcal shares with observed shares for specific countries
+```{r}
+
+select_countries<- c("Italy", "United Kingdom", "France", "China", "India")
+
+df_main_vars %>%
+  filter(country %in% select_countries,
+         year %in% year_list) %>% 
+  select(year, country, povcal_top10_share, povcal_top10_gpinter) %>%
+  pivot_longer(cols = !c(year, country), names_to = "shares_variable", values_to = "value") %>%
+ ggplot(aes(y = value, x = year, colour = shares_variable)) +
+  facet_wrap(~country) +
+  geom_point()
+
+```
+
+
+Combine original and gpinter Povcal topshares
+```{r}
+
+df_main_vars<- df_main_vars %>%
+  mutate(povcal_top10_share = if_else(is.na(povcal_top10_share),
+                                      povcal_top10_gpinter,
+                                      povcal_top10_share)) %>%
+  select(-povcal_top10_gpinter)
+
+
+```
+
+
+
+
+
+
+
+
+## Considering post-tax top shares in WID
+
+
+Check coverage of pre-tax shares
+```{r}
+gross_shares_coverage<- df_main_vars %>%
+  select(country, year, pre_tax_top10) %>%
+  group_by(country) %>%
+  summarise(obs = sum(!is.na(pre_tax_top10)))
+  
+
+```
+
+
+Check coverage of post-tax shares
+```{r}
+net_shares_coverage<- df_main_vars %>%
+  select(country, year, post_tax_top10) %>%
+  group_by(country) %>%
+  summarise(obs = sum(!is.na(post_tax_top10)))
+  
+
+```
+
+Model post-tax 'WID' top shares based on WID pre-tax and povcal top shares.
+
+A linear model is not bad, but results in counter-intuitive estimates -  such as being lower than the Povcal shares.
+```{r}
+
+lm_post_tax<- lm(post_tax_top10 ~ pre_tax_top10 + povcal_top10_share, data = df_main_vars)
+
+modelSummary <- summary(lm_post_tax)
+
+modelCoeffs <- modelSummary$coefficients  # model coefficients
+
+intercept<- modelCoeffs["(Intercept)", "Estimate"] 
+b_pre_tax_top10<- modelCoeffs["pre_tax_top10", "Estimate"] 
+b_povcal_top10_share<- modelCoeffs["povcal_top10_share", "Estimate"] 
+
+
+```
+
+A simpler idea is just to 'split the difference' between povcal and WID pre-tax shares =  i.e. a weighted average. Let's use the average ratio found in the available post-tax shares. 
+```{r}
+
+##Find the implied 'weight' on WID top shares
+# post_tax_share = WID_weight * pre_tax_share + (1-WID_weight) * Povcal_share
+# 
+# post_tax_share = WID_weight * pre_tax_share + Povcal_share - WID_weight * Povcal_share
+# 
+# post_tax_share - Povcal_share = WID_weight * (pre_tax_share - Povcal_Share)
+# 
+# WID_weight = (post_tax_share - Povcal_share)/(pre_tax_share - Povcal_Share)
+
+
+avg_WID_weight<- df_main_vars %>%
+  mutate(WID_weight = (post_tax_top10 - povcal_top10_share)/(pre_tax_top10 - povcal_top10_share)) %>%
+  summarise(avg_WID_weight = mean(WID_weight, na.rm=TRUE)) %>%
+  as.numeric()
+
+
+```
+
+Predict post-tax 'WID' top shares from models
+```{r}
+df_main_vars<- df_main_vars %>%
+  mutate(lm_predicted_post_tax = intercept + b_pre_tax_top10 * pre_tax_top10 + b_povcal_top10_share * povcal_top10_share)
+
+df_main_vars<- df_main_vars %>%
+  mutate(weight_predicted_post_tax = avg_WID_weight * pre_tax_top10 + (1 - avg_WID_weight) * povcal_top10_share)
+
+```
+
+```{r}
+br<- df_main_vars %>%
+  filter(country =="India",
+         year %in% year_list) 
+```
+
+Visual inspection of top shares data (select country)
+```{r}
+
+inspect_countries<- c("Italy", "United Kingdom", "United States", "Japan",
+                "China", "India", "Indonesia","Bangladesh", "Nigeria")
+
+
+df_main_vars %>%
+  filter(country %in% inspect_countries,
+         year %in% year_list) %>%
+  select(year, country, pre_tax_top10, post_tax_top10, lm_predicted_post_tax, weight_predicted_post_tax, povcal_top10_share) %>%
+  pivot_longer(cols = !c(year, country), names_to = "shares_variable", values_to = "value") %>%
+  mutate(shares_variable = factor(shares_variable, 
+                levels = c("pre_tax_top10",
+                           "post_tax_top10",
+                           "povcal_top10_share",
+                           "lm_predicted_post_tax",
+                           "weight_predicted_post_tax"))) %>%
+  ggplot(aes(y = value, x = year, colour = shares_variable, linetype = shares_variable)) +
+  scale_color_manual(values=c('red','blue', 'green', 'blue', 'blue')) +
+  scale_linetype_manual(values=c('solid', 'solid', 'solid', "twodash", "dotted")) +
+  facet_wrap(~country, ncol = 3 ) +
+  geom_line() +
+  ggtitle(paste0("Top shares in: "))
+
+
+  
+```
+
+
+
+
+
+
+
+
+------
+
+THIS IS OLDER WORK....
+
+
+Save outputs so far
+```{r}
+
+save(df,file="data/manipulation/Povcal_prepared_distribution_data.Rda")
+
+save(df_main_vars,file="data/manipulation/Povcal_prepared_main_vars.Rda")
+
+
+
+```
+
+
+Load intermediate files
+```{r}
+load("data/manipulation/Povcal_prepared_distribution_data.Rda")
+load("data/manipulation/Povcal_prepared_main_vars.Rda")
+
+```
+
+
+initialise a record whether interpolation happened
+```{r}
+all_records<- data.frame(country = character(),
+                         year = numeric(),
+                         population = numeric(),
+                         success = numeric())
+
+# initialise list of lists of the computed distributions
+dist_list_all_years<- list()
+adj_dist_list_all_years<- list()
+
+
+```
+
+This is a function that outputs results from the gpinter across P1-99
+```{r}
+# Return percentiles
+distribution_percentiles<- function(distribution){
+  
+p <- seq(1,99)/100
+
+a<- bracket_average(distribution, p, p+0.01)
+
+t_a<- top_average(distribution, p)
+
+t_sh<- top_share(distribution, p)
+
+q<- fitted_quantile(distribution, p)
+
+output <- data.frame(p,q,a,t_a,t_sh)
+
+return(output)
+}
+```
+
+
+```{r}
+# Function to replace average income above a threshold with the average that would yield a given (higher) top income share.
+
+# Arguments:
+  # T: percentile above which to adjust the distribution
+  # A_t_1: original average above percentile
+  # S_t_1: original share above percentile
+  # S_adj_t_1: target adjusted share above percentile
+  # A_0_1: original overall average
+
+adjusted_averages<- function(T, A_t_1, S_t_1, S_adj_t_1, A_0_1){
+
+
+# Ratio of adjusted to unadjusted top share
+K = S_adj_t_1/S_t_1
+
+# Calculate original average below percentile (reverse the weighted average)
+A_0_t <- (A_0_1 - (1-T) * A_t_1) / T
+
+
+# Calculate adjusted average above percentile
+A_adj_t_1 = (T * A_0_t)/(A_0_1/(K * A_t_1)-(1-T)) 
+
+# Calculate adjusted overall average (weighted average)
+A_adj_0_1 = T * A_0_t + (1-T) * A_adj_t_1
+
+outputs<- list()
+outputs[["Adjusted top average"]]<- A_adj_t_1
+outputs[["Adjusted overall average"]]<- A_adj_0_1
+
+return(outputs)
+
+}
+
+
+check<- adjusted_averages(0.9, 30, 10, 20, 10)
+
+
+```
+
+```{r}
+
+yearlist<- unique(df$Year)
+data_list_years<- list()
+for(y in yearlist){
+  
+  df_year<- df %>%
+    filter(Year == y) %>%
+    arrange(Entity)
+  
+  entity_list<- unique(df_year$Entity)
+  
+  data_list_years[[as.character(y)]]<- df_year %>%
+    group_split(Entity)
+  
+  names(data_list_years[[as.character(y)]])<- entity_list
+
+}
+
+
+```
+
+```{r}
+
+select_year<- 1990
+select_entity<- "Spain"
+
+
+# Select povcal data
+
+selected_year_df<- df %>%
+  filter(Year == select_year)
+
+selected_year_country_df<- selected_year_df %>%
+  filter(Entity == select_entity)
+
+# Select WID topshares data
+
+
+
+
+# Prepare original distribution  
+
+# variables for gpinter
+p<- selected_year_country_df$p
+q<- selected_year_country_df$q
+average<- unique(selected_year_country_df$average)
+pop<- unique(selected_year_country_df$Population)
+
+
+# Check variable availability (percentiles are obligatory)
+
+data_availability<- 1
+
+if(any(is.na(p)) | any(is.na(q))){
+  data_availability<- 0
+} 
+
+
+# Run gpinter
+
+if(data_availability == 1){ #percentile-only gp interpolation
+
+  # Original distribution
+distribution <- thresholds_fit(p, q, average = average)
+
+
+# Adjusted distribution
+# Return the percentiles, adjust the top percentile and re-run gpinter
+
+output<- distribution_percentiles(distribution)
+
+# Percentile from which to apply adjustment
+adj_threshold<- 0.95
+
+# target top income share (to replace with actual share from WID)
+adj_factor <- 2 # (e.g. 1.5 means increase average income of top x% by 50%)
+
+
+# For the derivation see here: https://imgur.com/a/O1Ko5jT
+
+
+
+# old average for adj_threshold-P100
+old_avg_thresh_100<- output[output$p==adj_threshold, "t_a"]
+
+# Old average for P<adj_threshold (reverse the weighted average)
+old_avg_0_thresh<- (average - (1-adj_threshold) * old_avg_thresh_100) / adj_threshold
+
+
+# adjusted average adj_threshold-P100
+adj_avg_thresh_100<- old_avg_thresh_100 * adj_factor
+
+# adjusted average P0-100 (weighted average)
+adj_average =  adj_threshold * old_avg_0_thresh + (1-adj_threshold) * adj_avg_thresh_100
+
+
+# drop brackets above adj_threshold, swap in new average
+input<- output %>%
+  filter(p<= adj_threshold) %>%
+  mutate(a = if_else(p == adj_threshold,
+                     adj_avg_thresh_100,
+                     a))
+
+# re-run gpinter on adjusted distribution
+adj_distribution<- tabulation_fit(input$p, input$q, bracketavg = input$a, average = adj_average)
+
+
+
+# add distributions to respective list
+
+dist_list[[select_entity]]<- distribution
+adj_dist_list[[select_entity]]<- adj_distribution
+
+
+
+
+```
+
+
+```{r}
+
+for (select_year in c(1981,2017)){
+  
+# new list to store the distributions of each country for this year
+dist_list<- list()
+adj_dist_list<- list()
+
+# record of whether the distributions in this year were successfully estimated
+records_this_year<- data.frame(Entity = character(),
+                         Year = numeric(),
+                         Population = numeric(),
+                         success = numeric())
+
+selected_year_df<- df %>%
+  filter(Year == select_year)
+
+country_list<- unique(selected_year_df$Entity)
+
+
+
+# loop on each country
+for(select_entity in country_list){
+  print(paste0("Country is: ", select_entity))
+  # Test on a single country
+
+
+selected_year_country_df<- selected_year_df %>%
+  filter(Entity == select_entity)
+
+
+p<- selected_year_country_df$p
+q<- selected_year_country_df$q
+average<- unique(selected_year_country_df$average)
+pop<- unique(selected_year_country_df$Population)
+
+
+# Check variable availability (percentiles are obligatory)
+
+data_availability<- 1
+
+if(any(is.na(p)) | any(is.na(q))){
+  data_availability<- 0
+} 
+
+
+# Run gpinter
+
+if(data_availability == 1){ #percentile-only gp interpolation
+
+  # Original distribution
+distribution <- thresholds_fit(p, q, average = average)
+
+
+# Adjusted distribution
+# Return the percentiles, adjust the top percentile and re-run gpinter
+
+output<- distribution_percentiles(distribution)
+
+# Percentile from which to apply adjustment
+adj_threshold<- 0.95
+
+# target top income share (to replace with actual share from WID)
+adj_factor <- 2 # (e.g. 1.5 means increase average income of top x% by 50%)
+
+
+# For the derivation see here: https://imgur.com/a/O1Ko5jT
+
+
+
+# old average for adj_threshold-P100
+old_avg_thresh_100<- output[output$p==adj_threshold, "t_a"]
+
+# Old average for P<adj_threshold (reverse the weighted average)
+old_avg_0_thresh<- (average - (1-adj_threshold) * old_avg_thresh_100) / adj_threshold
+
+
+# adjusted average adj_threshold-P100
+adj_avg_thresh_100<- old_avg_thresh_100 * adj_factor
+
+# adjusted average P0-100 (weighted average)
+adj_average =  adj_threshold * old_avg_0_thresh + (1-adj_threshold) * adj_avg_thresh_100
+
+
+# drop brackets above adj_threshold, swap in new average
+input<- output %>%
+  filter(p<= adj_threshold) %>%
+  mutate(a = if_else(p == adj_threshold,
+                     adj_avg_thresh_100,
+                     a))
+
+# re-run gpinter on adjusted distribution
+adj_distribution<- tabulation_fit(input$p, input$q, bracketavg = input$a, average = adj_average)
+
+
+
+# add distributions to respective list
+
+dist_list[[select_entity]]<- distribution
+adj_dist_list[[select_entity]]<- adj_distribution
+
+
+} else { #Not run - p or q not specified
+
+}
+  
+
+# record whether interpolation happened
+
+this_record<- data.frame(Entity = select_entity,
+                         Year = select_year,
+                         Population = pop,
+                         success = data_availability)
+
+
+records_this_year<- rbind(records_this_year, this_record)
+
+}
+
+all_records<- rbind(all_records, records_this_year)
+
+dist_list_all_years[[as.character(select_year)]]<- dist_list
+adj_dist_list_all_years[[as.character(select_year)]]<- adj_dist_list
+
+}
+```
+
+
+
+
+
+
+```{r}
+
+
+high_freq_output<- function(distribution){
+
+ 
+# p <- c(seq(0,99,1), seq(99.1,99.9,0.01))/100
+# p_1<- c(tail(p, length(p)-1),1)
+  
+p <- c(seq(0,99,1))/100
+p_1<- c(tail(p, length(p)-1),1)
+  
+x<- bracket_average(distribution, p, p_1)
+
+# size of bracket (share of population)
+n<- p_1 - p
+
+output <- data.frame(x, n)
+
+return(output)
+
+}
+
+
+
+```
+
+```{r}
+# Function to get mld decomposition from a list of country distributions
+decomp<- function(list_of_distributions){
+
+# Calculate average incomes across the distribution using gpinter
+list_output_avgs<- lapply(list_of_distributions, high_freq_output)
+
+# append all countries into single df
+df_output_avgs <- do.call("rbind", list_output_avgs)
+
+# convert generated rownames into Entity variable
+df_output_avgs <- cbind(Entity = gsub("\\..*","",rownames(df_output_avgs)), data.frame(df_output_avgs, row.names=NULL))
+
+# run mld decomposition on all-country df 
+run_decomp<- mld_decomp(df_output_avgs$x, df_output_avgs$Entity, df_output_avgs$n)    
+
+mld_components<- data.frame(components = do.call("rbind", run_decomp[["mld_decomp"]]))
+
+return(mld_components)
+}
+```
+
+```{r}
+
+# run the function to decompose each year's data
+calc_mld_decomp<- lapply(dist_list_all_years, decomp)
+
+# collapse the results for each year into a single df
+decomps_original <- do.call("rbind", calc_mld_decomp) %>%
+  rename(original_distribution = components)
+
+
+
+# do the same for the adjusted distributions
+# run the function to decompose each year's data
+calc_mld_decomp_adj<- lapply(adj_dist_list_all_years, decomp)
+
+# collapse the results for each year into a single df
+decomps_adj <- do.call("rbind", calc_mld_decomp_adj)%>%
+  rename(adj_distribution = components)
+
+
+# join the results from the original and adjusted distributions
+compare_decomp<- cbind(decomps_original, decomps_adj)
+
+
+outputs<- lapply(dist_list, high_freq_output)
+
+allinone <- do.call("rbind", outputs)
+
+allinone <- cbind(Entity = gsub("\\..*","",rownames(allinone)), data.frame(allinone, row.names=NULL))
+
+decomp<- mld_decomp(allinone$x, allinone$Entity, allinone$n)
+
+# Adjusted distribution
+outputs<- lapply(adj_dist_list, high_freq_output)
+
+allinone <- do.call("rbind", outputs)
+
+allinone <- cbind(Entity = gsub("\\..*","",rownames(allinone)), data.frame(allinone, row.names=NULL))
+
+decomp_adj<- mld_decomp(allinone$x, allinone$Entity, allinone$n)
+
+mld_compare<- data.frame(original = do.call("rbind", decomp[["mld_decomp"]]),
+                         adjusted = do.call("rbind", decomp_adj[["mld_decomp"]]))
+  
+```
+
+
+
+
+
+Gpinter also has an option to merge the distributions (but note it's very time-consuming to run some queries like gini on the merged global distribution)
+```{r}
+
+# only use pop data from successfully run distributions
+
+pop_list<- all_records[all_records$success==1,"Population"]
+
+merged_distribution <- merge_dist(
+dist = dist_list,
+popsize = pop_list
+)
+
+merged_adj_distribution <- merge_dist(
+dist = adj_dist_list,
+popsize = pop_list
+)
+
+```
+
+
+```{r}
+fitted_cdf(merged_distribution, c(1.9, 10,100, 150))
+fitted_cdf(merged_adj_distribution, c(1.9, 10,100, 150))
+
+top_share(merged_distribution, 0.99)
+top_share(merged_adj_distribution, 0.99)
+
+```
+
+
+
+```{r}
+# bracket_average(merged_distribution, 0.95, 0.999)
+# bracket_average(merged_adj_distribution, 0.95, 0.999)
+
+output_test<- high_freq_output(merged_distribution)
+output_test2<- high_freq_output(merged_adj_distribution)
+
+
+```
+
+```{r}
+theil_grouped<- function(x,n,param){
+  
+  mu = weighted.mean(x = x, w = n)
+  
+  if(param == 0){
+    
+   term <- x/mu * log(x/mu) 
+   
+  } else if (param ==1){
+    
+    term <- log(mu/x) 
+
+  } else
+    
+    stop("Invalid parameter - must be either 0 or 1")
+  
+
+coef<- weighted.mean(x = term, w = n)
+
+return(coef)
+}
+
+
+```
+
+```{r}
+
+a<- c(1,1,2,3,3,3)
+a_n<- c(1,1,1,1,1,1)
+
+b<- c(1,2,3)
+b_n<- c(1,1,1)
+
+
+a<- data.frame(x = c(1,2,3,4),
+               n = c(2,2,4,2),
+               type = c("a","a","a","a"))
+
+b<- data.frame(x = c(1,2,3,4),
+               n = c(4,4,2,1),
+               type = c("b","b","b","b"))
+
+join<- rbind(a, b)
+
+alt<- 
+
+decomp<- mld_decomp(join$x, join$type, join$n)
+
+
+
+
+# theil_grouped(c(a,b),c(a_n, b_n), 0)
+# 
+# full<- c(a,b)
+# full_n<- c(a_n, b_n)
+# mu<- weighted.mean(full, full_n)
+# N<- sum(full_n)
+# 
+# 
+# mu_i<- c(weighted.mean(a, a_n), weighted.mean(b, b_n))
+# N_i<- c(sum(a_n),sum(b_n))
+# s_i<- N_i*mu_i/N*mu
+# 
+# between_component<- sum(s_i*log(mu_i/mu))
+
+```
+
+```{r}
+
+# VIZ: country vs global q
+
+# query_qs<- c(seq(0.2,10,0.1),seq(11,200,1))
+# 
+# country_pos<- fitted_cdf(dist_list[["Madagascar"]], query_qs)
+# global_pos<- fitted_cdf(merged_distribution, query_qs)
+# 
+# country_vs_global_pos<- data.frame(country_pos,global_pos)
+# 
+# ggplot(country_vs_global_pos, aes(x=country_pos, y=global_pos)) +
+#   geom_line()
+
+
+```
+
+
+
+```{r}
+
+test<- distribution_percentiles(dist_list[["United Kingdom"]])
+test_adj<- distribution_percentiles(adj_dist_list[["United Kingdom"]])
+
+```
+
+
+
+
+
+
+
+
+

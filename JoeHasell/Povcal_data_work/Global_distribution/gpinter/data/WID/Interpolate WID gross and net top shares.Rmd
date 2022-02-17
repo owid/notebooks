@@ -1,0 +1,90 @@
+---
+title: "Prepare interpolated gross and net top incomes data set"
+author: "Joe Hasell"
+date: "04/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Country names and regions
+
+This code block takes the WID country-region mapping file and transforms it to a more helpful shape, and then exports a csv that I have then run through the OWID country-standardizer tool.
+
+```{r}
+# df_regions<- read.csv("original/wid-regions-list.csv")
+# 
+# 
+# # pivot longer
+# df_regions_long <- df_regions %>%
+#   pivot_longer(
+#     cols = !c(region, year),
+#     names_to = "country",
+#     values_to = "region_dummy"
+#   )
+# 
+# # keep only where dummy=1 (in order to merge region into other datasets)
+# df_regions_long <- df_regions_long %>%
+#   filter(region_dummy==1)
+# 
+# 
+# write.csv(df_regions_long, "wid_country_regions.csv", row.names = FALSE)
+
+
+```
+
+Grab top 10% share of pretax income
+```{r}
+wid_pretax_sh<- read.csv("original/WID pre-tax shares.csv")
+
+wid_pretax_sh_top10<-  wid_pretax_sh %>%
+  filter(percentile == "p90p100") %>%
+  select(country, year, value) %>%
+  rename(pre_tax_top10 = value,
+         countryCode = country)
+
+```
+
+
+Grab top 10% share of post_tax income
+```{r}
+wid_posttax_sh<- read.csv("original/WID post-tax shares.csv")
+
+wid_posttax_sh_top10<-  wid_posttax_sh %>%
+  filter(percentile == "p90p100") %>%
+  select(country, year, value) %>%
+  rename(post_tax_top10 = value,
+         countryCode = country)
+
+```
+
+Grab WID region classification and mapping to OWID country names
+```{r}
+country_region<- read.csv("original/WID regions_country_standardized.csv") %>%
+  rename(countryCode = WID.code)
+```
+
+Merge pre- and post-tax top shares and WID region classification
+```{r}
+
+wid_sh_top10<- left_join(wid_pretax_sh_top10, wid_posttax_sh_top10)
+
+wid_sh_top10<- left_join(wid_sh_top10, country_region)
+
+wid_sh_top10<- wid_sh_top10 %>%
+  select(-country) %>%
+  rename(country = Our.World.In.Data.Name)
+
+
+```
+
+```{r}
+# Export clean csv
+
+write.csv(wid_sh_top10, "clean/WID_top10_shares.csv", row.names = FALSE)
+
+```
+
