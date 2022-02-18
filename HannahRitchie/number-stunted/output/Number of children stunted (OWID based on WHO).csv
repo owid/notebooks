@@ -1,8 +1,8 @@
 Entity,Year,number_stunted
-Afghanistan,1997,7215934.211
-Afghanistan,2004,8076480.607
-Afghanistan,2013,13476665.84
-Afghanistan,2018,14663463.35
+Afghanistan,1997,2042282.564
+Afghanistan,2004,2840086.329
+Afghanistan,2013,2199607.492
+Afghanistan,2018,2139751.226
 Afghanistan,1950,
 Afghanistan,1951,
 Afghanistan,1952,
@@ -141,11 +141,11 @@ Africa,2017,
 Africa,2018,
 Africa,2019,
 Africa,2020,
-Albania,1997,1515808.824
-Albania,2000,713864.7959
-Albania,2005,821741.573
-Albania,2009,772896.5517
-Albania,2017,1562141.593
+Albania,1997,63081.9
+Albania,2000,109695.32
+Albania,2005,58581.135
+Albania,2009,41600.384
+Albania,2017,19946.986
 Albania,1950,
 Albania,1951,
 Albania,1952,
@@ -212,14 +212,14 @@ Albania,2016,
 Albania,2018,
 Albania,2019,
 Albania,2020,
-Algeria,1987,23402881.66
-Algeria,1992,17145650.66
-Algeria,1995,16591826.67
-Algeria,2000,13071398.31
-Algeria,2002,11990500
-Algeria,2006,20003720.78
-Algeria,2012,36741427.35
-Algeria,2019,51271591.84
+Algeria,1987,668409.703
+Algeria,1992,899135.066
+Algeria,1995,839961.225
+Algeria,2000,728024.6
+Algeria,2002,690652.8
+Algeria,2006,474408.242
+Algeria,2012,502953.399
+Algeria,2019,492412.368
 Algeria,1950,
 Algeria,1951,
 Algeria,1952,
@@ -283,9 +283,9 @@ Algeria,2016,
 Algeria,2017,
 Algeria,2018,
 Algeria,2020,
-Angola,1996,4500409.165
-Angola,2007,13691965.75
-Angola,2015,13809462.77
+Angola,1996,1680097.25
+Angola,2007,1167431.768
+Angola,2015,1952326.608
 Angola,1950,
 Angola,1951,
 Angola,1952,
@@ -425,10 +425,10 @@ Antigua and Barbuda,2017,
 Antigua and Barbuda,2018,
 Antigua and Barbuda,2019,
 Antigua and Barbuda,2020,
-Argentina,1994,50421732.39
-Argentina,1996,21150686.39
-Argentina,2005,43394097.56
-Argentina,2019,47365594.94
+Argentina,1994,254175.953
+Argentina,1996,604084.754
+Argentina,2005,291781.912
+Argentina,2019,295608.678
 Argentina,1950,
 Argentina,1951,
 Argentina,1952,
@@ -496,11 +496,11 @@ Argentina,2016,
 Argentina,2017,
 Argentina,2018,
 Argentina,2020,
-Armenia,1998,1474344.371
-Armenia,2000,1136150.289
-Armenia,2005,1042620.112
-Armenia,2010,962119.6172
-Armenia,2016,2274829.787
+Armenia,1998,33616.526
+Armenia,2000,34003.842
+Armenia,2005,33406.591
+Armenia,2010,42026.347
+Armenia,2016,20100.396
 Armenia,1950,
 Armenia,1951,
 Armenia,1952,
@@ -780,7 +780,8 @@ Asia,2020,
 "Asia, Central",2018,
 "Asia, Central",2019,
 "Asia, Central",2020,
-Australia,2007,66401000
+Australia,1995,0
+Australia,2007,26560.4
 Australia,1950,
 Australia,1951,
 Australia,1952,
@@ -992,12 +993,12 @@ Austria,2017,
 Austria,2018,
 Austria,2019,
 Austria,2020,
-Azerbaijan,1996,3055053.571
-Azerbaijan,2000,2944388.43
-Azerbaijan,2001,3744622.222
-Azerbaijan,2006,2478977.358
-Azerbaijan,2011,4477719.512
-Azerbaijan,2013,4549134.831
+Azerbaijan,1996,239516.2
+Azerbaijan,2000,172435.164
+Azerbaijan,2001,121325.76
+Azerbaijan,2006,174086.185
+Azerbaijan,2011,120432.744
+Azerbaijan,2013,144134.788
 Azerbaijan,1950,
 Azerbaijan,1951,
 Azerbaijan,1952,
@@ -1134,8 +1135,8 @@ Bahamas,2017,
 Bahamas,2018,
 Bahamas,2019,
 Bahamas,2020,
-Bahrain,1989,470877.6978
-Bahrain,1995,450661.7647
+Bahrain,1989,9097.828
+Bahrain,1995,8335.44
 Bahrain,1950,
 Bahrain,1951,
 Bahrain,1952,
@@ -1205,30 +1206,30 @@ Bahrain,2017,
 Bahrain,2018,
 Bahrain,2019,
 Bahrain,2020,
-Bangladesh,1986,21699042.31
-Bangladesh,1990,25062376.97
-Bangladesh,1991,21737206.52
-Bangladesh,1992,22437253.15
-Bangladesh,1993,23189328.03
-Bangladesh,1994,23845384.84
-Bangladesh,1995,24430498.48
-Bangladesh,1996,25256250.78
-Bangladesh,1997,27114379.19
-Bangladesh,1998,27338293.42
-Bangladesh,1999,27136005.01
-Bangladesh,2000,31863307.24
-Bangladesh,2001,30767798.87
-Bangladesh,2002,31889357.98
-Bangladesh,2003,34220108.79
-Bangladesh,2004,32228273.27
-Bangladesh,2005,35199797.39
-Bangladesh,2006,35649314.86
-Bangladesh,2007,36832129.63
-Bangladesh,2011,36504154.96
-Bangladesh,2013,38357798.45
-Bangladesh,2014,40803535.91
-Bangladesh,2018,46979330.1
-Bangladesh,2019,51495521.43
+Bangladesh,1986,10907696.29
+Bangladesh,1990,10073972.8
+Bangladesh,1991,11774957.82
+Bangladesh,1992,11470484.74
+Bangladesh,1993,11104534.38
+Bangladesh,1994,10800266.31
+Bangladesh,1995,10577526.34
+Bangladesh,1996,10280405.34
+Bangladesh,1997,9631461.32
+Bangladesh,1998,9613483.544
+Bangladesh,1999,9736425.733
+Bangladesh,2000,8320178.65
+Bangladesh,2001,8708025.508
+Bangladesh,2002,8425040.82
+Bangladesh,2003,7818747.336
+Bangladesh,2004,8219015.39
+Bangladesh,2005,7415928.513
+Bangladesh,2006,7251106.291
+Bangladesh,2007,6873759.36
+Bangladesh,2011,6226477.208
+Bangladesh,2013,5744809.116
+Bangladesh,2014,5347058.56
+Bangladesh,2018,4485633.417
+Bangladesh,2019,4037248.88
 Bangladesh,1950,
 Bangladesh,1951,
 Bangladesh,1952,
@@ -1276,7 +1277,7 @@ Bangladesh,2015,
 Bangladesh,2016,
 Bangladesh,2017,
 Bangladesh,2020,
-Barbados,2012,216272.7273
+Barbados,2012,1282.281
 Barbados,1950,
 Barbados,1951,
 Barbados,1952,
@@ -1347,7 +1348,7 @@ Barbados,2017,
 Barbados,2018,
 Barbados,2019,
 Barbados,2020,
-Belarus,2005,9903911.111
+Belarus,2005,20055.42
 Belarus,1950,
 Belarus,1951,
 Belarus,1952,
@@ -1418,7 +1419,7 @@ Belarus,2017,
 Belarus,2018,
 Belarus,2019,
 Belarus,2020,
-Belgium,2014,40407937.5
+Belgium,2014,10344.432
 Belgium,1950,
 Belgium,1951,
 Belgium,1952,
@@ -1489,9 +1490,9 @@ Belgium,2017,
 Belgium,2018,
 Belgium,2019,
 Belgium,2020,
-Belize,2006,172359.0909
-Belize,2011,194336.7876
-Belize,2015,257240
+Belize,2006,8342.18
+Belize,2011,7238.851
+Belize,2015,5787.9
 Belize,1950,
 Belize,1951,
 Belize,1952,
@@ -1560,11 +1561,11 @@ Belize,2017,
 Belize,2018,
 Belize,2019,
 Belize,2020,
-Benin,1996,2832726.343
-Benin,2001,3459784.53
-Benin,2008,3973240.642
-Benin,2014,5013094.118
-Benin,2018,5719295.031
+Benin,1996,433070.036
+Benin,2001,453384.004
+Benin,2008,555761.008
+Benin,2014,579513.68
+Benin,2018,592999.386
 Benin,1950,
 Benin,1951,
 Benin,1952,
@@ -1631,10 +1632,10 @@ Benin,2016,
 Benin,2017,
 Benin,2019,
 Benin,2020,
-Bhutan,1987,139466.3383
-Bhutan,1999,164524.109
-Bhutan,2008,197183.3811
-Bhutan,2010,199871.6418
+Bhutan,1987,51725.415
+Bhutan,1999,37434.006
+Bhutan,2008,24017.133
+Bhutan,2010,22430.595
 Bhutan,1950,
 Bhutan,1951,
 Bhutan,1952,
@@ -1702,13 +1703,13 @@ Bhutan,2017,
 Bhutan,2018,
 Bhutan,2019,
 Bhutan,2020,
-Bolivia,1989,2303040.909
-Bolivia,1994,2927428.571
-Bolivia,1998,3412463.855
-Bolivia,2003,3650111.111
-Bolivia,2008,4414014.76
-Bolivia,2012,6544318.681
-Bolivia,2016,7446826.087
+Bolivia,1989,445868.72
+Bolivia,1994,402934.196
+Bolivia,1998,376135.416
+Bolivia,2003,383174.064
+Bolivia,2008,324169.658
+Bolivia,2012,216774.012
+Bolivia,2016,193029.179
 Bolivia,1950,
 Bolivia,1951,
 Bolivia,1952,
@@ -1773,9 +1774,9 @@ Bolivia,2017,
 Bolivia,2018,
 Bolivia,2019,
 Bolivia,2020,
-Bosnia and Herzegovina,2000,1937760.331
-Bosnia and Herzegovina,2006,1398389.831
-Bosnia and Herzegovina,2012,2056078.652
+Bosnia and Herzegovina,2000,28370.749
+Bosnia and Herzegovina,2006,19471.18
+Bosnia and Herzegovina,2012,16286.199
 Bosnia and Herzegovina,1950,
 Bosnia and Herzegovina,1951,
 Bosnia and Herzegovina,1952,
@@ -1844,9 +1845,9 @@ Bosnia and Herzegovina,2017,
 Bosnia and Herzegovina,2018,
 Bosnia and Herzegovina,2019,
 Bosnia and Herzegovina,2020,
-Botswana,1996,622860.3989
-Botswana,2000,745570.4467
-Botswana,2007,846166.09
+Botswana,1996,76737.024
+Botswana,2000,63135.651
+Botswana,2007,70672.638
 Botswana,1950,
 Botswana,1951,
 Botswana,1952,
@@ -1915,9 +1916,9 @@ Botswana,2017,
 Botswana,2018,
 Botswana,2019,
 Botswana,2020,
-Brazil,1989,90645121.21
-Brazil,1996,134283246.2
-Brazil,2007,223465142.9
+Brazil,1989,3553651.332
+Brazil,1996,2269386.86
+Brazil,2007,1094979.2
 Brazil,1950,
 Brazil,1951,
 Brazil,1952,
@@ -1986,7 +1987,7 @@ Brazil,2017,
 Brazil,2018,
 Brazil,2019,
 Brazil,2020,
-Brunei,2009,159071.066
+Brunei,2009,6173.389
 Brunei,1950,
 Brunei,1951,
 Brunei,1952,
@@ -2057,9 +2058,9 @@ Brunei,2017,
 Brunei,2018,
 Brunei,2019,
 Brunei,2020,
-Bulgaria,2004,3673534.091
-Bulgaria,2007,3926956.522
-Bulgaria,2014,4965157.143
+Bulgaria,2004,28447.848
+Bulgaria,2007,33237.76
+Bulgaria,2014,24329.27
 Bulgaria,1950,
 Bulgaria,1951,
 Bulgaria,1952,
@@ -2128,19 +2129,19 @@ Bulgaria,2017,
 Bulgaria,2018,
 Bulgaria,2019,
 Bulgaria,2020,
-Burkina Faso,1993,4637837.209
-Burkina Faso,1999,5105345.411
-Burkina Faso,2009,7902396.011
-Burkina Faso,2010,8192927.954
-Burkina Faso,2011,8442156.069
-Burkina Faso,2012,9105082.317
-Burkina Faso,2013,9726757.188
-Burkina Faso,2014,10693503.45
-Burkina Faso,2015,10502445.18
-Burkina Faso,2016,12017272.39
-Burkina Faso,2017,15553056.87
-Burkina Faso,2018,13432192.77
-Burkina Faso,2019,14320424.37
+Burkina Faso,1993,694604.241
+Burkina Faso,1999,875035.782
+Burkina Faso,2009,973583.091
+Burkina Faso,2010,986502.262
+Burkina Faso,2011,1010661.156
+Burkina Faso,2012,979561.176
+Burkina Faso,2013,952920.675
+Burkina Faso,2014,899323.64
+Burkina Faso,2015,951532.036
+Burkina Faso,2016,863128.572
+Burkina Faso,2017,692437.645
+Burkina Faso,2018,832809.384
+Burkina Faso,2019,811166.118
 Burkina Faso,1950,
 Burkina Faso,1951,
 Burkina Faso,1952,
@@ -2199,13 +2200,13 @@ Burkina Faso,2006,
 Burkina Faso,2007,
 Burkina Faso,2008,
 Burkina Faso,2020,
-Burundi,1987,1817503.559
-Burundi,2000,1805964.063
-Burundi,2005,2264861.352
-Burundi,2010,2740717.014
-Burundi,2016,3409479.428
-Burundi,2018,3504496.466
-Burundi,2019,3738327.778
+Burundi,1987,574047.594
+Burundi,2000,739722.88
+Burundi,2005,754038.025
+Burundi,2010,909304.128
+Burundi,2016,1065397.541
+Burundi,2018,1122686.47
+Burundi,2019,1090096.38
 Burundi,1950,
 Burundi,1951,
 Burundi,1952,
@@ -2270,12 +2271,12 @@ Burundi,2014,
 Burundi,2015,
 Burundi,2017,
 Burundi,2020,
-Cambodia,1996,2987607.509
-Cambodia,2000,3214395.918
-Cambodia,2005,3578857.477
-Cambodia,2008,4104668.354
-Cambodia,2010,4201228.643
-Cambodia,2014,5429003.086
+Cambodia,1996,1025932.468
+Cambodia,2000,771776.46
+Cambodia,2005,655589.428
+Cambodia,2008,640430.88
+Cambodia,2010,665491.422
+Cambodia,2014,569915.028
 Cambodia,1950,
 Cambodia,1951,
 Cambodia,1952,
@@ -2341,13 +2342,13 @@ Cambodia,2017,
 Cambodia,2018,
 Cambodia,2019,
 Cambodia,2020,
-Cameroon,1991,7118335.443
-Cameroon,1998,6674120.419
-Cameroon,2004,8290980.337
-Cameroon,2006,8351082.447
-Cameroon,2011,10874656.44
-Cameroon,2014,11849668.77
-Cameroon,2018,13851256.06
+Cameroon,1991,710808.504
+Cameroon,1998,973914.348
+Cameroon,2004,1050765.684
+Cameroon,2006,1180642.632
+Cameroon,2011,1155714.988
+Cameroon,2014,1190761.365
+Cameroon,2018,1156870.757
 Cameroon,1950,
 Cameroon,1951,
 Cameroon,1952,
@@ -2483,8 +2484,8 @@ Canada,2017,
 Canada,2018,
 Canada,2019,
 Canada,2020,
-Cape Verde,1985,210761.194
-Cape Verde,1994,302252.3364
+Cape Verde,1985,15137.712
+Cape Verde,1994,13841.948
 Cape Verde,1950,
 Cape Verde,1951,
 Cape Verde,1952,
@@ -2625,14 +2626,14 @@ Caribbean,2017,
 Caribbean,2018,
 Caribbean,2019,
 Caribbean,2020,
-Central African Republic,1994,1273028.916
-Central African Republic,2000,1380601.351
-Central African Republic,2006,1603463.303
-Central African Republic,2010,1798292.383
-Central African Republic,2012,1862624.685
-Central African Republic,2014,1924839.474
-Central African Republic,2018,1939818.667
-Central African Republic,2019,1818052.239
+Central African Republic,1994,219247.405
+Central African Republic,2000,272166.228
+Central African Republic,2006,304811.96
+Central African Republic,2010,297885.335
+Central African Republic,2012,293566.414
+Central African Republic,2014,277946.82
+Central African Republic,2018,272787
+Central African Republic,2019,293804.514
 Central African Republic,1950,
 Central African Republic,1951,
 Central African Republic,1952,
@@ -2838,14 +2839,14 @@ Central and Southern Asia,2017,
 Central and Southern Asia,2018,
 Central and Southern Asia,2019,
 Central and Southern Asia,2020,
-Chad,1997,3411411.236
-Chad,2000,4340192.802
-Chad,2004,4409765.766
-Chad,2010,6005400.517
-Chad,2015,6615610.553
-Chad,2017,8589323.988
-Chad,2018,8823655.172
-Chad,2019,7597161.376
+Chad,1997,675544.71
+Chad,2000,656762.315
+Chad,2004,869323.584
+Chad,2010,899422.83
+Chad,2015,1047939.174
+Chad,2017,885052.533
+Chad,2018,897903.974
+Chad,2019,1085512.806
 Chad,1950,
 Chad,1951,
 Chad,1952,
@@ -2980,21 +2981,21 @@ Channel Islands,2017,
 Channel Islands,2018,
 Channel Islands,2019,
 Channel Islands,2020,
-Chile,1986,9797066.667
-Chile,1994,34943666.67
-Chile,1995,37426641.03
-Chile,1996,39083081.08
-Chile,1998,42094939.39
-Chile,1999,43719419.35
-Chile,2001,45700821.43
-Chile,2002,50018400
-Chile,2003,49295000
-Chile,2004,50845958.33
-Chile,2006,54909318.18
-Chile,2007,57587476.19
-Chile,2008,60650750
-Chile,2013,69316444.44
-Chile,2014,69166777.78
+Chile,1986,178551.54
+Chile,1994,61640.628
+Chile,1995,56925.921
+Chile,1996,53504.738
+Chile,1998,45841.389
+Chile,1999,42014.362
+Chile,2001,35829.444
+Chile,2002,31261.5
+Chile,2003,30809.375
+Chile,2004,29287.272
+Chile,2006,26576.11
+Chile,2007,25396.077
+Chile,2008,24260.3
+Chile,2013,22458.528
+Chile,2014,22410.036
 Chile,1950,
 Chile,1951,
 Chile,1952,
@@ -3051,19 +3052,19 @@ Chile,2017,
 Chile,2018,
 Chile,2019,
 Chile,2020,
-China,1987,311586869.5
-China,1990,411661863.8
-China,1992,343382878.9
-China,1995,322227307.7
-China,1998,429605904
-China,2000,498273016.9
-China,2002,420626412.8
-China,2005,710475333.3
-China,2008,844356540.8
-China,2009,931692788.9
-China,2010,900417606.4
-China,2013,1070584556
-China,2017,1802849583
+China,1987,45706366.29
+China,1990,42948270.59
+China,1992,49584487.72
+China,1995,31366895.04
+China,1998,16842269.86
+China,2000,15787282.27
+China,2002,19989849.64
+China,2005,9725696.838
+China,2008,8109200.218
+China,2009,7546711.59
+China,2010,7956089.97
+China,2013,7024105.269
+China,2017,4153765.44
 China,1950,
 China,1951,
 China,1952,
@@ -3122,13 +3123,13 @@ China,2016,
 China,2018,
 China,2019,
 China,2020,
-Colombia,1986,15249210.53
-Colombia,1989,19046394.5
-Colombia,1995,22653801.02
-Colombia,2000,23931538.46
-Colombia,2005,26295018.75
-Colombia,2010,30428603.17
-Colombia,2016,29085874.02
+Colombia,1986,1078973.14
+Colombia,1989,905160.852
+Colombia,1995,870268.42
+Colombia,2000,792708.28
+Colombia,2005,673152.48
+Colombia,2010,483084.504
+Colombia,2016,469126.062
 Colombia,1950,
 Colombia,1951,
 Colombia,1952,
@@ -3193,10 +3194,10 @@ Colombia,2017,
 Colombia,2018,
 Colombia,2019,
 Colombia,2020,
-Comoros,1992,202553.2468
-Comoros,1996,207537.5
-Comoros,2000,189236.6738
-Comoros,2012,358202.5723
+Comoros,1992,30023.455
+Comoros,1996,33206
+Comoros,2000,41624.688
+Comoros,2012,34645.711
 Comoros,1950,
 Comoros,1951,
 Comoros,1952,
@@ -3264,10 +3265,10 @@ Comoros,2017,
 Comoros,2018,
 Comoros,2019,
 Comoros,2020,
-Congo,1987,1227890.365
-Congo,2005,1906500
-Congo,2011,2973922.131
-Congo,2014,3624966.981
+Congo,1987,111248.095
+Congo,2005,185586.336
+Congo,2011,177055.428
+Congo,2014,162920.516
 Congo,1950,
 Congo,1951,
 Congo,1952,
@@ -3335,9 +3336,9 @@ Congo,2017,
 Congo,2018,
 Congo,2019,
 Congo,2020,
-Costa Rica,1996,5010817.073
-Costa Rica,2008,6301571.429
-Costa Rica,2018,3931944.444
+Costa Rica,1996,33692.734
+Costa Rica,2008,19761.728
+Costa Rica,2018,31848.75
 Costa Rica,1950,
 Costa Rica,1951,
 Costa Rica,1952,
@@ -3406,12 +3407,12 @@ Costa Rica,2016,
 Costa Rica,2017,
 Costa Rica,2019,
 Costa Rica,2020,
-Cote d'Ivoire,1986,9701326.531
-Cote d'Ivoire,1994,6987292.398
-Cote d'Ivoire,1998,8610865.385
-Cote d'Ivoire,2007,8208607.692
-Cote d'Ivoire,2012,11566147.16
-Cote d'Ivoire,2016,17621898.15
+Cote d'Ivoire,1986,372686.16
+Cote d'Ivoire,1994,817261.668
+Cote d'Ivoire,1998,838216.08
+Cote d'Ivoire,2007,1248529.23
+Cote d'Ivoire,2012,1034025.122
+Cote d'Ivoire,2016,822167.28
 Cote d'Ivoire,1950,
 Cote d'Ivoire,1951,
 Cote d'Ivoire,1952,
@@ -3548,8 +3549,8 @@ Croatia,2017,
 Croatia,2018,
 Croatia,2019,
 Croatia,2020,
-Cuba,2000,10721042.86
-Cuba,2019,8273521.127
+Cuba,2000,52533.11
+Cuba,2019,41706.82
 Cuba,1950,
 Cuba,1951,
 Cuba,1952,
@@ -3761,8 +3762,8 @@ Cyprus,2017,
 Cyprus,2018,
 Cyprus,2019,
 Cyprus,2020,
-Czechia,1991,21599193.55
-Czechia,2001,15468074.07
+Czechia,1991,20756.825
+Czechia,2001,11276.226
 Czechia,1950,
 Czechia,1951,
 Czechia,1952,
@@ -3832,12 +3833,12 @@ Czechia,2017,
 Czechia,2018,
 Czechia,2019,
 Czechia,2020,
-Democratic Republic of Congo,1995,15076431.37
-Democratic Republic of Congo,2001,20121123.87
-Democratic Republic of Congo,2007,24002294.76
-Democratic Republic of Congo,2010,27959110.6
-Democratic Republic of Congo,2013,31277135.83
-Democratic Republic of Congo,2017,35545916.27
+Democratic Republic of Congo,1995,3921379.8
+Democratic Republic of Congo,2001,3966597.876
+Democratic Republic of Congo,2007,5034817.358
+Democratic Republic of Congo,2010,5266266.236
+Democratic Republic of Congo,2013,5702728.899
+Democratic Republic of Congo,2017,6210724.674
 Democratic Republic of Congo,1950,
 Democratic Republic of Congo,1951,
 Democratic Republic of Congo,1952,
@@ -3974,10 +3975,10 @@ Denmark,2017,
 Denmark,2018,
 Denmark,2019,
 Denmark,2020,
-Djibouti,1989,368117.8571
-Djibouti,1996,305182.9653
-Djibouti,2002,389055.3506
-Djibouti,2012,276211.9403
+Djibouti,1989,28860.44
+Djibouti,1996,30667.531
+Djibouti,2002,28572.614
+Djibouti,2012,30997.885
 Djibouti,1950,
 Djibouti,1951,
 Djibouti,1952,
@@ -4045,14 +4046,14 @@ Djibouti,2017,
 Djibouti,2018,
 Djibouti,2019,
 Djibouti,2020,
-Dominican Republic,1986,4602985.294
-Dominican Republic,1991,4634701.422
-Dominican Republic,1996,7550555.556
-Dominican Republic,2000,13091129.87
-Dominican Republic,2002,8603586.207
-Dominican Republic,2006,11833107.14
-Dominican Republic,2007,9826683.168
-Dominican Republic,2013,14070746.48
+Dominican Republic,1986,191557.836
+Dominican Republic,1991,206341.542
+Dominican Republic,1996,137608.875
+Dominican Republic,2000,77617.309
+Dominican Republic,2002,115769.856
+Dominican Republic,2006,83494.404
+Dominican Republic,2007,100241.995
+Dominican Republic,2013,70930.633
 Dominican Republic,1950,
 Dominican Republic,1951,
 Dominican Republic,1952,
@@ -4400,13 +4401,13 @@ Eastern and South-Eastern Asia,2017,
 Eastern and South-Eastern Asia,2018,
 Eastern and South-Eastern Asia,2019,
 Eastern and South-Eastern Asia,2020,
-Ecuador,1986,3341492.537
-Ecuador,1999,5566860.215
-Ecuador,2004,5349753.425
-Ecuador,2006,5977277.992
-Ecuador,2012,6207913.386
-Ecuador,2014,6680594.142
-Ecuador,2019,7228130.435
+Ecuador,1986,539998.56
+Ecuador,1999,433329.966
+Ecuador,2004,456141.376
+Ecuador,2006,400961.785
+Ecuador,2012,400509.74
+Ecuador,2014,381602.218
+Ecuador,2019,382368.1
 Ecuador,1950,
 Ecuador,1951,
 Ecuador,1952,
@@ -4471,16 +4472,16 @@ Ecuador,2016,
 Ecuador,2017,
 Ecuador,2018,
 Ecuador,2020,
-Egypt,1988,24985350
-Egypt,1991,25083779.37
-Egypt,1992,27983350.48
-Egypt,1995,24096597.7
-Egypt,1998,31815806.08
-Egypt,2000,35070778.69
-Egypt,2003,43291777.23
-Egypt,2005,36808514.64
-Egypt,2008,29757912.05
-Egypt,2014,53556632.29
+Egypt,1988,2888306.46
+Egypt,1991,3055229.411
+Egypt,1992,2706577.642
+Egypt,1995,2918194.368
+Egypt,1998,2200667.491
+Egypt,2000,2087973.88
+Egypt,2003,1766477.678
+Egypt,2005,2102539.165
+Egypt,2008,2804653.453
+Egypt,2014,2663317.767
 Egypt,1950,
 Egypt,1951,
 Egypt,1952,
@@ -4542,12 +4543,12 @@ Egypt,2017,
 Egypt,2018,
 Egypt,2019,
 Egypt,2020,
-El Salvador,1988,2022297.003
-El Salvador,1993,2428974.684
-El Salvador,1998,2400575.851
-El Salvador,2003,2810085.366
-El Salvador,2008,2950990.385
-El Salvador,2014,4317411.765
+El Salvador,1988,272381.161
+El Salvador,1993,242547.696
+El Salvador,1998,250449.678
+El Salvador,2003,170055.126
+El Salvador,2008,127671.648
+El Salvador,2014,79854.848
 El Salvador,1950,
 El Salvador,1951,
 El Salvador,1952,
@@ -4613,10 +4614,10 @@ El Salvador,2017,
 El Salvador,2018,
 El Salvador,2019,
 El Salvador,2020,
-Equatorial Guinea,1997,230098.1912
-Equatorial Guinea,2000,234625.2927
-Equatorial Guinea,2004,335465.7143
-Equatorial Guinea,2011,591221.374
+Equatorial Guinea,1997,34461.576
+Equatorial Guinea,2000,42778.995
+Equatorial Guinea,2004,41094.55
+Equatorial Guinea,2011,40583.8
 Equatorial Guinea,1950,
 Equatorial Guinea,1951,
 Equatorial Guinea,1952,
@@ -4684,10 +4685,10 @@ Equatorial Guinea,2017,
 Equatorial Guinea,2018,
 Equatorial Guinea,2019,
 Equatorial Guinea,2020,
-Eritrea,1993,567382.1839
-Eritrea,1995,774414.2259
-Eritrea,2002,788881.3953
-Eritrea,2010,1002535.238
+Eritrea,1993,274849.008
+Eritrea,1995,176941.26
+Eritrea,2002,145864.17
+Eritrea,2010,276323.775
 Eritrea,1950,
 Eritrea,1951,
 Eritrea,1952,
@@ -4755,7 +4756,7 @@ Eritrea,2017,
 Eritrea,2018,
 Eritrea,2019,
 Eritrea,2020,
-Estonia,2014,6052416.667
+Estonia,2014,871.548
 Estonia,1950,
 Estonia,1951,
 Estonia,1952,
@@ -4826,11 +4827,11 @@ Estonia,2017,
 Estonia,2018,
 Estonia,2019,
 Estonia,2020,
-Eswatini,2000,400980.8219
-Eswatini,2006,500297.9452
-Eswatini,2008,371099.0099
-Eswatini,2010,491595.4693
-Eswatini,2014,576000
+Eswatini,2000,53420.67
+Eswatini,2006,42657.404
+Eswatini,2008,60569.296
+Eswatini,2010,46938.027
+Eswatini,2014,37454.4
 Eswatini,1950,
 Eswatini,1951,
 Eswatini,1952,
@@ -4897,13 +4898,13 @@ Eswatini,2017,
 Eswatini,2018,
 Eswatini,2019,
 Eswatini,2020,
-Ethiopia,1992,14464162.93
-Ethiopia,2000,21511480.84
-Ethiopia,2005,27106226
-Ethiopia,2011,32496198.2
-Ethiopia,2014,37640373.76
-Ethiopia,2016,41314187.99
-Ethiopia,2019,45002266.3
+Ethiopia,1992,6473595.225
+Ethiopia,2000,7087516.66
+Ethiopia,2005,6776556.5
+Ethiopia,2011,6406170.528
+Ethiopia,2014,6143511.244
+Ethiopia,2016,6060336.922
+Ethiopia,2019,6094386.912
 Ethiopia,1950,
 Ethiopia,1951,
 Ethiopia,1952,
@@ -5181,8 +5182,8 @@ Europe and Northern America,2020,
 "Europe, Western",2018,
 "Europe, Western",2019,
 "Europe, Western",2020,
-Fiji,1993,2290744.186
-Fiji,2004,1199653.333
+Fiji,1993,4235.586
+Fiji,2004,6748.05
 Fiji,1950,
 Fiji,1951,
 Fiji,1952,
@@ -5536,8 +5537,8 @@ French Polynesia,2017,
 French Polynesia,2018,
 French Polynesia,2019,
 French Polynesia,2020,
-Gabon,2000,713088.8031
-Gabon,2012,1494017.647
+Gabon,2000,47834.71
+Gabon,2012,43177.11
 Gabon,1950,
 Gabon,1951,
 Gabon,1952,
@@ -5607,14 +5608,14 @@ Gabon,2017,
 Gabon,2018,
 Gabon,2019,
 Gabon,2020,
-Gambia,1996,615232.687
-Gambia,2000,1009278.008
-Gambia,2006,1026198.556
-Gambia,2010,1356854.701
-Gambia,2012,1599895.735
-Gambia,2013,1409914.634
-Gambia,2018,2888985.294
-Gambia,2020,2340034.286
+Gambia,1996,80177.739
+Gambia,2000,58619.876
+Gambia,2006,78739.189
+Gambia,2010,74295.936
+Gambia,2012,71228.958
+Gambia,2013,85322.394
+Gambia,2018,53434.672
+Gambia,2020,71663.55
 Gambia,1950,
 Gambia,1951,
 Gambia,1952,
@@ -5678,10 +5679,10 @@ Gambia,2015,
 Gambia,2016,
 Gambia,2017,
 Gambia,2019,
-Georgia,1999,1676515.528
-Georgia,2005,1596417.808
-Georgia,2009,2158847.458
-Georgia,2018,4818879.31
+Georgia,1999,43456.959
+Georgia,2005,34029.242
+Georgia,2009,30059.792
+Georgia,2018,16210.71
 Georgia,1950,
 Georgia,1951,
 Georgia,1952,
@@ -5749,8 +5750,8 @@ Georgia,2016,
 Georgia,2017,
 Georgia,2019,
 Georgia,2020,
-Germany,2004,283037769.2
-Germany,2016,211993470.6
+Germany,2004,47833.383
+Germany,2016,61266.113
 Germany,1950,
 Germany,1951,
 Germany,1952,
@@ -5820,16 +5821,16 @@ Germany,2017,
 Germany,2018,
 Germany,2019,
 Germany,2020,
-Ghana,1988,5698584.507
-Ghana,1993,6577631.068
-Ghana,1997,8352752.161
-Ghana,1998,9661777.778
-Ghana,2003,9011901.408
-Ghana,2006,11923673.84
-Ghana,2008,12143049.3
-Ghana,2011,16102140.35
-Ghana,2014,20692148.94
-Ghana,2017,23254880
+Ghana,1988,1034156.322
+Ghana,1993,1116513.408
+Ghana,1997,1005746.535
+Ghana,1998,904690.224
+Ghana,2003,1135724.875
+Ghana,2006,928150.695
+Ghana,2008,979409.784
+Ghana,2011,837053.664
+Ghana,2014,731343.312
+Ghana,2017,712180.7
 Ghana,1950,
 Ghana,1951,
 Ghana,1952,
@@ -5891,7 +5892,7 @@ Ghana,2016,
 Ghana,2018,
 Ghana,2019,
 Ghana,2020,
-Greece,2003,35805133.33
+Greece,2003,8056.155
 Greece,1950,
 Greece,1951,
 Greece,1952,
@@ -6175,13 +6176,13 @@ Guam,2017,
 Guam,2018,
 Guam,2019,
 Guam,2020,
-Guatemala,1987,2311729.607
-Guatemala,1995,3189483.755
-Guatemala,1999,3530210.923
-Guatemala,2000,3715998.039
-Guatemala,2002,3524978.102
-Guatemala,2009,3798629.126
-Guatemala,2015,4269867.238
+Guatemala,1987,1013101.63
+Guatemala,1995,978903.596
+Guatemala,1999,995381.802
+Guatemala,2000,966531.09
+Guatemala,2002,1058565.024
+Guatemala,2009,1007491.41
+Guatemala,2015,931211.076
 Guatemala,1950,
 Guatemala,1951,
 Guatemala,1952,
@@ -6246,13 +6247,13 @@ Guatemala,2017,
 Guatemala,2018,
 Guatemala,2019,
 Guatemala,2020,
-Guinea,1994,3710481.586
-Guinea,1999,4741418.006
-Guinea,2005,4148424.936
-Guinea,2007,4970152.941
-Guinea,2012,5876755.627
-Guinea,2016,6004462.963
-Guinea,2018,6665831.683
+Guinea,1994,462359.4
+Guinea,1999,458594.691
+Guinea,2005,640720.083
+Guinea,2007,574549.68
+Guinea,2012,568405.681
+Guinea,2016,630324.504
+Guinea,2018,611983.341
 Guinea,1950,
 Guinea,1951,
 Guinea,1952,
@@ -6317,11 +6318,11 @@ Guinea,2015,
 Guinea,2017,
 Guinea,2019,
 Guinea,2020,
-Guinea-Bissau,2000,614742.6036
-Guinea-Bissau,2010,796371.875
-Guinea-Bissau,2012,1017000
-Guinea-Bissau,2014,1012442.029
-Guinea-Bissau,2019,1073508.897
+Guinea-Bissau,2000,70230.654
+Guinea-Bissau,2010,81548.48
+Guinea-Bissau,2012,70880.832
+Guinea-Bissau,2014,77123.784
+Guinea-Bissau,2019,84765.336
 Guinea-Bissau,1950,
 Guinea-Bissau,1951,
 Guinea-Bissau,1952,
@@ -6388,12 +6389,12 @@ Guinea-Bissau,2016,
 Guinea-Bissau,2017,
 Guinea-Bissau,2018,
 Guinea-Bissau,2020,
-Guyana,1993,644244.898
-Guyana,1997,732992.8571
-Guyana,2000,691294.964
-Guyana,2006,452189.9441
-Guyana,2009,383512.9534
-Guyana,2014,659150.4425
+Guyana,1993,13921.488
+Guyana,1997,14366.66
+Guyana,2000,13356.51
+Guyana,2006,14488.618
+Guyana,2009,14285.474
+Guyana,2014,8416.692
 Guyana,1950,
 Guyana,1951,
 Guyana,1952,
@@ -6459,12 +6460,12 @@ Guyana,2017,
 Guyana,2018,
 Guyana,2019,
 Guyana,2020,
-Haiti,1990,2850231.92
-Haiti,1994,3131576.819
-Haiti,2000,4192774.306
-Haiti,2006,4211597.973
-Haiti,2012,5773495.455
-Haiti,2017,5807182.648
+Haiti,1990,458320.143
+Haiti,1994,431033.365
+Haiti,2000,347765.472
+Haiti,2006,369003.368
+Haiti,2012,279437.18
+Haiti,2017,278518.287
 Haiti,1950,
 Haiti,1951,
 Haiti,1952,
@@ -6601,13 +6602,13 @@ High income countries,2017,
 High income countries,2018,
 High income countries,2019,
 High income countries,2020,
-Honduras,1987,1870965.358
-Honduras,1991,2045430.913
-Honduras,1994,2027776.805
-Honduras,1996,2512391.192
-Honduras,2001,3015980.282
-Honduras,2006,3533026.846
-Honduras,2012,4517668.142
+Honduras,1987,350785.424
+Honduras,1991,372941.373
+Honduras,1994,423499.158
+Honduras,1996,374336.238
+Honduras,2001,380088.915
+Honduras,2006,313746.916
+Honduras,2012,230744.418
 Honduras,1950,
 Honduras,1951,
 Honduras,1952,
@@ -6885,15 +6886,15 @@ Iceland,2017,
 Iceland,2018,
 Iceland,2019,
 Iceland,2020,
-India,1989,193344078.1
-India,1991,198043710.8
-India,1992,213422320.6
-India,1997,274827115.5
-India,1999,234872166.1
-India,2006,271516556.5
-India,2014,311826160.2
-India,2015,313940126.6
-India,2017,334791060.5
+India,1989,76009164.1
+India,1991,75882626.28
+India,1992,71054479.78
+India,1997,57900851.51
+India,1999,68996986.99
+India,2006,62037188.89
+India,2014,46701892.19
+India,2015,45094673.73
+India,2017,40311856.81
 India,1950,
 India,1951,
 India,1952,
@@ -6956,14 +6957,14 @@ India,2016,
 India,2018,
 India,2019,
 India,2020,
-Indonesia,1996,45530675.68
-Indonesia,2000,50248509.43
-Indonesia,2001,51610201.92
-Indonesia,2004,77114933.57
-Indonesia,2007,56215620.95
-Indonesia,2010,59114586.73
-Indonesia,2013,65696156.59
-Indonesia,2018,79059422.08
+Indonesia,1996,10534022.66
+Indonesia,2000,9033476.032
+Indonesia,2001,8931455.104
+Indonesia,2004,6307693.106
+Indonesia,2007,9039528.064
+Indonesia,2010,9083783.856
+Indonesia,2013,8704477.964
+Indonesia,2018,7499893.016
 Indonesia,1950,
 Indonesia,1951,
 Indonesia,1952,
@@ -7027,10 +7028,10 @@ Indonesia,2016,
 Indonesia,2017,
 Indonesia,2019,
 Indonesia,2020,
-Iran,1995,30053098.36
-Iran,1998,30261495.1
-Iran,2004,80018816.9
-Iran,2010,91950014.71
+Iran,1995,1789241.264
+Iran,1998,1259362.38
+Iran,2004,403374.856
+Iran,2010,425176.868
 Iran,1950,
 Iran,1951,
 Iran,1952,
@@ -7098,13 +7099,13 @@ Iran,2017,
 Iran,2018,
 Iran,2019,
 Iran,2020,
-Iraq,1991,11070554.35
-Iraq,2000,13632145.91
-Iraq,2003,12213462.91
-Iraq,2004,20887095
-Iraq,2006,15549341.82
-Iraq,2011,20969638.01
-Iraq,2018,42892039.68
+Iraq,1991,843310.548
+Iraq,2000,1076407.873
+Iraq,2003,1387070.769
+Iraq,2004,835483.8
+Iraq,2006,1175918.975
+Iraq,2011,1024178.09
+Iraq,2018,680954.022
 Iraq,1950,
 Iraq,1951,
 Iraq,1952,
@@ -7382,26 +7383,26 @@ Italy,2017,
 Italy,2018,
 Italy,2019,
 Italy,2020,
-Jamaica,1989,2471933.333
-Jamaica,1991,2447474.576
-Jamaica,1992,1996361.111
-Jamaica,1994,2400206.612
-Jamaica,1995,3005371.134
-Jamaica,1996,2619705.357
-Jamaica,1997,3381379.31
-Jamaica,1998,3091305.263
-Jamaica,1999,5121614.035
-Jamaica,2000,4013791.667
-Jamaica,2001,4329742.424
-Jamaica,2002,3413219.512
-Jamaica,2004,5401448.98
-Jamaica,2006,3297133.333
-Jamaica,2007,4451148.148
-Jamaica,2008,3418130.435
-Jamaica,2010,3842550
-Jamaica,2012,3422088.235
-Jamaica,2014,3920766.667
-Jamaica,2016,2569935.484
+Jamaica,1989,35595.84
+Jamaica,1991,34078.636
+Jamaica,1992,41396.544
+Jamaica,1994,35141.425
+Jamaica,1995,28277.537
+Jamaica,1996,32861.584
+Jamaica,1997,25593.66
+Jamaica,1998,27899.03
+Jamaica,1999,16640.124
+Jamaica,2000,20807.496
+Jamaica,2001,18860.358
+Jamaica,2002,22950.488
+Jamaica,2004,12968.879
+Jamaica,2006,18546.375
+Jamaica,2007,12979.548
+Jamaica,2008,16273.719
+Jamaica,2010,13833.18
+Jamaica,2012,15823.736
+Jamaica,2014,14114.76
+Jamaica,2016,22227.372
 Jamaica,1950,
 Jamaica,1951,
 Jamaica,1952,
@@ -7453,7 +7454,7 @@ Jamaica,2017,
 Jamaica,2018,
 Jamaica,2019,
 Jamaica,2020,
-Japan,2010,78227380.28
+Japan,2010,394344.224
 Japan,1950,
 Japan,1951,
 Japan,1952,
@@ -7524,11 +7525,11 @@ Japan,2017,
 Japan,2018,
 Japan,2019,
 Japan,2020,
-Jordan,1990,2997370
-Jordan,1997,6594900.901
-Jordan,2002,6517521.368
-Jordan,2009,11676792.68
-Jordan,2012,13978602.56
+Jordan,1990,119894.8
+Jordan,1997,81255.774
+Jordan,2002,89218.35
+Jordan,2009,78514.754
+Jordan,2012,85045.818
 Jordan,1950,
 Jordan,1951,
 Jordan,1952,
@@ -7595,11 +7596,11 @@ Jordan,2017,
 Jordan,2018,
 Jordan,2019,
 Jordan,2020,
-Kazakhstan,1995,6223394.85
-Kazakhstan,1999,8556696.97
-Kazakhstan,2006,7438302.857
-Kazakhstan,2010,12152664.12
-Kazakhstan,2015,24425387.5
+Kazakhstan,1995,337861.883
+Kazakhstan,1999,149091.888
+Kazakhstan,2006,227798.025
+Kazakhstan,2010,208551.869
+Kazakhstan,2015,156322.48
 Kazakhstan,1950,
 Kazakhstan,1951,
 Kazakhstan,1952,
@@ -7666,16 +7667,16 @@ Kazakhstan,2017,
 Kazakhstan,2018,
 Kazakhstan,2019,
 Kazakhstan,2020,
-Kenya,1987,11504013.51
-Kenya,1993,11531524.88
-Kenya,1994,11374029.2
-Kenya,1998,13811425.13
-Kenya,2000,13575688.73
-Kenya,2003,16780332.4
-Kenya,2005,15405064.52
-Kenya,2008,18590374.65
-Kenya,2011,26471026.62
-Kenya,2014,26849843.51
+Kenya,1987,1574899.45
+Kenya,1993,1863540.546
+Kenya,1994,1921312.386
+Kenya,1998,1931886.902
+Kenya,2000,2259863.448
+Kenya,2003,2150634.522
+Kenya,2005,2501921.123
+Kenya,2008,2342851.965
+Kenya,2011,1830974.44
+Kenya,2014,1843080.658
 Kenya,1950,
 Kenya,1951,
 Kenya,1952,
@@ -7737,8 +7738,8 @@ Kenya,2017,
 Kenya,2018,
 Kenya,2019,
 Kenya,2020,
-Kiribati,1985,29093.02326
-Kiribati,2018,96197.36842
+Kiribati,1985,3442.752
+Kiribati,2018,2222.544
 Kiribati,1950,
 Kiribati,1951,
 Kiribati,1952,
@@ -7808,24 +7809,24 @@ Kiribati,2016,
 Kiribati,2017,
 Kiribati,2019,
 Kiribati,2020,
-Kuwait,1996,3444860
-Kuwait,2001,5755025
-Kuwait,2002,6287305.556
-Kuwait,2003,5577461.538
-Kuwait,2004,5147390.244
-Kuwait,2005,4736555.556
-Kuwait,2006,4597782.609
-Kuwait,2007,4330921.569
-Kuwait,2008,4673647.059
-Kuwait,2009,6781236.842
-Kuwait,2010,6674000
-Kuwait,2011,7277750
-Kuwait,2012,7002744.186
-Kuwait,2013,6343083.333
-Kuwait,2014,5242913.793
-Kuwait,2015,6173102.041
-Kuwait,2016,5172355.932
-Kuwait,2017,4761687.5
+Kuwait,1996,8612.15
+Kuwait,2001,9208.04
+Kuwait,2002,8148.348
+Kuwait,2003,8483.319
+Kuwait,2004,8652.763
+Kuwait,2005,9591.525
+Kuwait,2006,9728.908
+Kuwait,2007,11264.727
+Kuwait,2008,12156.156
+Kuwait,2009,9792.106
+Kuwait,2010,11218.994
+Kuwait,2011,11644.4
+Kuwait,2012,12948.074
+Kuwait,2013,14614.464
+Kuwait,2014,17637.162
+Kuwait,2015,14821.618
+Kuwait,2016,18004.971
+Kuwait,2017,19503.872
 Kuwait,1950,
 Kuwait,1951,
 Kuwait,1952,
@@ -7879,12 +7880,12 @@ Kuwait,2000,
 Kuwait,2018,
 Kuwait,2019,
 Kuwait,2020,
-Kyrgyzstan,1997,1559102.21
-Kyrgyzstan,2006,2736198.895
-Kyrgyzstan,2009,2526553.097
-Kyrgyzstan,2012,3824106.145
-Kyrgyzstan,2014,5814496.124
-Kyrgyzstan,2018,6675601.695
+Kyrgyzstan,1997,204310.99
+Kyrgyzstan,2006,89640.612
+Kyrgyzstan,2009,129046.226
+Kyrgyzstan,2012,122528.185
+Kyrgyzstan,2014,96759.03
+Kyrgyzstan,2018,92951.078
 Kyrgyzstan,1950,
 Kyrgyzstan,1951,
 Kyrgyzstan,1952,
@@ -8021,13 +8022,13 @@ Land-locked Developing Countries (LLDC),2017,
 Land-locked Developing Countries (LLDC),2018,
 Land-locked Developing Countries (LLDC),2019,
 Land-locked Developing Countries (LLDC),2020,
-Laos,1993,1526035.448
-Laos,1994,1568659.735
-Laos,2000,1678347.368
-Laos,2006,1592779.874
-Laos,2011,1799712.67
-Laos,2015,2200146.479
-Laos,2017,2359359.517
+Laos,1993,438423.88
+Laos,1994,438975.309
+Laos,2000,378677.125
+Laos,2006,362403.612
+Laos,2011,351599.066
+Laos,2015,277273.46
+Laos,2017,258493.788
 Laos,1950,
 Laos,1951,
 Laos,1952,
@@ -8305,8 +8306,8 @@ Least Developed Countries,2017,
 Least Developed Countries,2018,
 Least Developed Countries,2019,
 Least Developed Countries,2020,
-Lebanon,1996,2559238.372
-Lebanon,2004,2626812.121
+Lebanon,1996,75712.508
+Lebanon,2004,71514.96
 Lebanon,1950,
 Lebanon,1951,
 Lebanon,1952,
@@ -8376,12 +8377,12 @@ Lebanon,2017,
 Lebanon,2018,
 Lebanon,2019,
 Lebanon,2020,
-Lesotho,1992,704701.5306
-Lesotho,1993,735333.3333
-Lesotho,2004,596460.8501
-Lesotho,2009,640806.6158
-Lesotho,2014,728670.6587
-Lesotho,2018,729167.6301
+Lesotho,1992,108287.256
+Lesotho,1993,103406.25
+Lesotho,2004,119178.246
+Lesotho,2009,98971.941
+Lesotho,2014,81287.584
+Lesotho,2018,87293.032
 Lesotho,1950,
 Lesotho,1951,
 Lesotho,1952,
@@ -8660,12 +8661,12 @@ Less Developed Regions,2020,
 "Less Developed Regions, excluding Least Developed Countries",2018,
 "Less Developed Regions, excluding Least Developed Countries",2019,
 "Less Developed Regions, excluding Least Developed Countries",2020,
-Liberia,2000,1070110.375
-Liberia,2007,1479126.263
-Liberia,2010,1644610.256
-Liberia,2013,2108887.85
-Liberia,2016,2334026.578
-Liberia,2019,2450171.141
+Liberia,2000,219596.28
+Liberia,2007,231950.664
+Liberia,2010,250145.22
+Liberia,2013,217301.913
+Liberia,2016,211465.142
+Liberia,2019,217584.998
 Liberia,1950,
 Liberia,1951,
 Liberia,1952,
@@ -8731,9 +8732,9 @@ Liberia,2015,
 Liberia,2017,
 Liberia,2018,
 Liberia,2020,
-Libya,1995,2851786.73
-Libya,2007,2858514.286
-Libya,2014,1741981.627
+Libya,1995,126964.397
+Libya,2007,126060.48
+Libya,2014,252867.795
 Libya,1950,
 Libya,1951,
 Libya,1952,
@@ -9157,14 +9158,14 @@ Macao,2017,
 Macao,2018,
 Macao,2019,
 Macao,2020,
-Madagascar,1992,3680798.347
-Madagascar,1993,4237918.669
-Madagascar,1995,4417963.768
-Madagascar,1997,4486582.474
-Madagascar,2004,5843182.163
-Madagascar,2009,6785872.47
-Madagascar,2012,7214730.061
-Madagascar,2018,9457555.288
+Madagascar,1992,1347264.215
+Madagascar,1993,1240358.274
+Madagascar,1995,1346171.232
+Madagascar,1997,1519713.162
+Madagascar,2004,1622821.139
+Madagascar,2009,1655997.174
+Madagascar,2012,1725193.467
+Madagascar,2018,1636686.688
 Madagascar,1950,
 Madagascar,1951,
 Madagascar,1952,
@@ -9228,21 +9229,21 @@ Madagascar,2016,
 Madagascar,2017,
 Madagascar,2019,
 Madagascar,2020,
-Malawi,1992,3249714.801
-Malawi,1995,3302544.61
-Malawi,1998,3037133.226
-Malawi,2000,3681652.651
-Malawi,2002,3657207.547
-Malawi,2004,4245752.381
-Malawi,2006,4440026.365
-Malawi,2009,5271920.082
-Malawi,2010,5565420.719
-Malawi,2014,6506672.17
-Malawi,2015,7425307.487
-Malawi,2016,7263221.932
-Malawi,2017,7129099.237
-Malawi,2018,7269661.538
-Malawi,2019,7034506.112
+Malawi,1992,997389.468
+Malawi,1995,955901.722
+Malawi,1998,1178799.482
+Malawi,2000,1101583.608
+Malawi,2002,1243044.616
+Malawi,2004,1170235.5
+Malawi,2006,1251914.274
+Malawi,2009,1255476.136
+Malawi,2010,1245146.012
+Malawi,2014,1169743.496
+Malawi,2015,1038622.31
+Malawi,2016,1065434.762
+Malawi,2017,1101082.248
+Malawi,2018,1105715.52
+Malawi,2019,1176739.217
 Malawi,1950,
 Malawi,1951,
 Malawi,1952,
@@ -9299,11 +9300,11 @@ Malawi,2011,
 Malawi,2012,
 Malawi,2013,
 Malawi,2020,
-Malaysia,1999,12969850.24
-Malaysia,2006,14233411.43
-Malaysia,2015,14147209.04
-Malaysia,2016,12336323.67
-Malaysia,2019,12019637.61
+Malaysia,1999,555745.113
+Malaysia,2006,435898.225
+Malaysia,2015,443217.912
+Malaysia,2016,528599.133
+Malaysia,2019,571221.258
 Malaysia,1950,
 Malaysia,1951,
 Malaysia,1952,
@@ -9370,12 +9371,12 @@ Malaysia,2014,
 Malaysia,2017,
 Malaysia,2018,
 Malaysia,2020,
-Maldives,1994,113614.9584
-Maldives,1995,120948.4848
-Maldives,1997,85139.53488
-Maldives,2001,94608.15047
-Maldives,2009,171100
-Maldives,2017,240921.5686
+Maldives,1994,14806.415
+Maldives,1995,13171.29
+Maldives,1997,15742.3
+Maldives,2001,9627.42
+Maldives,2009,6176.71
+Maldives,2017,5639.733
 Maldives,1950,
 Maldives,1951,
 Maldives,1952,
@@ -9441,18 +9442,18 @@ Maldives,2016,
 Maldives,2018,
 Maldives,2019,
 Maldives,2020,
-Mali,1987,4197013.966
-Mali,1996,4669631.579
-Mali,2001,5036597.647
-Mali,2006,6837476.064
-Mali,2010,10532557.55
-Mali,2011,10828752.69
-Mali,2014,11413391.46
-Mali,2015,10755095.39
-Mali,2016,12603928.03
-Mali,2017,13784813.01
-Mali,2018,12863163.57
-Mali,2019,13379204.55
+Mali,1987,537906.098
+Mali,1996,743410.017
+Mali,2001,909735.45
+Mali,2006,966655.016
+Mali,2010,813998.178
+Mali,2011,842920.938
+Mali,2014,901212.803
+Mali,2015,993942.896
+Mali,2016,878443.368
+Mali,2017,834201.744
+Mali,2018,930791.379
+Mali,2019,932477.04
 Mali,1950,
 Mali,1951,
 Mali,1952,
@@ -9655,15 +9656,15 @@ Martinique,2017,
 Martinique,2018,
 Martinique,2019,
 Martinique,2020,
-Mauritania,1988,841522.3881
-Mauritania,1996,794909.6386
-Mauritania,2000,1120683.938
-Mauritania,2007,1623184.127
-Mauritania,2008,2219987.288
-Mauritania,2011,1910289.562
-Mauritania,2012,2513543.103
-Mauritania,2015,2252623.656
-Mauritania,2018,2932714.912
+Mauritania,1988,135993.384
+Mauritania,1996,197140.77
+Mauritania,2000,166977.424
+Mauritania,2007,161060.445
+Mauritania,2008,123644.412
+Mauritania,2011,168504.732
+Mauritania,2012,135288.944
+Mauritania,2015,175346.478
+Mauritania,2018,152454.252
 Mauritania,1950,
 Mauritania,1951,
 Mauritania,1952,
@@ -9726,8 +9727,8 @@ Mauritania,2016,
 Mauritania,2017,
 Mauritania,2019,
 Mauritania,2020,
-Mauritius,1985,382197.8022
-Mauritius,1995,816250
+Mauritius,1985,28484.82
+Mauritius,1995,15097.36
 Mauritius,1950,
 Mauritius,1951,
 Mauritius,1952,
@@ -9939,15 +9940,15 @@ Melanesia,2017,
 Melanesia,2018,
 Melanesia,2019,
 Melanesia,2020,
-Mexico,1988,42165921.93
-Mexico,1989,44016038.46
-Mexico,1996,44532093.02
-Mexico,1998,53536672.9
-Mexico,2006,73512877.42
-Mexico,2012,82137323.53
-Mexico,2015,90597483.87
-Mexico,2016,112640910
-Mexico,2019,78304652.48
+Mexico,1988,3051168.277
+Mexico,1989,2975484.2
+Mexico,1996,2964234.24
+Mexico,1998,2451765.472
+Mexico,2006,1766146.88
+Mexico,2012,1519211.936
+Mexico,2015,1393026.912
+Mexico,2016,1126409.1
+Mexico,2019,1556774.796
 Mexico,1950,
 Mexico,1951,
 Mexico,1952,
@@ -10223,8 +10224,8 @@ Middle-income countries,2017,
 Middle-income countries,2018,
 Middle-income countries,2019,
 Middle-income countries,2020,
-Moldova,2005,1920392.523
-Moldova,2012,3525328.125
+Moldova,2005,21986.574
+Moldova,2012,14439.744
 Moldova,1950,
 Moldova,1951,
 Moldova,1952,
@@ -10294,15 +10295,15 @@ Moldova,2017,
 Moldova,2018,
 Moldova,2019,
 Moldova,2020,
-Mongolia,1992,985740.1813
-Mongolia,1999,795235.8804
-Mongolia,2000,785033.557
-Mongolia,2004,931502.1277
-Mongolia,2005,805825.4545
-Mongolia,2010,1855509.804
-Mongolia,2013,3138787.037
-Mongolia,2016,5125698.63
-Mongolia,2018,4045457.447
+Mongolia,1992,107998.68
+Mongolia,1999,72049.166
+Mongolia,2000,69714.12
+Mongolia,2004,51442.205
+Mongolia,2005,60940.55
+Mongolia,2010,43435.629
+Mongolia,2013,36610.812
+Mongolia,2016,27314.848
+Mongolia,2018,35745.662
 Mongolia,1950,
 Mongolia,1951,
 Mongolia,1952,
@@ -10365,9 +10366,9 @@ Mongolia,2015,
 Mongolia,2017,
 Mongolia,2019,
 Mongolia,2020,
-Montenegro,2005,510139.2405
-Montenegro,2013,407957.4468
-Montenegro,2018,508166.6667
+Montenegro,2005,3183.779
+Montenegro,2013,3604.712
+Montenegro,2018,2634.336
 Montenegro,1950,
 Montenegro,1951,
 Montenegro,1952,
@@ -10507,12 +10508,12 @@ More Developed Regions,2017,
 More Developed Regions,2018,
 More Developed Regions,2019,
 More Developed Regions,2020,
-Morocco,1987,11389296.77
-Morocco,1992,11033129.57
-Morocco,1997,11356283.74
-Morocco,2003,13118060.61
-Morocco,2011,21568328.86
-Morocco,2017,23096887.42
+Morocco,1987,1094511.42
+Morocco,1992,999612.572
+Morocco,1997,948488.174
+Morocco,2003,699992.832
+Morocco,2011,478838.469
+Morocco,2017,526632.13
 Morocco,1950,
 Morocco,1951,
 Morocco,1952,
@@ -10578,13 +10579,13 @@ Morocco,2016,
 Morocco,2018,
 Morocco,2019,
 Morocco,2020,
-Mozambique,1995,4544125.209
-Mozambique,1997,5990694.045
-Mozambique,2001,6465591.716
-Mozambique,2003,7482469.083
-Mozambique,2008,9242705.747
-Mozambique,2011,9920965.035
-Mozambique,2015,10958579.2
+Mozambique,1995,1630436.669
+Mozambique,1997,1420806.916
+Mozambique,2001,1661973.885
+Mozambique,2003,1645851.382
+Mozambique,2008,1748950.995
+Mozambique,2011,1825864.326
+Mozambique,2015,1960807.617
 Mozambique,1950,
 Mozambique,1951,
 Mozambique,1952,
@@ -10649,14 +10650,14 @@ Mozambique,2017,
 Mozambique,2018,
 Mozambique,2019,
 Mozambique,2020,
-Myanmar,1991,9691253.731
-Myanmar,1994,8610635.434
-Myanmar,1997,9172301.444
-Myanmar,2000,12762468.14
-Myanmar,2003,12558515.22
-Myanmar,2009,14359472.93
-Myanmar,2016,15461272.11
-Myanmar,2018,16920134.83
+Myanmar,1991,2784258.432
+Myanmar,1994,2966958.041
+Myanmar,1997,2815126.07
+Myanmar,2000,2124491.496
+Myanmar,2003,2289781.522
+Myanmar,2009,1769101.425
+Myanmar,2016,1336410.516
+Myanmar,2018,1206219.492
 Myanmar,1950,
 Myanmar,1951,
 Myanmar,1952,
@@ -10720,10 +10721,10 @@ Myanmar,2015,
 Myanmar,2017,
 Myanmar,2019,
 Myanmar,2020,
-Namibia,1992,712390.4494
-Namibia,2000,905904.4369
-Namibia,2007,895301.3699
-Namibia,2013,1382753.304
+Namibia,1992,90285.516
+Namibia,2000,77770.99
+Namibia,2007,76336.976
+Namibia,2013,71251.895
 Namibia,1950,
 Namibia,1951,
 Namibia,1952,
@@ -10792,15 +10793,15 @@ Namibia,2018,
 Namibia,2019,
 Namibia,2020,
 Nauru,2007,
-Nepal,1995,4951282.991
-Nepal,1996,5251788.432
-Nepal,1998,5828594.108
-Nepal,2001,6419187.166
-Nepal,2006,6605160.896
-Nepal,2011,7440082.294
-Nepal,2014,7609660.377
-Nepal,2016,7670811.634
-Nepal,2019,8591095.238
+Nepal,1995,2302960.55
+Nepal,1996,2266929.225
+Nepal,1998,2175936.581
+Nepal,2001,2020253.004
+Nepal,2006,1592378.794
+Nepal,2011,1196372.673
+Nepal,2014,1047401.264
+Nepal,2016,999667.843
+Nepal,2019,852451.425
 Nepal,1950,
 Nepal,1951,
 Nepal,1952,
@@ -10863,8 +10864,8 @@ Nepal,2015,
 Nepal,2017,
 Nepal,2018,
 Nepal,2020,
-Netherlands,1996,75639230.77
-Netherlands,2009,63143466.67
+Netherlands,1996,12783.03
+Netherlands,2009,14207.28
 Netherlands,1950,
 Netherlands,1951,
 Netherlands,1952,
@@ -11076,12 +11077,12 @@ New Zealand,2017,
 New Zealand,2018,
 New Zealand,2019,
 New Zealand,2020,
-Nicaragua,1993,2359070.946
-Nicaragua,1998,2250485.246
-Nicaragua,2001,2637880.478
-Nicaragua,2004,3491627.66
-Nicaragua,2007,2856770.563
-Nicaragua,2012,3874011.561
+Nicaragua,1993,206692.36
+Nicaragua,1998,209351.39
+Nicaragua,2001,166189.108
+Nicaragua,2004,123408.088
+Nicaragua,2007,152440.134
+Nicaragua,2012,115945.292
 Nicaragua,1950,
 Nicaragua,1951,
 Nicaragua,1952,
@@ -11147,23 +11148,23 @@ Nicaragua,2017,
 Nicaragua,2018,
 Nicaragua,2019,
 Nicaragua,2020,
-Niger,1985,3265963.47
-Niger,1992,3811123.62
-Niger,1998,4284072.978
-Niger,2000,4379383.178
-Niger,2006,5804519.608
-Niger,2007,6247026.423
-Niger,2008,7272038.813
-Niger,2009,7252901.099
-Niger,2010,7223014.768
-Niger,2011,6993815.324
-Niger,2012,9248248.12
-Niger,2013,8983600
-Niger,2014,9354182.464
-Niger,2015,8798396.552
-Niger,2016,10237673.12
-Niger,2018,9285334.021
-Niger,2019,9855802.548
+Niger,1985,626555.496
+Niger,1992,782076.867
+Niger,1998,1101216.675
+Niger,2000,1253488.95
+Niger,2006,1509755.55
+Niger,2007,1512180.204
+Niger,2008,1395097.014
+Niger,2009,1501531.85
+Niger,2010,1622838.066
+Niger,2011,1811964.668
+Niger,2012,1472330.349
+Niger,2013,1622662.75
+Niger,2014,1665830.23
+Niger,2015,1894259.584
+Niger,2016,1746229.667
+Niger,2018,2184142.695
+Niger,2019,2186421.093
 Niger,1950,
 Niger,1951,
 Niger,1952,
@@ -11218,15 +11219,15 @@ Niger,2004,
 Niger,2005,
 Niger,2017,
 Niger,2020,
-Nigeria,1990,34494650.92
-Nigeria,1993,40708150.68
-Nigeria,2003,54170734.12
-Nigeria,2011,79344743.02
-Nigeria,2014,90710241.07
-Nigeria,2015,94339754.55
-Nigeria,2016,73006438.07
-Nigeria,2018,89448891.3
-Nigeria,2020,107742206.3
+Nigeria,1990,8181061.865
+Nigeria,1993,7809614.46
+Nigeria,2003,9784588.85
+Nigeria,2011,10169139.64
+Nigeria,2014,10240823.38
+Nigeria,2015,10273599.27
+Nigeria,2016,13878231.85
+Nigeria,2018,12113526.66
+Nigeria,2020,10690720.43
 Nigeria,1950,
 Nigeria,1951,
 Nigeria,1952,
@@ -11360,13 +11361,13 @@ No income group available,2017,
 No income group available,2018,
 No income group available,2019,
 No income group available,2020,
-North Korea,1998,3229644.757
-North Korea,2000,3897356.863
-North Korea,2002,4325955.257
-North Korea,2004,4473417.633
-North Korea,2009,5359895.062
-North Korea,2012,5902964.158
-North Korea,2017,9112827.225
+North Korea,1998,1318731.777
+North Korea,2000,1013702.52
+North Korea,2002,864364.794
+North Korea,2004,830986.533
+North Korea,2009,562660.344
+North Korea,2012,459492.633
+North Korea,2017,332445.05
 North Korea,1950,
 North Korea,1951,
 North Korea,1952,
@@ -11431,10 +11432,10 @@ North Korea,2016,
 North Korea,2018,
 North Korea,2019,
 North Korea,2020,
-North Macedonia,1999,1754725
-North Macedonia,2005,1097637.168
-North Macedonia,2011,2264795.918
-North Macedonia,2019,2643348.837
+North Macedonia,1999,11230.24
+North Macedonia,2005,14015.729
+North Macedonia,2011,5437.775
+North Macedonia,2019,4887.552
 North Macedonia,1950,
 North Macedonia,1951,
 North Macedonia,1952,
@@ -11999,12 +12000,12 @@ Oceania (excluding Australia and New Zealand),2017,
 Oceania (excluding Australia and New Zealand),2018,
 Oceania (excluding Australia and New Zealand),2019,
 Oceania (excluding Australia and New Zealand),2020,
-Oman,1991,1334933.884
-Oman,1994,1498056.872
-Oman,1999,1827234.177
-Oman,2009,2810663.265
-Oman,2014,2596695.035
-Oman,2017,3715000
+Oman,1991,78179.068
+Oman,1994,66694.99
+Oman,1999,45615.074
+Oman,2009,26993.61
+Oman,2014,51624.894
+Oman,2017,48280.14
 Oman,1950,
 Oman,1951,
 Oman,1952,
@@ -12070,13 +12071,13 @@ Oman,2016,
 Oman,2018,
 Oman,2019,
 Oman,2020,
-Pakistan,1986,25959462.4
-Pakistan,1991,35288920.22
-Pakistan,1992,45618953.16
-Pakistan,2001,53409507.25
-Pakistan,2011,55980821.1
-Pakistan,2013,55825435.56
-Pakistan,2018,72582228.72
+Pakistan,1986,10140415
+Pakistan,1991,10252172.39
+Pakistan,1992,8317658.111
+Pakistan,2001,9154175.904
+Pakistan,2011,10641730.17
+Pakistan,2013,11304650.7
+Pakistan,2018,10261385.17
 Pakistan,1950,
 Pakistan,1951,
 Pakistan,1952,
@@ -12141,13 +12142,13 @@ Pakistan,2016,
 Pakistan,2017,
 Pakistan,2019,
 Pakistan,2020,
-Palestine,1996,6993474.359
-Palestine,2000,5459448.598
-Palestine,2004,5457942.857
-Palestine,2006,4247882.353
-Palestine,2010,5736165.138
-Palestine,2014,9061148.649
-Palestine,2020,7964517.241
+Palestine,1996,42548.298
+Palestine,2000,62505.227
+Palestine,2004,60173.82
+Palestine,2006,78568.832
+Palestine,2010,68151.378
+Palestine,2014,49618.85
+Palestine,2020,60283.431
 Palestine,1950,
 Palestine,1951,
 Palestine,1952,
@@ -12212,10 +12213,10 @@ Palestine,2016,
 Palestine,2017,
 Palestine,2018,
 Palestine,2019,
-Panama,1997,1950541.667
-Panama,2003,1476983.122
-Panama,2008,1896168.421
-Panama,2019,2462462.025
+Panama,1997,55052.088
+Panama,2003,82960.665
+Panama,2008,68451.68
+Panama,2019,61472.902
 Panama,1950,
 Panama,1951,
 Panama,1952,
@@ -12283,9 +12284,9 @@ Panama,2016,
 Panama,2017,
 Panama,2018,
 Panama,2020,
-Papua New Guinea,1983,1409239.13
-Papua New Guinea,2005,2159207.289
-Papua New Guinea,2010,2044731.313
+Papua New Guinea,1983,298195
+Papua New Guinea,2005,416124.588
+Papua New Guinea,2010,501010.29
 Papua New Guinea,1950,
 Papua New Guinea,1951,
 Papua New Guinea,1952,
@@ -12354,10 +12355,10 @@ Papua New Guinea,2017,
 Papua New Guinea,2018,
 Papua New Guinea,2019,
 Papua New Guinea,2020,
-Paraguay,1990,3605295.082
-Paraguay,2005,3874177.143
-Paraguay,2012,6499037.383
-Paraguay,2016,12227821.43
+Paraguay,1990,120737.727
+Paraguay,2005,118646.675
+Paraguay,2012,74407.479
+Paraguay,2016,38346.448
 Paraguay,1950,
 Paraguay,1951,
 Paraguay,1952,
@@ -12425,22 +12426,22 @@ Paraguay,2017,
 Paraguay,2018,
 Paraguay,2019,
 Paraguay,2020,
-Peru,1991,8421270.777
-Peru,1996,9822784.81
-Peru,2000,9584415.335
-Peru,2005,10058986.3
-Peru,2007,10628232.14
-Peru,2009,12588878.66
-Peru,2010,12894643.78
-Peru,2011,15446953.85
-Peru,2012,16121554.35
-Peru,2013,16436982.95
-Peru,2014,19120385.14
-Peru,2015,19046755.1
-Peru,2016,20674045.8
-Peru,2017,21134500
-Peru,2018,22595245.9
-Peru,2019,23033401.64
+Peru,1991,1171642.982
+Peru,1996,980864
+Peru,2000,938975.586
+Peru,2005,857669.408
+Peru,2007,833253.4
+Peru,2009,719089.338
+Peru,2010,700037.316
+Peru,2011,587370.42
+Peru,2012,545811.344
+Peru,2013,509151.984
+Peru,2014,418812.916
+Peru,2015,411581.331
+Peru,2016,354787.3
+Peru,2017,346267.648
+Peru,2018,336307.64
+Peru,2019,342829.15
 Peru,1950,
 Peru,1951,
 Peru,1952,
@@ -12496,17 +12497,17 @@ Peru,2004,
 Peru,2006,
 Peru,2008,
 Peru,2020,
-Philippines,1987,19852080.54
-Philippines,1990,21805981.52
-Philippines,1992,23866579.46
-Philippines,1993,25346750.64
-Philippines,1998,27252665.8
-Philippines,2003,33291434.91
-Philippines,2008,34942312.5
-Philippines,2011,33321991.02
-Philippines,2013,37918293.33
-Philippines,2015,34674359.52
-Philippines,2018,36420023.1
+Philippines,1987,3966624.36
+Philippines,1990,4088381.67
+Philippines,1992,3992425.279
+Philippines,1993,3835495.654
+Philippines,1998,3997666.293
+Philippines,2003,3803346.69
+Philippines,2008,3578092.8
+Philippines,2011,3717268.03
+Philippines,2013,3412646.4
+Philippines,2015,3798957.503
+Philippines,2018,3343685.901
 Philippines,1950,
 Philippines,1951,
 Philippines,1952,
@@ -12567,9 +12568,9 @@ Philippines,2016,
 Philippines,2017,
 Philippines,2019,
 Philippines,2020,
-Poland,2009,68146517.24
-Poland,2011,258381000
-Poland,2014,74096038.46
+Poland,2009,57311.221
+Poland,2011,16536.384
+Poland,2014,50088.922
 Poland,1950,
 Poland,1951,
 Poland,1952,
@@ -12638,7 +12639,7 @@ Poland,2017,
 Poland,2018,
 Poland,2019,
 Poland,2020,
-Portugal,2016,13452906.25
+Portugal,2016,13775.776
 Portugal,1950,
 Portugal,1951,
 Portugal,1952,
@@ -12780,7 +12781,7 @@ Puerto Rico,2017,
 Puerto Rico,2018,
 Puerto Rico,2019,
 Puerto Rico,2020,
-Qatar,1995,431137.931
+Qatar,1995,5801.392
 Qatar,1950,
 Qatar,1951,
 Qatar,1952,
@@ -12922,11 +12923,11 @@ Reunion,2017,
 Reunion,2018,
 Reunion,2019,
 Reunion,2020,
-Romania,1991,16479589.29
-Romania,1999,7152183.007
-Romania,2000,8604421.875
-Romania,2001,8230785.714
-Romania,2002,8962726.563
+Romania,1991,206719.968
+Romania,1999,167425.452
+Romania,2000,140974.848
+Romania,2001,161323.4
+Romania,2002,146845.312
 Romania,1950,
 Romania,1951,
 Romania,1952,
@@ -13064,16 +13065,16 @@ Russia,2017,
 Russia,2018,
 Russia,2019,
 Russia,2020,
-Rwanda,1992,2053626.761
-Rwanda,1996,1792900.881
-Rwanda,2000,2692125.261
-Rwanda,2005,2735408.56
-Rwanda,2009,3315774.678
-Rwanda,2010,3563000
-Rwanda,2012,3730294.521
-Rwanda,2015,4580493.225
-Rwanda,2018,5175132.184
-Rwanda,2020,5695181.269
+Rwanda,1992,662549.28
+Rwanda,1996,369545.558
+Rwanda,2000,617683.912
+Rwanda,2005,722684
+Rwanda,2009,720040.366
+Rwanda,2010,699235.187
+Rwanda,2012,715634.622
+Rwanda,2015,623684.538
+Rwanda,2018,626729.208
+Rwanda,2020,623969.755
 Rwanda,1950,
 Rwanda,1951,
 Rwanda,1952,
@@ -13135,7 +13136,7 @@ Rwanda,2014,
 Rwanda,2016,
 Rwanda,2017,
 Rwanda,2019,
-Saint Lucia,2012,442800
+Saint Lucia,2012,276.75
 Saint Lucia,1950,
 Saint Lucia,1951,
 Saint Lucia,1952,
@@ -13277,9 +13278,9 @@ Saint Vincent and the Grenadines,2017,
 Saint Vincent and the Grenadines,2018,
 Saint Vincent and the Grenadines,2019,
 Saint Vincent and the Grenadines,2020,
-Samoa,1999,400578.125
-Samoa,2014,582734.6939
-Samoa,2019,376698.6301
+Samoa,1999,1640.768
+Samoa,2014,1399.146
+Samoa,2019,2007.427
 Samoa,1950,
 Samoa,1951,
 Samoa,1952,
@@ -13348,9 +13349,9 @@ Samoa,2016,
 Samoa,2017,
 Samoa,2018,
 Samoa,2020,
-Sao Tome and Principe,1986,57128.125
-Sao Tome and Principe,2014,179232.5581
-Sao Tome and Principe,2019,269709.4017
+Sao Tome and Principe,1986,5849.92
+Sao Tome and Principe,2014,5302.416
+Sao Tome and Principe,2019,3692.052
 Sao Tome and Principe,1950,
 Sao Tome and Principe,1951,
 Sao Tome and Principe,1952,
@@ -13419,8 +13420,8 @@ Sao Tome and Principe,2016,
 Sao Tome and Principe,2017,
 Sao Tome and Principe,2018,
 Sao Tome and Principe,2020,
-Saudi Arabia,1994,12863406.54
-Saudi Arabia,2004,29063677.42
+Saudi Arabia,1994,589092.566
+Saudi Arabia,2004,251371.746
 Saudi Arabia,1950,
 Saudi Arabia,1951,
 Saudi Arabia,1952,
@@ -13490,21 +13491,21 @@ Saudi Arabia,2017,
 Saudi Arabia,2018,
 Saudi Arabia,2019,
 Saudi Arabia,2020,
-Senegal,1986,4829505.66
-Senegal,1991,4051718.023
-Senegal,1993,4883845.638
-Senegal,1996,5394670.139
-Senegal,2000,6379342.308
-Senegal,2005,9264738.693
-Senegal,2011,8318808.989
-Senegal,2012,14747470.97
-Senegal,2013,12464382.98
-Senegal,2014,12743250
-Senegal,2015,11813173.91
-Senegal,2016,14568771.93
-Senegal,2017,15315769.7
-Senegal,2018,13599223.4
-Senegal,2019,14440692.74
+Senegal,1986,339152.035
+Senegal,1991,479464.104
+Senegal,1993,433705.028
+Senegal,1996,447455.52
+Senegal,2000,431243.54
+Senegal,2005,366892.917
+Senegal,2011,593039.574
+Senegal,2012,354307.99
+Senegal,2013,440541.152
+Senegal,2014,450397.428
+Senegal,2015,506182.689
+Senegal,2016,426005.46
+Senegal,2017,416971.83
+Senegal,2018,480650.952
+Senegal,2019,462694.236
 Senegal,1950,
 Senegal,1951,
 Senegal,1952,
@@ -13561,10 +13562,10 @@ Senegal,2008,
 Senegal,2009,
 Senegal,2010,
 Senegal,2020,
-Serbia,2005,6617358.025
-Serbia,2010,7416363.636
-Serbia,2014,7399900
-Serbia,2019,7813055.556
+Serbia,2005,43416.486
+Serbia,2010,32305.68
+Serbia,2014,26639.64
+Serbia,2019,22782.87
 Serbia,1950,
 Serbia,1951,
 Serbia,1952,
@@ -13632,8 +13633,8 @@ Serbia,2016,
 Serbia,2017,
 Serbia,2018,
 Serbia,2020,
-Seychelles,1988,109051.9481
-Seychelles,2012,98936.70886
+Seychelles,1988,646.569
+Seychelles,2012,617.464
 Seychelles,1950,
 Seychelles,1951,
 Seychelles,1952,
@@ -13703,14 +13704,14 @@ Seychelles,2017,
 Seychelles,2018,
 Seychelles,2019,
 Seychelles,2020,
-Sierra Leone,1989,1824987.923
-Sierra Leone,1990,1859058.68
-Sierra Leone,2000,2221549.296
-Sierra Leone,2005,2126380
-Sierra Leone,2010,3225278.287
-Sierra Leone,2014,3760233.677
-Sierra Leone,2017,3827249.147
-Sierra Leone,2019,3889189.831
+Sierra Leone,1989,312795.63
+Sierra Leone,1990,310985.195
+Sierra Leone,2000,279970.75
+Sierra Leone,2005,430591.95
+Sierra Leone,2010,344875.782
+Sierra Leone,2014,318420.348
+Sierra Leone,2017,328565.512
+Sierra Leone,2019,338456.745
 Sierra Leone,1950,
 Sierra Leone,1951,
 Sierra Leone,1952,
@@ -13774,7 +13775,7 @@ Sierra Leone,2015,
 Sierra Leone,2016,
 Sierra Leone,2018,
 Sierra Leone,2020,
-Singapore,2000,5388250
+Singapore,2000,10431.652
 Singapore,1950,
 Singapore,1951,
 Singapore,1952,
@@ -14058,9 +14059,9 @@ Small Island Developing States (SIDS),2017,
 Small Island Developing States (SIDS),2018,
 Small Island Developing States (SIDS),2019,
 Small Island Developing States (SIDS),2020,
-Solomon Islands,1989,154456.9733
-Solomon Islands,2007,229945.122
-Solomon Islands,2015,295223.9748
+Solomon Islands,1989,17541.524
+Solomon Islands,2007,24738.416
+Solomon Islands,2015,29666.762
 Solomon Islands,1950,
 Solomon Islands,1951,
 Solomon Islands,1952,
@@ -14129,9 +14130,9 @@ Solomon Islands,2017,
 Solomon Islands,2018,
 Solomon Islands,2019,
 Solomon Islands,2020,
-Somalia,1999,5845602.74
-Somalia,2006,4898359.524
-Somalia,2009,8763335.968
+Somalia,1999,498419.472
+Somalia,2006,864070.62
+Somalia,2009,560932.372
 Somalia,1950,
 Somalia,1951,
 Somalia,1952,
@@ -14200,12 +14201,12 @@ Somalia,2017,
 Somalia,2018,
 Somalia,2019,
 Somalia,2020,
-South Africa,1994,18093968.64
-South Africa,1999,16241724.25
-South Africa,2008,21181935.74
-South Africa,2015,27253584.11
-South Africa,2016,21223996.35
-South Africa,2017,27120509.35
+South Africa,1994,1490382.103
+South Africa,1999,1471516.459
+South Africa,2008,1313301.198
+South Africa,2015,1248105.138
+South Africa,2016,1593412.75
+South Africa,2017,1242010.846
 South Africa,1950,
 South Africa,1951,
 South Africa,1952,
@@ -14413,8 +14414,8 @@ South Eastern Asia,2017,
 South Eastern Asia,2018,
 South Eastern Asia,2019,
 South Eastern Asia,2020,
-South Korea,2003,107410240
-South Korea,2009,91973880
+South Korea,2003,67131.4
+South Korea,2009,57483.675
 South Korea,1950,
 South Korea,1951,
 South Korea,1952,
@@ -14484,8 +14485,8 @@ South Korea,2017,
 South Korea,2018,
 South Korea,2019,
 South Korea,2020,
-South Sudan,2006,3688837.017
-South Sudan,2010,5058038.339
+South Sudan,2006,483399.958
+South Sudan,2010,495530.958
 South Sudan,1950,
 South Sudan,1951,
 South Sudan,1952,
@@ -14839,14 +14840,14 @@ Spain,2017,
 Spain,2018,
 Spain,2019,
 Spain,2020,
-Sri Lanka,1987,5830272.446
-Sri Lanka,1993,6005149.826
-Sri Lanka,1995,6575739.464
-Sri Lanka,2000,8968961.749
-Sri Lanka,2007,9923773.481
-Sri Lanka,2009,9334677.083
-Sri Lanka,2012,12084801.37
-Sri Lanka,2016,9899491.329
+Sri Lanka,1987,608266.494
+Sri Lanka,1993,494638.186
+Sri Lanka,1995,447945.948
+Sri Lanka,2000,300361.56
+Sri Lanka,2007,325112.743
+Sri Lanka,2009,344113.536
+Sri Lanka,2012,257599.626
+Sri Lanka,2016,296281.876
 Sri Lanka,1950,
 Sri Lanka,1951,
 Sri Lanka,1952,
@@ -14981,9 +14982,9 @@ Sub-Saharan Africa,2017,
 Sub-Saharan Africa,2018,
 Sub-Saharan Africa,2019,
 Sub-Saharan Africa,2020,
-Sudan,2006,13748872.06
-Sudan,2010,16298964.81
-Sudan,2014,15259879.58
+Sudan,2006,2016808.294
+Sudan,2010,1895259.927
+Sudan,2014,2226782.668
 Sudan,1950,
 Sudan,1951,
 Sudan,1952,
@@ -15052,10 +15053,10 @@ Sudan,2017,
 Sudan,2018,
 Sudan,2019,
 Sudan,2020,
-Suriname,2000,380496.4539
-Suriname,2006,501613.2075
-Suriname,2010,594977.2727
-Suriname,2018,635807.2289
+Suriname,2000,7564.65
+Suriname,2006,5636.126
+Suriname,2010,4607.504
+Suriname,2018,4380.076
 Suriname,1950,
 Suriname,1951,
 Suriname,1952,
@@ -15265,12 +15266,12 @@ Switzerland,2017,
 Switzerland,2018,
 Switzerland,2019,
 Switzerland,2020,
-Syria,1993,6579487.805
-Syria,1995,8248705.66
-Syria,2000,10008337.45
-Syria,2001,7886154.574
-Syria,2006,9193648.084
-Syria,2010,10547537.63
+Syria,1993,707847.616
+Syria,1995,579265.355
+Syria,2000,590982.318
+Syria,2001,792471.787
+Syria,2006,757271.599
+Syria,2010,821030.877
 Syria,1950,
 Syria,1951,
 Syria,1952,
@@ -15407,17 +15408,17 @@ Taiwan,2017,
 Taiwan,2018,
 Taiwan,2019,
 Taiwan,2020,
-Tajikistan,1999,2158161.446
-Tajikistan,2000,2119802.85
-Tajikistan,2001,2052344.907
-Tajikistan,2002,2360253.369
-Tajikistan,2003,2034275.943
-Tajikistan,2005,2588438.066
-Tajikistan,2007,2259961.832
-Tajikistan,2009,3294305.556
-Tajikistan,2012,4087338.29
-Tajikistan,2016,6478372.449
-Tajikistan,2017,7448662.857
+Tajikistan,1999,371689.355
+Tajikistan,2000,375715.977
+Tajikistan,2001,383016.816
+Tajikistan,2002,324867.634
+Tajikistan,2003,365713.992
+Tajikistan,2005,283591.863
+Tajikistan,2007,349048.845
+Tajikistan,2009,273242.88
+Tajikistan,2012,295763.886
+Tajikistan,2016,248873.156
+Tajikistan,2017,228115.3
 Tajikistan,1950,
 Tajikistan,1951,
 Tajikistan,1952,
@@ -15478,17 +15479,17 @@ Tajikistan,2015,
 Tajikistan,2018,
 Tajikistan,2019,
 Tajikistan,2020,
-Tanzania,1991,9440875.752
-Tanzania,1996,10853016.13
-Tanzania,1999,11651892.34
-Tanzania,2004,14811416.67
-Tanzania,2009,17838437.5
-Tanzania,2010,18767786.22
-Tanzania,2011,23117062.86
-Tanzania,2013,22531056.15
-Tanzania,2014,24765461.1
-Tanzania,2015,25421913.04
-Tanzania,2018,29295933.96
+Tanzania,1991,2350787.503
+Tanzania,1996,2670015.616
+Tanzania,1999,2718258.312
+Tanzania,2004,2919863.436
+Tanzania,2009,3329080.56
+Tanzania,2010,3326421.198
+Tanzania,2011,2831840.2
+Tanzania,2013,3151554.01
+Tanzania,2014,2981984.405
+Tanzania,2015,3025843.2
+Tanzania,2018,2962522.026
 Tanzania,1950,
 Tanzania,1951,
 Tanzania,1952,
@@ -15549,13 +15550,13 @@ Tanzania,2016,
 Tanzania,2017,
 Tanzania,2019,
 Tanzania,2020,
-Thailand,1987,22708609.76
-Thailand,1993,24756777.25
-Thailand,1995,28316436.46
-Thailand,2006,26642668.79
-Thailand,2012,24436030.49
-Thailand,2016,36038971.43
-Thailand,2019,27223261.19
+Thailand,1987,1374234.228
+Thailand,1993,1102196.48
+Thailand,1995,927674.775
+Thailand,2006,656715.143
+Thailand,2012,657231.476
+Thailand,2016,397329.66
+Thailand,2019,488820.878
 Thailand,1950,
 Thailand,1951,
 Thailand,1952,
@@ -15620,11 +15621,11 @@ Thailand,2015,
 Thailand,2017,
 Thailand,2018,
 Thailand,2020,
-Timor,2002,278378.8151
-Timor,2003,291385.0365
-Timor,2007,296024.4755
-Timor,2009,283979.1304
-Timor,2013,299562.8627
+Timor,2002,86366.749
+Timor,2003,87504.092
+Timor,2007,96854.472
+Timor,2009,93890.6
+Timor,2013,80069.858
 Timor,1950,
 Timor,1951,
 Timor,1952,
@@ -15691,16 +15692,16 @@ Timor,2017,
 Timor,2018,
 Timor,2019,
 Timor,2020,
-Togo,1988,1605933.661
-Togo,1996,1808350.746
-Togo,1998,2316219.88
-Togo,2006,3257692.308
-Togo,2008,3800684.015
-Togo,2009,3867366.667
-Togo,2010,3945225.926
-Togo,2012,4208606.87
-Togo,2014,4103706.522
-Togo,2017,4934058.824
+Togo,1988,266021.305
+Togo,1996,292236.714
+Togo,1998,255303.02
+Togo,2006,291240.95
+Togo,2008,275021.296
+Togo,2009,281931.03
+Togo,2010,287606.97
+Togo,2012,288895.61
+Togo,2014,312603.948
+Togo,2017,279484.828
 Togo,1950,
 Togo,1951,
 Togo,1952,
@@ -15762,9 +15763,9 @@ Togo,2016,
 Togo,2018,
 Togo,2019,
 Togo,2020,
-Tonga,1986,660045.4545
-Tonga,2012,163950.6173
-Tonga,2019,556363.6364
+Tonga,1986,319.462
+Tonga,2012,1075.68
+Tonga,2019,269.28
 Tonga,1950,
 Tonga,1951,
 Tonga,1952,
@@ -15833,9 +15834,9 @@ Tonga,2016,
 Tonga,2017,
 Tonga,2018,
 Tonga,2020,
-Trinidad and Tobago,1987,2443349.206
-Trinidad and Tobago,2000,1690867.925
-Trinidad and Tobago,2011,1060793.478
+Trinidad and Tobago,1987,9697.653
+Trinidad and Tobago,2000,4749.648
+Trinidad and Tobago,2011,8978.556
 Trinidad and Tobago,1950,
 Trinidad and Tobago,1951,
 Trinidad and Tobago,1952,
@@ -15904,12 +15905,12 @@ Trinidad and Tobago,2017,
 Trinidad and Tobago,2018,
 Trinidad and Tobago,2019,
 Trinidad and Tobago,2020,
-Tunisia,1988,5796762.162
-Tunisia,1997,7553294.118
-Tunisia,2000,5003964.286
-Tunisia,2006,8914644.444
-Tunisia,2012,9142851.485
-Tunisia,2018,12332226.19
+Tunisia,1988,198394.185
+Tunisia,1997,106962.198
+Tunisia,2000,141231.888
+Tunisia,2006,72208.62
+Tunisia,2012,93266.228
+Tunisia,2018,87016.188
 Tunisia,1950,
 Tunisia,1951,
 Tunisia,1952,
@@ -15975,12 +15976,12 @@ Tunisia,2016,
 Tunisia,2017,
 Tunisia,2019,
 Tunisia,2020,
-Turkey,1993,27310915.25
-Turkey,1998,34924601.06
-Turkey,2004,43294967.11
-Turkey,2008,51039784
-Turkey,2013,66459440
-Turkey,2018,112487900
+Turkey,1993,1521108.736
+Turkey,1998,1234375.1
+Turkey,2004,1000286.92
+Turkey,2008,797496.625
+Turkey,2013,664594.4
+Turkey,2018,404956.44
 Turkey,1950,
 Turkey,1951,
 Turkey,1952,
@@ -16046,10 +16047,10 @@ Turkey,2016,
 Turkey,2017,
 Turkey,2019,
 Turkey,2020,
-Turkmenistan,2000,1742516.014
-Turkmenistan,2006,2764349.206
-Turkmenistan,2015,5902304.348
-Turkmenistan,2019,9383486.111
+Turkmenistan,2000,137590.807
+Turkmenistan,2006,98745.318
+Turkmenistan,2015,78057.975
+Turkmenistan,2019,48643.992
 Turkmenistan,1950,
 Turkmenistan,1951,
 Turkmenistan,1952,
@@ -16118,15 +16119,15 @@ Turkmenistan,2017,
 Turkmenistan,2018,
 Turkmenistan,2020,
 Tuvalu,2007,
-Uganda,1988,6668232.704
-Uganda,1995,8972221.007
-Uganda,2000,10548899.78
-Uganda,2006,14725322.92
-Uganda,2009,15997065.45
-Uganda,2011,19177671.64
-Uganda,2012,19491198.81
-Uganda,2014,20166835.29
-Uganda,2016,24907702.42
+Uganda,1988,1517216.319
+Uganda,1995,1873839.385
+Uganda,2000,2126668.744
+Uganda,2006,2171337.216
+Uganda,2009,2334355.778
+Uganda,2011,2152214.2
+Uganda,2012,2213595.958
+Uganda,2014,2331286.16
+Uganda,2016,2080316.214
 Uganda,1950,
 Uganda,1951,
 Uganda,1952,
@@ -16189,7 +16190,7 @@ Uganda,2017,
 Uganda,2018,
 Uganda,2019,
 Uganda,2020,
-Ukraine,2000,9432737.991
+Ukraine,2000,494662.213
 Ukraine,1950,
 Ukraine,1951,
 Ukraine,1952,
@@ -16402,17 +16403,17 @@ United Kingdom,2017,
 United Kingdom,2018,
 United Kingdom,2019,
 United Kingdom,2020,
-United States,1991,629521032.3
-United States,2000,611393156.3
-United States,2002,627599806.5
-United States,2004,691101034.5
-United States,2006,671010387.1
-United States,2008,915647608.7
-United States,2010,746079607.1
-United States,2012,939963000
-United States,2014,839633958.3
-United States,2016,559862200
-United States,2018,573868264.7
+United States,1991,604969.712
+United States,2000,626066.592
+United States,2002,603123.414
+United States,2004,581215.97
+United States,2006,644840.982
+United States,2008,484377.585
+United States,2010,584926.412
+United States,2012,454942.092
+United States,2014,483629.16
+United States,2016,685831.195
+United States,2018,663391.714
 United States,1950,
 United States,1951,
 United States,1952,
@@ -16615,16 +16616,16 @@ Upper-middle-income countries,2017,
 Upper-middle-income countries,2018,
 Upper-middle-income countries,2019,
 Upper-middle-income countries,2020,
-Uruguay,1987,1232266.667
-Uruguay,1999,2138054.688
-Uruguay,2002,1777387.755
-Uruguay,2003,1636658.228
-Uruguay,2004,1841618.705
-Uruguay,2007,2282935.185
-Uruguay,2011,2193981.308
-Uruguay,2013,4712560
-Uruguay,2016,2221500
-Uruguay,2018,3466869.565
+Uruguay,1987,54342.96
+Uruguay,1999,35029.888
+Uruguay,2002,38407.572
+Uruguay,2003,40857.536
+Uruguay,2004,35581.915
+Uruguay,2007,26628.156
+Uruguay,2011,25118.892
+Uruguay,2013,11781.4
+Uruguay,2016,25911.576
+Uruguay,2018,16505.766
 Uruguay,1950,
 Uruguay,1951,
 Uruguay,1952,
@@ -16686,10 +16687,10 @@ Uruguay,2015,
 Uruguay,2017,
 Uruguay,2019,
 Uruguay,2020,
-Uzbekistan,1996,8170025.316
-Uzbekistan,2002,10613016.06
-Uzbekistan,2006,13251117.35
-Uzbekistan,2017,31138907.41
+Uzbekistan,1996,1274728.2
+Uzbekistan,2002,658017.609
+Uzbekistan,2006,509054.924
+Uzbekistan,2017,363204.216
 Uzbekistan,1950,
 Uzbekistan,1951,
 Uzbekistan,1952,
@@ -16757,9 +16758,9 @@ Uzbekistan,2016,
 Uzbekistan,2018,
 Uzbekistan,2019,
 Uzbekistan,2020,
-Vanuatu,1996,104260.7004
-Vanuatu,2008,123953.3074
-Vanuatu,2013,130598.6159
+Vanuatu,1996,6886.315
+Vanuatu,2008,8186.992
+Vanuatu,2013,10907.727
 Vanuatu,1950,
 Vanuatu,1951,
 Vanuatu,1952,
@@ -16828,27 +16829,27 @@ Vanuatu,2017,
 Vanuatu,2018,
 Vanuatu,2019,
 Vanuatu,2020,
-Venezuela,1987,36515557.14
-Venezuela,1990,14521704.3
-Venezuela,1991,15071516.48
-Venezuela,1992,15078666.67
-Venezuela,1993,15848074.71
-Venezuela,1994,15371418.99
-Venezuela,1995,14555047.62
-Venezuela,1996,14195538.86
-Venezuela,1997,13788221.11
-Venezuela,1998,14370843.75
-Venezuela,1999,15174431.69
-Venezuela,2000,16038821.84
-Venezuela,2001,16243127.17
-Venezuela,2002,16055562.5
-Venezuela,2003,16031350.28
-Venezuela,2004,16651859.65
-Venezuela,2005,17637617.28
-Venezuela,2006,17740870.37
-Venezuela,2007,18479192.31
-Venezuela,2008,19774068.49
-Venezuela,2009,21581328.36
+Venezuela,1987,178926.23
+Venezuela,1990,502392.882
+Venezuela,1991,499228.912
+Venezuela,1992,504969.468
+Venezuela,1993,479816.31
+Venezuela,1994,492515.636
+Venezuela,1995,519920.856
+Venezuela,1996,528769.627
+Venezuela,1997,546027.344
+Venezuela,1998,529766.784
+Venezuela,1999,508176.543
+Venezuela,2000,485591.37
+Venezuela,2001,486140.553
+Venezuela,2002,497337.104
+Venezuela,2003,502246.173
+Venezuela,2004,486917.028
+Venezuela,2005,462881.628
+Venezuela,2006,465591.402
+Venezuela,2007,449709.624
+Venezuela,2008,421504.044
+Venezuela,2009,387514.332
 Venezuela,1950,
 Venezuela,1951,
 Venezuela,1952,
@@ -16899,28 +16900,28 @@ Venezuela,2017,
 Venezuela,2018,
 Venezuela,2019,
 Venezuela,2020,
-Vietnam,1988,14637479.61
-Vietnam,1993,15188998.37
-Vietnam,1994,17707396.19
-Vietnam,1998,19118009.5
-Vietnam,1999,17310624.71
-Vietnam,2000,16645268.52
-Vietnam,2002,17328813.33
-Vietnam,2003,18443206.21
-Vietnam,2004,19672792.28
-Vietnam,2005,20171737.95
-Vietnam,2006,21768317.61
-Vietnam,2007,21876953.42
-Vietnam,2008,23244344.26
-Vietnam,2009,24326969.28
-Vietnam,2010,31763365.64
-Vietnam,2011,26701847.27
-Vietnam,2012,27841333.33
-Vietnam,2013,28979127.41
-Vietnam,2014,30409128.51
-Vietnam,2015,31068174.8
-Vietnam,2016,31575197.53
-Vietnam,2017,32537281.51
+Vietnam,1988,5500311.075
+Vietnam,1993,5744858.91
+Vietnam,1994,4880601.075
+Vietnam,1998,3388495.122
+Vietnam,1999,3305792.691
+Vietnam,2000,3106406.592
+Vietnam,2002,2436864.375
+Vietnam,2003,2311228.83
+Vietnam,2004,2234219.347
+Vietnam,2005,2223409.644
+Vietnam,2006,2201299.35
+Vietnam,2007,2268290.038
+Vietnam,2008,2162305.125
+Vietnam,2009,2088445.986
+Vietnam,2010,1636734.468
+Vietnam,2011,2019327.2
+Vietnam,2012,1984780.812
+Vietnam,2013,1943948.846
+Vietnam,2014,1885396.377
+Vietnam,2015,1880121.666
+Vietnam,2016,1864483.839
+Vietnam,2017,1843041.774
 Vietnam,1950,
 Vietnam,1951,
 Vietnam,1952,
@@ -17254,13 +17255,13 @@ World,2017,
 World,2018,
 World,2019,
 World,2020,
-Yemen,1991,5266275.794
-Yemen,1996,6160466.27
-Yemen,1997,5659644.928
-Yemen,2003,5535636.998
-Yemen,2005,5805333.333
-Yemen,2011,7909519.313
-Yemen,2013,8267961.207
+Yemen,1991,1337718.312
+Yemen,1996,1564857
+Yemen,1997,1724516.448
+Yemen,2003,1817510.16
+Yemen,2005,1886152.8
+Yemen,2011,1717599.576
+Yemen,2013,1780058.976
 Yemen,1950,
 Yemen,1951,
 Yemen,1952,
@@ -17325,14 +17326,14 @@ Yemen,2017,
 Yemen,2018,
 Yemen,2019,
 Yemen,2020,
-Zambia,1992,3361818.575
-Zambia,1995,2852211.704
-Zambia,1996,3504870.37
-Zambia,1999,3129748.311
-Zambia,2002,3890788.571
-Zambia,2007,5111076.419
-Zambia,2013,6614175
-Zambia,2018,8291658.96
+Zambia,1992,720669.686
+Zambia,1995,962795.435
+Zambia,1996,827836.362
+Zambia,1999,1096864.112
+Zambia,2002,1072398.6
+Zambia,2007,1072119.834
+Zambia,2013,1058268
+Zambia,2018,992644.244
 Zambia,1950,
 Zambia,1951,
 Zambia,1952,
@@ -17396,15 +17397,15 @@ Zambia,2016,
 Zambia,2017,
 Zambia,2019,
 Zambia,2020,
-Zimbabwe,1988,5483106.452
-Zimbabwe,1994,6096147.368
-Zimbabwe,1999,5002940.828
-Zimbabwe,2005,5018246.459
-Zimbabwe,2009,5522162.393
-Zimbabwe,2010,6202736.025
-Zimbabwe,2014,8102108.696
-Zimbabwe,2015,8335011.07
-Zimbabwe,2019,9097957.447
+Zimbabwe,1988,526926.53
+Zimbabwe,1994,495159.57
+Zimbabwe,1999,571555.972
+Zimbabwe,2005,625318.673
+Zimbabwe,2009,680335.929
+Zimbabwe,2010,643124.482
+Zimbabwe,2014,617186.232
+Zimbabwe,2015,612131.548
+Zimbabwe,2019,502434.7
 Zimbabwe,1950,
 Zimbabwe,1951,
 Zimbabwe,1952,
