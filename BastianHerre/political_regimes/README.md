@@ -47,31 +47,31 @@ The data are used in the following posts:
 `regimes_number_owid.csv` and `regimes_number_owid.dta` include the following variables:
 - `entity_name`: Entity name
 - `year`: Year
-- `number_closedaut_row_owid`: Number of closed autocracies, based on `electdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_electdaut_row_owid`: Number of electoral autocracies, based on `electdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_electdem_18_row_owid`: Number of electoral democracies aged 1-18 years, based on `electdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_electdem_30_row_owid`: Number of electoral democracies aged 19-30 years, based on `electdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_electdem_60_row_owid`: Number of electoral democracies aged 31-60 years, based on `electdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_electdem_90_row_owid`: Number of electoral democracies aged 61-90 years, based on `electdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_electdem_91plus_row_owid`: Number of electoral democracies aged 91 years or older, based on `electdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_electdem_row_owid`: Number of electoral democracies, based on `libdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_libdem_18_row_owid`: Number of liberal democracies aged 1-18 years, based on `libdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_libdem_30_row_owid`: Number of liberal democracies aged 19-30 years, based on `libdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_libdem_60_row_owid`: Number of liberal democracies aged 31-60 years, based on `libdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_libdem_90_row_owid`: Number of liberal democracies aged 61-90 years, based on `libdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_libdem_91plus_row_owid`: Number of liberal democracies aged 91 years or older, based on `libdem_age_group_row_owid` in `regimes_owid.dta`.
-- `number_nondem_bmr_owid`: Number of non-democracies, based on `electem_age_group_bmr_owid` in `regimes_owid.dta`.
-- `number_electdem_18_bmr_owid`: Number of electoral democracies aged 1-18 years, based on `electem_age_group_bmr_owid` in `regimes_owid.dta`.
-- `number_electdem_30_bmr_owid`: Number of electoral democracies aged 19-30 years, based on `electem_age_group_bmr_owid` in `regimes_owid.dta`.
-- `number_electdem_60_bmr_owid`: Number of electoral democracies aged 31-60 years, based on `electem_age_group_bmr_owid` in `regimes_owid.dta`.
-- `number_electdem_90_bmr_owid`: Number of electoral democracies aged 61-90 years, based on `electem_age_group_bmr_owid` in `regimes_owid.dta`.
-- `number_electdem_91plus_bmr_owid`: Number of electoral democracies aged 91 years, or older based on `electem_age_group_bmr_owid` in `regimes_owid.dta`.
+- `number_closedaut_row_owid`: Number of closed autocracies, based on `electdem_age_group_row_owid`
+- `number_electdaut_row_owid`: Number of electoral autocracies, based on `electdem_age_group_row_owid`
+- `number_electdem_18_row_owid`: Number of electoral democracies aged 1-18 years, based on `electdem_age_group_row_owid`
+- `number_electdem_30_row_owid`: Number of electoral democracies aged 19-30 years, based on `electdem_age_group_row_owid`
+- `number_electdem_60_row_owid`: Number of electoral democracies aged 31-60 years, based on `electdem_age_group_row_owid`
+- `number_electdem_90_row_owid`: Number of electoral democracies aged 61-90 years, based on `electdem_age_group_row_owid`
+- `number_electdem_91plus_row_owid`: Number of electoral democracies aged 91 years or older, based on `electdem_age_group_row_owid`
+- `number_electdem_row_owid`: Number of electoral democracies, based on `libdem_age_group_row_owid`
+- `number_libdem_18_row_owid`: Number of liberal democracies aged 1-18 years, based on `libdem_age_group_row_owid`
+- `number_libdem_30_row_owid`: Number of liberal democracies aged 19-30 years, based on `libdem_age_group_row_owid`
+- `number_libdem_60_row_owid`: Number of liberal democracies aged 31-60 years, based on `libdem_age_group_row_owid`
+- `number_libdem_90_row_owid`: Number of liberal democracies aged 61-90 years, based on `libdem_age_group_row_owid`
+- `number_libdem_91plus_row_owid`: Number of liberal democracies aged 91 years or older, based on `libdem_age_group_row_owid`
+- `number_nondem_bmr_owid`: Number of non-democracies, based on `electem_age_group_bmr_owid`
+- `number_electdem_18_bmr_owid`: Number of electoral democracies aged 1-18 years, based on `electem_age_group_bmr_owid`
+- `number_electdem_30_bmr_owid`: Number of electoral democracies aged 19-30 years, based on `electem_age_group_bmr_owid`
+- `number_electdem_60_bmr_owid`: Number of electoral democracies aged 31-60 years, based on `electem_age_group_bmr_owid`
+- `number_electdem_90_bmr_owid`: Number of electoral democracies aged 61-90 years, based on `electem_age_group_bmr_owid`
+- `number_electdem_91plus_bmr_owid`: Number of electoral democracies aged 91 years, or older based on `electem_age_group_bmr_owid`
 
 `regimes_population_owid.csv` and `regimes_population_owid.dta` include the following variables:
 - `entity_name`: entity name
 - `year`: Year
-- `population_closed_aut`: number of people living in closed autocracies, based on `regime_row_owid` in `regimes_owid.dta`.
-- `population_electoral_aut`: number of people living in electoral autocracies, based on `regime_row_owid` in `regimes_owid.dta`.
-- `population_electoral_dem`: number of people living in electoral democracies, based on `regime_row_owid` in `regimes_owid.dta`.
-- `population_liberal_dem`: number of people living in liberal democracies, based on `regime_row_owid` in `regimes_owid.dta`.
-- `population_missing_data`: number of people living in countries without regime data, based on `regime_row_owid` in `regimes_owid.dta`.
+- `population_closed_aut`: number of people living in closed autocracies, based on `regime_row_owid`
+- `population_electoral_aut`: number of people living in electoral autocracies, based on `regime_row_owid`
+- `population_electoral_dem`: number of people living in electoral democracies, based on `regime_row_owid`
+- `population_liberal_dem`: number of people living in liberal democracies, based on `regime_row_owid`
+- `population_missing_data`: number of people living in countries without regime data, based on `regime_row_owid`
