@@ -3,7 +3,7 @@
 *****  Post 2: "200 years ago, everyone lacked democratic rights. Now, billions of people have them"
 *****  Post 3: "In most countries, democracy is a recent achievement. Dictatorship is far from a distant memory"
 *****  Author: Bastian Herre
-*****  February 1, 2022
+*****  February 17, 2022
 
 
 version 14
@@ -20,10 +20,11 @@ global project "/Users/bastianherre/Dropbox/Data/"
 
 *** Create a master-dataset:
 
-** The master-dataset includes all countries included in either the V-Dem or OWID population dataset, and all years included in V-Dem (1789-2020).
-** It allows me to later map the population data onto RoW and V-Dem data.
+** The master-dataset includes all countries included in either the V-Dem, Boix-Miller-Rosato (BMR) or OWID population dataset, and all years included in V-Dem (1789-2020).
+** It allows me to later map the population data onto BMR, RoW and V-Dem data.
 
-** Download V-Dem dataset from https://www.v-dem.net/en/data/data/v-dem-dataset-v111/ and move it into the folder "Coppedge et al. 2021 V-Dem"
+
+** Download V-Dem dataset from https://www.v-dem.net/vdemds.html and move it into the folder "Coppedge et al. 2021 V-Dem"
 ** Import V-Dem dataset:
 use "Coppedge et al. 2021 V-Dem/V-Dem-CY-Full+Others-v11.1.dta", clear
 
@@ -45,14 +46,69 @@ sort country_name year
 merge 1:1 country_name year using "Our World in Data/population_owid.dta"
 
 ** Take a look at unmerged cases:
-tab country_name if _merge == 1 & year > 1799 // Unmerged observations in master dataset are from before 1800, are historical countries (e.g. Orange Free State and German Democratic Republic), as well as Kosovo, Palestine/Gaza, Palestine/West Bank, Somaliland, and Zanzibar.
+tab country_name if _merge == 1 & year > 1799 // Unmerged observations in master dataset are from before 1800, are historical countries (e.g. Tuscany and German Democratic Republic), as well as Kosovo, Palestine/Gaza, Palestine/West Bank, Somaliland, and Zanzibar.
 drop _merge
 
-** Only keep one observation per country to avoid duplicates in next step:
+** Only keep one observation per country to avoid duplicates in later step:
 keep country_name
 sort country_name
 duplicates drop
 isid country_name
+
+save "Political regimes/master_temp.dta", replace
+
+
+** Download BMR dataset from https://sites.google.com/site/mkmtwo/data?authuser=0 and move it into the folder "Boix, Miller, Rosato 2022 regimes data"
+** Import BMR dataset:
+use "Boix, Miller, Rosato 2022 regimes data/democracy-v4.0.dta", replace
+
+** Harmonize BMR country names with OWID names:
+generate country_name = country
+collapse (first) country, by(country_name)
+keep country
+sort country
+
+export delimited "Boix, Miller, Rosato 2022 regimes data/bmr_countries.csv", replace
+
+* I use the internal country-name-standardizer tool, which creates a file bith BMR's country names and the respective OWID names:
+
+import delimited "Boix, Miller, Rosato 2022 regimes data/bmr_countries_country_standardized.csv", clear varnames(1) // The file is in the GitHub folder.
+
+rename ourworldindataname country_name
+
+
+** Harmonize remaining incorrectly formatted country names in BMR with OWID names:
+replace country_name = "German Democratic Republic" if country_name == "East Germany"
+replace country_name = "Micronesia" if country_name == "Micronesia (country)"
+replace country_name = "Piedmont-Sardinia" if country_name == "Sardinia"
+replace country_name = "Republic of Vietnam" if country_name == "South Vietnam"
+replace country_name = "Germany" if country_name == "West Germany"
+replace country_name = "Wuerttemberg" if country_name == "Wuerttemburg"
+replace country_name = "Yemen" if country_name == "Yemen Arab Republic"
+replace country_name = "South Yemen" if country_name == "Yemen People's Republic"
+
+
+** Save list of original and harmonized BMR country names:
+save "Boix, Miller, Rosato 2022 regimes data/bmr_countries.dta", replace
+
+
+** Only keep one observation per country to avoid duplicates in later step:
+keep country_name
+tab country_name // Duplicates from countries that changed borders: Ethiopia, Germany, Pakistan, Russia, Serbia, Sudan, Vietnam, and Yemen.
+duplicates drop
+isid country_name
+
+sort country_name
+save "Boix, Miller, Rosato 2022 regimes data/bmr_temp.dta", replace
+
+
+** Merge BMR into master data:
+use "Political regimes/master_temp.dta", clear
+merge 1:1 country_name using "Boix, Miller, Rosato 2022 regimes data/bmr_temp.dta"
+tab country_name if _merge == 2 // Unmatched countries in BMR are historical countries Central American Union, Czechoslovakia, Great Colombia, Korea, and Orange Free State.
+drop _merge
+erase "Boix, Miller, Rosato 2022 regimes data/bmr_temp.dta"
+
 
 ** Expand country dataset to country-year dataset with years 1789 to 2020:
 expand 232
@@ -326,6 +382,12 @@ save "Political regimes/vdem_temp.dta", replace
 use "Political regimes/master.dta", clear
 
 merge 1:1 country_name year using "Political regimes/vdem_temp.dta"
+
+generate vdem_obs = 1 if _merge == 3
+replace vdem_obs = 0 if _merge == 1
+
+label variable vdem_obs "Observation includes information from V-Dem"
+
 drop _merge
 
 erase "Political regimes/master.dta"
@@ -334,7 +396,7 @@ sort country_name year
 
 
 
-*** Expand regime data by imputing values from other countries:
+*** Expand V-Dem data by imputing values from other countries:
 
 ** Investigate whether non-independent states have diverse regime types:
 tab v2svindep v2x_regime_owid
@@ -650,42 +712,49 @@ drop _merge
 
 erase "Political regimes/vdem_temp.dta"
 
-rename country_name regime_imputed_country_name
+rename country_name regime_imputed_country_vdem_owid
 rename country_name_temp country_name
 
-** Create variable identifying whether regime data was imputed:
-generate regime_imputed = ""
-replace regime_imputed = "yes" if regime_imputed_country_name != "" & empty_observation == 1
-replace regime_imputed = "no" if regime_imputed_country_name == "" | empty_observation != 1
-order regime_imputed, before(regime_imputed_country_name)
+** Create variable identifying whether regime data is imputed:
+generate regime_imputed_vdem_owid = ""
+replace regime_imputed_vdem_owid = "no" if regime_imputed_country_vdem_owid == "" | empty_observation != 1
+replace regime_imputed_vdem_owid = "yes" if regime_imputed_country_vdem_owid != "" & empty_observation == 1
+order regime_imputed_vdem_owid, before(regime_imputed_country_vdem_owid)
 
-label variable regime_imputed_country_name "Name of the country from which regime information was imputed"
-label variable regime_imputed "Regime information imputed from another country"
+label variable regime_imputed_country_vdem_owid "Name of the country from which V-Dem regime information was imputed"
+label variable regime_imputed_vdem_owid "V-Dem regime information imputed from another country"
+
+** Update variable identifying whether observation includes V-Dem information:
+replace vdem_obs = 1 if regime_imputed_vdem_owid == "yes"
+
+** Create variable identifying whether country includes V-Dem information:
+bysort country_name: egen vdem_country = max(vdem_obs)
+label variable vdem_country "Country includes information from V-Dem"
 
 ** Add imputed values for variables:
-replace regime_row_owid = v2x_regime_owid if regime_imputed == "yes"
+replace regime_row_owid = v2x_regime_owid if regime_imputed_vdem_owid== "yes"
 
-replace electdem_vdem_owid = v2x_polyarchy if regime_imputed == "yes"
+replace electdem_vdem_owid = v2x_polyarchy if regime_imputed_vdem_owid== "yes"
 
-replace electoff_vdem_owid = v2x_elecoff if regime_imputed == "yes"
-replace electfreefair_vdem_owid = v2xel_frefair if regime_imputed == "yes"
-replace freeassoc_vdem_owid = v2x_frassoc_thick if regime_imputed == "yes"
-replace suffr_vdem_owid = v2x_suffr if regime_imputed == "yes"
-replace freeexpr_vdem_owid = v2x_freexp_altinf if regime_imputed == "yes"
+replace electoff_vdem_owid = v2x_elecoff if regime_imputed_vdem_owid== "yes"
+replace electfreefair_vdem_owid = v2xel_frefair if regime_imputed_vdem_owid== "yes"
+replace freeassoc_vdem_owid = v2x_frassoc_thick if regime_imputed_vdem_owid== "yes"
+replace suffr_vdem_owid = v2x_suffr if regime_imputed_vdem_owid== "yes"
+replace freeexpr_vdem_owid = v2x_freexp_altinf if regime_imputed_vdem_owid== "yes"
 
-replace electdem_vdem_owid_low = v2x_polyarchy_codelow if regime_imputed == "yes"
-replace electfreefair_vdem_owid_low = v2xel_frefair_codelow if regime_imputed == "yes"
-replace freeassoc_vdem_owid_low = v2x_frassoc_thick_codelow if regime_imputed == "yes"
-replace freeexpr_vdem_owid_low = v2x_freexp_altinf_codelow if regime_imputed == "yes"
+replace electdem_vdem_owid_low = v2x_polyarchy_codelow if regime_imputed_vdem_owid== "yes"
+replace electfreefair_vdem_owid_low = v2xel_frefair_codelow if regime_imputed_vdem_owid== "yes"
+replace freeassoc_vdem_owid_low = v2x_frassoc_thick_codelow if regime_imputed_vdem_owid== "yes"
+replace freeexpr_vdem_owid_low = v2x_freexp_altinf_codelow if regime_imputed_vdem_owid== "yes"
 
-replace electdem_vdem_owid_high = v2x_polyarchy_codehigh if regime_imputed == "yes"
-replace electfreefair_vdem_owid_high = v2xel_frefair_codehigh if regime_imputed == "yes"
-replace freeassoc_vdem_owid_high = v2x_frassoc_thick_codehigh if regime_imputed == "yes"
-replace freeexpr_vdem_owid_high = v2x_freexp_altinf_codehigh if regime_imputed == "yes"
+replace electdem_vdem_owid_high = v2x_polyarchy_codehigh if regime_imputed_vdem_owid== "yes"
+replace electfreefair_vdem_owid_high = v2xel_frefair_codehigh if regime_imputed_vdem_owid== "yes"
+replace freeassoc_vdem_owid_high = v2x_frassoc_thick_codehigh if regime_imputed_vdem_owid== "yes"
+replace freeexpr_vdem_owid_high = v2x_freexp_altinf_codehigh if regime_imputed_vdem_owid== "yes"
 
 sort country_name year
-keep country_name year regime_row_owid electdem_vdem_owid electdem_vdem_owid_low electdem_vdem_owid_high electfreefair_vdem_owid electfreefair_vdem_owid_low electfreefair_vdem_owid_high suffr_vdem_owid electoff_vdem_owid freeexpr_vdem_owid freeexpr_vdem_owid_low freeexpr_vdem_owid_high freeassoc_vdem_owid freeassoc_vdem_owid_low freeassoc_vdem_owid_high regime_imputed regime_imputed_country_name
-order country_name year regime_row_owid electdem_vdem_owid electdem_vdem_owid_low electdem_vdem_owid_high electfreefair_vdem_owid electfreefair_vdem_owid_low electfreefair_vdem_owid_high suffr_vdem_owid electoff_vdem_owid freeexpr_vdem_owid freeexpr_vdem_owid_low freeexpr_vdem_owid_high freeassoc_vdem_owid freeassoc_vdem_owid_low freeassoc_vdem_owid_high regime_imputed regime_imputed_country_name
+keep country_name year vdem_country vdem_obs regime_row_owid electdem_vdem_owid electdem_vdem_owid_low electdem_vdem_owid_high electfreefair_vdem_owid electfreefair_vdem_owid_low electfreefair_vdem_owid_high suffr_vdem_owid electoff_vdem_owid freeexpr_vdem_owid freeexpr_vdem_owid_low freeexpr_vdem_owid_high freeassoc_vdem_owid freeassoc_vdem_owid_low freeassoc_vdem_owid_high regime_imputed_vdem_owid regime_imputed_country_vdem_owid
+order country_name year vdem_country vdem_obs regime_row_owid electdem_vdem_owid electdem_vdem_owid_low electdem_vdem_owid_high electfreefair_vdem_owid electfreefair_vdem_owid_low electfreefair_vdem_owid_high suffr_vdem_owid electoff_vdem_owid freeexpr_vdem_owid freeexpr_vdem_owid_low freeexpr_vdem_owid_high freeassoc_vdem_owid freeassoc_vdem_owid_low freeassoc_vdem_owid_high regime_imputed_vdem_owid regime_imputed_country_vdem_owid
 
 ** Format variables:
 
@@ -710,7 +779,7 @@ label variable freeassoc_vdem_owid_high "Freedom of association (upper bound, V-
 
 
 
-*** Create variables for age of electoral democracies and liberal democracies:
+*** Create age variables for electoral democracies and liberal democracies:
 
 ** Create numeric country identifier:
 encode country_name, generate(country_number)
@@ -725,6 +794,7 @@ replace electdem_age_row_owid = 1 if (l.regime_row_owid == 0 | l.regime_row_owid
 replace electdem_age_row_owid = 1 if l.regime_row_owid == . & (regime_row_owid == 2 | regime_row_owid == 3) // Assume that when previous information is missing, the country was not an electoral democracy.
 replace electdem_age_row_owid = l.electdem_age_row_owid + 1 if electdem_age_row_owid == . & (regime_row_owid == 2 | regime_row_owid == 3)
 label variable electdem_age_row_owid "Electoral democracy age (Regimes of the World, OWID)"
+order electdem_age_row_owid, after(regime_row_owid)
 
 ** Create variable for age of liberal democracies:
 generate libdem_age_row_owid = .
@@ -733,64 +803,249 @@ replace libdem_age_row_owid = 1 if (l.regime_row_owid == 0 | l.regime_row_owid =
 replace libdem_age_row_owid = 1 if l.regime_row_owid == . & regime_row_owid == 3 // Assume that when previous information is missing, the country was not a liberal democracy.
 replace libdem_age_row_owid = l.libdem_age_row_owid + 1 if libdem_age_row_owid == . & regime_row_owid == 3
 label variable libdem_age_row_owid "Liberal democracy age (Regimes of the World, OWID)"
+order libdem_age_row_owid, after(electdem_age_row_owid)
+
+drop country_number
+
+** Create variable for experience with electoral democracy:
+generate electdem_row_owid = .
+replace electdem_row_owid = 0 if regime_row_owid == 0 | regime_row_owid == 1
+replace electdem_row_owid = 1 if regime_row_owid == 2 | regime_row_owid == 3
+
+generate electdem_exp_row_owid = .
+bysort country_name: replace electdem_exp_row_owid = sum(electdem_row_owid) if vdem_country == 1
+drop electdem_row_owid
+
+label variable electdem_exp_row_owid "Experience with electoral democracy (Regimes of the World, OWID)"
+
+** Create variable for experience with liberal democracy:
+generate libdem_row_owid = .
+replace libdem_row_owid = 0 if regime_row_owid == 0 | regime_row_owid == 1 | regime_row_owid == 2
+replace libdem_row_owid = 1 if regime_row_owid == 3
+
+generate libdem_exp_row_owid = .
+bysort country_name: replace libdem_exp_row_owid = sum(libdem_row_owid) if vdem_country == 1
+drop libdem_row_owid
+
+label variable libdem_exp_row_owid "Experience with liberal democracy (Regimes of the World, OWID)"
+
 
 ** Create variable for age group of electoral demcoracies:
 generate electdem_age_group_row_owid = .
-replace electdem_age_group_row_owid = 0 if electdem_age_row_owid == 0
-replace electdem_age_group_row_owid = 1 if electdem_age_row_owid > 0 & electdem_age_row_owid <= 18
-replace electdem_age_group_row_owid = 2 if electdem_age_row_owid > 18 & electdem_age_row_owid <= 30
-replace electdem_age_group_row_owid = 3 if electdem_age_row_owid > 30 & electdem_age_row_owid <= 60
-replace electdem_age_group_row_owid = 4 if electdem_age_row_owid > 60 & electdem_age_row_owid <= 90
-replace electdem_age_group_row_owid = 5 if electdem_age_row_owid > 90 & electdem_age_row_owid < .
+replace electdem_age_group_row_owid = 0 if regime_row_owid == 0
+replace electdem_age_group_row_owid = 1 if regime_row_owid == 1
+replace electdem_age_group_row_owid = 2 if electdem_age_row_owid > 0 & electdem_age_row_owid <= 18
+replace electdem_age_group_row_owid = 3 if electdem_age_row_owid > 18 & electdem_age_row_owid <= 30
+replace electdem_age_group_row_owid = 4 if electdem_age_row_owid > 30 & electdem_age_row_owid <= 60
+replace electdem_age_group_row_owid = 5 if electdem_age_row_owid > 60 & electdem_age_row_owid <= 90
+replace electdem_age_group_row_owid = 6 if electdem_age_row_owid > 90 & electdem_age_row_owid < .
 label variable electdem_age_group_row_owid "Electoral democracy age group (Regimes of the World, OWID)"
-label define electdem_age_group_row_owid 0 "not an electoral democracy" 1 "1-18 years" 2 "19-30 years" 3 "31-60 years" 4 "61-90 years" 5 "91+ years"
+label define electdem_age_group_row_owid 0 "closed autocracy" 1"electoral autocracy" 2 "1-18 years" 3 "19-30 years" 4 "31-60 years" 5 "61-90 years" 6 "91+ years"
 label values electdem_age_group_row_owid electdem_age_group_row_owid
+order electdem_age_group_row_owid, after(electdem_age_row_owid)
 
 ** Create variable for age group of liberal democracies:
 generate libdem_age_group_row_owid = .
-replace libdem_age_group_row_owid = 0 if libdem_age_row_owid == 0
-replace libdem_age_group_row_owid = 1 if libdem_age_row_owid > 0 & libdem_age_row_owid <= 18
-replace libdem_age_group_row_owid = 2 if libdem_age_row_owid > 18 & libdem_age_row_owid <= 30
-replace libdem_age_group_row_owid = 3 if libdem_age_row_owid > 30 & libdem_age_row_owid <= 60
-replace libdem_age_group_row_owid = 4 if libdem_age_row_owid > 60 & libdem_age_row_owid <= 90
-replace libdem_age_group_row_owid = 5 if libdem_age_row_owid > 90 & libdem_age_row_owid < .
+replace libdem_age_group_row_owid = 0 if regime_row_owid == 0
+replace libdem_age_group_row_owid = 1 if regime_row_owid == 1
+replace libdem_age_group_row_owid = 2 if regime_row_owid == 2
+replace libdem_age_group_row_owid = 3 if libdem_age_row_owid > 0 & libdem_age_row_owid <= 18
+replace libdem_age_group_row_owid = 4 if libdem_age_row_owid > 18 & libdem_age_row_owid <= 30
+replace libdem_age_group_row_owid = 5 if libdem_age_row_owid > 30 & libdem_age_row_owid <= 60
+replace libdem_age_group_row_owid = 6 if libdem_age_row_owid > 60 & libdem_age_row_owid <= 90
+replace libdem_age_group_row_owid = 7 if libdem_age_row_owid > 90 & libdem_age_row_owid < .
 label variable libdem_age_group_row_owid "Liberal democracy age group (Regimes of the World, OWID)"
-label define libdem_age_group_row_owid 0 "not a liberal democracy" 1 "1-18 years" 2 "19-30 years" 3 "31-60 years" 4 "61-90 years" 5 "91+ years"
+label define libdem_age_group_row_owid 0 "closed autocracy" 1 "electoral autocracy" 2 "electoral democracy" 3 "1-18 years" 4 "19-30 years" 5 "31-60 years" 6 "61-90 years" 7 "91+ years"
 label values libdem_age_group_row_owid libdem_age_group_row_owid
+order libdem_age_group_row_owid, after(libdem_age_row_owid)
 
 ** Add labels for ages of electoral and liberal democracies to optimize use in the OWID grapher:
 tostring electdem_age_row_owid, replace
-replace electdem_age_row_owid = "not an electoral democracy" if electdem_age_row_owid == "0"
 replace electdem_age_row_owid = "no data" if electdem_age_row_owid == "."
+replace electdem_age_row_owid = "closed autocracy" if regime_row_owid == 0
+replace electdem_age_row_owid = "electoral autocracy" if regime_row_owid == 1
 
 tostring libdem_age_row_owid, replace
-replace libdem_age_row_owid = "not a liberal democracy" if libdem_age_row_owid == "0"
 replace libdem_age_row_owid = "no data" if libdem_age_row_owid == "."
+replace libdem_age_row_owid = "closed autocracy" if regime_row_owid == 0
+replace libdem_age_row_owid = "electoral autocracy" if regime_row_owid == 1
+replace libdem_age_row_owid = "electoral democracy" if regime_row_owid == 2
 
+save "Political regimes/master_temp.dta", replace
+
+
+
+*** Prepare BMR data:
+
+** Import BMR data again:
+use "Boix, Miller, Rosato 2022 regimes data/democracy-v4.0.dta", replace
+
+
+** Merge with harmonized country names:
+merge m:1 country using "Boix, Miller, Rosato 2022 regimes data/bmr_countries.dta"
+drop _merge
+erase "Boix, Miller, Rosato 2022 regimes data/bmr_countries.dta"
+
+
+** Identify duplicate observations:
+sort country_name year
+duplicates tag country_name year, generate(duplicate)
+list if duplicate == 1 // duplicates are of Germany/West Germany in 1945 and 1990, and Yugoslavia/Serbia in 1991 and 2006.
+drop if ccode == 260 & year == 1945
+drop if ccode == 260 & year == 1990
+drop if ccode == 345 & year == 1991
+drop if ccode == 347 & year == 2006
+
+
+** Keep variables of interest:
+keep country_name year democracy_omitteddata democracy_femalesuffrage // I use 'democracy_omitteddata' instead of 'democracy' because the former codes times of foreign occupation and civil war as missing values instead of continuations of the previous regime type.
+
+order country_name year
+sort country_name year
+
+save "Boix, Miller, Rosato 2022 regimes data/bmr.dta", replace
+
+
+
+*** Merge BMR with master dataset:
+
+use "Political regimes/master_temp.dta", clear
+
+merge 1:1 country_name year using "Boix, Miller, Rosato 2022 regimes data/bmr.dta"
+erase "Political regimes/master_temp.dta"
+tab country_name if _merge == 2 // No unmatched countries in BMR (as it should be, as I created a comprehensive list of countries above).
+
+generate bmr_obs = 1 if _merge == 3
+replace bmr_obs = 0 if _merge == 1
+
+label variable bmr_obs "Observation includes information from Boix et al. (2013)"
+
+generate regime_bmr_owid = democracy_omitteddata
+
+order bmr_obs, before(regime_bmr_owid)
+
+generate regime_womsuffr_bmr_owid = democracy_femalesuffrage
+replace regime_womsuffr_bmr_owid = . if regime_bmr_owid == . // I do this to code times of foreign occupation and civil war as missing values instead of continuations of the previous regime type.
+
+label variable regime_bmr_owid "Regime (BMR, OWID)"
+label variable regime_womsuffr_bmr_owid "Regime (with women's suffrage, BMR, OWID)"
+
+generate regime_imputed_bmr_owid = "no" if _merge == 3
+drop _merge democracy_omitteddata democracy_femalesuffrage
+
+label variable regime_imputed_bmr_owid "BMR regime information imputed from another country"
+
+** Expand BMR data by imputing data from historical countries:
+
+generate regime_imputed_country_bmr_owid = ""
+replace regime_imputed_country_bmr_owid = "Great Colombia" if country_name == "Colombia" & year >= 1821 & year <= 1830
+replace regime_imputed_country_bmr_owid = "Central American Union" if country_name == "Costa Rica" & year >= 1824 & year <= 1838
+replace regime_imputed_country_bmr_owid = "Czechoslovakia" if country_name == "Czechia" & year >= 1918 & year <= 1992
+replace regime_imputed_country_bmr_owid = "Great Colombia" if country_name == "Ecuador" & year >= 1821 & year <= 1830
+replace regime_imputed_country_bmr_owid = "Central American Union" if country_name == "El Salvador" & year >= 1824 & year <= 1838
+replace regime_imputed_country_bmr_owid = "Central American Union" if country_name == "Guatemala" & year >= 1824 & year <= 1838
+replace regime_imputed_country_bmr_owid = "Central American Union" if country_name == "Honduras" & year >= 1824 & year <= 1838
+replace regime_imputed_country_bmr_owid = "Central American Union" if country_name == "Nicaragua" & year >= 1824 & year <= 1838
+replace regime_imputed_country_bmr_owid = "Korea" if country_name == "North Korea" & year >= 1800 & year <= 1910
+replace regime_imputed_country_bmr_owid = "Great Colombia" if country_name == "Panama" & year >= 1821 & year <= 1830
+replace regime_imputed_country_bmr_owid = "Czechoslovakia" if country_name == "Slovakia" & year >= 1918 & year <= 1992
+replace regime_imputed_country_bmr_owid = "Korea" if country_name == "South Korea" & year >= 1800 & year <= 1910
+replace regime_imputed_country_bmr_owid = "Great Colombia" if country_name == "Venezuela" & year >= 1821 & year <= 1830
+
+label variable regime_imputed_country_bmr_owid "Name of the country from which BMR regime information was imputed"
+
+
+** Merge again, this time on imputed countries:
+rename country_name country_name_temp
+rename regime_imputed_country_bmr_owid country_name
+merge m:1 country_name year using "Boix, Miller, Rosato 2022 regimes data/bmr.dta"
+drop if _merge == 2
+
+rename country_name regime_imputed_country_bmr_owid
+rename country_name_temp country_name
+sort country_name year
+
+replace regime_imputed_bmr_owid = "yes" if _merge == 3
+
+** Update observations including information from BMR:
+replace bmr_obs = 1 if regime_imputed_bmr_owid == "yes"
+
+** Create variable identifying whether country includes information from BMR:
+bysort country_name: egen bmr_country = max(bmr_obs)
+label variable bmr_country "Country includes information from Boix et al. (2013)
+order bmr_country, before(bmr_obs)
+
+drop _merge
+
+list country_name year if regime_bmr_owid != . & democracy_omitteddata != . // There is sometimes BMR information for the separate countries at the very end of the historical country; in that case, I do not impute.
+replace regime_bmr_owid = democracy_omitteddata if regime_bmr_owid == .
+replace regime_womsuffr_bmr_owid = democracy_femalesuffrage if regime_womsuffr_bmr_owid == . & democracy_omitteddata != .
+drop democracy_omitteddata democracy_femalesuffrage
+
+
+
+*** Create variables for age of BMR democracies:
+
+** Create numeric country identifier:
+encode country_name, generate(country_number)
+
+** Declare dataset to be time-series data:
+tsset country_number year
+
+** Create variable for age of electoral democracies:
+generate electdem_age_bmr_owid = .
+replace electdem_age_bmr_owid = 0 if regime_bmr_owid == 0
+replace electdem_age_bmr_owid = 1 if l.regime_bmr_owid == 0 & regime_bmr_owid == 1
+replace electdem_age_bmr_owid = 1 if l.regime_bmr_owid == . & regime_bmr_owid == 1 // Assume that when previous information is missing, the country was not an electoral democracy.
+replace electdem_age_bmr_owid = l.electdem_age_bmr_owid + 1 if electdem_age_bmr_owid == . & regime_bmr_owid == 1
+label variable electdem_age_bmr_owid "Electoral democracy age (BMR, OWID)"
+order electdem_age_bmr_owid, after(regime_womsuffr_bmr_owid)
 
 drop country_number
+
+** Create variable for experience with electoral democracy:
+generate electdem_bmr_owid = .
+replace electdem_bmr_owid = 0 if regime_bmr_owid == 0
+replace electdem_bmr_owid = 1 if regime_bmr_owid == 1
+
+generate electdem_exp_bmr_owid = .
+bysort country_name: replace electdem_exp_bmr_owid = sum(electdem_bmr_owid) if bmr_country == 1
+drop electdem_bmr_owid
+
+label variable electdem_exp_bmr_owid "Experience with electoral democracy (BMR, OWID)"
+
+
+** Create variable for age group of electoral democracies:
+generate electdem_age_group_bmr_owid = .
+replace electdem_age_group_bmr_owid = 0 if regime_bmr_owid == 0
+replace electdem_age_group_bmr_owid = 1 if electdem_age_bmr_owid > 0 & electdem_age_bmr_owid <= 18
+replace electdem_age_group_bmr_owid = 2 if electdem_age_bmr_owid > 18 & electdem_age_bmr_owid <= 30
+replace electdem_age_group_bmr_owid = 3 if electdem_age_bmr_owid > 30 & electdem_age_bmr_owid <= 60
+replace electdem_age_group_bmr_owid = 4 if electdem_age_bmr_owid > 60 & electdem_age_bmr_owid <= 90
+replace electdem_age_group_bmr_owid = 5 if electdem_age_bmr_owid > 90 & electdem_age_bmr_owid < .
+label variable electdem_age_group_bmr_owid "Electoral democracy age group (BMR, OWID)"
+label define electdem_age_group_bmr_owid 0 "non-democracy" 1 "1-18 years" 2 "19-30 years" 3 "31-60 years" 4 "61-90 years" 5 "91+ years"
+label values electdem_age_group_bmr_owid electdem_age_group_bmr_owid
+
+** Add labels for ages of BMR democracies to optimize use in the OWID grapher:
+tostring electdem_age_bmr_owid, replace
+replace electdem_age_bmr_owid = "no data" if electdem_age_bmr_owid == "."
+replace electdem_age_bmr_owid = "non-democracy" if regime_bmr_owid == 0
+
+order electdem_age_group_bmr_owid, after(electdem_age_bmr_owid)
+order regime_imputed_bmr_owid regime_imputed_country_bmr_owid, after(electdem_age_group_bmr_owid)
 
 
 
 *** Create dataset with regime information per country and year:
 
-** Keep only countries with at least one year of regime information:
-
 preserve
 
-generate number_years = .
-bysort country_name: replace number_years = _N
-
-generate missing_regime = .
-replace missing_regime = 1 if regime_row_owid == .
-
-bysort country_name: egen number_years_missing_regime = total(missing_regime)
-
-drop if number_years == number_years_missing_regime
-drop number_years missing_regime number_years_missing_regime
+** Keep only countries with at least one year of some regime information:
+keep if vdem_country == 1 | bmr_country == 1
 
 save "Political regimes/regimes_owid.dta", replace
-export delimited "Political regimes/regimes_owid.csv", replace
+export delimited "Political regimes/regimes_owid.csv", replace nolabel
 
 restore
 
@@ -849,48 +1104,66 @@ restore
 
 preserve
 
-tabulate electdem_age_group_row_owid, generate(electdem_age_group)
-tabulate libdem_age_group_row_owid, generate(libdem_age_group)
+tabulate electdem_age_group_row_owid, generate(electdem_age_group_row_owid)
+tabulate libdem_age_group_row_owid, generate(libdem_age_group_row_owid)
+tabulate electdem_age_group_bmr_owid, generate(electdem_age_group_bmr_owid)
 
-collapse (sum) electdem_age_group* libdem_age_group*, by(year)
-drop electdem_age_group_row_owid libdem_age_group_row_owid
+collapse (sum) electdem_age_group_row_owid* libdem_age_group_row_owid* electdem_age_group_bmr_owid*, by(year)
+drop electdem_age_group_row_owid libdem_age_group_row_owid electdem_age_group_bmr_owid
 
 generate entity_name = "World"
 order entity_name, before(year)
 
-rename electdem_age_group1 number_electdem_0
-rename electdem_age_group2 number_electdem_18
-rename electdem_age_group3 number_electdem_30
-rename electdem_age_group4 number_electdem_60
-rename electdem_age_group5 number_electdem_90
-rename electdem_age_group6 number_electdem_91plus
+rename electdem_age_group_row_owid1 number_closedaut_row_owid
+rename electdem_age_group_row_owid2 number_electaut_row_owid
+rename electdem_age_group_row_owid3 number_electdem_18_row_owid
+rename electdem_age_group_row_owid4 number_electdem_30_row_owid
+rename electdem_age_group_row_owid5 number_electdem_60_row_owid
+rename electdem_age_group_row_owid6 number_electdem_90_row_owid
+rename electdem_age_group_row_owid7 number_electdem_91plus_row_owid
 
-rename libdem_age_group1 number_libdem_0
-rename libdem_age_group2 number_libdem_18
-rename libdem_age_group3 number_libdem_30
-rename libdem_age_group4 number_libdem_60
-rename libdem_age_group5 number_libdem_90
-rename libdem_age_group6 number_libdem_91plus
+drop libdem_age_group_row_owid1 libdem_age_group_row_owid2
+rename libdem_age_group_row_owid3 number_electdem_row_owid
+rename libdem_age_group_row_owid4 number_libdem_18_row_owid
+rename libdem_age_group_row_owid5 number_libdem_30_row_owid
+rename libdem_age_group_row_owid6 number_libdem_60_row_owid
+rename libdem_age_group_row_owid7 number_libdem_90_row_owid
+rename libdem_age_group_row_owid8 number_libdem_91plus_row_owid
 
-label variable number_electdem_0 "Number of countries which are not electoral democracies"
-label variable number_electdem_18 "Number of electoral democracies aged 1-18 years"
-label variable number_electdem_30 "Number of electoral democracies aged 19-30 years"
-label variable number_electdem_60 "Number of electoral democracies aged 31-60 years"
-label variable number_electdem_90 "Number of electoral democracies aged 61-90 years"
-label variable number_electdem_91plus "Number of electoral democracies aged 91 years or older"
+label variable number_closedaut_row_owid "Number of closed autocracies (RoW, OWID)"
+label variable number_electaut_row_owid "Number of electoral autocracies (RoW, OWID)"
+label variable number_electdem_18_row_owid "Number of electoral democracies aged 1-18 years (RoW, OWID)"
+label variable number_electdem_30_row_owid "Number of electoral democracies aged 19-30 years (RoW, OWID)"
+label variable number_electdem_60_row_owid "Number of electoral democracies aged 31-60 years (RoW, OWID)"
+label variable number_electdem_90_row_owid "Number of electoral democracies aged 61-90 years (RoW, OWID)"
+label variable number_electdem_91plus_row_owid "Number of electoral democracies aged 91 years or older (RoW, OWID)"
 
-label variable number_libdem_0 "Number of countries which are not liberal democracies"
-label variable number_libdem_18 "Number of liberal democracies aged 1-18 years"
-label variable number_libdem_30 "Number of liberal democracies aged 19-30 years"
-label variable number_libdem_60 "Number of liberal democracies aged 31-60 years"
-label variable number_libdem_90 "Number of liberal democracies aged 61-90 years"
-label variable number_libdem_91plus "Number of liberal democracies aged 91 years or older"
+label variable number_electdem_row_owid "Number of electoral democracies (RoW, OWID)"
+label variable number_libdem_18_row_owid "Number of liberal democracies aged 1-18 years (RoW, OWID)"
+label variable number_libdem_30_row_owid "Number of liberal democracies aged 19-30 years (RoW, OWID)"
+label variable number_libdem_60_row_owid "Number of liberal democracies aged 31-60 years (RoW, OWID)"
+label variable number_libdem_90_row_owid "Number of liberal democracies aged 61-90 years (RoW, OWID)"
+label variable number_libdem_91plus_row_owid "Number of liberal democracies aged 91 years or older (RoW, OWID)"
 
+rename electdem_age_group_bmr_owid1 number_nondem_bmr_owid
+rename electdem_age_group_bmr_owid2 number_electdem_18_bmr_owid
+rename electdem_age_group_bmr_owid3 number_electdem_30_bmr_owid
+rename electdem_age_group_bmr_owid4 number_electdem_60_bmr_owid
+rename electdem_age_group_bmr_owid5 number_electdem_90_bmr_owid
+rename electdem_age_group_bmr_owid6 number_electdem_91plus_bmr_owid
+
+label variable number_nondem_bmr_owid "Number of non-democracies (Boix et al. 2013, OWID)"
+label variable number_electdem_18_bmr_owid "Number of electoral democracies aged 1-18 years (Boix et al. 2013, OWID)"
+label variable number_electdem_30_bmr_owid "Number of electoral democracies aged 19-30 years (Boix et al. 2013, OWID)"
+label variable number_electdem_60_bmr_owid "Number of electoral democracies aged 31-60 years (Boix et al. 2013, OWID)"
+label variable number_electdem_90_bmr_owid "Number of electoral democracies aged 61-90 years (Boix et al. 2013, OWID)"
+label variable number_electdem_91plus_bmr_owid "Number of electoral democracies aged 91 years or older (Boix et al. 2013, OWID)"
 
 save "Political regimes/regimes_number_owid.dta", replace
 export delimited "Political regimes/regimes_number_owid.csv", replace
 
 restore
+
 
 
 exit
