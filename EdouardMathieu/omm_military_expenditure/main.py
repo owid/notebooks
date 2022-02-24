@@ -62,7 +62,7 @@ def convert_gbp_to_usd(df: pd.DataFrame) -> pd.DataFrame:
         columns={"Year": "year"}
     )
     df = df.merge(exchange, on="year", validate="many_to_one", how="left")
-    df["military_expenditure"] = df.military_expenditure.mul(df.Rate)
+    df["military_expenditure"] = df.military_expenditure * df.Rate
     df = df.drop(columns="Rate")
     return df
 
@@ -105,9 +105,7 @@ def select_source(df: pd.DataFrame) -> pd.DataFrame:
     1. Correlates of War
     2. SIPRI
     """
-    import pdb
 
-    pdb.set_trace()
     return (
         df.dropna(subset=["military_expenditure"])
         .sort_values(["country", "year", "source_rank"])
@@ -131,9 +129,7 @@ def adjust_for_inflation(df: pd.DataFrame) -> pd.DataFrame:
     )
     cpi_2020 = cpi.loc[cpi.year == 2020, "cpi"].values[0]
     df = df.merge(cpi, on="year", validate="many_to_one", how="left")
-    df["military_expenditure"] = (
-        df.military_expenditure.mul(cpi_2020).div(df.cpi).round(0)
-    )
+    df["military_expenditure"] = (df.military_expenditure * cpi_2020 / df.cpi).round(0)
     df = df.drop(columns="cpi")
     return df
 
