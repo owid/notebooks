@@ -105,7 +105,6 @@ def select_source(df: pd.DataFrame) -> pd.DataFrame:
     1. Correlates of War
     2. SIPRI
     """
-
     return (
         df.dropna(subset=["military_expenditure"])
         .sort_values(["country", "year", "source_rank"])
