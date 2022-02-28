@@ -1,0 +1,61 @@
+---
+title: "Cleaning WHO WASH data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(dplyr)
+
+```
+
+## Reading in the data
+
+
+```{r}
+df <- read.csv("data/WASH_data_to_be_cleaned.csv")
+```
+
+Identifying which columns should be rounded to integers - columns with 'number' in their name
+```{r}
+
+num_cols <- colnames(df)[grepl("number",colnames(df))]
+oth_cols <- colnames(df)[!grepl("number",colnames(df))]
+oth_cols <- oth_cols[3:length(oth_cols)]
+
+```
+
+Rounding columns to appropriate decimal places. Lots of the negative values were very small and could be solved by rounding. 
+```{r}
+df <- df %>% 
+  mutate_at(num_cols, as.numeric) %>% 
+  mutate_at(num_cols, round, 0) %>% 
+  mutate_at(oth_cols, as.numeric) %>% 
+  mutate_at(oth_cols, round, 2)
+```
+A handful of columns still had some negative values
+```{r}
+df$san_imp_number_without[df$san_imp_number_without < 0 & !is.na(df$san_imp_number_without)] <- 0
+df$wat_imp_number_without[df$wat_imp_number_without < 0 & !is.na(df$wat_imp_number_without)] <- 0
+df$wat_sm_number_without[df$wat_sm_number_without < 0 & !is.na(df$wat_sm_number_without)] <- 0
+df$wat_bas_number_without[df$wat_bas_number_without < 0 & !is.na(df$wat_bas_number_without)] <- 0
+df$san_bas_number_without[df$san_bas_number_without < 0 & !is.na(df$san_bas_number_without)] <- 0
+
+```
+
+Replacing NAs with empty space for grapher. 
+```{r}
+df[,3:ncol(df)][is.na(df[,3:ncol(df)])] <- ""
+
+```
+
+Writing out data for upload to grapher. 
+```{r}
+write.csv(df, "data/Water_and_sanitation_WHO_wash_2021_clean.csv", row.names = FALSE)
+
+```
