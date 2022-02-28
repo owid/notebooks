@@ -1,0 +1,126 @@
+library(dplyr)
+
+gini <- function(x,weight=rep(1,length(x))) {
+  ox     <- order(x)
+  x      <- x[ox]
+  weight <- weight[ox]/sum(weight)
+  p      <- cumsum(weight)
+  nu     <- cumsum(weight*x)
+  n      <- length(nu)
+  nu     <- nu/nu[n]
+  res    <- sum(nu[-1]*p[-n])-sum(nu[-n]*p[-1])
+  return(res)
+}
+atkinson <- function(x,y=rep(1,length(x)),epsilon=1) {
+  keep <- which(!is.na(x))
+  x    <- x[keep]
+  y    <- y[keep]
+  x    <- x/mean(x)
+  y    <- y/sum(y)
+  res  <- ifelse(epsilon==1,1-(prod(exp(y*log(x)))/sum(x*y/sum(y))),1-(sum(((x/sum(x*y/sum(y)))^(1-epsilon))*y/sum(y)))^(1/(1-epsilon)))
+  return(res)
+}
+wNtile <- function(df,var,weight,split) {
+  df       <- df[order(df[paste(var)]),]
+  df$cumwt <- cumsum(df[,paste(weight)])/sum(df[,paste(weight)])
+  res      <- df[,paste(var)][Find(function(y) df$cumwt[y]>split, seq_along(df$cumwt))]
+  return(res)	
+}
+lisTopBottom <- function(df,var,evar,weight) {
+  df       <- df[which(!is.na(df[paste(var)])),]
+  df       <- df[order(df[paste(var)]),]
+  df$cumwt <- cumsum(df[,paste(weight)]) / sum(df[,paste(weight)])
+  topline  <- 10   * df[,paste(var)][Find(function(y) df$cumwt[y]>0.5,seq_along(df$cumwt))]
+  botline  <- 0.01 * sum(df[,paste(var)]*df[,paste(weight)] / sum(df[,paste(weight)]))
+  df[,paste(evar)] <- ifelse(df[,paste(evar)] < botline, botline                ,df[,paste(evar)])
+  df[,paste(evar)] <- ifelse(df[,paste(var)]  > topline, topline/sqrt(df$nhhmem),df[,paste(evar)])
+  return(df)
+}
+setups <- function(df) {
+  hfile    <- paste(df,'h',sep='')
+  dsh      <- read.LIS(hfile, vars=c("did","hid","nhhmem","dhi","hwgt"), subset="!is.na(dhi) & dhi !=0 & !is.na(hwgt)",labels=FALSE)
+  dsh$ey   <- dsh$dhi  / sqrt(dsh$nhhmem)
+  dsh$wt   <- dsh$hwgt * dsh$nhhmem
+  dsh      <- lisTopBottom(dsh,'dhi','ey','wt')	
+  return(dsh)
+}
+#--------------------------#
+#  INEQUALITY INDICATORS   #
+#--------------------------#
+
+# A data frame to store results
+output<- data.frame("survey_code" = character(),
+                    "gini_coef" = numeric(),
+                    "percentile_1" = numeric(),
+                    "percentile_2" = numeric(),
+                    "percentile_3" = numeric(),
+                    "percentile_4" = numeric(),
+                    "percentile_5" = numeric(),
+                    "percentile_6" = numeric(),
+                    "percentile_7" = numeric(),
+                    "percentile_8" = numeric(),
+                    "percentile_9" = numeric())
+
+# List of survey codes to query
+surveys   <- c('AU14', 'AU10', 'AU08', 'AU04', 'AU03', 'AU01', 'AU95', 'AU89', 'AU85', 'AU81', 'AT16', 'AT13', 'AT10', 'AT07', 'AT04', 'AT00', 'AT97', 'AT95', 'AT94', 'AT87', 'BE17', 'BE16', 'BE15', 'BE14', 'BE13', 'BE12', 'BE11', 'BE10', 'BE09', 'BE08', 'BE07', 'BE06', 'BE05', 'BE04', 'BE03', 'BE00', 'BE97', 'BE95', 'BE92', 'BE88', 'BE85', 'BR16', 'BR13', 'BR11', 'BR09', 'BR06', 'CA17', 'CA16', 'CA15', 'CA14', 'CA13', 'CA12', 'CA10', 'CA07', 'CA04', 'CA00', 'CA98', 'CA97', 'CA94', 'CA91', 'CA87', 'CA81', 'CA75', 'CA71', 'CL17', 'CL15', 'CL13', 'CL11', 'CL09', 'CL06', 'CL03', 'CL00', 'CL98', 'CL96', 'CL94', 'CL92', 'CL90', 'CN13', 'CN02', 'CO16', 'CO13', 'CO10', 'CO07', 'CO04', 'CI15', 'CI08', 'CI02', 'CZ16', 'CZ13', 'CZ10', 'CZ07', 'CZ04', 'CZ02', 'CZ96', 'CZ92', 'DK16', 'DK13', 'DK10', 'DK07', 'DK04', 'DK00', 'DK95', 'DK92', 'DK87', 'DO07', 'EG12', 'EE16', 'EE13', 'EE10', 'EE07', 'EE04', 'EE00', 'FI16', 'FI13', 'FI10', 'FI07', 'FI04', 'FI00', 'FI95', 'FI91', 'FI87', 'FR10', 'FR05', 'FR00', 'FR94', 'FR89', 'FR84', 'FR78', 'GE19', 'GE18', 'GE17', 'GE16', 'GE15', 'GE14', 'GE13', 'GE12', 'GE11', 'GE10', 'GE09', 'DE18', 'DE17', 'DE16', 'DE15', 'DE14', 'DE13', 'DE12', 'DE11', 'DE10', 'DE09', 'DE08', 'DE07', 'DE06', 'DE05', 'DE04', 'DE03', 'DE02', 'DE01', 'DE00', 'DE99', 'DE98', 'DE97', 'DE96', 'DE95', 'DE94', 'DE93', 'DE92', 'DE91', 'DE90', 'DE89', 'DE88', 'DE87', 'DE86', 'DE85', 'DE84', 'DE83', 'DE81', 'DE78', 'DE73', 'GR16', 'GR13', 'GR10', 'GR07', 'GR04', 'GR00', 'GR95', 'GT14', 'GT11', 'GT06', 'HU15', 'HU12', 'HU09', 'HU07', 'HU05', 'HU99', 'HU94', 'HU91', 'IS10', 'IS07', 'IS04', 'IN11', 'IN04', 'IE17', 'IE16', 'IE15', 'IE14', 'IE13', 'IE12', 'IE11', 'IE10', 'IE09', 'IE08', 'IE07', 'IE06', 'IE05', 'IE04', 'IE03', 'IE02', 'IE00', 'IE96', 'IE95', 'IE94', 'IE87', 'IL18', 'IL17', 'IL16', 'IL15', 'IL14', 'IL13', 'IL12', 'IL11', 'IL10', 'IL09', 'IL08', 'IL07', 'IL06', 'IL05', 'IL04', 'IL03', 'IL02', 'IL01', 'IL97', 'IL92', 'IL86', 'IL79', 'IT16', 'IT14', 'IT10', 'IT08', 'IT04', 'IT00', 'IT98', 'IT95', 'IT93', 'IT91', 'IT89', 'IT87', 'IT86', 'JP13', 'JP10', 'JP08', 'LT18', 'LT17', 'LT16', 'LT15', 'LT14', 'LT13', 'LT12', 'LT11', 'LT10', 'LT09', 'LU13', 'LU10', 'LU07', 'LU04', 'LU00', 'LU97', 'LU94', 'LU91', 'LU85', 'MX18', 'MX16', 'MX14', 'MX12', 'MX10', 'MX08', 'MX06', 'MX05', 'MX04', 'MX02', 'MX00', 'MX98', 'MX96', 'MX94', 'MX92', 'MX89', 'MX84', 'NL18', 'NL17', 'NL16', 'NL15', 'NL13', 'NL10', 'NL07', 'NL04', 'NL99', 'NL93', 'NL90', 'NL87', 'NL83', 'NO16', 'NO13', 'NO10', 'NO07', 'NO04', 'NO00', 'NO95', 'NO91', 'NO86', 'NO79', 'PS17', 'PA16', 'PA13', 'PA10', 'PA07', 'PY16', 'PY13', 'PY10', 'PY07', 'PY04', 'PY00', 'PE16', 'PE13', 'PE10', 'PE07', 'PE04', 'PL16', 'PL13', 'PL10', 'PL07', 'PL04', 'PL99', 'PL95', 'PL92', 'PL86', 'RO97', 'RO95', 'RU18', 'RU17', 'RU16', 'RU15', 'RU14', 'RU13', 'RU11', 'RU10', 'RU07', 'RU04', 'RU00', 'RS16', 'RS13', 'RS10', 'RS06', 'SK18', 'SK17', 'SK16', 'SK15', 'SK14', 'SK13', 'SK10', 'SK07', 'SK04', 'SK96', 'SK92', 'SI15', 'SI12', 'SI10', 'SI07', 'SI04', 'SI99', 'SI97', 'ZA17', 'ZA15', 'ZA12', 'ZA10', 'ZA08', 'KR16', 'KR14', 'KR12', 'KR10', 'KR08', 'KR06', 'ES16', 'ES13', 'ES10', 'ES07', 'ES04', 'ES00', 'ES95', 'ES90', 'ES85', 'ES80', 'SE05', 'SE00', 'SE95', 'SE92', 'SE87', 'SE81', 'SE75', 'SE67', 'CH18', 'CH17', 'CH16', 'CH15', 'CH14', 'CH13', 'CH12', 'CH11', 'CH10', 'CH09', 'CH08', 'CH07', 'CH06', 'CH04', 'CH02', 'CH00', 'CH92', 'CH82', 'TW16', 'TW13', 'TW10', 'TW07', 'TW05', 'TW00', 'TW97', 'TW95', 'TW91', 'TW86', 'TW81', 'UK18', 'UK17', 'UK16', 'UK15', 'UK14', 'UK13', 'UK12', 'UK11', 'UK10', 'UK09', 'UK08', 'UK07', 'UK06', 'UK05', 'UK04', 'UK03', 'UK02', 'UK01', 'UK00', 'UK99', 'UK98', 'UK97', 'UK96', 'UK95', 'UK94', 'UK91', 'UK86', 'UK79', 'UK74', 'UK69', 'US19', 'US18', 'US17', 'US16', 'US15', 'US14', 'US13', 'US12', 'US11', 'US10', 'US09', 'US08', 'US07', 'US06', 'US05', 'US04', 'US03', 'US02', 'US01', 'US00', 'US99', 'US98', 'US97', 'US96', 'US95', 'US94', 'US93', 'US92', 'US91', 'US86', 'US79', 'US74', 'UY16', 'UY13', 'UY10', 'UY07', 'UY04', 'VN13', 'VN11')
+
+# for each survey code...
+for (survey in surveys) {
+
+  # Run the setup function to get the household data from LISSY and format
+  df <- setups(survey)
+
+  # Calculate percentiles
+
+    # An empty list to store the percentiles
+    percentiles_list<- list()
+
+    # Calculate each percentile (using wNtile function) and store in list
+    for (i in 1:9) {
+      percentiles_list[paste0("percentile_",i)]<- round(wNtile(df,"ey","wt",i/10),digits=3)
+    }
+
+    # Convert list to data frame
+    percentiles_df<- do.call(cbind.data.frame, percentiles_list)
+
+
+  # Calculate Gini (using gini function)
+  gini_coef<- round(gini(df$ey,df$wt),digits=3)
+
+
+  # Collate all fields together in a one-row data frame
+
+  this_survey_df<- percentiles_df %>%
+    mutate(gini_coef = gini_coef,
+           survey_code = survey) %>%
+    select(survey_code, gini_coef, everything())
+
+
+  # append the data for this survey to the running data frame of all survey data
+  output<- rbind(output, this_survey_df)
+  
+
+}
+
+# Grab LIS PPPs (which adjust for CPI up to reference year and then PPPs
+# across countries in the reference year)
+
+LIS_PPPs_2011<- read.dta13(paste(INC_DIR, "ppp_2011.dta", sep=""),convert.factors=FALSE) %>%
+  mutate(survey_code = paste0(toupper(iso2), substr(year, start = 3, stop = 4))) %>%
+  rename(lisppp_2011 = lisppp) %>%
+  select(survey_code, lisppp_2011)
+
+LIS_PPPs_2017<- read.dta13(paste(INC_DIR, "ppp_2017.dta", sep=""),convert.factors=FALSE) %>%
+  mutate(survey_code = paste0(toupper(iso2), substr(year, start = 3, stop = 4))) %>%
+  rename(lisppp_2017 = lisppp) %>%
+  select(survey_code, lisppp_2017)
+
+# Merge LIS PPPs into survey data
+output<- left_join(output, LIS_PPPs_2011)
+output<- left_join(output, LIS_PPPs_2017)
+
+
+# Print the output data frame (as sort of comma separated for copying and pasting)
+print(write.csv(output, row.names = FALSE))
+
+
