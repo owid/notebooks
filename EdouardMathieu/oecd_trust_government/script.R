@@ -20,4 +20,5 @@ df[, weighted_value := Value * population]
 df <- df[, .(trust_government = sum(weighted_value) / sum(population)), Year]
 df[, entity := "OECD"]
 
+setcolorder(df, c("entity", "Year"))
 fwrite(df, "OECD - Trust in government.csv")
