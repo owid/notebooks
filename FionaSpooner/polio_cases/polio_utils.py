@@ -1,8 +1,10 @@
+from matplotlib.pyplot import table
 import requests
 from datetime import date, timedelta
 import pdfplumber
 import pandas as pd
 import tabula
+from owid import catalog
 
 
 def find_latest_polio_data(url_stub: str, days_to_sub: int):
@@ -29,7 +31,6 @@ def extract_wild_cases(file_path: str) -> pd.DataFrame:
     df_cases = pd.melt(df_sel, id_vars=["entity"], value_vars=years)
 
     df_cases.columns = ["entity", "year", "wild_polio_1_cases"]
-    df_cases
 
     return df_cases
 
@@ -67,8 +68,39 @@ def extract_vd_cases(file_path: str):
         dfm, values="value", index=["entity", "variable"], columns=["strain"]
     ).reset_index()
     df_p.rename(
-        columns={"cVDPV11": "cVDPV1", "cVDPV21": "cVDPV2", "cVDPV31": "cVDPV3"},
+        columns={
+            "variable": "year",
+            "cVDPV11": "cVDPV1",
+            "cVDPV21": "cVDPV2",
+            "cVDPV31": "cVDPV3",
+        },
         inplace=True,
+    )
+    df_p[["cVDPV1", "cVDPV2", "cVDPV3"]] = df_p[["cVDPV1", "cVDPV2", "cVDPV3"]].fillna(
+        0
     )
     df_p["total_cVDPV"] = df_p[["cVDPV1", "cVDPV2", "cVDPV3"]].sum(axis=1)
     return df_p
+
+
+def owid_population() -> pd.DataFrame:
+    population = (
+        catalog.find("population", dataset="key_indicators", namespace="owid")
+        .load()
+        .reset_index()
+        .rename(columns={"country": "entity"})[["entity", "year", "population"]]
+    )
+
+    return population
+
+
+def standardise_countries(country=pd.Series) -> pd.DataFrame:
+    owid_countries = pd.read_csv(
+        "data/countries_to_standardise_country_standardized.csv",
+        usecols=["Country", "Our World In Data Name"],
+    )
+    owid_countries["Country"] = owid_countries["Country"].apply(lambda x: x.strip())
+    country = country.apply(lambda x: x.strip())
+    owid_countries = owid_countries.set_index("Country").squeeze().to_dict()
+    countries_standardised = country.apply(lambda x: owid_countries[x])
+    return countries_standardised
