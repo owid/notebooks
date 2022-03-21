@@ -1,4 +1,3 @@
-from matplotlib.pyplot import table
 import requests
 from datetime import date, timedelta
 import pdfplumber
