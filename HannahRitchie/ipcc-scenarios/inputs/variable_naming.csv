@@ -1,0 +1,154 @@
+VARIABLE,Variable
+Agricultural Demand|Crops,agri_demand_crops
+Agricultural Demand|Livestock,agri_demand_livestock
+Agricultural Production|Crops|Energy,agri_prod_crops_energy
+Agricultural Production|Crops|Non-Energy,agri_prod_crops_nonenergy
+Agricultural Production|Livestock,agri_prod_livestock
+Capacity|Electricity,elec_capacity
+Capacity|Electricity|Biomass,elec_capacity_biomass
+Capacity|Electricity|Coal,elec_capacity_coal
+Capacity|Electricity|Gas,elec_capacity_gas
+Capacity|Electricity|Hydro,elec_capacity_hydro
+Capacity|Electricity|Nuclear,elec_capacity_nuclear
+Capacity|Electricity|Oil,elec_capacity_oil
+Capacity|Electricity|Other,elec_capacity_other
+Capacity|Electricity|Solar,elec_capacity_solar
+Capacity|Electricity|Solar|CSP,elec_capacity_csp
+Capacity|Electricity|Solar|PV,elec_capacity_solarpv
+Capacity|Electricity|Wind,elec_capacity_wind
+Capacity|Electricity|Wind|Offshore,elec_capacity_offshorewind
+Capacity|Electricity|Wind|Onshore,elec_capacity_onshorewind
+Consumption,econ_consumption
+Emissions|BC,emissions_blackcarbon
+Emissions|CH4,emissions_ch4
+Emissions|CH4|Land Use,emissions_ch4_land
+Emissions|CO,emissions_co
+Emissions|CO2,emissions_co2
+Emissions|CO2|Carbon Capture and Storage,emissions_co2_ccs
+Emissions|CO2|Carbon Capture and Storage|Biomass,emissions_co2_beccs
+Emissions|CO2|Fossil Fuels and Industry,emissions_co2_fossil
+Emissions|CO2|Land Use,emissions_co2_land
+Emissions|F-Gases,emissions_fgas
+Emissions|Kyoto Gases,emissions_kyotogas
+Emissions|N2O,emissions_n2o
+Emissions|N2O|Land Use,emissions_n2o_land
+Emissions|NH3,emissions_nh3
+Emissions|NOx,emissions_nox
+Emissions|OC,emissions_oc
+Emissions|Sulfur,emissions_sulfur
+Emissions|VOC,emissions_voc
+Energy Service|Transportation|Freight,energy_transport_freight
+Energy Service|Transportation|Passenger,energy_transport_passenger
+Final Energy,final_energy
+Final Energy|Electricity,final_energy_elec
+Final Energy|Gases,final_energy_gases
+Final Energy|Heat,final_energy_heat
+Final Energy|Hydrogen,final_energy_hydrogen
+Final Energy|Industry,final_energy_industry
+Final Energy|Liquids,final_energy_liquids
+Final Energy|Residential and Commercial,final_energy_residentialcommercial
+Final Energy|Solar,final_energy_solar
+Final Energy|Solids,final_energy_solids
+Final Energy|Solids|Biomass,final_energy_biomass
+Final Energy|Solids|Biomass|Traditional,final_energy_traditionalbiomass
+Final Energy|Solids|Coal,final_energy_coal
+Final Energy|Transportation,final_energy_transport
+GDP|PPP,gdp
+Harmonized Emissions|BC,
+Harmonized Emissions|CH4|Fossil Fuels and Industry,
+Harmonized Emissions|CH4|Land Use,
+Harmonized Emissions|CO,
+Harmonized Emissions|CO2|Fossil Fuels and Industry,
+Harmonized Emissions|CO2|Land Use,
+Harmonized Emissions|NH3,
+Harmonized Emissions|NOx,
+Harmonized Emissions|OC,
+Harmonized Emissions|Sulfur,
+Land Cover|Built-up Area,land_urban
+Land Cover|Cropland,land_cropland
+Land Cover|Forest,land_forest
+Land Cover|Pasture,land_pasture
+Population,population
+Price|Carbon,carbon_price
+Primary Energy,primary_energy
+Primary Energy|Biomass,primary_energy_biomass
+Primary Energy|Biomass|Traditional,primary_energy_tradbiomass
+Primary Energy|Biomass|w/ CCS,primary_energy_biomass_ccs
+Primary Energy|Biomass|w/o CCS,primary_energy_biomass_no_ccs
+Primary Energy|Coal,primary_energy_coal
+Primary Energy|Coal|w/ CCS,primary_energy_coal_ccs
+Primary Energy|Coal|w/o CCS,primary_energy_coal_no_ccs
+Primary Energy|Fossil,primary_energy_fossil
+Primary Energy|Fossil|w/ CCS,primary_energy_fossil_ccs
+Primary Energy|Fossil|w/o CCS,primary_energy_fossil_no_ccs
+Primary Energy|Gas,primary_energy_gas
+Primary Energy|Gas|w/ CCS,primary_energy_gas_ccs
+Primary Energy|Gas|w/o CCS,primary_energy_no_ccs
+Primary Energy|Hydro,primary_energy_hydro
+Primary Energy|Non-Biomass Renewables,primary_energy_nonbio_renewables
+Primary Energy|Nuclear,primary_energy_nuclear
+Primary Energy|Oil,primary_energy_oil
+Primary Energy|Oil|w/ CCS,primary_energy_oil_ccs
+Primary Energy|Oil|w/o CCS,primary_energy_oil_no_ccs
+Primary Energy|Other,primary_energy_other
+Primary Energy|Solar,primary_energy_solar
+Primary Energy|Wind,primary_energy_wind
+Secondary Energy|Electricity,secondary_energy_elec
+Secondary Energy|Electricity|Biomass,secondary_energy_elec_biomass
+Secondary Energy|Electricity|Biomass|w/ CCS,secondary_energy_elec_biomass_ccs
+Secondary Energy|Electricity|Biomass|w/o CCS,
+Secondary Energy|Electricity|Coal,secondary_energy_elec_coal
+Secondary Energy|Electricity|Coal|w/ CCS,secondary_energy_elec_coal_ccs
+Secondary Energy|Electricity|Coal|w/o CCS,
+Secondary Energy|Electricity|Gas,secondary_energy_elec_gas
+Secondary Energy|Electricity|Gas|w/ CCS,secondary_energy_elec_gas_ccs
+Secondary Energy|Electricity|Gas|w/o CCS,
+Secondary Energy|Electricity|Hydro,secondary_energy_elec_hydro
+Secondary Energy|Electricity|Non-Biomass Renewables,secondary_energy_elec_nonbiorenewables
+Secondary Energy|Electricity|Nuclear,secondary_energy_elec_nuclear
+Secondary Energy|Electricity|Oil,secondary_energy_elec_oil
+Secondary Energy|Electricity|Solar,secondary_energy_elec_solar
+Secondary Energy|Electricity|Wind,secondary_energy_elec_wind
+Secondary Energy|Gases,
+Secondary Energy|Gases|Natural Gas,secondary_energy_gas
+Secondary Energy|Heat,secondary_energy_heat
+Secondary Energy|Hydrogen,secondary_energy_hydrogen
+Secondary Energy|Hydrogen|Biomass,
+Secondary Energy|Hydrogen|Biomass|w/ CCS,
+Secondary Energy|Hydrogen|Biomass|w/o CCS,
+Secondary Energy|Hydrogen|Electricity,
+Secondary Energy|Liquids,
+Secondary Energy|Liquids|Biomass,secondary_energy_liquid_biofuel
+Secondary Energy|Liquids|Biomass|w/o CCS,
+Secondary Energy|Liquids|Oil,secondary_energy_oil
+Secondary Energy|Solids,
+Diagnostics|MAGICC6|Concentration|CH4,concentration_ch4
+Diagnostics|MAGICC6|Concentration|CO2,concentration_co2
+Diagnostics|MAGICC6|Concentration|N2O,concentration_n2o
+Diagnostics|MAGICC6|Forcing,forcing
+Diagnostics|MAGICC6|Forcing|Aerosol,forcing_aerosol
+Diagnostics|MAGICC6|Forcing|CH4,forcing_ch4
+Diagnostics|MAGICC6|Forcing|CO2,forcing_co2
+Diagnostics|MAGICC6|Forcing|F-Gases,forcing_fgases
+Diagnostics|MAGICC6|Forcing|Kyoto Gases,forcing_kyoto
+Diagnostics|MAGICC6|Forcing|N2O,forcing_n2o
+Diagnostics|MAGICC6|Temperature|Global Mean,temp
+Harmonized Emissions|F-Gases,
+Harmonized Emissions|Kyoto Gases,
+Harmonized Emissions|VOC,
+Capacity|Electricity|Geothermal,elec_capacity_geothermal
+Primary Energy|Geothermal,primary_energy_geothermal
+Primary Energy|Secondary Energy Trade,
+Secondary Energy|Electricity|Geothermal,secondary_energy_elec_geothermal
+Secondary Energy|Gases|Biomass,
+Secondary Energy|Gases|Coal,
+Secondary Energy|Heat|Geothermal,secondary_energy_heat_hydro
+Secondary Energy|Liquids|Biomass|w/ CCS,
+Secondary Energy|Liquids|Coal,
+Secondary Energy|Liquids|Coal|w/ CCS,
+Secondary Energy|Liquids|Coal|w/o CCS,
+Secondary Energy|Liquids|Gas,
+Secondary Energy|Liquids|Gas|w/ CCS,
+Secondary Energy|Liquids|Gas|w/o CCS,
+Agricultural Demand|Crops|Energy,agri_demand_energycrops
+Emissions|CH4|Fossil Fuels and Industry,emissions_ch4_fossil
