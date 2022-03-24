@@ -29,7 +29,26 @@ def extract_wild_cases(file_path: str) -> pd.DataFrame:
     df_sel = df_sel.reset_index(level=0)
     df_cases = pd.melt(df_sel, id_vars=["entity"], value_vars=years)
 
-    df_cases.columns = ["entity", "year", "wild_polio_1_cases"]
+    df_cases.columns = ["entity", "year", "wild_polio_cases"]
+
+    return df_cases
+
+
+def extract_historical_wild_cases(file_path: str) -> pd.DataFrame:
+    pdf = pdfplumber.open(file_path)
+    table = pdf.pages[0].extract_table()
+    df = pd.DataFrame(table)
+    df.columns = df.iloc[2]
+    df.drop([0, 1, 2], inplace=True)
+    col_lim = "2015"
+    df = df.iloc[:, 0:6]
+    df.rename(columns={None: "entity"}, inplace=True)
+    years = df.columns.drop("entity")
+    dfe = df.set_index("entity")
+    df_sel = dfe.loc[:"Total"]
+    df_sel = df_sel.reset_index(level=0)
+    df_cases = pd.melt(df_sel, id_vars=["entity"], value_vars=years)
+    df_cases.columns = ["entity", "year", "wild_polio_cases"]
 
     return df_cases
 
@@ -103,3 +122,18 @@ def standardise_countries(country=pd.Series) -> pd.DataFrame:
     owid_countries = owid_countries.set_index("Country").squeeze().to_dict()
     countries_standardised = country.apply(lambda x: owid_countries[x])
     return countries_standardised
+
+
+def get_who_data_and_regions():
+
+    who_polio = pd.read_excel('data/incidence_series.xls', sheet_name='Polio')
+    who_polio
+    regions = who_polio[['WHO_REGION', 'Cname']].drop_duplicates().rename(columns = {'Cname':'entity'})
+    regions['entity'] = standardise_countries(regions['entity'])
+    who_polio.drop(columns = ['Disease','WHO_REGION','ISO_code',], inplace=True)
+    who_melt = pd.melt(who_polio, id_vars=['Cname'])
+    who_melt['entity'] = standardise_countries(who_melt['Cname'])
+    who_melt = who_melt[['entity', 'variable', 'value']].rename(columns = {'variable':'year', 'value':'total_polio'})
+    who_melt[['year']]=who_melt[['year']].astype(int)
+
+    return who_melt, regions
