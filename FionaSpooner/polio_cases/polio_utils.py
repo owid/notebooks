@@ -2,7 +2,6 @@ import requests
 from datetime import date, timedelta
 import pdfplumber
 import pandas as pd
-import tabula
 from owid import catalog
 
 
@@ -65,40 +64,11 @@ def download_polio_data(url_stub: str):
     return res
 
 
-def extract_vd_cases(file_path: str):
-    table = tabula.read_pdf(file_path, pages=1)
+# Manually transcribed the cases into a csv - pdfreading was too glitchy!
+def extract_vd_cases() -> pd.DataFrame:
+    vdpv_cases = pd.read_csv("data/polio_cVDPV_cases.csv")
 
-    df = pd.DataFrame(table[0])
-    df.iloc[:, 0] = df.iloc[:, 0].fillna(method="ffill")
-    col_lim = date.today().year - 2014
-    df = df.iloc[:, 0:col_lim]
-    years = range(2016, df.shape[1] - 2 + 2016)
-    years_str = [str(x) for x in years]
-    cols = ["strain", "entity"]
-    cols = cols + years_str
-    df.columns = cols
-    df.drop([0], inplace=True)
-
-    dfm = pd.melt(df, id_vars=["entity", "strain"], value_vars=years_str)
-    dfm = dfm[dfm.strain != "Gender"]
-
-    df_p = pd.pivot_table(
-        dfm, values="value", index=["entity", "variable"], columns=["strain"]
-    ).reset_index()
-    df_p.rename(
-        columns={
-            "variable": "year",
-            "cVDPV11": "cVDPV1",
-            "cVDPV21": "cVDPV2",
-            "cVDPV31": "cVDPV3",
-        },
-        inplace=True,
-    )
-    df_p[["cVDPV1", "cVDPV2", "cVDPV3"]] = df_p[["cVDPV1", "cVDPV2", "cVDPV3"]].fillna(
-        0
-    )
-    df_p["total_cVDPV"] = df_p[["cVDPV1", "cVDPV2", "cVDPV3"]].sum(axis=1)
-    return df_p
+    return vdpv_cases
 
 
 def owid_population() -> pd.DataFrame:
@@ -126,14 +96,27 @@ def standardise_countries(country=pd.Series) -> pd.DataFrame:
 
 def get_who_data_and_regions():
 
-    who_polio = pd.read_excel('data/incidence_series.xls', sheet_name='Polio')
+    who_polio = pd.read_excel("data/incidence_series.xls", sheet_name="Polio")
     who_polio
-    regions = who_polio[['WHO_REGION', 'Cname']].drop_duplicates().rename(columns = {'Cname':'entity'})
-    regions['entity'] = standardise_countries(regions['entity'])
-    who_polio.drop(columns = ['Disease','WHO_REGION','ISO_code',], inplace=True)
-    who_melt = pd.melt(who_polio, id_vars=['Cname'])
-    who_melt['entity'] = standardise_countries(who_melt['Cname'])
-    who_melt = who_melt[['entity', 'variable', 'value']].rename(columns = {'variable':'year', 'value':'total_polio'})
-    who_melt[['year']]=who_melt[['year']].astype(int)
+    regions = (
+        who_polio[["WHO_REGION", "Cname"]]
+        .drop_duplicates()
+        .rename(columns={"Cname": "entity"})
+    )
+    regions["entity"] = standardise_countries(regions["entity"])
+    who_polio.drop(
+        columns=[
+            "Disease",
+            "WHO_REGION",
+            "ISO_code",
+        ],
+        inplace=True,
+    )
+    who_melt = pd.melt(who_polio, id_vars=["Cname"])
+    who_melt["entity"] = standardise_countries(who_melt["Cname"])
+    who_melt = who_melt[["entity", "variable", "value"]].rename(
+        columns={"variable": "year", "value": "total_polio"}
+    )
+    who_melt[["year"]] = who_melt[["year"]].astype(int)
 
     return who_melt, regions
