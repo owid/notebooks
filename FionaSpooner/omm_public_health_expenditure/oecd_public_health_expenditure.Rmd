@@ -4,7 +4,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(jsonlite)
 library(dplyr)
 library(ggplot2)
@@ -14,7 +14,7 @@ library(zoo)
 
 ```
 
-Downloading the data from WHO-GHO and OECD Stat
+Downloading the data from OECD Stat - the data is available here: https://data.oecd.org/healthres/health-spending.htm
 
 ```{r download}
 year <- format(Sys.Date(),"%Y")
@@ -23,65 +23,118 @@ if (!file.exists(oecd_stat_fp)){
   download.file('https://stats.oecd.org/sdmx-json/data/DP_LIVE/.HEALTHEXP.../OECD?contentType=csv&detail=code&separator=comma&csv-lang=en', oecd_stat_fp )
 }
 
-#download.file('https://ghoapi.azureedge.net/api/GHED_GGHE-DGDP_SHA2011', 'data/GHED_GGHE-DGDP_SHA2011.json')
+```
+
+Loading in the country standardisation csv
+```{r}
+countries <- read.csv("data/country_names_country_standardized.csv") %>% distinct()
 
 ```
 
-Loading the data from OECD Stat, OECD 93 and Lindert
-
-OECD Stat - Government Compulsory Schemes 'https://stats.oecd.org/Index.aspx?DataSetCode=SHA_FS#'
+We are only interested in data from OECD countries - they are listed here so we can filter other countries out.
 
 ```{r }
 
-countries <- read.csv("data/country_names_country_standardized.csv") %>% distinct()
-
 oecd_members <- c("Australia", "Austria", "Belgium", "Canada", "Chile", "Colombia", "Costa Rica", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece","Hungary", "Iceland", "Ireland", "Israel", "Italy", "Japan", "South Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal", "Slovakia", "Spain", "Sweden", "Switzerland", "Turkey", "United Kingdom", "United States")
+```
 
+Reading in the data downloaded from OECD Stat. We are using the values relating to 'Government/Compulsory' expenditure - which is here coded 'COMPULSORY' in the 'SUBJECT' column.
 
-oecd <- read.csv(oecd_stat_fp) %>% filter(SUBJECT == 'COMPULSORY' & MEASURE == 'PC_GDP') %>% select(entity = LOCATION, year = TIME,value = Value ) %>% mutate(source = 'oecd_stat')%>% 
+In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't OECD members.
+
+We also add rows so that for each country every year between the first and last has it's own row. 
+```{r}
+oecd <- read.csv(oecd_stat_fp) %>% filter(SUBJECT == 'COMPULSORY' & MEASURE == 'PC_GDP') %>%
+  select(entity = LOCATION, year = TIME,value = Value ) %>% 
+  mutate(source = 'oecd_stat')%>% 
   left_join(., countries, by = c('entity'= 'Country')) %>% 
   select(entity = Our.World.In.Data.Name, year, value, source)%>% 
-  filter(entity %in%oecd_members)
+  filter(entity %in%oecd_members) %>% 
+  group_by(entity) %>% 
+  complete(year = full_seq(min(year):max(year), 1))
 
-oecd_93 <- read.csv("data/OECD 1993.csv") %>% pivot_longer(starts_with('X')) %>% mutate(entity = year, year = as.numeric(gsub("X","",name)), source = 'oecd_93') %>% select(entity,year, value, source ) %>% 
-  left_join(., countries, by = c('entity'= 'Country')) %>% 
-  select(entity = Our.World.In.Data.Name, year, value, source)%>% 
-  filter(entity %in%oecd_members)
-
-
-lindert <- read.csv("data/lindert_1880_1930.csv") %>% select(entity,year, value = public_expenditure_on_health)
+ggplot()+
+  geom_line(data =oecd, aes(x = year, y = value, group = interaction(entity)))+
+  labs(x = "Year", y= "Public Health Expenditure (%GDP)")+
+  facet_wrap(.~entity)+
+  scale_x_continuous(breaks=seq(1970, 2020, 25))+
+  theme_bw()
 
 ```
 
+
+Reading in the data from OECD 1993, which is available [here][https://drive.google.com/file/d/1Xa9WRtQq_Dfeod8mfJzcj6TGXak7APRF/view?usp=sharing]. 
+
+In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't OECD members.
+
 ```{r}
-oecd <- oecd %>% group_by(entity) %>% 
-  complete(year = full_seq(min(year):max(year), 1))%>% 
-  mutate(value = na.approx(value, na.rm = FALSE)) %>% 
+oecd_93 <- read.csv("data/OECD 1993.csv") %>% 
+  pivot_longer(starts_with('X')) %>% 
+  mutate(entity = year, year = as.numeric(gsub("X","",name)), source = 'oecd_93') %>% 
+  left_join(., countries, by = c('entity'= 'Country')) %>% 
+  select(entity = Our.World.In.Data.Name, year, value, source)%>% 
+  filter(entity %in%oecd_members)  %>% 
+  group_by(entity) %>% 
+  complete(year = full_seq(min(year):max(year), 1))
+
+ggplot()+
+  geom_line(data =oecd_93, aes(x = year, y = value, group = interaction(entity)))+
+  labs(x = "Year", y= "Public Health Expenditure (%GDP)")+
+  facet_wrap(.~entity)+
+  scale_x_continuous(breaks=seq(1960, 1990, 15))+
+  theme_bw()
+```
+
+
+Reading in the data from Lindert (1994) - The Rise of Social Spending 1880-1930 (Table 1D), available [here][https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing].
+
+In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't OECD members.
+
+```{r}
+lindert <- read.csv("data/lindert_1880_1930.csv") %>% 
+  left_join(., countries, by = c('entity'= 'Country')) %>% 
+  mutate(source = 'Lindert') %>% 
+  select(entity = Our.World.In.Data.Name, year, value = public_expenditure_on_health, source)%>% 
+  select(entity,year,value, source )
+
+ggplot()+
+  geom_line(data =lindert, aes(x = year, y = value, group = interaction(entity)))+
+  labs(x = "Year", y= "Public Health Expenditure (%GDP)")+
+  facet_wrap(.~entity)+
+  scale_x_continuous(breaks=seq(1880, 1930, 25))+
+  theme_bw()
+
+```
+
+Here we linearly interpolate missing data from both OECD datasets. For example the data for France between is only available every five years between 1970 and 1990, so we interpolate the missing values. 
+
+```{r}
+oecd <- oecd %>% group_by(entity) %>%
+  mutate(value = na.approx(value, na.rm = FALSE)) %>%
+  ungroup()
+
+oecd_93 <- oecd_93 %>% group_by(entity) %>%
+  mutate(value = na.approx(value, na.rm = FALSE)) %>%
   ungroup()
 
 ```
 
-```{r}
-oecd_93 <- oecd_93 %>% group_by(entity) %>% 
-  complete(year = full_seq(min(year):max(year), 1))%>% 
-  mutate(value = na.approx(value, na.rm = FALSE)) %>% 
-  ungroup()
-
-```
-
+Here we combine both the datasets and plot them, coloured according to the source. Values which have been linearly interpolated (as described above) are shown as 'OWID'.
 ```{r}
 
 
 oecd_both<- rbind(oecd, oecd_93) 
-
+oecd_both$source[is.na(oecd_both$source)] <- 'OWID'
 ggplot()+
   geom_line(data =oecd_both, aes(x = year, y = value, group = interaction(source,entity), colour = source), size = 1)+
+  scale_x_continuous(breaks=seq(1960, 2020, 30))+
   facet_wrap(.~ entity)
 
-oecd_both %>% filter(entity == 'Switzerland') %>% arrange(year)
 ```
 
-Calculating the rate of change in the OECD Stat data
+Calculating the rate of change in the OECD Stat data. Here we create a new column (time_m1) which is lagged by one year, for example values in the 'value' column for 1971 rows are shown as 1972 in the 'time_m1' column. 
+
+We then the divide the 'time_m1' column by the 'value' column to estimate the rate of change - in a backwards direction. So we would estimate the rate of change from 1972 to 1971.
 ```{r}
 roc_df<- oecd %>% 
   select(entity, year, value) %>% 
@@ -95,6 +148,9 @@ roc_df<- oecd %>%
 roc_df %>% arrange(entity, year) %>% filter(entity == 'Switzerland')
 ```
 
+Calculating the rate of change in the OECD 1993 data. Here we create a new column (time_m1) which is lagged by one year, for example values in the 'value' column for 1971 rows are shown as 1972 in the 'time_m1' column. 
+
+We then the divide the 'time_m1' column by the 'value' column to estimate the rate of change - in a backwards direction. So we would estimate the rate of change from 1972 to 1971.
 ```{r}
 oecd_93_roc <- oecd_93 %>% 
   select(entity, year, value) %>% 
@@ -110,24 +166,26 @@ oecd_93_roc
 
 
 
-Combine the two rates of change - if there are duplicates for years we have a preference for OECD Stat
+We combine the two rates of change - as there is some overlap in the time-series there are duplicate for some entity-rate_of_change pairs. In these cases we have a preference for OECD Stat.
 ```{r}
-roc_df <- rbind(oecd_93_roc, roc_df)
+roc_both <- rbind(oecd_93_roc, roc_df)
 
-roc_df <- roc_df %>% 
+roc_both <- roc_both %>% 
   left_join(., countries, by = c('entity'= 'Country')) %>% 
   select(entity = Our.World.In.Data.Name, year, br_roc, source)
 
-roc_df <- roc_df %>% 
+roc_both <- roc_both %>% 
   group_by(entity, year) %>% 
   add_count() %>%
   ungroup() 
 
-roc_sel <- roc_df[-which(roc_df$n >1 & roc_df$source == 'oecd_93'),]
+roc_sel <- roc_both[-which(roc_both$n >1 & roc_both$source == 'oecd_93'),]
 
-roc_sel %>% filter(entity == 'Switzerland')
+roc_sel %>% filter(entity == 'France')
 
 ```
+
+There are some countries which have a gap between the OECD datasets (Belgium, Switzerland). For these we linearly interpolate the missing rate of change values. 
 
 ```{r}
 
@@ -139,13 +197,14 @@ roc_int <- roc_sel %>%
 
 roc_int %>% filter(entity == 'Switzerland')
 ```
+These interpolated values are labelled as 'OWID'
 
 ```{r}
 roc_int$source[is.na(roc_int$source)] <- 'OWID'
 
 ```
 
-
+Here we standardise the names (check this is needed - might be duplicate effort)
 ```{r}
 oecd <- oecd %>% 
   left_join(., countries, by = c('entity'= 'Country')) %>% 
@@ -153,6 +212,11 @@ oecd <- oecd %>%
 
 ```
 
+
+This loop iterates through each entity and within this iterates through each year (going backwards through time), to multiply the current 'value' by the current 'br_roc' (rate of change) to calculate the 'value' for the next year.
+
+
+The calculations for each entity are combined as the loop runs. 
 ```{r}
 
 
@@ -169,8 +233,6 @@ for (entity_sel in entities) {
   years <- start_reg_year:min_roc_year
   if (min_roc_year <= start_reg_year) {
     for (year_sel in years) {
-      print(entity_sel)
-      print(year_sel)
       roc_yr <- roc_int %>% filter(year == year_sel & entity == entity_sel)
       
       oecd_new <- oecd_sel %>% filter(year == year_sel) %>%
@@ -188,21 +250,23 @@ oecd_loop %>% arrange(entity, year)
 
 ```
 
-Combining with Lindert data
+Lastly, we add in the Lindert data.
 ```{r}
-full_owid <- rbind(oecd_loop, lindert)
+full_owid <- rbind(oecd_loop, lindert %>% select(-source))
 full_owid <- full_owid %>% select(entity, year, public_health_expenditure_pc_gdp = value) %>% filter(complete.cases(.))
 
-
+full_owid$source <- 'OWID'
 ```
 
-Plot data for countries with data over multiple datasets
+Plot the combined and final dataset.
 
 ```{r}
 
 ggplot()+
-  geom_line(data = full_owid , aes(x = year, y = public_health_expenditure_pc_gdp, group = entity))+
+  geom_line(data = full_owid, aes(x = year, y = public_health_expenditure_pc_gdp, group = entity, colour = source), size = 0.8)+
+  geom_line(data =oecd_both, aes(x = year, y = value, group = interaction(source,entity), colour = source), size = 1.2, alpha = 0.5)+
   facet_wrap(.~entity)+
+  scale_x_continuous(breaks=seq(1880, 2020, 70))+
   theme_bw()
   
 ```
