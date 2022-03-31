@@ -3670,7 +3670,8 @@ for (i in sort(unique(MasterDistro$ISO3DataYearCovType))){
 
 rm(list= ls()[!(ls() %in% c('IdealPLs'))])
 
-for (i in c(seq(9800,length(IdealPLs),100),15162)){
+#for (i in c(5600,5700)){
+for (i in c(seq(100,length(IdealPLs),100),15162)){
   no_cores <- 5
   cl <- makeCluster(no_cores, type="FORK")
   registerDoParallel(cl)
@@ -3722,7 +3723,287 @@ for (i in c(seq(9800,length(IdealPLs),100),15162)){
   rm(Distro)
 }
 
-redo 5600 5700
+###### Integrity Check and Combine saved data ####
+# do I need the integrity check on take 2>???
+
+IdealPLs <- c(seq(0.001,5,0.001),seq(5.01,60,0.01),seq(60.1,150,0.1),
+              seq(150.5,1400,0.5), seq(1405,3000,5), seq(3010,10000,10),
+              seq(11000,35000,100),99999)
+
+SavedDistrosFolder <- '/media/michalis/1984/PovcalNet/Regional'
+TheFiles <- list.files(SavedDistrosFolder,pattern = 'Distro')
+#TheFiles <- TheFiles[c(34:42,44:53)]
+TheWrongList <- rep(as.numeric(NA),length(IdealPLs))
+names(TheWrongList) <- trimws(format(IdealPLs, nsmall = 3))
+
+options(warn=2) # turn warnings to errors, for better debugging
+tictoc::tic()
+FirstTimeCheck <- T
+
+for (i in c(1:length(TheFiles))){
+  #for (i in c(1)){
+  # Load the saved data from the disk
+  CurrentFile <- paste0(SavedDistrosFolder, '/',TheFiles[i])
+  load(CurrentFile)
+  print(CurrentFile)
+  # First check: all list elements must have a fixed length of 32
+  # equal to the number of columns returned by the PovcalNet API (31)
+  # plus one extra column I add for control ("RequestedLine")
+  # that stores the PL requested to the API.
+  # Elements not complying are removed, and at the end of this process
+  # we will have a reporting variable with all the PL values that
+  # need to be requested again from the API
+  
+  if (!all(sapply(Distro, length)==10)){
+    while (!all(sapply(Distro, length)==10)){
+      # remove those that did not:
+      Distro[[which(!(sapply(Distro, length)==10))[1]]] <- NULL
+    }
+    print(paste0('Current number of fetched PLs', length(Distro),". Normally this must be 100."))
+  } else {
+    print('No entries with less than 10 columns to remove...')
+  }
+  
+  # Second check: all entries from a particular list element (so within each list
+  # element) must have Distro$RequestedLine == Distro$povertyline
+  # those that do not are kept in a separate dataframe
+  # plus other integrity checks in the loop below:
+  
+  for (j in c(1:length(Distro))){
+    
+    Temp <- Distro[[j]]
+    
+    if (FirstTimeCheck){
+      
+      MasterDistro <- subset(Temp,Temp$regiontitle=='2398y9wfhehfsdih') # just maintain 
+      TempMasterDistro <- subset(Temp,Temp$regiontitle=='2398y9wfhehfsdih') # just maintain 
+      # the data structure
+      FaultyEntries <- subset(Temp,Temp$regiontitle=='2398y9wfhehfsdih') # just maintain 
+      # the data structure and add a comment column
+      FaultyEntries$Comments <- as.character(NA)
+      FirstTimeCheck <- F
+    }
+    
+    NewFaultyEntries <- subset(FaultyEntries,FaultyEntries$regiontitle=='498heo98h')
+    
+    # Rule 0: no line with all NA, and no line with 
+    # countrycode == "CountryCode"
+    # and no line with countryname=="DELETE"
+    #Temp <- subset(Temp,!Temp$=="CountryCode")
+    #Temp <- subset(Temp,!Temp$countryname=="DELETE")
+    
+    # Rule 0.5: all PLs must be identical to the one requested
+    WrongEntries <- which(!round(Temp$povertyline,3)==
+                          round(Temp$RequestedLine,3))
+    NonIdenticalLines <- length(WrongEntries)
+    
+    FaultyTemp <- Temp[WrongEntries,]
+    FaultyTemp$Comments <- 'PL not identical to the one requested'
+    Temp <- suppressMessages(dplyr::anti_join(x = Temp, y = FaultyTemp))
+    NewFaultyEntries <- rbind(NewFaultyEntries,FaultyTemp)
+
+    # keeping a log over the distros with different PLs than requested:
+    TheWrongList[which(names(TheWrongList)==
+                       as.character(unique(trimws(format(NewFaultyEntries$RequestedLine, 
+                                                         nsmall = 3)))))] <- NonIdenticalLines
+    
+    rm(NonIdenticalLines)
+    FaultyEntries <- rbind(FaultyEntries,NewFaultyEntries)
+    rm(NewFaultyEntries)
+    
+    TempMasterDistro <- rbind(TempMasterDistro,Temp)
+    #rm(Temp)
+  }
+  MasterDistro <- rbind(MasterDistro,TempMasterDistro)
+  TempMasterDistro <- subset(Temp,Temp$regiontitle=='2398y9wfhehfsdih') 
+  rm(Distro,Temp)
+  print('-------------------------------------')
+}
+
+options(warn=0) # restore to default from warn=2
+tictoc::toc()
+# 14126.986
+
+DistroRange <- paste0(readr::parse_number(TheFiles[1]),'-',readr::parse_number(TheFiles[length(TheFiles)]))
+save(list = 'MasterDistro',file = paste0('/media/michalis/1984/PovcalNet/Regional/MasterData/MasterDistro',DistroRange,'.RData'))
+save(list = 'FaultyEntries',file = paste0('/media/michalis/1984/PovcalNet/Regional/MasterData/FaultyEntries',DistroRange,'.RData'))
+
+table(FaultyEntries$Comments)
+# PL not identical to the one requested 
+# 4150 
+length(table(FaultyEntries$RequestedLine))
+# [1] 76
+
+###### Fetch missing regional data ####
+
+no_cores <- 5
+cl <- makeCluster(no_cores, type="FORK")
+registerDoParallel(cl)
+Distro <- foreach(jjj=unique(FaultyEntries$RequestedLine), 
+                  #.combine='rbind', 
+                  .errorhandling = "pass") %dopar% { 
+                    
+                    ttt <- 8
+                    while (ttt>0){
+                      Temp <- povcalnet_wb(
+                        povline = jjj,
+                        year = "all",
+                        url = "http://iresearch.worldbank.org",
+                        format = "csv"
+                      )
+                      
+                      WrongEntries <- which(!trimws(format(Temp$povertyline,nsmall = 3))==
+                                            trimws(format(jjj, nsmall = 3)))
+                      
+                      if (length(WrongEntries)>0){
+                        ttt <- ttt - 1
+                      } else {
+                        ttt <- 0
+                      }
+                    }
+                    
+                    # I added this extra column because in several instances
+                    # the poverty line returned from a particular country
+                    # is much different from the poverty line requested
+                    # e.g. when asking PL of 1.009 I got a 0.2264779
+                    # PL for Burundi in 1981
+                    # in the same df I got year 19892Y and datayear 0.0163
+                    # for Belarus see 
+                    # "/media/michalis/1984/PovcalNet/Examples/Distro1100.RData" oh I just deleted it...
+                    Temp$RequestedLine <- jjj
+                    return(Temp)
+                  }
+stopCluster(cl)
+registerDoSEQ()
+# next time it must be width = 5 because it goes up to ~16000 and it does not 
+# sort properly in R:
+save(list = 'Distro',file = paste0('/media/michalis/1984/PovcalNet/Regional/Take2/DistroAllMissingShort.RData'))
+print(paste0('Saved file... ',paste0('/media/michalis/1984/PovcalNet/Regional/Take2/DistroAllMissingShort.RData')))
+# I also have this save using jjj=FaultyEntries$RequestedLine, so 4150 elements in the list
+#save(list = 'Distro',file = paste0('/media/michalis/1984/PovcalNet/Regional/Take2/DistroAllMissing.RData'))
+
+###### Integrity Check and Combine saved data ####
+if (!all(sapply(Distro, length)==10)){
+  while (!all(sapply(Distro, length)==10)){
+    # remove those that did not:
+    Distro[[which(!(sapply(Distro, length)==10))[1]]] <- NULL
+  }
+  print(paste0('Current number of fetched PLs', length(Distro),". Normally this must be 100."))
+} else {
+  print('No entries with less than 10 columns to remove...')
+}
+
+FirstTimeCheck <- T
+
+for (j in c(1:length(Distro))){
+  
+  Temp <- Distro[[j]]
+  
+  if (FirstTimeCheck){
+    
+    MasterDistroOfWrongEntries <- subset(Temp,Temp$regiontitle=='2398y9wfhehfsdih') # just maintain 
+    # the data structure
+    FaultyEntriesMissing <- subset(Temp,Temp$regiontitle=='2398y9wfhehfsdih') # just maintain 
+    # the data structure and add a comment column
+    FaultyEntriesMissing$Comments <- as.character(NA)
+    FirstTimeCheck <- F
+  }
+  
+  NewFaultyEntries <- subset(FaultyEntriesMissing,FaultyEntriesMissing$regiontitle=='498heo98h')
+  
+  # Rule 0: no line with all NA, and no line with 
+  # countrycode == "CountryCode"
+  # and no line with countryname=="DELETE"
+  #Temp <- subset(Temp,!Temp$=="CountryCode")
+  #Temp <- subset(Temp,!Temp$countryname=="DELETE")
+  
+  # Rule 0.5: all PLs must be identical to the one requested
+  WrongEntries <- which(!round(Temp$povertyline,3)==
+                        round(Temp$RequestedLine,3))
+  NonIdenticalLines <- length(WrongEntries)
+  
+  FaultyTemp <- Temp[WrongEntries,]
+  FaultyTemp$Comments <- 'PL not identical to the one requested'
+  Temp <- suppressMessages(dplyr::anti_join(x = Temp, y = FaultyTemp))
+  NewFaultyEntries <- rbind(NewFaultyEntries,FaultyTemp)
+  
+  # keeping a log over the distros with different PLs than requested:
+  TheWrongList[which(names(TheWrongList)==
+                     as.character(unique(trimws(format(NewFaultyEntries$RequestedLine, 
+                                                       nsmall = 3)))))] <- NonIdenticalLines
+  
+  rm(NonIdenticalLines)
+  FaultyEntriesMissing <- rbind(FaultyEntriesMissing,NewFaultyEntries)
+  rm(NewFaultyEntries)
+  
+  MasterDistroOfWrongEntries <- rbind(MasterDistroOfWrongEntries,Temp)
+  #rm(Temp)
+}
+
+# save.image("/media/michalis/1984/PovcalNet/Regional/MasterData/TempSave.RData")
+# load("/media/michalis/1984/PovcalNet/Regional/MasterData/TempSave.RData")
+
+##### Merge ####
+# since there is no wrong entry in the MasterDistroOfWrongEntries,
+# I will simply remove the entries from MasterDistro referring to
+# the PLs identified in unique(FaultyEntries$RequestedLine)
+# and then simply merge MasterDistro with MasterDistroOfWrongEntries
+
+MasterDistro <- subset(MasterDistro,!MasterDistro$RequestedLine %in% unique(FaultyEntries$RequestedLine))
+MasterDistro <- rbind(MasterDistro,MasterDistroOfWrongEntries)
+# test if all requested poverty lines correspond to an equal returned poverty line
+all(round(MasterDistro$povertyline,3)==round(MasterDistro$RequestedLine,3))
+# Perfect!!
+
+##### Too many entries and missing entries ####
+# first check this in terms of total entries:
+length(IdealPLs)*nrow(Temp)-nrow(MasterDistro)
+# -5
+# this is a problem...
+table(MasterDistro$RequestedLine)[which(table(MasterDistro$RequestedLine)>312)]
+# 4.869 4.887  16.1 16.12 16.14 
+#   313   313   313   313   313 
+table(MasterDistro$RequestedLine)[which(table(MasterDistro$RequestedLine)<312)]
+
+MasterDistro$RegionYear <- paste0(MasterDistro$regioncode,":",MasterDistro$year)
+MasterDistro$RegionYearLine <- paste0(MasterDistro$regioncode,":",MasterDistro$year,
+                                      ':',round(MasterDistro$povertyline,3))
+any(duplicated(MasterDistro$RegionYearLine))
+# FALSE
+# this is VERY weird
+TestSlice <- subset(MasterDistro,round(MasterDistro$povertyline,3)==round(16.14,3))
+# aparently there is an entry with XX as a regiontitle, that's why there are no duplicates
+table(TestSlice$regiontitle)
+#East Asia and Pacific         Europe and Central Asia Latin America and the Caribbean    Middle East and North Africa               Other high Income 
+#                   39                              39                              39                              39                              39 
+#South Asia              Sub-Saharan Africa                     World Total                              XX 
+#        39                              39                              39                               1 
+MasterDistro <- subset(MasterDistro,!MasterDistro$regiontitle=='XX')
+length(IdealPLs)*nrow(Temp)-nrow(MasterDistro)
+# 0, good
+MasterDistro <- MasterDistro[order(MasterDistro[,'povertyline']),]
+
+##### Monotonicity ####
+
+EAP <- subset(MasterDistro,MasterDistro$regioncode=='EAP')
+Temp <- subset(EAP,EAP$year==1981)
+Temp$Diffs <- c(1,diff(Temp$headcount))
+Temp$RegionYearLine[which(Temp$Diffs<0)]
+sum(Temp$Diffs<0)
+TempPCN <- povcalnet_wb(
+  povline = 0.026,
+  year = 1981,
+  url = "http://iresearch.worldbank.org",
+  format = "csv"
+)
+
+# there are violations, but cannot be resolved by fetching again the data
+# I will not deal with this. I will circumvent this when using gpinter
+# in the ExportTheData script.
+
+MasterDistroRegions <- MasterDistro
+
+save(list = 'MasterDistroRegions',file = paste0('/media/michalis/1984/PovcalNet/Regional/MasterData/MasterDistroRegions.RData'))
 
 #### Visualization Platforms ####
 # http://worrydream.com/ExplorableExplanations/

@@ -48,8 +48,14 @@ library(povcalnetR)
 library(ineq)
 library(gpinter)
 library(tcltk)
+library(doParallel)
+library(readr)
 
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+# step for adjusting the sampling of the distribution for gpinter use:
+HighStep <- 0.0001
+LowStep <- 0.0001
 
 OldExport <- read.csv('/home/michalis/PhD/Sources/OWID/Poverty_and_inequality_measures_from_PovCal_2021.csv',
                       stringsAsFactors = F,
@@ -97,7 +103,8 @@ IneqIndices <- c('Gini index',"Gini_estimated", "Polarization","Polarization_est
 # I am estimating them from gpinter
 
 MetaColumns <- c("isinterpolated","usemicrodata",'coveragetype','datatype','IsSurveyYear',
-                 'OriginalMedian','OriginalMean','OriginalDecileShares','MonotonicityBreaks')
+                 'OriginalMedian','OriginalMean','OriginalDecileShares','MonotonicityBreaks',
+                 'DataframeRowsForGpinter','GpinterError','LessThan33Rows')
 GenStatsAndInfo <- c('Mean','Mean_estimated','Median','Median_estimated','PPP','Population')
 
 AbsCols <- expand.grid(AbsPLs,AbsPLColsSuffixes)
@@ -117,6 +124,7 @@ names(MyEmptyRow) <- AllCols
 MyEmptyRow[,c(1:ncol(MyEmptyRow))] <- NA
 
 ExportDataFrame <- subset(MyEmptyRow,MyEmptyRow$Entity=='sfjskdjfsdj0988')
+#ExportDataFrame$DataframeRowsForGpinter <- NA
 
 #load('/media/michalis/1984/PovcalNet/MasterData/MasterDistroWithFills.RData')
 load('/mnt/sdb3/PovcalNet/MasterData/MasterDistroWithFills.RData')
@@ -161,14 +169,18 @@ IdealPLs <- c(seq(0.001,5,0.001),seq(5.01,60,0.01),seq(60.1,150,0.1),
               seq(150.5,1400,0.5), seq(1405,3000,5), seq(3010,10000,10),
               seq(11000,35000,100),99999)
 
+Tests <- c("ARG:1992:1992:U:i","AUS:1993:NA:N:i","AUT:1981:1987:N:i","BEL:1981:1985:N:i")
+
 ##### Running the loop ####
 
 total <- length(UniqueHHS)
-pb <- tkProgressBar(title = "progress bar", min = 0,max = total, width = 300)
 
+pb <- tkProgressBar(title = "progress bar", min = 0,max = total, width = 300)
 for (i in UniqueHHS[c(1:length(UniqueHHS))]){
+#for (i in Tests){
   setTkProgressBar(pb, which(UniqueHHS==i), 
                    label=paste( round(which(UniqueHHS==i)/total*100, 3),"% done"))
+
   #print(i)
   Temp <- subset(MasterDistro,MasterDistro$ISO3DataYearCovType==i)
   if (!all(is.na(Temp$headcount))){
@@ -202,6 +214,9 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
     }
     if (y>nrow(TempNew)){
       print(paste0('monotonicity alert at: ',i,' involving ',y-nrow(TempNew),' rows.'))
+      #conn <- file( sprintf("/output/output_%d.txt" , Sys.getpid()) , open = "a" )
+      #write.table( d , conn , append = TRUE , col.names = FALSE )
+      #close( conn )
       TempAlert <- NewMonotonicityAlerts
       TempAlert$ID <- i
       TempAlert$NumOfBreaks <- y-nrow(TempNew)
@@ -210,55 +225,105 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
     }
     NewEmptyRow$MonotonicityBreaks <- y-nrow(TempNew)
     TempNew <- TempNew[ order(TempNew[,'povertyline']), ]
-    TempNew$Diffs <- c(1,diff(TempNew$headcount))
-    TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.001) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.0005))
-    # if the above gives an error (as in "AUS:1988:NA:N:i") try the following:
+    TempNew$Diffs <- c(0,diff(TempNew$headcount))
+    TempNew$CumDiffs <- cumsum(TempNew$Diffs)
+    
+    # I am using the code below
+    # to take samples only at specific (wider) intervals
+    # so that gpinter can perform without errors like
+    # Error in clean_input_thresholds(p, threshold, average, last_bracketavg,  : 
+    # The method requires at least three interpolation points.
+    # or like mismatch between the estimated threshold from gpinter
+    # and that given by the data, see "AUS:1988:NA:N:i" for example, using TempNew from here
+    # TempNew <- TempNew[ order(TempNew[,'povertyline']), ])
+    
+    # the below is a result of a bit of experimenting to operate as a starting point.
+    # the idea is that the higher the mean value of the distribution
+    # the higher the sampling step to avoid "over-feeding" the gpinter fitter
+    # which results to the typical error mentioned in the next bunch of comments.
+    
+    TempNew$Samples <- NA
+    TempNew$Samples[which(TempNew$headcount<0.8)] <- 
+      round(TempNew$CumDiffs[which(TempNew$headcount<0.8)] / 
+              (unique(TempNew$mean)/100000))
+    TempNew$Samples[which(TempNew$headcount>=0.8)] <- 
+      round(TempNew$CumDiffs[which(TempNew$headcount>=0.8)] / 
+              (unique(TempNew$mean)/100000))
+    
+    TempNew$DiffSamples <- c(1,diff(TempNew$Samples))
+    TempShort <- subset(TempNew,TempNew$DiffSamples==1)
+    # the above gives a testDistro error (below) at "ARG:1992:1992:U:i"
+    
+    # let's catch the error and use the message to get the point where the error
+    # of fitting takes place. A typical error message is like:
+    # "Error in clean_input_tabulation(p, threshold, average, bracketshare, topshare,  : 
+    # input data is inconsistent between p=0.8357 and p=0.8374. The bracket average 
+    # (9094.33) is not strictly within the bracket thresholds (9095.80 and 9099.45)
+    
     testDistro <- tryCatch(thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
                                           365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
-                                          average = 12*unique(Temp$mean)),error=function(cond) {
+                                          average = 12*unique(Temp$mean)),error=function(e) {
                                             # Choose a return value in case of error
-                                            return(T)
+                                            return(parse_number(unlist(e)$message))
                                           })
-    if (is.logical(testDistro)){
-      TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.001) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
-    }
-    # if the above gives an error (as in "AUS:1993:NA:N:i") try the following:
-    testDistro <- tryCatch(thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
-                                          365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
-                                          average = 12*unique(Temp$mean)),error=function(cond) {
-                                            # Choose a return value in case of error
-                                            return(T)
-                                          })
-    if (is.logical(testDistro)){
-      TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0012) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
-    }
-    # if the above gives an error (as in "AUT:1981:1987:N:i") try the following:
-    testDistro <- tryCatch(thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
-                                          365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
-                                          average = 12*unique(Temp$mean)),error=function(cond) {
-                                            # Choose a return value in case of error
-                                            return(T)
-                                          })
-    if (is.logical(testDistro)){
-      TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0025) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
-    }
-    # if the above gives an error (as in "BEL:1981:1985:N:i") try the following:
-    testDistro <- tryCatch(thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
-                                          365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
-                                          average = 12*unique(Temp$mean)),error=function(cond) {
-                                            # Choose a return value in case of error
-                                            return(T)
-                                          })
-    if (is.logical(testDistro)){
-      TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0025) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.0025))
+    k <- 1
+    
+    # if the above fails then this while loop will adjust the sampling depending
+    # on which part of the distribution the gpinter error occured
+    # until no error is produced or the sampling boundaries are reached 
+    # (in which case an error stops the entire process, in the "if" statement 
+    # after the while loop)
+    
+    while (is.numeric(testDistro) & (0.001 - k*HighStep >0) & (0.001 - k*LowStep >0)){
+      TempNew$Samples <- NA
+      
+      if (testDistro>=.8){
+        TempNew$Samples[which(TempNew$headcount>=0.8)] <- round(TempNew$CumDiffs[which(TempNew$headcount>=0.8)] / (0.001 - k*HighStep))
+      } else {
+        TempNew$Samples[which(TempNew$headcount<0.8)] <- round(TempNew$CumDiffs[which(TempNew$headcount<0.8)] / (0.001 - k*LowStep))
+      }
+      
+      TempNew$DiffSamples <- c(1,diff(TempNew$Samples))
+      TempShort <- subset(TempNew,TempNew$DiffSamples==1)
+      testDistro <- tryCatch(thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
+                                            365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
+                                            average = 12*unique(Temp$mean)),error=function(e) {
+                                              # Choose a return value in case of error
+                                              return(parse_number(unlist(e)$message))
+                                            })
+      
+      k <- k + 1
+      
     }
     
-    if (nrow(TempShort)<100){
-      TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0009) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.0002))
+    if (is.numeric(testDistro)){
+      stop(paste0('error at ',i))
     }
+    
+    #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.001) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
+    # if the above gives an error (as in "AUS:1993:NA:N:i") try the following:
+    
+    #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0012) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
+    # if the above gives an error (as in "AUT:1981:1987:N:i") try the following:
+  
+    #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0025) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
+    # if the above gives an error (as in "BEL:1981:1985:N:i") try the following:
+    
+    NewEmptyRow$LessThan33Rows <- F # default
+    
+    if (nrow(TempShort)<33){
+      NewEmptyRow$LessThan33Rows <- T
+      print(paste0(nrow(TempShort),' rows at ',i))
+      #conn <- file( sprintf("/output/output_%d.txt" , Sys.getpid()) , open = "a" )
+      #write.table( d , conn , append = TRUE , col.names = FALSE )
+      #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0009) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.0002))
+    }
+    
+    NewEmptyRow$DataframeRowsForGpinter <- nrow(TempShort)
+    
     # the command bellow did not work very well, big difference with the given PCN values when used 
     # to estimate MLD or Gini
-    #TheDistroInProportions <- rep(TempShort$povertyline,round(10000*TempShort$headcount))
+    # TheDistroInProportions <- rep(TempShort$povertyline,round(10000*TempShort$headcount))
     # so I reverted to gpinter entirely
     
     # following the example from the gpinter-vignette.pdf on page 2:
@@ -292,7 +357,7 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
     NewEmptyRow$Median <- unique(Temp$median)
     NewEmptyRow$Median_estimated <- GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.5)]/12
     NewEmptyRow$PPP <- unique(Temp$ppp)
-    NewEmptyRow$Population <- unique(Temp$population)
+    NewEmptyRow$Population <- unique(Temp$population)*1000000
     # MetaColumns
     NewEmptyRow$isinterpolated <- unique(Temp$isinterpolated)
     NewEmptyRow$usemicrodata <- unique(Temp$usemicrodata)
@@ -592,9 +657,25 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
     # NewEmptyRow[,which(is.na(NewEmptyRow[1,]))]
     ExportDataFrame <- rbind(ExportDataFrame,NewEmptyRow)
     rm(NewEmptyRow,distribution)
-  }
+  
+  } else {
+      print(paste0('All headcounts are NA at ',i))
+    }
 }
 close(pb)
 
 save(list = 'ExportDataFrame',file = '~/PhD/Sources/OWID/ExportDataFrame.RData')
 # Now check which is original and which not
+# by comparing with the original set of HHS:
+
+HHS <- povcalnet(
+  country = "all",
+  povline = 1.9,
+  year = "all",
+  aggregate = FALSE,
+  fill_gaps = F,
+  coverage = "all",
+  ppp = NULL,
+  url = "http://iresearch.worldbank.org",
+  format = "csv"
+)
