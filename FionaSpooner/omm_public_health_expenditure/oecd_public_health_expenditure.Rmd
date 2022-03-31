@@ -1,0 +1,213 @@
+---
+title: "OMM Public Health Expenditure"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(janitor)
+library(tidyr)
+library(zoo)
+
+```
+
+Downloading the data from WHO-GHO and OECD Stat
+
+```{r download}
+year <- format(Sys.Date(),"%Y")
+oecd_stat_fp <- paste0("data/oecd_stat_",year,".csv")
+if (!file.exists(oecd_stat_fp)){
+  download.file('https://stats.oecd.org/sdmx-json/data/DP_LIVE/.HEALTHEXP.../OECD?contentType=csv&detail=code&separator=comma&csv-lang=en', oecd_stat_fp )
+}
+
+#download.file('https://ghoapi.azureedge.net/api/GHED_GGHE-DGDP_SHA2011', 'data/GHED_GGHE-DGDP_SHA2011.json')
+
+```
+
+Loading the data from OECD Stat, OECD 93 and Lindert
+
+OECD Stat - Government Compulsory Schemes 'https://stats.oecd.org/Index.aspx?DataSetCode=SHA_FS#'
+
+```{r }
+
+countries <- read.csv("data/country_names_country_standardized.csv") %>% distinct()
+
+oecd_members <- c("Australia", "Austria", "Belgium", "Canada", "Chile", "Colombia", "Costa Rica", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece","Hungary", "Iceland", "Ireland", "Israel", "Italy", "Japan", "South Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal", "Slovakia", "Spain", "Sweden", "Switzerland", "Turkey", "United Kingdom", "United States")
+
+
+oecd <- read.csv(oecd_stat_fp) %>% filter(SUBJECT == 'COMPULSORY' & MEASURE == 'PC_GDP') %>% select(entity = LOCATION, year = TIME,value = Value ) %>% mutate(source = 'oecd_stat')%>% 
+  left_join(., countries, by = c('entity'= 'Country')) %>% 
+  select(entity = Our.World.In.Data.Name, year, value, source)%>% 
+  filter(entity %in%oecd_members)
+
+oecd_93 <- read.csv("data/OECD 1993.csv") %>% pivot_longer(starts_with('X')) %>% mutate(entity = year, year = as.numeric(gsub("X","",name)), source = 'oecd_93') %>% select(entity,year, value, source ) %>% 
+  left_join(., countries, by = c('entity'= 'Country')) %>% 
+  select(entity = Our.World.In.Data.Name, year, value, source)%>% 
+  filter(entity %in%oecd_members)
+
+
+lindert <- read.csv("data/lindert_1880_1930.csv") %>% select(entity,year, value = public_expenditure_on_health)
+
+```
+
+```{r}
+oecd <- oecd %>% group_by(entity) %>% 
+  complete(year = full_seq(min(year):max(year), 1))%>% 
+  mutate(value = na.approx(value, na.rm = FALSE)) %>% 
+  ungroup()
+
+```
+
+```{r}
+oecd_93 <- oecd_93 %>% group_by(entity) %>% 
+  complete(year = full_seq(min(year):max(year), 1))%>% 
+  mutate(value = na.approx(value, na.rm = FALSE)) %>% 
+  ungroup()
+
+```
+
+```{r}
+
+
+oecd_both<- rbind(oecd, oecd_93) 
+
+ggplot()+
+  geom_line(data =oecd_both, aes(x = year, y = value, group = interaction(source,entity), colour = source), size = 1)+
+  facet_wrap(.~ entity)
+
+oecd_both %>% filter(entity == 'Switzerland') %>% arrange(year)
+```
+
+Calculating the rate of change in the OECD Stat data
+```{r}
+roc_df<- oecd %>% 
+  select(entity, year, value) %>% 
+  group_by(entity) %>% 
+  arrange(entity,year) %>% 
+  mutate(time_m1 = lag(value, n = 1L), br_roc = time_m1/value, source = 'oecd_stat') %>% 
+  select(entity, year = year, br_roc, source) %>% 
+  ungroup() %>% 
+  filter(complete.cases(.))
+
+roc_df %>% arrange(entity, year) %>% filter(entity == 'Switzerland')
+```
+
+```{r}
+oecd_93_roc <- oecd_93 %>% 
+  select(entity, year, value) %>% 
+  #filter(between(year, 1960, 1970)) %>% 
+  group_by(entity) %>% 
+  mutate(time_m1 = lag(value, n = 1L), br_roc = time_m1/value, source = 'oecd_93') %>% 
+  select(entity, year, br_roc, source) %>% 
+  ungroup() %>% 
+  filter(complete.cases(.))
+
+oecd_93_roc
+```
+
+
+
+Combine the two rates of change - if there are duplicates for years we have a preference for OECD Stat
+```{r}
+roc_df <- rbind(oecd_93_roc, roc_df)
+
+roc_df <- roc_df %>% 
+  left_join(., countries, by = c('entity'= 'Country')) %>% 
+  select(entity = Our.World.In.Data.Name, year, br_roc, source)
+
+roc_df <- roc_df %>% 
+  group_by(entity, year) %>% 
+  add_count() %>%
+  ungroup() 
+
+roc_sel <- roc_df[-which(roc_df$n >1 & roc_df$source == 'oecd_93'),]
+
+roc_sel %>% filter(entity == 'Switzerland')
+
+```
+
+```{r}
+
+roc_int <- roc_sel %>% 
+  group_by(entity) %>% 
+  complete(year = full_seq(min(year):max(year), 1))%>% 
+  mutate(br_roc = na.approx(br_roc, na.rm = FALSE)) %>% 
+  ungroup()
+
+roc_int %>% filter(entity == 'Switzerland')
+```
+
+```{r}
+roc_int$source[is.na(roc_int$source)] <- 'OWID'
+
+```
+
+
+```{r}
+oecd <- oecd %>% 
+  left_join(., countries, by = c('entity'= 'Country')) %>% 
+  select(entity = Our.World.In.Data.Name, year, value, source)
+
+```
+
+```{r}
+
+
+oecd_out <- oecd %>%
+  select(entity, year, value)
+oecd_loop <- NULL
+entities <- unique(oecd_out$entity)
+for (entity_sel in entities) {
+  oecd_sel <- oecd_out %>%
+    filter(entity == entity_sel)
+  start_reg_year <- min(oecd_sel$year)
+  min_roc_year <-
+    roc_int %>% group_by(entity) %>%  filter(entity == entity_sel, year == min(year)) %>% ungroup() %>% select(year)  %>% pull()
+  years <- start_reg_year:min_roc_year
+  if (min_roc_year <= start_reg_year) {
+    for (year_sel in years) {
+      print(entity_sel)
+      print(year_sel)
+      roc_yr <- roc_int %>% filter(year == year_sel & entity == entity_sel)
+      
+      oecd_new <- oecd_sel %>% filter(year == year_sel) %>%
+        mutate(value = value * roc_yr$br_roc, year = year_sel - 1) %>%
+        select(entity, year, value)
+      
+      oecd_sel <- rbind(oecd_sel, oecd_new)
+      
+    }
+  }
+  oecd_loop <- rbind(oecd_loop, oecd_sel)
+}
+
+oecd_loop %>% arrange(entity, year)
+
+```
+
+Combining with Lindert data
+```{r}
+full_owid <- rbind(oecd_loop, lindert)
+full_owid <- full_owid %>% select(entity, year, public_health_expenditure_pc_gdp = value) %>% filter(complete.cases(.))
+
+
+```
+
+Plot data for countries with data over multiple datasets
+
+```{r}
+
+ggplot()+
+  geom_line(data = full_owid , aes(x = year, y = public_health_expenditure_pc_gdp, group = entity))+
+  facet_wrap(.~entity)+
+  theme_bw()
+  
+```
+
+Write out the data.
+```{r}
+
+```
