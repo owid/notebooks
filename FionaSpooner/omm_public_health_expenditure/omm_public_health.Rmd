@@ -10,6 +10,7 @@ library(dplyr)
 library(ggplot2)
 library(janitor)
 library(tidyr)
+library(zoo)
 
 ```
 
@@ -43,6 +44,23 @@ countries <- read.csv("data/country_names_country_standardized.csv") %>% distinc
 
 ```
 
+```{r}
+
+oecd_who <- rbind(who, oecd, oecd_93)
+
+oecd_who_df<- oecd_who %>% 
+  left_join(., countries, by = c('entity'= 'Country')) %>% 
+  select(entity = Our.World.In.Data.Name, year, value, source)
+
+full_lines = oecd_who_df$entity[which(oecd_who_df$year == 1960 & !is.na(oecd_who_df$value))]
+
+ggplot()+
+  geom_line(data =oecd_who_df %>% filter(complete.cases(.)& entity %in% full_lines), aes(x = year, y = value, group = interaction(source,entity), colour = source), size = 1)+
+  facet_wrap(.~ entity)+
+  ggtitle( "WHO - Domestic general government health expenditure (%GDP), OECD Stat - Government (%GDP)")
+
+
+```
 
 Calculating the rate of change in the OECD Stat data
 ```{r}
@@ -93,6 +111,28 @@ roc_sel <- roc_df[-which(roc_df$n >1 & roc_df$source == 'oecd_93'),]
 
 
 ```
+The value for Belgium 1992 is missing - I'll use an average of 1991 and 1993
+```{r}
+
+bel_1992 <- roc_sel %>% filter(entity == 'Belgium' & year %in% c(1991,1993)) %>% 
+  summarise(entity = 'Belgium',year = 1992, br_roc = mean(br_roc), source = 'OWID', n = 1)
+
+roc_sel <- rbind(roc_sel, bel_1992)
+
+```
+
+The values for Switzerland 1992-95 is missing - I've linearly interpolated between 1991-96
+
+```{r}
+
+swi_90s <- roc_sel %>% 
+  filter(entity == 'Switzerland' & year >= 1991 & year <=1996) %>% 
+  complete(year = full_seq(1991:1996, 1)) %>% 
+  mutate(entity = 'Switzerland',br_roc = na.approx(br_roc), source = 'OWID', n = 1)
+
+roc_sel <- rbind(roc_sel, swi_90s)
+```
+
 Standardising the WHO entities
 
 ```{r}

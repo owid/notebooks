@@ -14,7 +14,7 @@ library(zoo)
 
 ```
 
-Downloading the data from OECD Stat - the data is available here: https://data.oecd.org/healthres/health-spending.htm
+Downloading the data from OECD Stat - the data is available [here](https://data.oecd.org/healthres/health-spending.htm).
 
 ```{r download}
 year <- format(Sys.Date(),"%Y")
@@ -31,16 +31,11 @@ countries <- read.csv("data/country_names_country_standardized.csv") %>% distinc
 
 ```
 
-We are only interested in data from OECD countries - they are listed here so we can filter other countries out.
 
-```{r }
-
-oecd_members <- c("Australia", "Austria", "Belgium", "Canada", "Chile", "Colombia", "Costa Rica", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece","Hungary", "Iceland", "Ireland", "Israel", "Italy", "Japan", "South Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal", "Slovakia", "Spain", "Sweden", "Switzerland", "Turkey", "United Kingdom", "United States")
-```
 
 Reading in the data downloaded from OECD Stat. We are using the values relating to 'Government/Compulsory' expenditure - which is here coded 'COMPULSORY' in the 'SUBJECT' column.
 
-In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't OECD members.
+In this code chunk we also standardise the country names to OWID country names.
 
 We also add rows so that for each country every year between the first and last has it's own row. 
 ```{r}
@@ -49,7 +44,6 @@ oecd <- read.csv(oecd_stat_fp) %>% filter(SUBJECT == 'COMPULSORY' & MEASURE == '
   mutate(source = 'oecd_stat')%>% 
   left_join(., countries, by = c('entity'= 'Country')) %>% 
   select(entity = Our.World.In.Data.Name, year, value, source)%>% 
-  filter(entity %in%oecd_members) %>% 
   group_by(entity) %>% 
   complete(year = full_seq(min(year):max(year), 1))
 
@@ -63,9 +57,9 @@ ggplot()+
 ```
 
 
-Reading in the data from OECD 1993, which is available [here][https://drive.google.com/file/d/1Xa9WRtQq_Dfeod8mfJzcj6TGXak7APRF/view?usp=sharing]. 
+Reading in the data from OECD 1993, which is available [here](https://drive.google.com/file/d/1Xa9WRtQq_Dfeod8mfJzcj6TGXak7APRF/view?usp=sharing.). 
 
-In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't OECD members.
+In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't in the OECD stat dataset.
 
 ```{r}
 oecd_93 <- read.csv("data/OECD 1993.csv") %>% 
@@ -73,7 +67,8 @@ oecd_93 <- read.csv("data/OECD 1993.csv") %>%
   mutate(entity = year, year = as.numeric(gsub("X","",name)), source = 'oecd_93') %>% 
   left_join(., countries, by = c('entity'= 'Country')) %>% 
   select(entity = Our.World.In.Data.Name, year, value, source)%>% 
-  filter(entity %in%oecd_members)  %>% 
+  #filter(entity %in% oecd_members) %>% 
+  filter(entity %in% oecd$entity)  %>% 
   group_by(entity) %>% 
   complete(year = full_seq(min(year):max(year), 1))
 
@@ -86,7 +81,7 @@ ggplot()+
 ```
 
 
-Reading in the data from Lindert (1994) - The Rise of Social Spending 1880-1930 (Table 1D), available [here][https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing].
+Reading in the data from Lindert (1994) - The Rise of Social Spending 1880-1930 (Table 1D), available [here](https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing).
 
 In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't OECD members.
 
@@ -145,7 +140,7 @@ roc_df<- oecd %>%
   ungroup() %>% 
   filter(complete.cases(.))
 
-roc_df %>% arrange(entity, year) %>% filter(entity == 'Switzerland')
+head(roc_df)
 ```
 
 Calculating the rate of change in the OECD 1993 data. Here we create a new column (time_m1) which is lagged by one year, for example values in the 'value' column for 1971 rows are shown as 1972 in the 'time_m1' column. 
@@ -161,7 +156,7 @@ oecd_93_roc <- oecd_93 %>%
   ungroup() %>% 
   filter(complete.cases(.))
 
-oecd_93_roc
+
 ```
 
 
@@ -181,7 +176,7 @@ roc_both <- roc_both %>%
 
 roc_sel <- roc_both[-which(roc_both$n >1 & roc_both$source == 'oecd_93'),]
 
-roc_sel %>% filter(entity == 'France')
+head(roc_sel)
 
 ```
 
@@ -195,7 +190,7 @@ roc_int <- roc_sel %>%
   mutate(br_roc = na.approx(br_roc, na.rm = FALSE)) %>% 
   ungroup()
 
-roc_int %>% filter(entity == 'Switzerland')
+head(roc_int)
 ```
 These interpolated values are labelled as 'OWID'
 
@@ -204,13 +199,7 @@ roc_int$source[is.na(roc_int$source)] <- 'OWID'
 
 ```
 
-Here we standardise the names (check this is needed - might be duplicate effort)
-```{r}
-oecd <- oecd %>% 
-  left_join(., countries, by = c('entity'= 'Country')) %>% 
-  select(entity = Our.World.In.Data.Name, year, value, source)
 
-```
 
 
 This loop iterates through each entity and within this iterates through each year (going backwards through time), to multiply the current 'value' by the current 'br_roc' (rate of change) to calculate the 'value' for the next year.
@@ -230,8 +219,10 @@ for (entity_sel in entities) {
   start_reg_year <- min(oecd_sel$year)
   min_roc_year <-
     roc_int %>% group_by(entity) %>%  filter(entity == entity_sel, year == min(year)) %>% ungroup() %>% select(year)  %>% pull()
-  years <- start_reg_year:min_roc_year
-  if (min_roc_year <= start_reg_year) {
+  
+  if ( length(min_roc_year)  == 1) {
+    if (min_roc_year <= start_reg_year){
+    years <- start_reg_year:min_roc_year
     for (year_sel in years) {
       roc_yr <- roc_int %>% filter(year == year_sel & entity == entity_sel)
       
@@ -242,11 +233,10 @@ for (entity_sel in entities) {
       oecd_sel <- rbind(oecd_sel, oecd_new)
       
     }
+    }
   }
   oecd_loop <- rbind(oecd_loop, oecd_sel)
 }
-
-oecd_loop %>% arrange(entity, year)
 
 ```
 
@@ -258,7 +248,7 @@ full_owid <- full_owid %>% select(entity, year, public_health_expenditure_pc_gdp
 full_owid$source <- 'OWID'
 ```
 
-Plot the combined and final dataset.
+Plot the combined dataset.
 
 ```{r}
 
@@ -273,5 +263,6 @@ ggplot()+
 
 Write out the data.
 ```{r}
-
+full_owid <- full_owid %>% select(-source)
+write.csv(full_owid,paste0('data/OMM_public_health_expenditure_',year,'.csv'), row.names = FALSE)
 ```
