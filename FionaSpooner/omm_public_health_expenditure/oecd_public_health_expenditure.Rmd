@@ -136,7 +136,7 @@ roc_df<- oecd %>%
   group_by(entity) %>% 
   arrange(entity,year) %>% 
   mutate(time_m1 = lag(value, n = 1L), br_roc = time_m1/value, source = 'oecd_stat') %>% 
-  select(entity, year = year, br_roc, source) %>% 
+  #select(entity, year, br_roc, source) %>% 
   ungroup() %>% 
   filter(complete.cases(.))
 
@@ -152,7 +152,7 @@ oecd_93_roc <- oecd_93 %>%
   #filter(between(year, 1960, 1970)) %>% 
   group_by(entity) %>% 
   mutate(time_m1 = lag(value, n = 1L), br_roc = time_m1/value, source = 'oecd_93') %>% 
-  select(entity, year, br_roc, source) %>% 
+  #select(entity, year, br_roc, source) %>% 
   ungroup() %>% 
   filter(complete.cases(.))
 
@@ -161,10 +161,17 @@ oecd_93_roc <- oecd_93 %>%
 
 
 
-We combine the two rates of change - as there is some overlap in the time-series there are duplicate for some entity-rate_of_change pairs. In these cases we have a preference for OECD Stat.
+We combine the two rates of change - we can check the rate of change has been calculated as expected by looking at the values in the table below. 
+
+The 1962 value for Australia is 2.74, we multiply this by the 1962 value of the rate of change (br_roc), which is 0.9379562 to get the 1961 value of 2.57.
 ```{r}
 roc_both <- rbind(oecd_93_roc, roc_df)
+head(roc_both)
+```
 
+As there is some overlap in the time-series there are duplicate for some entity-rate_of_change pairs. In these cases we have a preference for OECD Stat.
+
+```{r}
 roc_both <- roc_both %>% 
   left_join(., countries, by = c('entity'= 'Country')) %>% 
   select(entity = Our.World.In.Data.Name, year, br_roc, source)
@@ -248,7 +255,7 @@ full_owid <- full_owid %>% select(entity, year, public_health_expenditure_pc_gdp
 full_owid$source <- 'OWID'
 ```
 
-Plot the combined dataset.
+Plot the combined dataset to check it looks sensible:
 
 ```{r}
 
