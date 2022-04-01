@@ -37,7 +37,7 @@ Reading in the data downloaded from OECD Stat. We are using the values relating 
 
 In this code chunk we also standardise the country names to OWID country names.
 
-We also add rows so that for each country every year between the first and last has it's own row. 
+We also add rows so that for each country every year between the first and last has its own row. 
 ```{r}
 oecd <- read.csv(oecd_stat_fp) %>% filter(SUBJECT == 'COMPULSORY' & MEASURE == 'PC_GDP') %>%
   select(entity = LOCATION, year = TIME,value = Value ) %>% 
@@ -67,7 +67,6 @@ oecd_93 <- read.csv("data/OECD 1993.csv") %>%
   mutate(entity = year, year = as.numeric(gsub("X","",name)), source = 'oecd_93') %>% 
   left_join(., countries, by = c('entity'= 'Country')) %>% 
   select(entity = Our.World.In.Data.Name, year, value, source)%>% 
-  #filter(entity %in% oecd_members) %>% 
   filter(entity %in% oecd$entity)  %>% 
   group_by(entity) %>% 
   complete(year = full_seq(min(year):max(year), 1))
@@ -136,7 +135,6 @@ roc_df<- oecd %>%
   group_by(entity) %>% 
   arrange(entity,year) %>% 
   mutate(time_m1 = lag(value, n = 1L), br_roc = time_m1/value, source = 'oecd_stat') %>% 
-  #select(entity, year, br_roc, source) %>% 
   ungroup() %>% 
   filter(complete.cases(.))
 
@@ -149,10 +147,8 @@ We then the divide the 'time_m1' column by the 'value' column to estimate the ra
 ```{r}
 oecd_93_roc <- oecd_93 %>% 
   select(entity, year, value) %>% 
-  #filter(between(year, 1960, 1970)) %>% 
   group_by(entity) %>% 
   mutate(time_m1 = lag(value, n = 1L), br_roc = time_m1/value, source = 'oecd_93') %>% 
-  #select(entity, year, br_roc, source) %>% 
   ungroup() %>% 
   filter(complete.cases(.))
 
