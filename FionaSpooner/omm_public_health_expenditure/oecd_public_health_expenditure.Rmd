@@ -5,10 +5,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-library(jsonlite)
 library(dplyr)
 library(ggplot2)
-library(janitor)
 library(tidyr)
 library(zoo)
 
