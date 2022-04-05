@@ -24,12 +24,11 @@ def extract_wild_cases(file_path: str) -> pd.DataFrame:
     df.rename(columns={None: "entity"}, inplace=True)
     years = df.columns.drop("entity")
     dfe = df.set_index("entity")
-    df_sel = dfe.loc[:"Total (Type1)"]
+    df_sel = dfe.loc[:"Total\xa0(Type1)"]
     df_sel = df_sel.reset_index(level=0)
     df_cases = pd.melt(df_sel, id_vars=["entity"], value_vars=years)
-
     df_cases.columns = ["entity", "year", "wild_polio_cases"]
-
+    df_cases = df_cases[df_cases.entity != "Total\xa0(Type1)"]
     return df_cases
 
 
@@ -39,7 +38,6 @@ def extract_historical_wild_cases(file_path: str) -> pd.DataFrame:
     df = pd.DataFrame(table)
     df.columns = df.iloc[2]
     df.drop([0, 1, 2], inplace=True)
-    col_lim = "2015"
     df = df.iloc[:, 0:6]
     df.rename(columns={None: "entity"}, inplace=True)
     years = df.columns.drop("entity")
