@@ -118,3 +118,22 @@ def get_who_data_and_regions():
     who_melt[["year"]] = who_melt[["year"]].astype(int)
 
     return who_melt, regions
+
+
+def add_years_to_polio_status(polio_free: pd.DataFrame) -> pd.DataFrame:
+    entities = polio_free["Entity"].drop_duplicates().to_list()
+
+    appended_data = []
+    for entity in entities:
+        polio_ent = polio_free[polio_free["Entity"] == entity]
+        max_year = polio_ent["Year"].max()
+        new_years = [2018, 2019, 2020]
+        polio_max = polio_ent.loc[polio_ent["Year"] == max_year]
+        polio_new = pd.DataFrame(
+            np.repeat(polio_max.values, 3, axis=0), columns=polio_max.columns
+        )
+        polio_new["Year"] = new_years
+        appended_data.append(polio_new)
+
+    polio_new = pd.concat(appended_data, ignore_index=True)
+    return polio_new
