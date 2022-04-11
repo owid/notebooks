@@ -1,16 +1,23 @@
 ---
-title: "OMM Public Health Expenditure"
+title: "Government Health Expenditure"
 output: html_document
 ---
+<style>
+p.caption {
+  font-size: 0.6em;
+}
+</style>
+<br>
+#### Introduction
+<br>
+In this notebook we combine three data sources to produce a long-term time-series of government health expenditure as a share of GDP. The figure, taken from ['the OECD's public funding for health care brief (2020)'](https://www.oecd.org/health/Public-funding-of-health-care-Brief-2020.pdf), below shows public and private funding contribute to health care goods and services. The section we focus on in this notebook is highlighted in the grey boxes, expenditure which is either government schemes, social health insurance or compulsory health insurance. 
 
-In this notebook we combine three data sources to produce a long-term time-series of public health expenditure as a share of GDP. The figure, taken from ['the OECD's public funding for health care brief (2020)'](https://www.oecd.org/health/Public-funding-of-health-care-Brief-2020.pdf), below shows public and private funding contribute to health care goods and services. The section we focus on in this notebook is highlighted in the grey boxes, expenditure which is either government schemes, social health insurance or compulsory health insurance. 
+![Figure from 'Public funding for health care brief (OECD,2020)'](OECD-brief.png)
 
-![Figure from 'Public funding for health care brief'](OECD-brief.png)
-
-
-The data sources we use are Lindert (1994), OECD (1993), OECD Stat.
-
-These three sources were combined as follows:
+<br>
+#### Data sources
+<br>
+The data sources we use are [Lindert (1994)](https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing), [OECD (1993)](https://drive.google.com/file/d/1Xa9WRtQq_Dfeod8mfJzcj6TGXak7APRF/view?usp=sharing.), [OECD Stat](https://stats.oecd.org/sdmx-json/data/DP_LIVE/.HEALTHEXP.../OECD?contentType=csv&detail=code&separator=comma&csv-lang=en) and were combined as follows:
 
 For the period 1970-2020 we report the figures as published in OECD Stat.
 For the period 1960-1969, we extended the recent figures (from OECD Stat) backwards by using the rates of change as reported in OECD (1993). 
@@ -20,18 +27,20 @@ To be precise, the process of extrapolation consisted in taking the earliest ava
 
 OECD_Stat_(year-1)= OECD_Stat_year x [OECD_1993_(year-1)]/[OECD_Stat_(year)]
 
-Backward extrapolation was necessary because the levels in the estimates from OECD Stat and OECD (1993) do not exactly coincide for the overlapping years. This is partly because OECD Stat data does not include capital expenditure.
-
-The implicit assumption in our constructed dataset, then, is that the estimates from these two series have different levels, but common trends. Empirically, the validity of this assumption is supported by the trends in the overlapping years.
+We use backward extrapolation because it is not possible to splice the estimates from OECD Stat and OECD (1993). This is because, while the trends are consistent, there are differences in levels due to changes in definitions and measurement."
 
 
+```{r, include =FALSE}
+knitr::opts_chunk$set(
+                      warning = FALSE,
+                      message = FALSE)
 
-
-```{r, knitr::opts_chunk$set(warning = FALSE, message = FALSE)}
-install.packages('zoo',repos = "http://cran.us.r-project.org")
 ```
-
-```{r setup, include=FALSE}
+<br>
+#### Method - data preparation
+<br>
+```{r, message = FALSE,results='hide'}
+install.packages('zoo',repos = "http://cran.us.r-project.org")
 
 library(dplyr)
 library(ggplot2)
@@ -40,7 +49,7 @@ library(zoo)
 
 ```
 
-Downloading the data from OECD Stat - the data is available [here](https://data.oecd.org/healthres/health-spending.htm).
+We download the data from OECD Stat - the data is available [here](https://data.oecd.org/healthres/health-spending.htm). If we already have downloaded a version of the data from the current year then we use that, if not a new version is downloaded. 
 
 ```{r download}
 year <- format(Sys.Date(),"%Y")
@@ -51,12 +60,11 @@ if (!file.exists(oecd_stat_fp)){
 
 ```
 
-Loading in the country standardisation csv
+Loading in the country standardisation csv:
 ```{r}
 countries <- read.csv("data/country_names_country_standardized.csv") %>% distinct()
 
 ```
-
 
 
 Reading in the data downloaded from OECD Stat. We are using the values relating to 'Government/Compulsory' expenditure - which is here coded 'COMPULSORY' in the 'SUBJECT' column.
@@ -75,7 +83,7 @@ oecd <- read.csv(oecd_stat_fp) %>% filter(SUBJECT == 'COMPULSORY' & MEASURE == '
 
 ggplot()+
   geom_line(data =oecd, aes(x = year, y = value, group = interaction(entity)))+
-  labs(x = "Year", y= "Public Health Expenditure (%GDP)")+
+  labs(x = "Year", y= "Government Health Expenditure (%GDP)")+
   facet_wrap(.~entity)+
   scale_x_continuous(breaks=seq(1970, 2020, 25))+
   theme_bw()
@@ -106,9 +114,9 @@ ggplot()+
 ```
 
 
-Reading in the data from Lindert (1994) - The Rise of Social Spending 1880-1930 (Table 1D), available [here](https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing).
+Reading in the data from Lindert (1994) - The Rise of Social Spending 1880-1930 (Table 1D; Government subsidies for health care, 1880-1930, as percentage of national product at current prices.), available [here](https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing).
 
-In this code chunk we also standardise the country names to OWID country names and filter out countries that aren't OECD members.
+In this code chunk we also standardise the country names to OWID country names.
 
 ```{r}
 lindert <- read.csv("data/lindert_1880_1930.csv") %>% 
@@ -119,7 +127,7 @@ lindert <- read.csv("data/lindert_1880_1930.csv") %>%
 
 ggplot()+
   geom_line(data =lindert, aes(x = year, y = value, group = interaction(entity)))+
-  labs(x = "Year", y= "Public Health Expenditure (%GDP)")+
+  labs(x = "Year", y= "Government Health Expenditure (%GDP)")+
   facet_wrap(.~entity)+
   scale_x_continuous(breaks=seq(1880, 1930, 25))+
   theme_bw()
@@ -138,20 +146,24 @@ oecd_93 <- oecd_93 %>% group_by(entity) %>%
   ungroup()
 
 ```
-
-Here we combine both the datasets and plot them, coloured according to the source. Values which have been linearly interpolated (as described above) are shown as 'OWID'.
+<br>
+Here we combine both the datasets and plot them, coloured according to the source. Values which have been linearly interpolated (as described above) are shown as 'OWID_estimate'.
 ```{r}
 
 
 oecd_both<- rbind(oecd, oecd_93) 
-oecd_both$source[is.na(oecd_both$source)] <- 'OWID'
+oecd_both$source[is.na(oecd_both$source)] <- 'OWID_estimate'
 ggplot()+
-  geom_line(data =oecd_both, aes(x = year, y = value, group = interaction(source,entity), colour = source), size = 1)+
+  geom_point(data =oecd_both %>% filter(entity %in%c('France', 'Germany')), aes(x = year, y = value, group = interaction(source,entity), colour = source), size = 1)+
   scale_x_continuous(breaks=seq(1960, 2020, 30))+
+  labs(x = "Year", y= "Public/Government Health Expenditure (%GDP)")+
   facet_wrap(.~ entity)
 
-```
 
+```
+<br>
+#### Method - calculating rates of change
+<br>
 Calculating the rate of change in the OECD Stat data. Here we create a new column (time_m1) which is lagged by one year, for example values in the 'value' column for 1971 rows are shown as 1972 in the 'time_m1' column. 
 
 We then the divide the 'time_m1' column by the 'value' column to estimate the rate of change - in a backwards direction. So we would estimate the rate of change from 1972 to 1971.
@@ -221,16 +233,15 @@ roc_int <- roc_sel %>%
 
 head(roc_int)
 ```
-These interpolated values are labelled as 'OWID'
+These interpolated values are labelled as 'OWID_estimate'
 
 ```{r}
-roc_int$source[is.na(roc_int$source)] <- 'OWID'
+roc_int$source[is.na(roc_int$source)] <- 'OWID_estimate'
 
 ```
-
-
-
-
+<br>
+#### Method - backwards regression
+<br>
 This loop iterates through each entity and within this iterates through each year (going backwards through time), to multiply the current 'value' by the current 'br_roc' (rate of change) to calculate the 'value' for the next year.
 
 
@@ -249,19 +260,20 @@ for (entity_sel in entities) {
   min_roc_year <-
     roc_int %>% group_by(entity) %>%  filter(entity == entity_sel, year == min(year)) %>% ungroup() %>% select(year)  %>% pull()
   
-  if ( length(min_roc_year)  == 1) {
-    if (min_roc_year <= start_reg_year){
-    years <- start_reg_year:min_roc_year
-    for (year_sel in years) {
-      roc_yr <- roc_int %>% filter(year == year_sel & entity == entity_sel)
-      
-      oecd_new <- oecd_sel %>% filter(year == year_sel) %>%
-        mutate(value = value * roc_yr$br_roc, year = year_sel - 1) %>%
-        select(entity, year, value)
-      
-      oecd_sel <- rbind(oecd_sel, oecd_new)
-      
-    }
+  if (length(min_roc_year)  == 1) {
+    if (min_roc_year <= start_reg_year) {
+      years <- start_reg_year:min_roc_year
+      for (year_sel in years) {
+        roc_yr <-
+          roc_int %>% filter(year == year_sel & entity == entity_sel)
+        
+        oecd_new <- oecd_sel %>% filter(year == year_sel) %>%
+          mutate(value = value * roc_yr$br_roc, year = year_sel - 1) %>%
+          select(entity, year, value)
+        
+        oecd_sel <- rbind(oecd_sel, oecd_new)
+        
+      }
     }
   }
   oecd_loop <- rbind(oecd_loop, oecd_sel)
@@ -269,29 +281,33 @@ for (entity_sel in entities) {
 
 ```
 
+
 Lastly, we add in the Lindert data.
 ```{r}
 full_owid <- rbind(oecd_loop, lindert %>% select(-source))
 full_owid <- full_owid %>% select(entity, year, public_health_expenditure_pc_gdp = value) %>% filter(complete.cases(.))
 
-full_owid$source <- 'OWID'
+full_owid$source <- 'OWID_estimate'
 ```
 
-Plot the combined dataset to check it looks sensible:
+Plot countries which use all three datasets to check it looks sensible:
 
 ```{r}
 
+
 ggplot()+
-  geom_line(data = full_owid, aes(x = year, y = public_health_expenditure_pc_gdp, group = entity, colour = source), size = 0.8)+
-  geom_line(data =oecd_both, aes(x = year, y = value, group = interaction(source,entity), colour = source), size = 1.2, alpha = 0.5)+
+  geom_line(data = full_owid %>% filter(entity %in% lindert$entity), aes(x = year, y = public_health_expenditure_pc_gdp, group = entity, colour = source), size = 1.5, alpha =0.5)+
+  geom_line(data =oecd_both%>% filter(entity %in% lindert$entity), aes(x = year, y = value, group = interaction(source,entity), colour = source))+
   facet_wrap(.~entity)+
   scale_x_continuous(breaks=seq(1880, 2020, 70))+
-  theme_bw()
+  scale_colour_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
+  theme_bw()+
+  labs(x = "Year", y = "Government Health Expenditure (% of GDP)")
   
 ```
 
 Write out the data.
 ```{r}
 full_owid <- full_owid %>% select(-source)
-write.csv(full_owid,paste0('data/OMM_public_health_expenditure_',year,'.csv'), row.names = FALSE)
+write.csv(full_owid,paste0('data/OMM_government_health_expenditure_',year,'.csv'), row.names = FALSE)
 ```
