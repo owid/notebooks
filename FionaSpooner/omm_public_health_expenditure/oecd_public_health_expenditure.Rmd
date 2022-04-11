@@ -2,11 +2,6 @@
 title: "Government Health Expenditure"
 output: html_document
 ---
-<style>
-p.caption {
-  font-size: 0.6em;
-}
-</style>
 
 #### Introduction
 
@@ -14,9 +9,10 @@ In this notebook we combine three data sources to produce a long-term time-serie
 
 ![Figure from 'Public funding for health care brief (OECD,2020)'](OECD-brief.png)
 
-<br>
+
 #### Data sources
-<br>
+
+
 The data sources we use are [Lindert (1994)](https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing), [OECD (1993)](https://drive.google.com/file/d/1Xa9WRtQq_Dfeod8mfJzcj6TGXak7APRF/view?usp=sharing.), [OECD Stat](https://stats.oecd.org/sdmx-json/data/DP_LIVE/.HEALTHEXP.../OECD?contentType=csv&detail=code&separator=comma&csv-lang=en) and were combined as follows:
 
 For the period 1970-2020 we report the figures as published in OECD Stat.
@@ -36,9 +32,9 @@ knitr::opts_chunk$set(
                       message = FALSE)
 
 ```
-<br>
+
 #### Method - data preparation
-<br>
+
 ```{r, message = FALSE,results='hide'}
 install.packages('zoo',repos = "http://cran.us.r-project.org")
 
