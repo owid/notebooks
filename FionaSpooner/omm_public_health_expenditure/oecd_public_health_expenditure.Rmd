@@ -3,14 +3,9 @@ title: "Government Health Expenditure"
 output: html_document
 ---
 
-Introduction
-
 In this notebook we combine three data sources to produce a long-term time-series of government health expenditure as a share of GDP. The figure, taken from ['the OECD's public funding for health care brief (2020)'](https://www.oecd.org/health/Public-funding-of-health-care-Brief-2020.pdf), below shows public and private funding contribute to health care goods and services. The section we focus on in this notebook is highlighted in the grey boxes, expenditure which is either government schemes, social health insurance or compulsory health insurance. 
 
 ![Figure from 'Public funding for health care brief (OECD,2020)'](OECD-brief.png)
-
-
-#### Data sources
 
 
 The data sources we use are [Lindert (1994)](https://drive.google.com/file/d/1YFlIC-on7oWiDhgdETUD9PSVE-BTaySn/view?usp=sharing), [OECD (1993)](https://drive.google.com/file/d/1Xa9WRtQq_Dfeod8mfJzcj6TGXak7APRF/view?usp=sharing.), [OECD Stat](https://stats.oecd.org/sdmx-json/data/DP_LIVE/.HEALTHEXP.../OECD?contentType=csv&detail=code&separator=comma&csv-lang=en) and were combined as follows:
@@ -32,8 +27,6 @@ knitr::opts_chunk$set(
                       message = FALSE)
 
 ```
-
-#### Method - data preparation
 
 ```{r, message = FALSE,results='hide'}
 install.packages('zoo',repos = "http://cran.us.r-project.org")
@@ -142,7 +135,7 @@ oecd_93 <- oecd_93 %>% group_by(entity) %>%
   ungroup()
 
 ```
-<br>
+
 Here we combine both the datasets and plot them, coloured according to the source. Values which have been linearly interpolated (as described above) are shown as 'OWID_estimate'.
 ```{r}
 
@@ -157,9 +150,7 @@ ggplot()+
 
 
 ```
-<br>
-#### Method - calculating rates of change
-<br>
+
 Calculating the rate of change in the OECD Stat data. Here we create a new column (time_m1) which is lagged by one year, for example values in the 'value' column for 1971 rows are shown as 1972 in the 'time_m1' column. 
 
 We then the divide the 'time_m1' column by the 'value' column to estimate the rate of change - in a backwards direction. So we would estimate the rate of change from 1972 to 1971.
@@ -235,9 +226,7 @@ These interpolated values are labelled as 'OWID_estimate'
 roc_int$source[is.na(roc_int$source)] <- 'OWID_estimate'
 
 ```
-<br>
-#### Method - backwards regression
-<br>
+
 This loop iterates through each entity and within this iterates through each year (going backwards through time), to multiply the current 'value' by the current 'br_roc' (rate of change) to calculate the 'value' for the next year.
 
 
