@@ -51,21 +51,24 @@ def process_usa(source: str):
 
 
 def process_chl(source: str):
-    df = pd.read_csv(
-        source,
-        usecols=[
-            "semana_epidemiologica",
-            "grupo_edad",
-            "estado_vacunacion",
-            "incidencia_def",
-        ],
-    ).rename(
-        columns={
-            "semana_epidemiologica": "Week",
-            "grupo_edad": "Entity",
-            "estado_vacunacion": "status",
-            "incidencia_def": "rate",
-        }
+    df = (
+        pd.read_csv(source)
+        .drop_duplicates()[
+            [
+                "semana_epidemiologica",
+                "grupo_edad",
+                "estado_vacunacion",
+                "incidencia_def",
+            ]
+        ]
+        .rename(
+            columns={
+                "semana_epidemiologica": "Week",
+                "grupo_edad": "Entity",
+                "estado_vacunacion": "status",
+                "incidencia_def": "rate",
+            }
+        )
     )
 
     assert set(df.status) == {
