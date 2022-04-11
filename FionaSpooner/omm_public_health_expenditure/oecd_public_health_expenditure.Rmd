@@ -3,7 +3,7 @@ title: "Government Health Expenditure"
 output: html_document
 ---
 
-#### Introduction
+Introduction
 
 In this notebook we combine three data sources to produce a long-term time-series of government health expenditure as a share of GDP. The figure, taken from ['the OECD's public funding for health care brief (2020)'](https://www.oecd.org/health/Public-funding-of-health-care-Brief-2020.pdf), below shows public and private funding contribute to health care goods and services. The section we focus on in this notebook is highlighted in the grey boxes, expenditure which is either government schemes, social health insurance or compulsory health insurance. 
 
