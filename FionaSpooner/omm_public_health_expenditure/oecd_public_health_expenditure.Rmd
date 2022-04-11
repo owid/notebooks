@@ -3,6 +3,8 @@ title: "Government Health Expenditure"
 output: html_document
 ---
 
+The notebook for this repo is available here: https://nextjournal.com/fiona-spooner/government-health-expenditure
+
 In this notebook we combine three data sources to produce a long-term time-series of government health expenditure as a share of GDP. The figure, taken from ['the OECD's public funding for health care brief (2020)'](https://www.oecd.org/health/Public-funding-of-health-care-Brief-2020.pdf), below shows public and private funding contribute to health care goods and services. The section we focus on in this notebook is highlighted in the grey boxes, expenditure which is either government schemes, social health insurance or compulsory health insurance. 
 
 ![Figure from 'Public funding for health care brief (OECD,2020)'](OECD-brief.png)
@@ -68,7 +70,7 @@ oecd <- read.csv(oecd_stat_fp) %>% filter(SUBJECT == 'COMPULSORY' & MEASURE == '
   left_join(., countries, by = c('entity'= 'Country')) %>% 
   select(entity = Our.World.In.Data.Name, year, value, source)%>% 
   group_by(entity) %>% 
-  complete(year = full_seq(min(year):max(year), 1))
+  tidyr::complete(year = full_seq(min(year):max(year), 1))
 
 ggplot()+
   geom_line(data =oecd, aes(x = year, y = value, group = interaction(entity)))+
@@ -92,7 +94,7 @@ oecd_93 <- read.csv("data/OECD 1993.csv") %>%
   select(entity = Our.World.In.Data.Name, year, value, source)%>% 
   filter(entity %in% oecd$entity)  %>% 
   group_by(entity) %>% 
-  complete(year = full_seq(min(year):max(year), 1))
+  tidyr::complete(year = full_seq(min(year):max(year), 1))
 
 ggplot()+
   geom_line(data =oecd_93, aes(x = year, y = value, group = interaction(entity)))+
@@ -214,7 +216,7 @@ There are some countries which have a gap between the OECD datasets (Belgium, Sw
 
 roc_int <- roc_sel %>% 
   group_by(entity) %>% 
-  complete(year = full_seq(min(year):max(year), 1))%>% 
+  tidyr::complete(year = full_seq(min(year):max(year), 1))%>% 
   mutate(br_roc = na.approx(br_roc, na.rm = FALSE)) %>% 
   ungroup()
 
