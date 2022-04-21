@@ -99,12 +99,16 @@ df<- df %>%
 ## Plot densities
 
 
+```{r}
+unique(df$CountryName)
+```
+
 Filter for countries and years.
 
 ```{r}
 
-select_countries<- c("Mozambique", "United States")
-select_years<- c(1981, 2019)
+select_countries<- c("Kenya", "Other high Income")
+select_years<- c(2019)
 
 selected_data<- df %>%
   filter(CountryName %in% select_countries,
@@ -151,3 +155,26 @@ ggplot(selected_data,
         axis.title.y = element_blank())
 ```
 
+Two countries together:
+
+```{r}
+
+# tick marks
+axis_breaks<- log(c(0.5, 1, 2, 5, 10, 20, 50, 100))
+axis_labels<- c("$0.5", "$1", "$2", "$5", "$10", "$20", "$50", "$100")
+2
+ggplot(selected_data,
+       aes(x=log(midpoint_inc), y = density_for_logs, colour = as.factor(CountryName)))+
+  geom_point() +
+  geom_line() +
+  facet_wrap(~RequestYear) +
+  scale_x_continuous(breaks=axis_breaks,
+                    labels = axis_labels) +
+  theme_bw() +
+  theme(legend.title = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+
+
+
+```
