@@ -1,0 +1,12 @@
+---
+title: "Format Michalis' output for explorer"
+author: "Joe Hasell"
+date: "21/04/2022"
+output: html_document
+---
+
+```{r}
+df<- read.csv("MainDataCountriesOnly.csv")
+
+
+```
