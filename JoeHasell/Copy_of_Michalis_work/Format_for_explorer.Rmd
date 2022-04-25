@@ -164,14 +164,31 @@ controls_inc_and_cons_plus_extrap<- controls %>%
 
 Join survey type controls together
 ```{r}
-all_types_controls<- bind_rows(controls_inc_and_cons_plus_extrap, controls_inc_and_cons_no_extrap, controls_inc_only, controls_cons_only, )
+all_types_controls<- bind_rows(controls_inc_and_cons_plus_extrap, controls_inc_and_cons_no_extrap, controls_inc_only, controls_cons_only )
+
+all_types_controls<- all_types_controls %>%
+  select(title, 
+         metric_dropdown, 
+         pov_line_dropdown, 
+         survey_type_dropdown, 
+         extrapolate_checkbox, 
+         tableSlug, 
+         ySlugs)
+
+names(all_types_controls)<- c("title",
+                              "Metric Dropdown", 
+                              "Poverty line Dropdown", 
+                              "Household survey data type Radio", 
+                              "Show extrapolated estimates for years with no survey data Checkbox", 
+                              "tableSlug", 
+                              "ySlugs")
 ```
 
 
 
 Write explorer controls to csv
 ```{r}
-write.csv(all_types_controls, "explorer_controls.csv")
+write.csv(all_types_controls, "explorer_controls.csv", row.names = F)
 ```
 
 
