@@ -135,27 +135,27 @@ Rework controls for each survey data type
 controls_inc_only<- controls %>%
   mutate(title = gsub("of median", "of median income", title),
          survey_type_dropdown = "Income only",
-         extrapolate_checkbox = "false",
+         extrapolate_checkbox = "'false",
          tableSlug = "Income_only")
 
 
 controls_cons_only<- controls %>%
   mutate(title = gsub("of median", "of median consumption", title),
          survey_type_dropdown = "Consumption only",
-         extrapolate_checkbox = "false",
+         extrapolate_checkbox = "'false",
          tableSlug = "Consunmption_only")
 
 controls_inc_and_cons_no_extrap<- controls %>%
   mutate(title = gsub("of median", "of median income or consumption", title),
          survey_type_dropdown = "Either income or consumption",
-         extrapolate_checkbox = "false",
+         extrapolate_checkbox = "'false",
          tableSlug = "Inc_or_cons_no_extrap")
 
 
 controls_inc_and_cons_plus_extrap<- controls %>%
   mutate(title = gsub("of median", "of median income or consumption", title),
          survey_type_dropdown = "Either income or consumption",
-         extrapolate_checkbox = "true",
+         extrapolate_checkbox = "'true",
          tableSlug = "Inc_or_cons_plus_extrap")
 
 
