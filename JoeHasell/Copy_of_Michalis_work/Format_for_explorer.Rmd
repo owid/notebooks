@@ -5,8 +5,187 @@ date: "21/04/2022"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(RCurl)
+```
+
+
 ```{r}
-df<- read.csv("MainDataCountriesOnly.csv")
+df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/MainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+
+```
+
+
+Rename coumns to work with explorers
+```{r}
+names(df) <- gsub("[.]", "_", names(df))
+
+```
+
+
+
+Absolute poverty controls
+
+```{r}
+
+
+pov_lines<- data.frame(rough_pov_line =  c("1_9",
+                    "3_2",
+                    "5_5",
+                    "10",
+                    "15",
+                    "20",
+                    "30",
+                    "40"),
+                          clean_pov_line = c( "$1.90 a day",
+                    "$3.20 a day",
+                    "$5.50 a day",
+                    "$10 a day",
+                    "$15 a day",
+                    "$20 a day",
+                    "$30 a day",
+                    "$40 a day"))
+
+
+
+metrics<- data.frame(metric_dropdown = c("Share in poverty",
+                            "Number of people in poverty"),
+                     metric_slug_snippet = c("share_of_population_below_poverty_line",
+                                               "total_number_of_people_below_poverty_line"),
+                     title_snippet = c("Poverty: Share of population living on less than",
+                                       "Poverty: Number of people living on less than"))
+
+
+
+abs_pov_controls<- expand.grid("metric_dropdown" = metrics$metric_dropdown,
+                               "rough_pov_line" = pov_lines$rough_pov_line) 
+
+abs_pov_controls <- left_join(abs_pov_controls, pov_lines) %>%
+  rename(pov_line_dropdown = clean_pov_line)
+
+abs_pov_controls <- left_join(abs_pov_controls, metrics) %>%
+  mutate(ySlugs = paste0("X_", rough_pov_line, "_per_day___", metric_slug_snippet),
+         title = paste0(title_snippet, " ", pov_line_dropdown))
+
+```
+
+Relative poverty controls
+```{r}
+
+
+pov_lines<- data.frame(rough_pov_line =  c("X_40__of_median_income",
+                    "X_50__of_median_income",
+                    "X_60__of_median_income"),
+                          clean_pov_line = c("40% of median",
+                    "50% of median",
+                    "60% of median"))
+
+
+
+metrics<- data.frame(metric_dropdown = c("Share in poverty",
+                            "Number of people in poverty"),
+                     metric_slug_snippet = c("share_of_population_below_poverty_line",
+                                               "total_number_of_people_below_poverty_line"),
+                     title_snippet = c("Relative poverty: Share of population living on less than",
+                                       "Relative poverty: Number of people living on less than"))
+
+
+
+
+
+rel_pov_controls<- expand.grid("metric_dropdown" = metrics$metric_dropdown,
+                               "rough_pov_line" = pov_lines$rough_pov_line) 
+
+rel_pov_controls <- left_join(rel_pov_controls, pov_lines) %>%
+  mutate(pov_line_dropdown = paste0("Relative line: ", clean_pov_line))
+
+rel_pov_controls <- left_join(rel_pov_controls, metrics) %>%
+  mutate(ySlugs = paste0(rough_pov_line, "___", metric_slug_snippet),
+         title = paste0(title_snippet, " ", clean_pov_line))
+
+
+```
+
+Join controls for the different groups of metric
+```{r}
+controls<- bind_rows(abs_pov_controls, rel_pov_controls) %>%
+  select(title, metric_dropdown, pov_line_dropdown, ySlugs)
+
+```
+
+Non poverty controls
+```{r}
+
+
+metric_dropdown_non_pov<- c("Mean income or consumption per day",
+                            "Median income or consumption per day",
+                            "P10: the income or consumption marking the poorest tenth",
+                            "P90: the income or consumption marking the richest tenth",
+                            "P90:P10 ratio",
+                            "Gini coefficient")
+
+```
+
+
+Rework controls for each survey data type
+```{r}
+
+controls_inc_only<- controls %>%
+  mutate(title = gsub("of median", "of median income", title),
+         survey_type_dropdown = "Income only",
+         extrapolate_checkbox = "false",
+         tableSlug = "Income_only")
+
+
+controls_cons_only<- controls %>%
+  mutate(title = gsub("of median", "of median consumption", title),
+         survey_type_dropdown = "Consumption only",
+         extrapolate_checkbox = "false",
+         tableSlug = "Consunmption_only")
+
+controls_inc_and_cons_no_extrap<- controls %>%
+  mutate(title = gsub("of median", "of median income or consumption", title),
+         survey_type_dropdown = "Either income or consumption",
+         extrapolate_checkbox = "false",
+         tableSlug = "Inc_or_cons_no_extrap")
+
+
+controls_inc_and_cons_plus_extrap<- controls %>%
+  mutate(title = gsub("of median", "of median income or consumption", title),
+         survey_type_dropdown = "Either income or consumption",
+         extrapolate_checkbox = "true",
+         tableSlug = "Inc_or_cons_plus_extrap")
+
+
+```
+
+
+Join survey type controls together
+```{r}
+all_types_controls<- bind_rows(controls_inc_and_cons_plus_extrap, controls_inc_and_cons_no_extrap, controls_inc_only, controls_cons_only, )
+```
+
+
+
+Write explorer controls to csv
+```{r}
+write.csv(all_types_controls, "explorer_controls.csv")
+```
+
+
+Split dfs by survey type
+
+```{r}
+
+
+```
+
+
+Write to new csv
+```{r}
+write.csv(df, "Michalis_main_file_for_explorer.csv")
 
 
 ```
