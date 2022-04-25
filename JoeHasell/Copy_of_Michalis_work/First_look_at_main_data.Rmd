@@ -12,8 +12,41 @@ library(RCurl)
 ```
 
 
-
+Pull in data from Michalis' folder in Github repo
 ```{r}
 df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/MainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
 
 ```
+
+
+1. Observations where the poverty share = -1.
+
+See rough summary of poverty shares
+```{r}
+summary(df[ , grep("share.of.population.below.poverty.line", colnames(df))] )  
+
+
+```
+
+Inspect
+```{r}
+br<- df %>%
+  filter(X.20.per.day...share.of.population.below.poverty.line < 0)
+
+```
+
+2. Relative poverty = 0 in some observations (where Median is NA...)
+
+```{r}
+br<- df %>%
+  filter(X.40..of.median.income...share.of.population.below.poverty.line ==0)
+```
+
+
+3. Would be good to understand where missing values are coming from more generally
+
+```{r}
+check_nas<- data.frame(colSums(is.na(df))) %>%
+  filter(colSums.is.na.df.. > 0)
+```
+
