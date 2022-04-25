@@ -1,0 +1,19 @@
+---
+title: "First look at the main data"
+author: "Joe Hasell"
+date: "25/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(RCurl)
+```
+
+
+
+```{r}
+df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/MainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+
+```
