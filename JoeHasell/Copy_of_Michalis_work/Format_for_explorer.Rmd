@@ -24,7 +24,11 @@ names(df) <- gsub("[.]", "_", names(df))
 
 ```
 
+```{r}
+br<- df %>%
+  filter(Entity == "MDG", Year %in% c(1999,2000,2001))
 
+```
 
 Absolute poverty controls
 
