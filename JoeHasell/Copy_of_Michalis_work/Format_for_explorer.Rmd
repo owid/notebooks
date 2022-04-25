@@ -143,7 +143,7 @@ controls_cons_only<- controls %>%
   mutate(title = gsub("of median", "of median consumption", title),
          survey_type_dropdown = "Consumption only",
          extrapolate_checkbox = "'false",
-         tableSlug = "Consunmption_only")
+         tableSlug = "Consumption_only")
 
 controls_inc_and_cons_no_extrap<- controls %>%
   mutate(title = gsub("of median", "of median income or consumption", title),
