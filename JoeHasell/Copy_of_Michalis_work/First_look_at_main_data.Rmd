@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(RCurl)
+library(knitr)
 ```
 
 
@@ -19,7 +20,9 @@ df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMo
 ```
 
 
-1. Observations where the poverty share = -1.
+* Can you add a $1 a day poverty line please.
+
+* There are observations where the poverty share = -1.
 
 See rough summary of poverty shares
 ```{r}
@@ -28,25 +31,31 @@ summary(df[ , grep("share.of.population.below.poverty.line", colnames(df))] )
 
 ```
 
-Inspect
+For instance:
 ```{r}
-br<- df %>%
-  filter(X.20.per.day...share.of.population.below.poverty.line < 0)
+kable(head(df %>%
+  filter(X.20.per.day...share.of.population.below.poverty.line < 0) %>%
+    select(Entity, Year, X.20.per.day...share.of.population.below.poverty.line)))
 
 ```
 
-2. Relative poverty = 0 in some observations (where Median is NA...)
+* Relative poverty = 0 in some observations
 
 ```{r}
-br<- df %>%
-  filter(X.40..of.median.income...share.of.population.below.poverty.line ==0)
+kable(head(df %>%
+  filter(X.40..of.median.income...share.of.population.below.poverty.line ==0) %>%
+    select(Entity, Year, X.40..of.median.income...share.of.population.below.poverty.line, Median, Median_estimated)))
 ```
 
 
-3. Would be good to understand where missing values are coming from more generally
+* Missing values:
 
+Count NA's by column and filter for count>0
 ```{r}
-check_nas<- data.frame(colSums(is.na(df))) %>%
-  filter(colSums.is.na.df.. > 0)
+kable(data.frame(colSums(is.na(df))) %>%
+  filter(colSums.is.na.df.. > 0))
 ```
+
+  + Why are there some missing values for a very small number of relative poverty lines?
+  + Povcal for some reason witholds a bunch of variables for loads of observations (2266 observations in your data it looks like). I've never really understood why. Is this also an issue in PIP? If so then I think the solution should be: use the direct output where available but fill in the NAs with the estimated value produced by us. (Not just for Median, but for all variables).
 

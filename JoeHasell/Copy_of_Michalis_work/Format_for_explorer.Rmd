@@ -17,6 +17,19 @@ df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMo
 
 ```
 
+Map 3-letter codes to country names
+```{r}
+name_mapping <- read.csv("entity_names_three_letter_country_standardized.csv") %>%
+  rename(Entity = Country)
+
+df<- left_join(df,name_mapping)
+
+df<- df %>%
+  select(-Entity) %>%
+  rename(Entity = Our.World.In.Data.Name) %>%
+  select(Entity, everything())
+
+```
 
 Rename coumns to work with explorers
 ```{r}
@@ -55,11 +68,17 @@ pov_lines<- data.frame(rough_pov_line =  c("1_9",
 
 
 metrics<- data.frame(metric_dropdown = c("Share in poverty",
-                            "Number of people in poverty"),
+                            "Number of people in poverty",
+                            "Poverty gap index",
+                            "Income gap ratio"),
                      metric_slug_snippet = c("share_of_population_below_poverty_line",
-                                               "total_number_of_people_below_poverty_line"),
+                                               "total_number_of_people_below_poverty_line",
+                                             "poverty_gap_index",
+                                             "income_gap_ratio"),
                      title_snippet = c("Poverty: Share of population living on less than",
-                                       "Poverty: Number of people living on less than"))
+                                       "Poverty: Number of people living on less than",
+                                       "Poverty gap index at",
+                                       "Income gap ratio at"))
 
 
 
