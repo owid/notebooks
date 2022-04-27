@@ -219,13 +219,30 @@ Split dfs by survey type
 
 ```{r}
 
+income_only<- df %>%
+  filter(IsSurveyYear == TRUE,
+         datatype == "income")
+
+write.csv(income_only, "income_only.csv", row.names = FALSE)
+  
+
+consumption_only<- df %>%
+  filter(IsSurveyYear == TRUE,
+         datatype == "consumption")
+
+write.csv(consumption_only, "consumption_only.csv", row.names = FALSE)
+  
+
+
+inc_and_cons_no_extrap<- df %>%
+  filter(IsSurveyYear == TRUE)
+
+write.csv(inc_and_cons_no_extrap, "inc_and_cons_no_extrap.csv", row.names = FALSE)
+  
+write.csv(df, "inc_and_cons_plus_extrap.csv", row.names = FALSE)
+
+
+
 
 ```
 
-
-Write to new csv
-```{r}
-write.csv(df, "Michalis_main_file_for_explorer.csv")
-
-
-```
