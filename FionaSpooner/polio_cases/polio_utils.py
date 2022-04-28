@@ -3,6 +3,7 @@ from datetime import date, timedelta
 import pdfplumber
 import pandas as pd
 from owid import catalog
+import numpy as np
 
 
 def find_latest_polio_data(url_stub: str, days_to_sub: int):
