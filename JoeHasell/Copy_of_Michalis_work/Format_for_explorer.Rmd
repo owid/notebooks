@@ -346,10 +346,4 @@ write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = F
 ```
 
 
-```{r}
-
-br<- df %>%
-  filter(Entity == "Belarus")
-```
-
 
