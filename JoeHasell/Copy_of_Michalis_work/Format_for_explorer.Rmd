@@ -335,6 +335,8 @@ write.csv(df, "data/inc_or_cons.csv", row.names = FALSE)
 inc_or_cons_no_extrap<- df %>%
   filter(IsSurveyYear == TRUE)
 
+# Check for years where there are both income and concumption surveys
+
 write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = FALSE)
   
 
@@ -343,5 +345,11 @@ write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = F
 
 ```
 
+
+```{r}
+
+br<- df %>%
+  filter(Entity == "Belarus")
+```
 
 
