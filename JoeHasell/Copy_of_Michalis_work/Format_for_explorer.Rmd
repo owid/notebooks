@@ -37,11 +37,7 @@ names(df) <- gsub("[.]", "_", names(df))
 
 ```
 
-```{r}
-br<- df %>%
-  filter(Entity == "MDG", Year %in% c(1999,2000,2001))
 
-```
 
 Absolute poverty controls
 
@@ -69,16 +65,28 @@ pov_lines<- data.frame(rough_pov_line =  c("1_9",
 
 metrics<- data.frame(metric_dropdown = c("Share in poverty",
                             "Number of people in poverty",
-                            "Poverty gap index",
-                            "Income gap ratio"),
+                            "Average shortfall to poverty line, per day",
+                            "Average shortfall to poverty line, per year",
+                            "Total shortfall to poverty line, per day",
+                            "Total shortfall to poverty line, per year",
+                            "Income gap ratio",
+                            "Poverty gap index"),
                      metric_slug_snippet = c("share_of_population_below_poverty_line",
                                                "total_number_of_people_below_poverty_line",
-                                             "poverty_gap_index",
-                                             "income_gap_ratio"),
+                                             "average_shortfall_per_day",
+                                             "average_shortfall_per_year",
+                                             "total_shortfall_per_day",
+                                             "total_shortfall_per_year",
+                                             "income_gap_ratio",
+                                             "poverty_gap_index"),
                      title_snippet = c("Poverty: Share of population living on less than",
                                        "Poverty: Number of people living on less than",
-                                       "Poverty gap index at",
-                                       "Income gap ratio at"))
+                                       "Depth of poverty: Average daily shortfall to",
+                                       "Depth of poverty: Average annual shortfall to",
+                                       "Total daily shortfall to a poverty line of",
+                                       "Total annual shortfall to a poverty line of",
+                                       "Depth of poverty: Income gap ratio at",
+                                       "Poverty gap index at"))
 
 
 
@@ -92,9 +100,10 @@ abs_pov_controls <- left_join(abs_pov_controls, metrics) %>%
   mutate(ySlugs = paste0("X_", rough_pov_line, "_per_day___", metric_slug_snippet),
          title = paste0(title_snippet, " ", pov_line_dropdown))
 
+
 ```
 
-Relative poverty controls
+Relative poverty headcount controls
 ```{r}
 
 
@@ -108,13 +117,29 @@ pov_lines<- data.frame(rough_pov_line =  c("X_40__of_median_income",
 
 
 metrics<- data.frame(metric_dropdown = c("Share in poverty",
-                            "Number of people in poverty"),
+                            "Number of people in poverty",
+                            "Average shortfall to poverty line, per day",
+                            "Average shortfall to poverty line, per year",
+                            "Total shortfall to poverty line, per day",
+                            "Total shortfall to poverty line, per year",
+                            "Income gap ratio",
+                            "Poverty gap index"),
                      metric_slug_snippet = c("share_of_population_below_poverty_line",
-                                               "total_number_of_people_below_poverty_line"),
-                     title_snippet = c("Relative poverty: Share of population living on less than",
-                                       "Relative poverty: Number of people living on less than"))
-
-
+                                               "total_number_of_people_below_poverty_line",
+                                             "average_shortfall_per_day",
+                                             "average_shortfall_per_year",
+                                             "total_shortfall_per_day",
+                                             "total_shortfall_per_year",
+                                             "income_gap_ratio",
+                                             "poverty_gap_index"),
+            title_snippet = c("Relative poverty: Share of population living on less than",
+                               "Relative poverty: Number of people living on less than",
+                              "Depth of relative poverty: Average daily shortfall to",
+                              "Depth of relative poverty: Average annual shortfall to",
+                              "Total daily shortfall to a poverty line of",
+                              "Total annual shortfall to a poverty line of",
+                              "Depth of relative poverty: Income gap ratio at",
+                              "Poverty gap index at"))
 
 
 
@@ -131,14 +156,19 @@ rel_pov_controls <- left_join(rel_pov_controls, metrics) %>%
 
 ```
 
-Join controls for the different groups of metric
+Join controls for the different headcount controls
 ```{r}
-controls<- bind_rows(abs_pov_controls, rel_pov_controls) %>%
+poverty_controls<- bind_rows(abs_pov_controls, rel_pov_controls) %>%
   select(title, metric_dropdown, pov_line_dropdown, ySlugs)
 
 ```
 
-Non poverty controls
+
+Across the distribution controls
+
+
+
+Inequality controls
 ```{r}
 
 
@@ -151,6 +181,12 @@ metric_dropdown_non_pov<- c("Mean income or consumption per day",
 
 ```
 
+Join different control types together
+```{r}
+controls<- bind_rows(poverty_controls)
+  
+  
+```
 
 Rework controls for each survey data type
 ```{r}
@@ -198,13 +234,19 @@ all_types_controls<- all_types_controls %>%
          tableSlug, 
          ySlugs)
 
+all_types_controls<- all_types_controls %>%
+  mutate(yAxisMin = 0)
+
 names(all_types_controls)<- c("title",
                               "Metric Dropdown", 
                               "Poverty line Dropdown", 
                               "Household survey data type Radio", 
                               "Show extrapolated estimates for years with no survey data Checkbox", 
                               "tableSlug", 
-                              "ySlugs")
+                              "ySlugs",
+                              "yAxisMin")
+
+
 ```
 
 
