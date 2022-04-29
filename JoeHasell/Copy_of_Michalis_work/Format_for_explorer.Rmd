@@ -158,6 +158,17 @@ repeat_controls_by_survey_type<- function(controls_df){
 
 controls_by_survey_type<- list()
 
+controls_by_survey_type[["controls_inc_or_cons"]]<- controls_df %>%
+  mutate(survey_type_dropdown = "Either income or consumption",
+         extrapolate_checkbox = "'true",
+         tableSlug = "inc_or_cons")
+
+
+controls_by_survey_type[["controls_inc_or_cons_no_extrap"]]<- controls_df %>%
+  mutate(survey_type_dropdown = "Either income or consumption",
+         extrapolate_checkbox = "'false",
+         tableSlug = "inc_or_cons_no_extrap")
+
 
 controls_by_survey_type[["controls_inc_only"]]<- controls_df %>%
   mutate(survey_type_dropdown = "Income only",
@@ -183,17 +194,9 @@ controls_by_survey_type[["controls_cons_only_no_extrap"]]<- controls_df %>%
          tableSlug = "cons_no_extrap")
 
 
-controls_by_survey_type[["controls_inc_and_cons"]]<- controls_df %>%
-  mutate(survey_type_dropdown = "Either income or consumption",
-         extrapolate_checkbox = "'true",
-         tableSlug = "inc_or_cons")
 
 
-controls_by_survey_type[["controls_inc_and_cons_no_extrap"]]<- controls_df %>%
-  mutate(survey_type_dropdown = "Either income or consumption",
-         extrapolate_checkbox = "'false",
-         tableSlug = "inc_or_cons_no_extrap")
-
+return(controls_by_survey_type)
 
 }
 
@@ -218,12 +221,12 @@ Adjust titles in the case of poverty
 #   mutate(title = gsub("of median", "of median consumption", title),
 #      
 # 
-# controls_inc_and_cons_no_extrap<- controls %>%
+# controls_inc_or_cons_no_extrap<- controls %>%
 #   mutate(title = gsub("of median", "of median income or consumption", title),
 #       
 # 
 # 
-# controls_inc_and_cons_plus_extrap<- controls %>%
+# controls_inc_or_cons_plus_extrap<- controls %>%
 #   mutate(title = gsub("of median", "of median income or consumption", title),
 # 
 #          ....
@@ -325,14 +328,14 @@ write.csv(cons_no_extrap, "data/cons_no_extrap.csv", row.names = FALSE)
 
 
 # Both income and consumption, including extrapolated years
-write.csv(df, "data/inc_and_cons.csv", row.names = FALSE)
+write.csv(df, "data/inc_or_cons.csv", row.names = FALSE)
 
 
 # Both income and consumption, excluding extrapolated years
-inc_and_cons_no_extrap<- df %>%
+inc_or_cons_no_extrap<- df %>%
   filter(IsSurveyYear == TRUE)
 
-write.csv(inc_and_cons_no_extrap, "data/inc_and_cons_no_extrap.csv", row.names = FALSE)
+write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = FALSE)
   
 
 
