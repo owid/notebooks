@@ -63,6 +63,47 @@ Belarus:  the difference between IsSurveyYear = TRUE and FALSE
 ```{r}
 selected_countries<-  c("BLR")
 
+
+# Income only, including extrapolated years
+inc<- df %>%
+  filter(datatype == "income",
+         Entity %in% selected_countries)
+
+
+# Income only, excluding extrapolated years
+inc_no_extrap<- df %>%
+  filter(IsSurveyYear == TRUE,
+         datatype == "income",
+         Entity %in% selected_countries)
+
+  
+# Consumption only, including extrapolated years
+cons<- df %>%
+  filter(datatype == "consumption",
+         Entity %in% selected_countries)
+
+
+# Consumption only, excluding extrapolated years
+cons_no_extrap<- df %>%
+  filter(IsSurveyYear == TRUE,
+         datatype == "consumption",
+         Entity %in% selected_countries)  
+
+
+
+# Both income and consumption, including extrapolated years
+
+
+# Both income and consumption, excluding extrapolated years
+inc_or_cons_no_extrap<- df %>%
+  filter(IsSurveyYear == TRUE,
+         Entity %in% selected_countries)
+
+
+
+
+
+
 # df of survey year only vs all year
 
 all_years<- df %>%
