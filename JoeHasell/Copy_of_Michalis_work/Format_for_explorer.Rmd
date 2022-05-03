@@ -31,7 +31,14 @@ df<- df %>%
 
 ```
 
-Rename coumns to work with explorers
+Separate out Urban/Rural entities (except for Argentina, where we only have Urban-only data. For Argentina we will add an annotation. )
+```{r}
+
+
+```
+
+
+Rename columns to work with explorers
 ```{r}
 names(df) <- gsub("[.]", "_", names(df))
 
@@ -295,7 +302,23 @@ write.csv(poverty_controls_all_survey_types, "poverty_explorer_controls.csv", ro
 ```
 
 
-Split dfs by survey type
+##Split dfs by survey type
+
+
+Handle country-years with both survey types
+```{r}
+
+
+```
+
+Add annotation for survey type (where this changes over time, say 'Income data before X, consumption after')
+```{r}
+
+
+```
+
+
+
 
 ```{r}
 
