@@ -5,6 +5,7 @@ output: html_document
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+install.packages('janitor',repos = "http://cran.us.r-project.org")
 ```
 
 Load libraries
