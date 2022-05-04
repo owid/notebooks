@@ -55,10 +55,10 @@ poverty_metrics<- data.frame(metric_dropdown = c("Share in poverty",
                             "Poverty gap index"),
                      metric_slug_snippet = c("share_of_population_below_poverty_line",
                                                "total_number_of_people_below_poverty_line",
+                                             "average_shortfall_per_day",
+                                             "average_shortfall_per_year",
                                              "absolute_poverty_gap_per_day",
                                              "absolute_poverty_gap",
-                                             "total_shortfall_per_day",
-                                             "total_shortfall_per_year",
                                              "income_gap_ratio",
                                              "poverty_gap_index"))
 ```
@@ -90,10 +90,10 @@ pov_lines<- data.frame(rough_pov_line =  c("1_9",
 poverty_metrics<- poverty_metrics %>%
   mutate(title_snippet = c("Poverty: Share of population living on less than",
                            "Poverty: Number of people living on less than",
-                            "Depth of poverty: Average daily shortfall to",
-                            "Depth of poverty: Average annual shortfall to",
+                            "Depth of poverty: Average daily shortfall below",
+                            "Depth of poverty: Average annual shortfall below",
                             "Total daily shortfall to a poverty line of",
-                            "Total annual shortfall to a poverty line of",
+                            "Total annual shortfall below a poverty line of",
                             "Depth of poverty: Income gap ratio at",
                             "Poverty gap index at"))
 
@@ -214,33 +214,6 @@ Repeat controls for poverty
 poverty_controls_by_survey_type<- repeat_controls_by_survey_type(poverty_controls)
 ```
 
-Adjust titles in the case of poverty
-```{r}
-
-
-
-# controls_inc_only<- controls %>%
-#   mutate(title = gsub("of median", "of median income", title),
-#         
-# 
-# 
-# controls_cons_only<- controls %>%
-#   mutate(title = gsub("of median", "of median consumption", title),
-#      
-# 
-# controls_inc_or_cons_no_extrap<- controls %>%
-#   mutate(title = gsub("of median", "of median income or consumption", title),
-#       
-# 
-# 
-# controls_inc_or_cons_plus_extrap<- controls %>%
-#   mutate(title = gsub("of median", "of median income or consumption", title),
-# 
-#          ....
-
-
-```
-
 
 Join survey type controls together
 ```{r}
@@ -273,8 +246,40 @@ names(poverty_controls_all_survey_types)<- c("title",
 
 
 
-## Controls for Across the distribution explorer
+Write poverty explorer controls to csv
 ```{r}
+write.csv(poverty_controls_all_survey_types, "poverty_explorer_controls.csv", row.names = F)
+```
+
+
+
+## Incomes across the distribution explorer controls
+
+```{r}
+
+# thresholds<- c("P10 (poorest tenth)",
+#               "P20",
+#               "P30",
+#               "P40",
+#               "Median – P50",
+#               "P60",
+#               "P70",
+#               "P80",
+#               "P90 (richest tenth)",
+#               clean<- "1","2","3","4","5",
+#                         "6", "7", "8", "9")
+# 
+# deciles<- c("Decile 1 (poorest tenth)",
+#             "Decile 2",
+#             "Decile 3",
+#             "Decile 4",
+#             "Decile 5",
+#             "Decile 6",
+#             "Decile 7",
+#             "Decile 8",
+#             "Decile 9",
+#             "Decile 10 (richest tenth)")
+# 
 
 ```
 
@@ -282,34 +287,15 @@ names(poverty_controls_all_survey_types)<- c("title",
 ## Controls for Inequality explorer
 ```{r}
 
-
-metric_dropdown_non_pov<- c("Mean income or consumption per day",
-                            "Median income or consumption per day",
-                            "P10: the income or consumption marking the poorest tenth",
-                            "P90: the income or consumption marking the richest tenth",
-                            "P90:P10 ratio",
-                            "Gini coefficient")
-
 ```
 
 
 
-
-
-Write poverty explorer controls to csv
-```{r}
-write.csv(poverty_controls_all_survey_types, "poverty_explorer_controls.csv", row.names = F)
-```
 
 
 ##Split dfs by survey type
 
 
-Handle country-years with both survey types
-```{r}
-
-
-```
 
 Add annotation for survey type (where this changes over time, say 'Income data before X, consumption after')
 ```{r}
@@ -358,7 +344,7 @@ write.csv(df, "data/inc_or_cons.csv", row.names = FALSE)
 inc_or_cons_no_extrap<- df %>%
   filter(IsSurveyYear == TRUE)
 
-# Check for years where there are both income and concumption surveys
+# Check for years where there are both income and consumption surveys
 
 write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = FALSE)
   
