@@ -6,6 +6,8 @@ output: html_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
+
+Load libraries
 ```{r}
 library(readxl)
 library(dplyr)
@@ -16,7 +18,7 @@ date <- Sys.Date()
 
 ```
 
-Download data from GapMinder
+Download data from Gapminder and save it locally
 ```{r}
 dir.create("data/input", recursive = TRUE)
 download.file('https://www.gapminder.org/documentation/documentation/gapdata010.xls', paste0('data/input/',date,'_gapminder_data.xls'))
@@ -24,6 +26,7 @@ download.file('https://www.gapminder.org/documentation/documentation/gapdata010.
 
 ```
 
+Read in the Gapminder data
 ```{r}
 
 df <- read_xls(paste0('data/input/',date,'_gapminder_data.xls'), col_names = TRUE)
@@ -80,12 +83,14 @@ Let's check the mid-year estimates have worked as expected:
 ```{r}
 df %>% select(year, mid_year) %>% filter(grepl("-",year)) %>% distinct()
 
+```
+
+Keeping only the columns we want to take forward.
+```{r}
 df <- df %>% 
   select(entity = Country, year = mid_year, maternal_mortality_rate = MMR)
 
-
 ```
-
 
 Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.
 
@@ -93,7 +98,7 @@ Read in data from WDI - in future iterations we will read this in from ETL so it
 download.file('https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv', paste0('data/input/',date,'_wdi_maternal_mortality.zip'))
 
 unzip(paste0('data/input/',date,'_wdi_maternal_mortality.zip'), exdir = "data/input")
-wdi <- clean_names(read.csv('data/input/API_SH.STA.MMRT_DS2_en_csv_v2_4029775.csv', skip = 4))
+who <- clean_names(read.csv('data/input/API_SH.STA.MMRT_DS2_en_csv_v2_4029775.csv', skip = 4))
 
 ```
 
@@ -111,7 +116,7 @@ who_clean <- who %>%
 
 ```
 
-Check the Gapminder countries are in the WDI dataset
+Check the Gapminder countries are in the WHO dataset
 ```{r}
 
 unique(df$entity) %in% who_clean$entity
