@@ -892,7 +892,12 @@ kable((ExportDataFrame %>%
 
 # now NPL1981-1989 is identified only
 
-NPL <- subset(MasterDistro,MasterDistro$countrycode=='NPL' & MasterDistro$year==1981)
+CurYear <- 1989
+NPL <- subset(MasterDistro,MasterDistro$countrycode=='NPL' & MasterDistro$year==CurYear)
+RelPL <- ExportDataFrame$MedianPerMonth[which(ExportDataFrame$Entity=='NPL' & ExportDataFrame$Year==CurYear)]*.4*12/365
+# for 1984 use:
+# RelPL <- ExportDataFrame$MedianPerMonth_estimated[which(ExportDataFrame$Entity=='NPL' & ExportDataFrame$Year==CurYear)]*.4*12/365
+max(NPL$headcount[which(NPL$povertyline<RelPL)])
 
 ###### checking BFA 1994 ####
 "BFA:1994:1994.25:N:c"
@@ -909,8 +914,9 @@ BFA <- povcalnet(
   format = "csv"
 )
 ##### Missing values ####
-kable(data.frame(colSums(is.na(df))) %>%
-        filter(colSums.is.na.df.. > 0))
+
+kable(data.frame(colSums(is.na(ExportDataFrame))) %>%
+        filter(colSums.is.na.ExportDataFrame.. > 0))
 
 ExportDataFrame$ISO3Year[is.na(ExportDataFrame$`$40% of median income - income gap ratio`)]
 #"NPL1981" "NPL1984" "NPL1985" "NPL1986" "NPL1987" "NPL1988" "NPL1989" "STP2012"
@@ -920,16 +926,11 @@ ExportDataFrame$ISO3Year[is.na(ExportDataFrame$`$60% of median income - income g
 # "STP2012"
 
 # the above should be corrected once I apply the correction for the relative poverty issue
-
-#### ad-hoc correction ####
-
-# first check the cases for which the Median estimate is too low
-sort(ExportDataFrame$ISO3Year[which(ExportDataFrame$Median_estimated<20)])
-ExportDataFrame[which(ExportDataFrame$ISO3Year=='SWZ1986'),]
+# and now they have been corrected!!
 
 #### To report ####
 # summary of the length of monotonicity breaks in HHS with at least one monotonicity break
-summary(df$MonotonicityBreaks[which(df$MonotonicityBreaks>0)])
+summary(ExportDataFrame$MonotonicityBreaks[which(ExportDataFrame$MonotonicityBreaks>0)])
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #    1929    4048    5370    6010    7924   12058 
 
