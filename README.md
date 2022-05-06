@@ -30,8 +30,8 @@ You may have to restart your terminal session in between for newly installed pac
   * If your shell is zsh
     * Open or create the file `.zshrc` in your user directory. You can show hidden files (those starting with a dot) by pressing CMD + SHIFT + .
   * Put this into into your profile file `export PYTHON_CONFIGURE_OPTS="--enable-framework"`. (On some system not having this led to problems with installing some python libraries)
-* Install python 3.9 with pyenv: `pyenv install 3.9.7`
-* Make this the default python version so that typing `python` start this version: `pyenv global 3.9.7`
+* Install python 3.10 with pyenv: `pyenv install 3.10.4`
+* Make this the default python version so that typing `python` start this version: `pyenv global 3.10.4`
 * Install common libraries: `pip install pandas matplotlib ipython jupyter jupyterlab ipywidgets altair parse`
 
 #### Windows
