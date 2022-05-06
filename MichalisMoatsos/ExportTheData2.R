@@ -1,3 +1,7 @@
+#### Additional to do ####
+# reporting at 1$/day level
+# re-run also because of the $ sign in the names of the relative poverty columns
+
 #### Notes to mention ####
 
 # for the relative pov I am using the closest PL to the rel PL
@@ -50,6 +54,9 @@ library(gpinter)
 library(tcltk)
 library(doParallel)
 library(readr)
+library(tidyverse)
+library(RCurl)
+library(knitr)
 
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
@@ -63,7 +70,7 @@ OldExport <- read.csv('/home/michalis/PhD/Sources/OWID/Poverty_and_inequality_me
 
 ##### Creating the dataframe ####
 FirstRows <- c('Entity','Year')
-AbsPLs <- c(1.90, 3.20, 5.50, 10, 15, 20, 30, 40)
+AbsPLs <- c(1, 1.90, 3.20, 5.50, 10, 15, 20, 30, 40)
 AbsPLColsSuffixes <- c(' per day - share of population below poverty line',
                     ' per day - poverty gap index',
                     ' per day - total number of people below poverty line',
@@ -83,17 +90,18 @@ DecileSharesColumns <- c("Decile 1 – share of income or consumption",
                    "Decile 6 – share of income or consumption", "Decile 7 – share of income or consumption",
                    "Decile 8 – share of income or consumption", "Decile 9 – share of income or consumption",
                    "Decile 10 – share of income or consumption")
-DecileThresholdsColumns <- c("Decile 1 – threshold of income or consumption",
-                   "Decile 2 – threshold of income or consumption", "Decile 3 – threshold of income or consumption",
-                   "Decile 4 – threshold of income or consumption", "Decile 5 – threshold of income or consumption",
-                   "Decile 6 – threshold of income or consumption", "Decile 7 – threshold of income or consumption",
-                   "Decile 8 – threshold of income or consumption", "Decile 9 – threshold of income or consumption")
-DecileAveragesColumns <- c("Decile 1 – average income or consumption", "Decile 2 – average income or consumption",
-                           "Decile 3 – average income or consumption", "Decile 4 – average income or consumption",
-                           "Decile 5 – average income or consumption", "Decile 6 – average income or consumption",
-                           "Decile 7 – average income or consumption", "Decile 8 – average income or consumption",
-                           "Decile 9 – average income or consumption", "Decile 10 – average income or consumption")
-IneqIndices <- c('Gini index',"Gini_estimated", "Polarization","Polarization_estimated", "MLD","MLD_estimated","Palma","P90:P10 ratio", "P90:50 ratio",
+DecileThresholdsColumns <- c("Decile 1 – threshold of income or consumption per month",
+                   "Decile 2 – threshold of income or consumption per month", "Decile 3 – threshold of income or consumption per month",
+                   "Decile 4 – threshold of income or consumption per month", "Decile 5 – threshold of income or consumption per month",
+                   "Decile 6 – threshold of income or consumption per month", "Decile 7 – threshold of income or consumption per month",
+                   "Decile 8 – threshold of income or consumption per month", "Decile 9 – threshold of income or consumption per month")
+DecileAveragesColumns <- c("Decile 1 – average income or consumption per month", "Decile 2 – average income or consumption per month",
+                           "Decile 3 – average income or consumption per month", "Decile 4 – average income or consumption per month",
+                           "Decile 5 – average income or consumption per month", "Decile 6 – average income or consumption per month",
+                           "Decile 7 – average income or consumption per month", "Decile 8 – average income or consumption per month",
+                           "Decile 9 – average income or consumption per month", "Decile 10 – average income or consumption per month")
+IneqIndices <- c('Gini index',"Gini_estimated", "Polarization","Polarization_estimated", "MLD","MLD_estimated",
+                 "Palma","P90:P10 ratio", "P90:50 ratio",
                  "Entropy_0_5","Entropy_1_0","Entropy_1_5","Entropy_2_0",
                  "Atkinson_0_5","Atkinson_1_0","Atkinson_1_5","Atkinson_2_0",
                  "Theil_0_0","Theil_0_5","Theil_1_0","Theil_1_5","Theil_2_0","Var.Coeff")
@@ -102,16 +110,16 @@ IneqIndices <- c('Gini index',"Gini_estimated", "Polarization","Polarization_est
 # median or mean or decile share values available from Povcalnet? When not
 # I am estimating them from gpinter
 
-MetaColumns <- c("isinterpolated","usemicrodata",'coveragetype','datatype','IsSurveyYear',
-                 'OriginalMedian','OriginalMean','OriginalDecileShares','MonotonicityBreaks',
-                 'DataframeRowsForGpinter','GpinterError','LessThan33Rows')
-GenStatsAndInfo <- c('Mean','Mean_estimated','Median','Median_estimated','PPP','Population')
+MetaColumns <- c('datayear',"isinterpolated","usemicrodata",'coveragetype','datatype','IsSurveyYear',
+                 'OriginalMedian','OriginalMean','OriginalDecileShares','MonotonicityBreaks','RowsWithIncreasingHeadcount',
+                 'DataframeRowsForGpinter','LessThan33Rows')
+GenStatsAndInfo <- c('MeanPerMonth','MeanPerMonth_estimated','MedianPerMonth','MedianPerMonth_estimated','PPP','Population')
 
 AbsCols <- expand.grid(AbsPLs,AbsPLColsSuffixes)
 AbsCols$Title <- paste0("$",AbsCols$Var1,AbsCols$Var2)
 AbsCols <- AbsCols[order(AbsCols[,1]),]
 RelCols <- expand.grid(RelPLs,RelPLColsSuffixes)
-RelCols$Title <- paste0("$",RelCols$Var1,RelCols$Var2)
+RelCols$Title <- paste0(RelCols$Var1,RelCols$Var2)
 RelCols <- RelCols[order(RelCols[,1]),]
 
 AllCols <- c(FirstRows,AbsCols$Title,RelCols$Title,GenStatsAndInfo,DecileSharesColumns,
@@ -170,11 +178,12 @@ IdealPLs <- c(seq(0.001,5,0.001),seq(5.01,60,0.01),seq(60.1,150,0.1),
               seq(11000,35000,100),99999)
 
 Tests <- c("ARG:1992:1992:U:i","AUS:1993:NA:N:i","AUT:1981:1987:N:i","BEL:1981:1985:N:i")
+Tests <- c("BFA:1994:1994.25:N:c")
 
-##### Running the loop ####
+##### Running countries' loop ####
 
 total <- length(UniqueHHS)
-
+# ca.36 hrs
 pb <- tkProgressBar(title = "progress bar", min = 0,max = total, width = 300)
 for (i in UniqueHHS[c(1:length(UniqueHHS))]){
 #for (i in Tests){
@@ -183,6 +192,772 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
 
   #print(i)
   Temp <- subset(MasterDistro,MasterDistro$ISO3DataYearCovType==i)
+  if (!all(is.na(Temp$headcount))){
+    NewEmptyRow <- MyEmptyRow
+    
+    # because some distributions are way too detailed to be matched by gpinter
+    # and they produce errors like:
+    # "Error in clean_input_tabulation(p, threshold, average, bracketshare, topshare,  : 
+    # input data is inconsistent between p=0.0539 and p=0.0544. The bracket average 
+    # (217.52) is not strictly within the bracket thresholds (217.91 and 218.27)"
+    # which is meaningless, I will sample the distribution at a higher
+    # step between samples in the headcount (via Diff>0.001 below)
+    # I am using a different step size at parts levels of the distro
+    # so that the density does not become too low
+    
+    # moreover monotonicity issues like in:
+    # ARM:1997:1996:N:i 
+    # Error in clean_input_thresholds(p, threshold, average, last_bracketavg,  : 
+    # thresholds must be strictly increasing: at rows 37 and 38, you have threshold=1967.35 followed by threshold=1952.75
+    # Error in clean_input_thresholds(p, threshold, average, last_bracketavg,  : 
+    # thresholds must be strictly increasing: at rows 38 and 39, you have threshold=1971 followed by threshold=1956.4
+    # I will remove those before subsetting to the short version
+    
+    Temp <- Temp[ order(Temp[,'povertyline']), ]
+    TempNew <- Temp
+    TempNew$Diffs <- c(1,diff(TempNew$headcount))
+    y <- nrow(TempNew)
+    while (any(TempNew$Diffs<0)){
+      TempNew <- subset(TempNew,TempNew$Diffs>0)
+      TempNew$Diffs <- c(1,diff(TempNew$headcount))
+    }
+    
+    NewEmptyRow$RowsWithIncreasingHeadcount <- nrow(subset(TempNew,TempNew$Diffs>0))
+    
+    if (y>nrow(TempNew)){
+      #print(paste0('monotonicity alert at: ',i,' involving ',y-nrow(TempNew),' rows.'))
+      #conn <- file( sprintf("/output/output_%d.txt" , Sys.getpid()) , open = "a" )
+      #write.table( d , conn , append = TRUE , col.names = FALSE )
+      #close( conn )
+      TempAlert <- NewMonotonicityAlerts
+      TempAlert$ID <- i
+      TempAlert$NumOfBreaks <- y-nrow(TempNew)
+      MonotonicityAlerts <- rbind(MonotonicityAlerts,TempAlert)
+      rm(TempAlert)
+    }
+    
+    NewEmptyRow$MonotonicityBreaks <- y-nrow(TempNew)
+    TempNew <- TempNew[ order(TempNew[,'povertyline']), ]
+    TempNew$Diffs <- c(0,diff(TempNew$headcount))
+    TempNew$CumDiffs <- cumsum(TempNew$Diffs)
+    
+    # I am using the code below
+    # to take samples only at specific (wider) intervals
+    # so that gpinter can perform without errors like
+    # Error in clean_input_thresholds(p, threshold, average, last_bracketavg,  : 
+    # The method requires at least three interpolation points.
+    # or like mismatch between the estimated threshold from gpinter
+    # and that given by the data, see "AUS:1988:NA:N:i" for example, using TempNew from here
+    # TempNew <- TempNew[ order(TempNew[,'povertyline']), ])
+    
+    # the below is a result of a bit of experimenting to operate as a starting point.
+    # the idea is that the higher the mean value of the distribution
+    # the higher the sampling step to avoid "over-feeding" the gpinter fitter
+    # which results to the typical error mentioned in the next bunch of comments.
+    
+    TempNew$Samples <- NA
+    TempNew$Samples[which(TempNew$headcount<0.8)] <- 
+      round(TempNew$CumDiffs[which(TempNew$headcount<0.8)] / 
+              (unique(TempNew$mean)/100000))
+    TempNew$Samples[which(TempNew$headcount>=0.8)] <- 
+      round(TempNew$CumDiffs[which(TempNew$headcount>=0.8)] / 
+              (unique(TempNew$mean)/100000))
+    
+    TempNew$DiffSamples <- c(1,diff(TempNew$Samples))
+    TempShort <- subset(TempNew,TempNew$DiffSamples==1)
+    # the above gives a testDistro error (below) at "ARG:1992:1992:U:i"
+    
+    # let's catch the error and use the message to get the point where the error
+    # of fitting takes place. A typical error message is like:
+    # "Error in clean_input_tabulation(p, threshold, average, bracketshare, topshare,  : 
+    # input data is inconsistent between p=0.8357 and p=0.8374. The bracket average 
+    # (9094.33) is not strictly within the bracket thresholds (9095.80 and 9099.45)
+    
+    testDistro <- tryCatch(thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
+                                          365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
+                                          average = 12*unique(Temp$mean)),error=function(e) {
+                                            # Choose a return value in case of error
+                                            return(parse_number(unlist(e)$message))
+                                          })
+    k <- 1
+    
+    # if the above fails then this while loop will adjust the sampling depending
+    # on which part of the distribution the gpinter error occured
+    # until no error is produced or the sampling boundaries are reached 
+    # (in which case an error stops the entire process, in the "if" statement 
+    # after the while loop)
+    
+    while (is.numeric(testDistro) & (0.001 - k*HighStep >0) & (0.001 - k*LowStep >0)){
+      #TempNew$Samples <- NA
+      
+      if (testDistro>=.8){
+        TempNew$Samples[which(TempNew$headcount>=0.8)] <- round(TempNew$CumDiffs[which(TempNew$headcount>=0.8)] / (0.001 - k*HighStep))
+      } else {
+        TempNew$Samples[which(TempNew$headcount<0.8)] <- round(TempNew$CumDiffs[which(TempNew$headcount<0.8)] / (0.001 - k*LowStep))
+      }
+      
+      TempNew$DiffSamples <- c(1,diff(TempNew$Samples))
+      TempShort <- subset(TempNew,TempNew$DiffSamples==1)
+      testDistro <- tryCatch(thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
+                                            365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
+                                            average = 12*unique(Temp$mean)),error=function(e) {
+                                              # Choose a return value in case of error
+                                              return(parse_number(unlist(e)$message))
+                                            })
+      
+      k <- k + 1
+      
+    }
+    
+    if (is.numeric(testDistro)){
+      stop(paste0('error at ',i))
+    }
+    
+    #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.001) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
+    # if the above gives an error (as in "AUS:1993:NA:N:i") try the following:
+    
+    #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0012) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
+    # if the above gives an error (as in "AUT:1981:1987:N:i") try the following:
+  
+    #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0025) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
+    # if the above gives an error (as in "BEL:1981:1985:N:i") try the following:
+    
+    NewEmptyRow$LessThan33Rows <- F # default
+    
+    if (nrow(TempShort)<33){
+      NewEmptyRow$LessThan33Rows <- T
+      print(paste0(nrow(TempShort),' rows at ',i))
+      #conn <- file( sprintf("/output/output_%d.txt" , Sys.getpid()) , open = "a" )
+      #write.table( d , conn , append = TRUE , col.names = FALSE )
+      #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0009) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.0002))
+    }
+    
+    NewEmptyRow$DataframeRowsForGpinter <- nrow(TempShort)
+    
+    # the command bellow did not work very well, big difference with the given PCN values when used 
+    # to estimate MLD or Gini
+    # TheDistroInProportions <- rep(TempShort$povertyline,round(10000*TempShort$headcount))
+    # so I reverted to gpinter entirely
+    
+    # following the example from the gpinter-vignette.pdf on page 2:
+    # TempShort <- subset(TempShort,!round(TempShort$headcount,4)==0.0544)
+    #TempShort$PopulationInBracket <- diff(c(0,round(1000000*NewEmptyRow$Population*TempShort$headcount,0)))
+    #TempShort$CumulativePopInBracket <- c(cumsum(TempShort$PopulationInBracket)[c(1:(nrow(TempShort)))])
+    
+    if (!is.na(unique(Temp$mean))){
+      distribution <- thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
+                                     365*TempShort$povertyline[c(1:nrow(TempShort)-1)],
+                                     average = 12*unique(Temp$mean))
+    } else {
+      distribution <- thresholds_fit(TempShort$headcount[c(1:nrow(TempShort)-1)], 
+                                     365*TempShort$povertyline[c(1:nrow(TempShort)-1)])
+    }
+    
+    
+    GPinterDistro <- generate_tabulation(distribution,
+                                         fractiles = c(seq(0.1, 0.9, 0.1)))
+    
+    GPinterDistroDetailed <- generate_tabulation(distribution,
+                                         fractiles = c(seq(0.001, 0.999, 0.001)))
+    
+    # copy readily available info or easy (one-liners) to calculate
+    # FirstRows
+    NewEmptyRow$Entity <- unique(Temp$countrycode)
+    NewEmptyRow$Year <-  unique(Temp$year)
+    # GenStatsAndInfo
+    NewEmptyRow$MeanPerMonth <- unique(Temp$mean)
+    NewEmptyRow$MeanPerMonth_estimated <- bracket_average(distribution, 0, 1)/12
+    NewEmptyRow$MedianPerMonth <- unique(Temp$median)
+    NewEmptyRow$MedianPerMonth_estimated <- GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.5)]/12 # GPinterDistroDetailed$threshold[which(round(GPinterDistroDetailed$fractile,3)==0.500)]/12
+    NewEmptyRow$PPP <- unique(Temp$ppp)
+    NewEmptyRow$Population <- unique(Temp$population)*1000000
+    # MetaColumns
+    NewEmptyRow$isinterpolated <- unique(Temp$isinterpolated)
+    NewEmptyRow$datayear <- unique(Temp$datayear)
+    NewEmptyRow$usemicrodata <- unique(Temp$usemicrodata)
+    NewEmptyRow$coveragetype <- unique(Temp$coveragetype)
+    NewEmptyRow$datatype <- unique(Temp$datatype)
+    NewEmptyRow$usemicrodata <- unique(Temp$usemicrodata)
+    NewEmptyRow$IsSurveyYear <- F
+    NewEmptyRow$OriginalMedian <- ifelse(is.na(NewEmptyRow$MedianPerMonth),F,T)
+    NewEmptyRow$OriginalMean <- ifelse(is.na(NewEmptyRow$MeanPerMonth),F,T)
+    NewEmptyRow$OriginalDecileShares <- ifelse (!is.na(HHS2$decile1[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile2[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile3[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile4[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile5[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile6[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile7[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile8[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile9[which(HHS2$ISO3DataYearCovType==i)]) &
+                                            !is.na(HHS2$decile10[which(HHS2$ISO3DataYearCovType==i)]),T,F)
+    # IneqIndices
+    NewEmptyRow$`Gini index` <- unique(Temp$gini)
+    NewEmptyRow$Gini_estimated <- gini(distribution)
+    NewEmptyRow$Polarization <- unique(Temp$polarization)
+    # which polarization index definition?
+    # https://www.sciencedirect.com/science/article/pii/S0165176518301046
+    NewEmptyRow$Polarization_estimated <- NA
+    NewEmptyRow$MLD <- unique(Temp$mld)
+    NewEmptyRow$MLD_estimated <- entropy(GPinterDistroDetailed$threshold, parameter = 0)
+    # The Palma ratio is the share of all income received by the 10% people with 
+    # highest disposable income divided by the share of all income received by the 40%
+    # https://data.oecd.org/inequality/income-inequality.htm
+    NewEmptyRow$Palma <- bracket_share(distribution, 0.90, 1)/bracket_share(distribution, 0, 0.4)
+    # The P90/P10 ratio is the ratio of the upper bound value of the ninth decile 
+    # (i.e. the 10% of people with highest income) to that of the first. The P50/P10 
+    # ratio is the ratio of median income to the upper bound value of the first decile.
+    # (ibid)
+    NewEmptyRow$`P90:P10 ratio` <- GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.9)]/
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.1)]
+    NewEmptyRow$`P90:50 ratio` <- GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.9)]/
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.5)]
+    NewEmptyRow$Entropy_0_5 <- entropy(GPinterDistroDetailed$threshold, parameter = 0.5)
+    NewEmptyRow$Entropy_1_0 <- entropy(GPinterDistroDetailed$threshold, parameter = 1.0)
+    NewEmptyRow$Entropy_1_5 <- entropy(GPinterDistroDetailed$threshold, parameter = 1.5)
+    NewEmptyRow$Entropy_2_0 <- entropy(GPinterDistroDetailed$threshold, parameter = 2.0)
+    NewEmptyRow$Atkinson_0_5 <- Atkinson(GPinterDistroDetailed$threshold, parameter = 0.5)
+    NewEmptyRow$Atkinson_1_0 <- Atkinson(GPinterDistroDetailed$threshold, parameter = 1.0)
+    NewEmptyRow$Atkinson_1_5 <- Atkinson(GPinterDistroDetailed$threshold, parameter = 1.5)
+    NewEmptyRow$Atkinson_2_0 <- Atkinson(GPinterDistroDetailed$threshold, parameter = 2.0)
+    NewEmptyRow$Theil_0_0 <- Theil(GPinterDistroDetailed$threshold, parameter = 0)
+    NewEmptyRow$Theil_0_5 <- Theil(GPinterDistroDetailed$threshold, parameter = 0.5)
+    NewEmptyRow$Theil_1_0 <- Theil(GPinterDistroDetailed$threshold, parameter = 1.0)
+    NewEmptyRow$Theil_1_5 <- Theil(GPinterDistroDetailed$threshold, parameter = 1.5)
+    NewEmptyRow$Theil_2_0 <- Theil(GPinterDistroDetailed$threshold, parameter = 2.0)
+    NewEmptyRow$Var.Coeff <- var.coeff(GPinterDistroDetailed$threshold)
+    # DecileSharesColumns
+    if (NewEmptyRow$OriginalDecileShares){
+      NewEmptyRow$`Decile 1 – share of income or consumption` <- HHS2$decile1[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 2 – share of income or consumption` <- HHS2$decile2[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 3 – share of income or consumption` <- HHS2$decile3[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 4 – share of income or consumption` <- HHS2$decile4[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 5 – share of income or consumption` <- HHS2$decile5[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 6 – share of income or consumption` <- HHS2$decile6[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 7 – share of income or consumption` <- HHS2$decile7[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 8 – share of income or consumption` <- HHS2$decile8[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 9 – share of income or consumption` <- HHS2$decile9[which(HHS2$ISO3DataYearCovType==i)]
+      NewEmptyRow$`Decile 10 – share of income or consumption` <- HHS2$decile10[which(HHS2$ISO3DataYearCovType==i)]
+    } else {
+      # use the gpinter instead
+      NewEmptyRow$`Decile 1 – share of income or consumption` <- bracket_share(distribution, 0, 0.1)
+      NewEmptyRow$`Decile 2 – share of income or consumption` <- bracket_share(distribution, 0.1, 0.2)
+      NewEmptyRow$`Decile 3 – share of income or consumption` <- bracket_share(distribution, 0.2, 0.3)
+      NewEmptyRow$`Decile 4 – share of income or consumption` <- bracket_share(distribution, 0.3, 0.4)
+      NewEmptyRow$`Decile 5 – share of income or consumption` <- bracket_share(distribution, 0.4, 0.5)
+      NewEmptyRow$`Decile 6 – share of income or consumption` <- bracket_share(distribution, 0.5, 0.6)
+      NewEmptyRow$`Decile 7 – share of income or consumption` <- bracket_share(distribution, 0.6, 0.7)
+      NewEmptyRow$`Decile 8 – share of income or consumption` <- bracket_share(distribution, 0.7, 0.8)
+      NewEmptyRow$`Decile 9 – share of income or consumption` <- bracket_share(distribution, 0.8, 0.9)
+      NewEmptyRow$`Decile 10 – share of income or consumption` <- bracket_share(distribution, 0.9, 1)
+    }
+    # DecileThresholdsColumns
+    NewEmptyRow$`Decile 1 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.1)]
+    NewEmptyRow$`Decile 2 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.2)]
+    NewEmptyRow$`Decile 3 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.3)]
+    NewEmptyRow$`Decile 4 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.4)]
+    NewEmptyRow$`Decile 5 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.5)]
+    NewEmptyRow$`Decile 6 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.6)]
+    NewEmptyRow$`Decile 7 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.7)]
+    NewEmptyRow$`Decile 8 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.8)]
+    NewEmptyRow$`Decile 9 – threshold of income or consumption per month` <- 
+      GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.9)]
+    
+    # DecileAveragesColumns
+    NewEmptyRow$`Decile 1 – average income or consumption per month` <- bracket_average(distribution, 0, 0.1)
+    NewEmptyRow$`Decile 2 – average income or consumption per month` <- bracket_average(distribution, 0.1, 0.2)
+    NewEmptyRow$`Decile 3 – average income or consumption per month` <- bracket_average(distribution, 0.2, 0.3)
+    NewEmptyRow$`Decile 4 – average income or consumption per month` <- bracket_average(distribution, 0.3, 0.4)
+    NewEmptyRow$`Decile 5 – average income or consumption per month` <- bracket_average(distribution, 0.4, 0.5)
+    NewEmptyRow$`Decile 6 – average income or consumption per month` <- bracket_average(distribution, 0.5, 0.6)
+    NewEmptyRow$`Decile 7 – average income or consumption per month` <- bracket_average(distribution, 0.6, 0.7)
+    NewEmptyRow$`Decile 8 – average income or consumption per month` <- bracket_average(distribution, 0.7, 0.8)
+    NewEmptyRow$`Decile 9 – average income or consumption per month` <- bracket_average(distribution, 0.8, 0.9)
+    NewEmptyRow$`Decile 10 – average income or consumption per month` <- bracket_average(distribution, 0.9, 1)
+    
+    # now get the information that is at some row within the Temp dataframe:
+    NewEmptyRow$`$1 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==1.000)]
+    NewEmptyRow$`$1.9 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==1.900)]
+    NewEmptyRow$`$3.2 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==3.200)]
+    NewEmptyRow$`$5.5 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==5.500)]
+    NewEmptyRow$`$10 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==10.000)]
+    NewEmptyRow$`$15 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==15.000)]
+    NewEmptyRow$`$20 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==20.000)]
+    NewEmptyRow$`$30 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==30.000)]
+    NewEmptyRow$`$40 per day - share of population below poverty line` <- 
+      Temp$headcount[which(round(Temp$povertyline,3)==40.000)]
+    
+    NewEmptyRow$`$1 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==1.000)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$1.9 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==1.900)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$3.2 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==3.200)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$5.5 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==5.500)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$10 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==10.000)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$15 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==15.000)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$20 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==20.000)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$30 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==30.000)]*1000000*unique(Temp$population))
+    NewEmptyRow$`$40 per day - total number of people below poverty line` <- 
+      round(Temp$headcount[which(round(Temp$povertyline,3)==40.000)]*1000000*unique(Temp$population))
+    
+    #Absolute poverty gap (expressed in annual terms)
+    #[FYI, this is the amount of money (theoretically) needed to bring everyone up to the poverty line, expressed in annual terms]
+    #Derived as:
+    #  = poverty_gap_index x poverty_line x population x 365
+    NewEmptyRow$`$1 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==1.000)]*1*365
+    #Poverty gap index (as per WB/Ravallion terminology)
+    NewEmptyRow$`$1 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==1.000)]
+    #‘Income gap ratio’ (According to Ravallion)
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*1)]/365
+    NewEmptyRow$`$1 per day - income gap ratio` <- mean((1-IGPdata)/1)
+    rm(IGPdata)
+    NewEmptyRow$`$1 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==1.000)]
+    #Watts(GPinterDistroDetailed$threshold,365*1.9)
+    
+    NewEmptyRow$`$1.9 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==1.900)]*1.9*365
+    #Poverty gap index (as per WB/Ravallion terminology)
+    NewEmptyRow$`$1.9 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==1.900)]
+    #‘Income gap ratio’ (According to Ravallion)
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*1.9)]/365
+    NewEmptyRow$`$1.9 per day - income gap ratio` <- mean((1.9-IGPdata)/1.9)
+    rm(IGPdata)
+    NewEmptyRow$`$1.9 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==1.900)]
+    #Watts(GPinterDistroDetailed$threshold,365*1.9)
+    
+    NewEmptyRow$`$3.2 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==3.200)]*3.2*365
+    NewEmptyRow$`$3.2 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==3.200)]
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*3.2)]/365
+    NewEmptyRow$`$3.2 per day - income gap ratio` <- mean((3.2-IGPdata)/3.2)
+    rm(IGPdata)
+    NewEmptyRow$`$3.2 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==3.200)]
+    
+    NewEmptyRow$`$5.5 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==5.500)]*5.5*365
+    NewEmptyRow$`$5.5 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==5.500)]
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*5.5)]/365
+    NewEmptyRow$`$5.5 per day - income gap ratio` <- mean((5.5-IGPdata)/5.5)
+    rm(IGPdata)
+    NewEmptyRow$`$5.5 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==5.500)]
+    
+    NewEmptyRow$`$10 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==10.000)]*10*365
+    NewEmptyRow$`$10 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==10.000)]
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*10)]/365
+    NewEmptyRow$`$10 per day - income gap ratio` <- mean((10-IGPdata)/10)
+    rm(IGPdata)
+    NewEmptyRow$`$10 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==10.000)]
+    
+    NewEmptyRow$`$15 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==15.000)]*15*365
+    NewEmptyRow$`$15 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==15.000)]
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*15)]/365
+    NewEmptyRow$`$15 per day - income gap ratio` <- mean((15-IGPdata)/15)
+    rm(IGPdata)
+    NewEmptyRow$`$15 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==15.000)]
+    
+    NewEmptyRow$`$20 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==20.000)]*20*365
+    NewEmptyRow$`$20 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==20.000)]
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*20)]/365
+    NewEmptyRow$`$20 per day - income gap ratio` <- mean((20-IGPdata)/20)
+    rm(IGPdata)
+    NewEmptyRow$`$20 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==20.000)]
+    
+    NewEmptyRow$`$30 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==30.000)]*30*365
+    NewEmptyRow$`$30 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==30.000)]
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*30)]/365
+    NewEmptyRow$`$30 per day - income gap ratio` <- mean((30-IGPdata)/30)
+    rm(IGPdata)
+    NewEmptyRow$`$30 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==30.000)]
+    
+    NewEmptyRow$`$40 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==40.000)]*40*365
+    NewEmptyRow$`$40 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==40.000)]
+    IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*40)]/365
+    NewEmptyRow$`$40 per day - income gap ratio` <- mean((40-IGPdata)/40)
+    rm(IGPdata)
+    NewEmptyRow$`$40 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==40.000)]
+    
+    if (NewEmptyRow$OriginalMedian){
+      PL40 <- IdealPLs[which.min(abs(IdealPLs-round(.4*12*NewEmptyRow$MedianPerMonth/365,3)))][1]
+      NewEmptyRow$`40% of median income - share of population below poverty line` <- 
+        Temp$headcount[which(round(Temp$povertyline,3)==round(PL40,3))]
+      NewEmptyRow$`40% of median income - poverty gap index` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]
+      NewEmptyRow$`40% of median income - total number of people below poverty line` <- 
+        round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL40,3))]*
+        NewEmptyRow$Population)
+      NewEmptyRow$`40% of median income - absolute poverty gap` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]*
+        round(PL40,3)*365
+      IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL40)]/365
+      NewEmptyRow$`40% of median income - income gap ratio` <- mean((PL40-IGPdata)/PL40)
+      rm(IGPdata)
+      NewEmptyRow$`40% of median income - watts index` <- 
+        Temp$watts[which(round(Temp$povertyline,3)==round(PL40,3))]
+      rm(PL40)
+      
+      PL50 <- IdealPLs[which.min(abs(IdealPLs-round(.5*12*NewEmptyRow$MedianPerMonth/365,3)))][1]
+      NewEmptyRow$`50% of median income - share of population below poverty line` <- 
+        Temp$headcount[which(round(Temp$povertyline,3)==round(PL50,3))]
+      NewEmptyRow$`50% of median income - poverty gap index` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]
+      NewEmptyRow$`50% of median income - total number of people below poverty line` <- 
+        round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL50,3))]*
+                NewEmptyRow$Population)
+      NewEmptyRow$`50% of median income - absolute poverty gap` <- 
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]*
+        round(PL50,3)*365
+      IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL50)]/365
+      NewEmptyRow$`50% of median income - income gap ratio` <- mean((PL50-IGPdata)/PL50)
+      rm(IGPdata)
+      NewEmptyRow$`50% of median income - watts index` <- 
+        Temp$watts[which(round(Temp$povertyline,3)==round(PL50,3))]
+      rm(PL50)
+      
+      PL60 <- IdealPLs[which.min(abs(IdealPLs-round(.6*12*NewEmptyRow$MedianPerMonth/365,3)))][1]
+      NewEmptyRow$`60% of median income - share of population below poverty line` <- 
+        Temp$headcount[which(round(Temp$povertyline,3)==round(PL60,3))]
+      NewEmptyRow$`60% of median income - poverty gap index` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]
+      NewEmptyRow$`60% of median income - total number of people below poverty line` <- 
+        round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL60,3))]*
+                NewEmptyRow$Population)
+      NewEmptyRow$`60% of median income - absolute poverty gap` <- 
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]*
+        round(PL60,3)*365
+      IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL60)]/365
+      NewEmptyRow$`60% of median income - income gap ratio` <- mean((PL60-IGPdata)/PL60)
+      rm(IGPdata)
+      NewEmptyRow$`60% of median income - watts index` <- 
+        Temp$watts[which(round(Temp$povertyline,3)==round(PL60,3))]
+      rm(PL60)
+    } else {
+      PL40 <- IdealPLs[which.min(abs(IdealPLs-round(.4*12*NewEmptyRow$MedianPerMonth_estimated/365,3)))][1]
+      NewEmptyRow$`40% of median income - share of population below poverty line` <- 
+        Temp$headcount[which(round(Temp$povertyline,3)==round(PL40,3))]
+      NewEmptyRow$`40% of median income - poverty gap index` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]
+      NewEmptyRow$`40% of median income - total number of people below poverty line` <- 
+        round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL40,3))]*
+                NewEmptyRow$Population)
+      NewEmptyRow$`40% of median income - absolute poverty gap` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]*
+        round(PL40,3)*365
+      IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL40)]/365
+      NewEmptyRow$`40% of median income - income gap ratio` <- mean((PL40-IGPdata)/PL40)
+      rm(IGPdata)
+      NewEmptyRow$`40% of median income - watts index` <- 
+        Temp$watts[which(round(Temp$povertyline,3)==round(PL40,3))]
+      rm(PL40)
+      
+      PL50 <- IdealPLs[which.min(abs(IdealPLs-round(.5*12*NewEmptyRow$MedianPerMonth_estimated/365,3)))][1]
+      NewEmptyRow$`50% of median income - share of population below poverty line` <- 
+        Temp$headcount[which(round(Temp$povertyline,3)==round(PL50,3))]
+      NewEmptyRow$`50% of median income - poverty gap index` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]
+      NewEmptyRow$`50% of median income - total number of people below poverty line` <- 
+        round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL50,3))]*
+                NewEmptyRow$Population)
+      NewEmptyRow$`50% of median income - absolute poverty gap` <- 
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]*
+        round(PL50,3)*365
+      IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL50)]/365
+      NewEmptyRow$`50% of median income - income gap ratio` <- mean((PL50-IGPdata)/PL50)
+      rm(IGPdata)
+      NewEmptyRow$`50% of median income - watts index` <- 
+        Temp$watts[which(round(Temp$povertyline,3)==round(PL50,3))]
+      rm(PL50)
+      
+      PL60 <- IdealPLs[which.min(abs(IdealPLs-round(.6*12*NewEmptyRow$MedianPerMonth_estimated/365,3)))][1]
+      NewEmptyRow$`60% of median income - share of population below poverty line` <- 
+        Temp$headcount[which(round(Temp$povertyline,3)==round(PL60,3))]
+      NewEmptyRow$`60% of median income - poverty gap index` <-  
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]
+      NewEmptyRow$`60% of median income - total number of people below poverty line` <- 
+        round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL60,3))]*
+                NewEmptyRow$Population)
+      NewEmptyRow$`60% of median income - absolute poverty gap` <- 
+        Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]*
+        round(PL60,3)*365
+      IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL60)]/365
+      NewEmptyRow$`60% of median income - income gap ratio` <- mean((PL60-IGPdata)/PL60)
+      rm(IGPdata)
+      NewEmptyRow$`60% of median income - watts index` <- 
+        Temp$watts[which(round(Temp$povertyline,3)==round(PL60,3))]
+      rm(PL60)
+    }
+    
+    # NewEmptyRow[,which(is.na(NewEmptyRow[1,]))]
+    ExportDataFrame <- rbind(ExportDataFrame,NewEmptyRow)
+    rm(NewEmptyRow,distribution)
+  
+  } else {
+      print(paste0('All headcounts are NA at ',i))
+    }
+}
+close(pb)
+
+#[1] "All headcounts are NA at IND:2018:2011.5:A:c"
+#[1] "All headcounts are NA at IND:2018:2011.5:R:c"
+#[1] "All headcounts are NA at IND:2018:2011.5:U:c"
+#[1] "All headcounts are NA at IND:2019:2011.5:A:c"
+#[1] "All headcounts are NA at IND:2019:2011.5:R:c"
+#[1] "All headcounts are NA at IND:2019:2011.5:U:c"
+
+# datayear was not in the df when I run the script, so it may not be in the save as well
+# when I run this script for PIP I will use that column
+# save(list = 'ExportDataFrame',file = '~/PhD/Sources/OWID/ExportDataFrameNew.RData')
+# load('~/PhD/Sources/OWID/ExportDataFrameNew.RData')
+# Now check which is original and which not
+# by comparing with the original set of HHS:
+# write.csv2(ExportDataFrame,'~/PhD/Sources/OWID/MainDataCountriesOnlyNew.csv')
+
+HHS <- povcalnet(
+  country = "all",
+  povline = 1.9,
+  year = "all",
+  aggregate = FALSE,
+  fill_gaps = F,
+  coverage = "all",
+  ppp = NULL,
+  url = "http://iresearch.worldbank.org",
+  format = "csv"
+)
+
+#### Original/Imputation Flag ####
+
+table(ExportDataFrame$IsSurveyYear)
+# FALSE 
+#  6497 
+ExportDataFrame$ISO3DataYearCovType <- paste0(ExportDataFrame$Entity,":",ExportDataFrame$Year,#":",ExportDataFrame$datayear,
+                                     ":",ExportDataFrame$coveragetype,":",ifelse(ExportDataFrame$datatype=="consumption",'c','i'))
+
+length(ExportDataFrame$ISO3DataYearCovType)==nrow(ExportDataFrame)
+HHS$ISO3DataYearCovType <- paste0(HHS$countrycode,":",HHS$year,#":",ExportDataFrame$datayear,
+                                  ":",HHS$coveragetype,":",ifelse(HHS$datatype=="consumption",'c','i'))
+length(unique(HHS$ISO3DataYearCovType))==nrow(HHS)
+
+# perfect, so we do have unique identifiers for both dataframes
+sum(unique(HHS$ISO3DataYearCovType) %in% ExportDataFrame$ISO3DataYearCovType)
+# 1960, where are the other 96?
+# let's find the missing ones:
+unique(HHS$ISO3DataYearCovType)[which(!unique(HHS$ISO3DataYearCovType) %in% ExportDataFrame$ISO3DataYearCovType)]
+# [1] "ARG:1980:U:i" "BOL:1990:U:i" "BGR:2007:N:i" "CAN:1971:N:i" "CAN:1975:N:i" "COL:1980:U:i" "COL:1988:U:i" "COL:1989:U:i" "COL:1991:U:i" "HRV:2009:N:i" "HRV:2010:N:i"
+# [12] "ECU:1987:U:i" "ECU:1995:U:i" "ECU:1998:U:i" "EST:2003:N:i" "EST:2004:N:i" "ETH:1981:R:c" "FRA:1978:N:i" "HTI:2012:N:i" "HND:1986:U:i" "HUN:1999:N:i" "HUN:2004:N:i"
+# [23] "HUN:2005:N:i" "HUN:2006:N:i" "HUN:2007:N:i" "IND:1977:A:c" "IND:1977:R:c" "IND:1977:U:c" "ISR:1979:N:i" "LVA:2004:N:i" "LVA:2007:N:i" "LVA:2008:N:i" "LVA:2009:N:i"
+# [34] "LTU:2004:N:i" "LTU:2008:N:i" "MDG:1980:N:c" "FSM:2000:U:i" "MNE:2012:N:i" "MNE:2013:N:i" "MNE:2014:N:i" "NIC:1993:N:i" "NIC:1998:N:i" "NIC:2001:N:i" "NIC:2005:N:i"
+# [45] "NOR:1979:N:i" "PAN:1979:N:i" "PHL:2000:N:i" "PHL:2003:N:i" "PHL:2006:N:i" "PHL:2009:N:i" "PHL:2012:N:i" "PHL:2015:N:i" "PHL:2018:N:i" "POL:1999:N:i" "POL:2004:N:i"
+# [56] "POL:2005:N:i" "POL:2006:N:i" "POL:2007:N:i" "POL:2008:N:i" "POL:2009:N:i" "POL:2010:N:i" "POL:2011:N:i" "POL:2012:N:i" "POL:2013:N:i" "POL:2014:N:i" "POL:2015:N:i"
+# [67] "POL:2016:N:i" "POL:2017:N:i" "POL:2018:N:i" "ROU:2006:N:i" "ROU:2007:N:i" "ROU:2008:N:i" "ROU:2009:N:i" "ROU:2010:N:i" "ROU:2011:N:i" "ROU:2012:N:i" "ROU:2013:N:i"
+# [78] "ROU:2016:N:i" "SRB:2013:N:i" "SRB:2015:N:i" "SVK:2004:N:i" "SVK:2005:N:i" "SVK:2006:N:i" "SVK:2007:N:i" "SVK:2008:N:i" "SVK:2009:N:i" "ESP:1980:N:i" "SWE:1967:N:i"
+# [89] "SWE:1975:N:i" "GBR:1969:N:i" "GBR:1974:N:i" "GBR:1979:N:i" "USA:1974:N:i" "USA:1979:N:i" "URY:1981:U:i" "URY:1989:U:i"
+# lets see if those are also part of the imputed set:
+HHS2$ISO3DataYearCovType <- paste0(HHS2$countrycode,":",HHS2$year,#":",ExportDataFrame$datayear,
+                                   ":",HHS2$coveragetype,":",ifelse(HHS2$datatype=="consumption",'c','i'))
+unique(HHS$ISO3DataYearCovType)[which(!unique(HHS$ISO3DataYearCovType) %in% HHS2$ISO3DataYearCovType)]
+
+# no they are not, so we are OK I think.
+ExportDataFrame$IsSurveyYear[which(ExportDataFrame$ISO3DataYearCovType %in% unique(HHS$ISO3DataYearCovType))] <- T
+table(ExportDataFrame$IsSurveyYear)
+# FALSE  TRUE 
+#  4537  1960 
+
+#### Corrections ####
+
+##### API returning -1 ####
+
+# I will therefore substitute the -1 with N/A for GNB
+KeepTrackOfNegatives <- colSums(ExportDataFrame<0)
+ExportDataFrame$ISO3Year <- paste0(ExportDataFrame$Entity,ExportDataFrame$Year)
+ISO3negatives <- c()
+which(grepl('watts',names(ExportDataFrame),fixed = T))
+
+for (i in c(1:ncol(ExportDataFrame))){
+  if (is.numeric(ExportDataFrame[,i])){
+    ISO3negatives <- c(ISO3negatives,unique(ExportDataFrame$ISO3Year[which(ExportDataFrame[,i]<0)]))
+  }
+}
+ISO3negatives <- unique(ISO3negatives)
+
+#[1] "AUT1988" "AUT1989" "AUT1990" "AUT1991" "AUT1992" "AUT1993" "AUT2001" "AUT2002" "BGR1990" "BGR1991" "BGR1993" "CHE1993" "CHE1994" "CHE1995" "CHE1996"
+#[16] "CHE1997" "CHE1998" "CHE1999" "CHE2001" "CHE2003" "CHE2004" "CHE2005" "CZE1994" "CZE1995" "CZE1997" "CZE1998" "CZE1999" "CZE2000" "CZE2001" "CZE2003"
+#[31] "DEU1992" "DEU1993" "DEU1996" "DEU1997" "DEU1999" "DNK1993" "DNK1994" "DNK1996" "DNK1997" "DNK1998" "DNK1999" "DNK2001" "DNK2002" "FIN1988" "FIN1989"
+#[46] "FIN1990" "FIN1992" "FIN1993" "FIN1994" "FIN1996" "FIN1997" "FIN1998" "FIN1999" "FIN2001" "FIN2002" "FRA1990" "FRA1991" "FRA1992" "FRA1993" "FRA1995"
+#[61] "FRA1996" "FRA1997" "FRA1998" "FRA1999" "FRA2001" "FRA2002" "HRV1989" "HRV1990" "HRV1991" "HRV1995" "HRV1996" "HRV1997" "HRV2002" "HRV2003" "HRV2005"
+#[76] "HRV2006" "HRV2007" "HUN1988" "HUN1992" "ISR1981" "ISR1982" "ISR1983" "ISR1984" "ISR1985" "ITA1988" "ITA1990" "JOR1986" "JOR1987" "JOR1988" "JPN2009"
+#[91] "JPN2011" "JPN2012" "LBN2011" "LTU1997" "LUX1986" "LUX1987" "LUX1988" "LUX1989" "LUX1990" "LUX1992" "LUX1993" "LUX1995" "LUX1996" "LUX1998" "LUX1999"
+#[106] "LUX2001" "LUX2002" "LVA1994" "MDV2014" "MDV2015" "NLD1988" "NLD1989" "POL1988" "POL1990" "POL1991" "ROU1990" "ROU1991" "SLE1981" "SLE1982" "SLE1983"
+#[121] "SLE1984" "SLE1985" "SLE1986" "SLE1987" "SLE1988" "SLE1989" "SLE1990" "SLE1991" "SLE1992" "SLE1993" "SLE1994" "SLE1995" "SLE1996" "SLE1997" "SLE1998"
+#[136] "SLE1999" "SLE2000" "SLE2001" "SLE2002" "SLE2003" "SVK1993" "SVK1994" "SVK1995" "SVN1988" "SVN1989" "SVN1990" "SVN1991" "SVN1992" "SVN1994" "SVN1995"
+#[151] "SVN1996" "SVN2000" "SVN2001" "SWE1996" "SWE1997" "SWE1998" "SWE1999" "SWE2001" "SWE2002" "HRV1993" "GNB1981" "GNB1982" "GNB1983" "GNB1984" "GNB1985"
+#[166] "GNB1986" "GNB1987" "GNB1988" "GNB1989" "GNB1990" "GNB1991" "GNB1992" "BDI1999" "BDI2000" "BDI2001" "BFA1994" "MDG2000" "NPL1984" "STP2006" "STP2012"
+
+AUT <- povcalnet(
+  country = "AUT",
+  povline = 5.5,
+  year = "1988",
+  aggregate = FALSE,
+  fill_gaps = T,
+  coverage = "all",
+  ppp = NULL,
+  url = "http://iresearch.worldbank.org",
+  format = "csv"
+)
+
+WattsNegatives <- c()
+
+for (i in which(grepl('watts',names(ExportDataFrame),fixed = T))){
+  if (is.numeric(ExportDataFrame[,i])){
+    WattsNegatives <- c(WattsNegatives,unique(ExportDataFrame$ISO3Year[which(ExportDataFrame[,i]<0)]))
+  }
+}
+WattsNegatives <- unique(WattsNegatives)
+all(WattsNegatives == ISO3negatives)
+
+# this means that all countries that have negative values have negative values
+# in watts index estimates as well
+
+NonWattsNegatives <- c()
+
+for (i in which(!grepl('watts',names(ExportDataFrame),fixed = T))){
+  if (is.numeric(ExportDataFrame[,i])){
+    NonWattsNegatives <- c(NonWattsNegatives,unique(ExportDataFrame$ISO3Year[which(ExportDataFrame[,i]<0)]))
+  }
+}
+NonWattsNegatives <- unique(NonWattsNegatives)
+# "GNB1981" "GNB1982" "GNB1983" "GNB1984" "GNB1985" "GNB1986" "GNB1987" "GNB1988" "GNB1989" "GNB1990" "GNB1991"
+# these are the few observations that contain  non watts issues (see sub-section below)
+# and they are all from GNB
+
+# now I will substitute all the <0 with N/A
+
+KeepTrackOfNA <- colSums(is.na(ExportDataFrame))
+
+for (i in c(1:ncol(ExportDataFrame))){
+  if (is.numeric(ExportDataFrame[,i])){
+    ExportDataFrame[which(ExportDataFrame[,i]<0),i] <- as.numeric(NA)
+  }
+}
+
+save(list = 'ExportDataFrame',file = '~/PhD/Sources/OWID/ExportDataFrameNEW2.RData')
+# load('~/PhD/Sources/OWID/ExportDataFrameNEW.RData')
+# Now check which is original and which not
+# by comparing with the original set of HHS:
+
+write.csv2(ExportDataFrame,'~/PhD/Sources/OWID/PovcalNetMainDataCountriesOnly.csv')
+# save.image("~/PhD/Sources/OWID/BulkSave.RData")
+
+##### GNB ####
+# GNB has very low top threshold in some years, and this in turn gives a -1 for 
+# poverty rates in those years (it is an original value from PCN, as it can be 
+# seen from the API call below)
+
+GNB <- povcalnet(
+  country = "GNB",
+  povline = 5.5,
+  year = "all",
+  aggregate = FALSE,
+  fill_gaps = T,
+  coverage = "all",
+  ppp = NULL,
+  url = "http://iresearch.worldbank.org",
+  format = "csv"
+)
+
+# it has been corrected in the section above
+
+##### Relative poverty = 0 in some observations ##### 
+
+kable((ExportDataFrame %>%
+             filter(`40% of median income - share of population below poverty line` ==0) %>%
+             select(Entity, Year, `40% of median income - share of population below poverty line`, MedianPerMonth, MedianPerMonth_estimated)))
+
+# now NPL1981-1989 is identified only
+
+NPL <- subset(MasterDistro,MasterDistro$countrycode=='NPL' & MasterDistro$year==1981)
+
+###### checking BFA 1994 ####
+"BFA:1994:1994.25:N:c"
+
+BFA <- povcalnet(
+  country = "BFA",
+  povline = 1,
+  year = "1994",
+  aggregate = FALSE,
+  fill_gaps = T,
+  coverage = "all",
+  ppp = NULL,
+  url = "http://iresearch.worldbank.org",
+  format = "csv"
+)
+##### Missing values ####
+kable(data.frame(colSums(is.na(df))) %>%
+        filter(colSums.is.na.df.. > 0))
+
+ExportDataFrame$ISO3Year[is.na(ExportDataFrame$`$40% of median income - income gap ratio`)]
+#"NPL1981" "NPL1984" "NPL1985" "NPL1986" "NPL1987" "NPL1988" "NPL1989" "STP2012"
+ExportDataFrame$ISO3Year[is.na(ExportDataFrame$`$50% of median income - income gap ratio`)]
+# "STP2012"
+ExportDataFrame$ISO3Year[is.na(ExportDataFrame$`$60% of median income - income gap ratio`)]
+# "STP2012"
+
+# the above should be corrected once I apply the correction for the relative poverty issue
+
+#### ad-hoc correction ####
+
+# first check the cases for which the Median estimate is too low
+sort(ExportDataFrame$ISO3Year[which(ExportDataFrame$Median_estimated<20)])
+ExportDataFrame[which(ExportDataFrame$ISO3Year=='SWZ1986'),]
+
+#### To report ####
+# summary of the length of monotonicity breaks in HHS with at least one monotonicity break
+summary(df$MonotonicityBreaks[which(df$MonotonicityBreaks>0)])
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#    1929    4048    5370    6010    7924   12058 
+
+#### Add the regions ####
+rm(MasterDistro)
+gc()
+
+load("/media/michalis/DataBox/PovcalNet/Regional/MasterData/MasterDistroRegions.RData")
+
+UniqueHHS <- sort(unique(MasterDistroRegions$RegionYear))
+
+IdealPLs <- c(seq(0.001,5,0.001),seq(5.01,60,0.01),seq(60.1,150,0.1),
+              seq(150.5,1400,0.5), seq(1405,3000,5), seq(3010,10000,10),
+              seq(11000,35000,100),99999)
+
+##### Running regions' loop ####
+
+total <- length(UniqueHHS)
+
+pb <- tkProgressBar(title = "progress bar", min = 0,max = total, width = 300)
+
+for (i in UniqueHHS[c(1:length(UniqueHHS))]){
+  #for (i in Tests){
+  setTkProgressBar(pb, which(UniqueHHS==i), 
+                   label=paste( round(which(UniqueHHS==i)/total*100, 3),"% done"))
+  
+  #print(i)
+  Temp <- subset(MasterDistroRegions,MasterDistroRegions$RegionYear==i)
   if (!all(is.na(Temp$headcount))){
     NewEmptyRow <- MyEmptyRow
     
@@ -305,7 +1080,7 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
     
     #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0012) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
     # if the above gives an error (as in "AUT:1981:1987:N:i") try the following:
-  
+    
     #TempShort <- subset(TempNew,(TempNew$headcount<0.8 & TempNew$Diffs>0.0025) | (TempNew$headcount>=0.8 & TempNew$Diffs>0.001))
     # if the above gives an error (as in "BEL:1981:1985:N:i") try the following:
     
@@ -345,37 +1120,39 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
                                          fractiles = c(seq(0.1, 0.9, 0.1)))
     
     GPinterDistroDetailed <- generate_tabulation(distribution,
-                                         fractiles = c(seq(0.001, 0.999, 0.001)))
+                                                 fractiles = c(seq(0.001, 0.999, 0.001)))
     
     # copy readily available info or easy (one-liners) to calculate
+    NewEmptyRow$ISO3DataYearCovType <- i
     # FirstRows
-    NewEmptyRow$Entity <- unique(Temp$countrycode)
+    NewEmptyRow$Entity <- unique(Temp$regioncode)
     NewEmptyRow$Year <-  unique(Temp$year)
     # GenStatsAndInfo
-    NewEmptyRow$Mean <- unique(Temp$mean)
+    NewEmptyRow$Mean <- as.numeric(names(sort(table(Temp$mean),decreasing = T)[1]))[1]
     NewEmptyRow$Mean_estimated <- bracket_average(distribution, 0, 1)/12
-    NewEmptyRow$Median <- unique(Temp$median)
+    #NewEmptyRow$Median <- unique(Temp$)
     NewEmptyRow$Median_estimated <- GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.5)]/12
-    NewEmptyRow$PPP <- unique(Temp$ppp)
-    NewEmptyRow$Population <- unique(Temp$population)*1000000
+    #NewEmptyRow$PPP <- unique(Temp$ppp)
+    NewEmptyRow$Population <- as.numeric(names(sort(table(Temp$population),decreasing = T)[1]))[1]*1000000
     # MetaColumns
-    NewEmptyRow$isinterpolated <- unique(Temp$isinterpolated)
-    NewEmptyRow$usemicrodata <- unique(Temp$usemicrodata)
-    NewEmptyRow$coveragetype <- unique(Temp$coveragetype)
-    NewEmptyRow$datatype <- unique(Temp$datatype)
-    NewEmptyRow$usemicrodata <- unique(Temp$usemicrodata)
-    NewEmptyRow$IsSurveyYear <- F
-    NewEmptyRow$OriginalMedian <- ifelse(is.na(NewEmptyRow$Median),F,T)
+    #NewEmptyRow$isinterpolated <- unique(Temp$isinterpolated)
+    #NewEmptyRow$datayear <- unique(Temp$datayear)
+    #NewEmptyRow$usemicrodata <- unique(Temp$usemicrodata)
+    #NewEmptyRow$coveragetype <- unique(Temp$coveragetype)
+    #NewEmptyRow$datatype <- unique(Temp$datatype)
+    #NewEmptyRow$usemicrodata <- unique(Temp$usemicrodata)
+    #NewEmptyRow$IsSurveyYear <- F
+    NewEmptyRow$OriginalMedian <- F
     NewEmptyRow$OriginalMean <- ifelse(is.na(NewEmptyRow$Mean),F,T)
-    NewEmptyRow$OriginalDecileShares <- 
+    NewEmptyRow$OriginalDecileShares <- F
     # IneqIndices
-    NewEmptyRow$`Gini index` <- unique(Temp$gini)
+    #NewEmptyRow$`Gini index` <- unique(Temp$gini)
     NewEmptyRow$Gini_estimated <- gini(distribution)
-    NewEmptyRow$Polarization <- unique(Temp$polarization)
+    #NewEmptyRow$Polarization <- unique(Temp$polarization)
     # which polarization index definition?
     # https://www.sciencedirect.com/science/article/pii/S0165176518301046
-    NewEmptyRow$Polarization_estimated <- NA
-    NewEmptyRow$MLD <- unique(Temp$mld)
+    #NewEmptyRow$Polarization_estimated <- NA
+    #NewEmptyRow$MLD <- unique(Temp$mld)
     NewEmptyRow$MLD_estimated <- entropy(GPinterDistroDetailed$threshold, parameter = 0)
     # The Palma ratio is the share of all income received by the 10% people with 
     # highest disposable income divided by the share of all income received by the 40%
@@ -404,16 +1181,16 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
     NewEmptyRow$Theil_2_0 <- Theil(GPinterDistroDetailed$threshold, parameter = 2.0)
     NewEmptyRow$Var.Coeff <- var.coeff(GPinterDistroDetailed$threshold)
     # DecileSharesColumns
-    NewEmptyRow$`Decile 1 – share of income or consumption` <- HHS2$decile1[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 2 – share of income or consumption` <- HHS2$decile2[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 3 – share of income or consumption` <- HHS2$decile3[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 4 – share of income or consumption` <- HHS2$decile4[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 5 – share of income or consumption` <- HHS2$decile5[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 6 – share of income or consumption` <- HHS2$decile6[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 7 – share of income or consumption` <- HHS2$decile7[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 8 – share of income or consumption` <- HHS2$decile8[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 9 – share of income or consumption` <- HHS2$decile9[which(HHS2$ISO3DataYearCovType==i)]
-    NewEmptyRow$`Decile 10 – share of income or consumption` <- HHS2$decile10[which(HHS2$ISO3DataYearCovType==i)]
+    NewEmptyRow$`Decile 1 – share of income or consumption` <- bottom_share(distribution,0.1)
+    NewEmptyRow$`Decile 2 – share of income or consumption` <- bracket_share(distribution,0.1,0.2)
+    NewEmptyRow$`Decile 3 – share of income or consumption` <- bracket_share(distribution,0.2,0.3)
+    NewEmptyRow$`Decile 4 – share of income or consumption` <- bracket_share(distribution,0.3,0.4)
+    NewEmptyRow$`Decile 5 – share of income or consumption` <- bracket_share(distribution,0.4,0.5)
+    NewEmptyRow$`Decile 6 – share of income or consumption` <- bracket_share(distribution,0.5,0.6)
+    NewEmptyRow$`Decile 7 – share of income or consumption` <- bracket_share(distribution,0.6,0.7)
+    NewEmptyRow$`Decile 8 – share of income or consumption` <- bracket_share(distribution,0.7,0.8)
+    NewEmptyRow$`Decile 9 – share of income or consumption` <- bracket_share(distribution,0.8,0.9)
+    NewEmptyRow$`Decile 10 – share of income or consumption` <- top_share(distribution,0.9)
     # DecileThresholdsColumns
     NewEmptyRow$`Decile 1 – threshold of income or consumption` <- 
       GPinterDistro$threshold[which(round(GPinterDistro$fractile,1)==0.1)]
@@ -465,21 +1242,21 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
       Temp$headcount[which(round(Temp$povertyline,3)==40.000)]
     
     NewEmptyRow$`$1.9 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==1.900)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==1.900)]*NewEmptyRow$Population)
     NewEmptyRow$`$3.2 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==3.200)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==3.200)]*NewEmptyRow$Population)
     NewEmptyRow$`$5.5 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==5.500)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==5.500)]*NewEmptyRow$Population)
     NewEmptyRow$`$10 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==10.000)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==10.000)]*NewEmptyRow$Population)
     NewEmptyRow$`$15 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==15.000)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==15.000)]*NewEmptyRow$Population)
     NewEmptyRow$`$20 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==20.000)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==20.000)]*NewEmptyRow$Population)
     NewEmptyRow$`$30 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==30.000)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==30.000)]*NewEmptyRow$Population)
     NewEmptyRow$`$40 per day - total number of people below poverty line` <- 
-      round(Temp$headcount[which(round(Temp$povertyline,3)==40.000)]*1000000*unique(Temp$population))
+      round(Temp$headcount[which(round(Temp$povertyline,3)==40.000)]*NewEmptyRow$Population)
     
     #Absolute poverty gap (expressed in annual terms)
     #[FYI, this is the amount of money (theoretically) needed to bring everyone up to the poverty line, expressed in annual terms]
@@ -492,57 +1269,56 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*1.9)]/365
     NewEmptyRow$`$1.9 per day - income gap ratio` <- mean((1.9-IGPdata)/1.9)
     rm(IGPdata)
-    NewEmptyRow$`$1.9 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==1.900)]
-    #Watts(GPinterDistroDetailed$threshold,365*1.9)
+    NewEmptyRow$`$1.9 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*1.9)
     
     NewEmptyRow$`$3.2 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==3.200)]*3.2*365
     NewEmptyRow$`$3.2 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==3.200)]
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*3.2)]/365
     NewEmptyRow$`$3.2 per day - income gap ratio` <- mean((3.2-IGPdata)/3.2)
     rm(IGPdata)
-    NewEmptyRow$`$3.2 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==3.200)]
+    NewEmptyRow$`$3.2 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*3.2)
     
     NewEmptyRow$`$5.5 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==5.500)]*5.5*365
     NewEmptyRow$`$5.5 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==5.500)]
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*5.5)]/365
     NewEmptyRow$`$5.5 per day - income gap ratio` <- mean((5.5-IGPdata)/5.5)
     rm(IGPdata)
-    NewEmptyRow$`$5.5 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==5.500)]
+    NewEmptyRow$`$5.5 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*5.5)
     
     NewEmptyRow$`$10 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==10.000)]*10*365
     NewEmptyRow$`$10 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==10.000)]
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*10)]/365
     NewEmptyRow$`$10 per day - income gap ratio` <- mean((10-IGPdata)/10)
     rm(IGPdata)
-    NewEmptyRow$`$10 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==10.000)]
+    NewEmptyRow$`$10 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*10)
     
     NewEmptyRow$`$15 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==15.000)]*15*365
     NewEmptyRow$`$15 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==15.000)]
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*15)]/365
     NewEmptyRow$`$15 per day - income gap ratio` <- mean((15-IGPdata)/15)
     rm(IGPdata)
-    NewEmptyRow$`$15 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==15.000)]
+    NewEmptyRow$`$15 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*15)
     
     NewEmptyRow$`$20 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==20.000)]*20*365
     NewEmptyRow$`$20 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==20.000)]
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*20)]/365
     NewEmptyRow$`$20 per day - income gap ratio` <- mean((20-IGPdata)/20)
     rm(IGPdata)
-    NewEmptyRow$`$20 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==20.000)]
+    NewEmptyRow$`$20 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*20)
     
     NewEmptyRow$`$30 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==30.000)]*30*365
     NewEmptyRow$`$30 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==30.000)]
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*30)]/365
     NewEmptyRow$`$30 per day - income gap ratio` <- mean((30-IGPdata)/30)
     rm(IGPdata)
-    NewEmptyRow$`$30 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==30.000)]
+    NewEmptyRow$`$30 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*30)
     
     NewEmptyRow$`$40 per day - absolute poverty gap` <- Temp$povertygap[which(round(Temp$povertyline,3)==40.000)]*40*365
     NewEmptyRow$`$40 per day - poverty gap index` <- Temp$povertygap[which(round(Temp$povertyline,3)==40.000)]
     IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*40)]/365
     NewEmptyRow$`$40 per day - income gap ratio` <- mean((40-IGPdata)/40)
     rm(IGPdata)
-    NewEmptyRow$`$40 per day - watts index` <- Temp$watts[which(round(Temp$povertyline,3)==40.000)]
+    NewEmptyRow$`$40 per day - watts index` <- Watts(GPinterDistroDetailed$threshold,365*40)
     
     if (NewEmptyRow$OriginalMedian){
       PL40 <- IdealPLs[which.min(abs(IdealPLs-round(.4*12*NewEmptyRow$Median/365,3)))][1]
@@ -552,7 +1328,7 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]
       NewEmptyRow$`$40% of median income - total number of people below poverty line` <- 
         round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL40,3))]*
-        1000000*NewEmptyRow$Population)
+                NewEmptyRow$Population)
       NewEmptyRow$`$40% of median income - absolute poverty gap` <-  
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]*
         round(PL40,3)*365
@@ -570,7 +1346,7 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]
       NewEmptyRow$`$50% of median income - total number of people below poverty line` <- 
         round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL50,3))]*
-                1000000*NewEmptyRow$Population)
+                NewEmptyRow$Population)
       NewEmptyRow$`$50% of median income - absolute poverty gap` <- 
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]*
         round(PL50,3)*365
@@ -588,7 +1364,7 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]
       NewEmptyRow$`$60% of median income - total number of people below poverty line` <- 
         round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL60,3))]*
-                1000000*NewEmptyRow$Population)
+                NewEmptyRow$Population)
       NewEmptyRow$`$60% of median income - absolute poverty gap` <- 
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]*
         round(PL60,3)*365
@@ -606,15 +1382,14 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]
       NewEmptyRow$`$40% of median income - total number of people below poverty line` <- 
         round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL40,3))]*
-                1000000*NewEmptyRow$Population)
+                NewEmptyRow$Population)
       NewEmptyRow$`$40% of median income - absolute poverty gap` <-  
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL40,3))]*
         round(PL40,3)*365
       IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL40)]/365
       NewEmptyRow$`$40% of median income - income gap ratio` <- mean((PL40-IGPdata)/PL40)
       rm(IGPdata)
-      NewEmptyRow$`$40% of median income - watts index` <- 
-        Temp$watts[which(round(Temp$povertyline,3)==round(PL40,3))]
+      NewEmptyRow$`$40% of median income - watts index` <- Watts(GPinterDistroDetailed$threshold,365*PL40)
       rm(PL40)
       
       PL50 <- IdealPLs[which.min(abs(IdealPLs-round(.5*12*NewEmptyRow$Median_estimated/365,3)))][1]
@@ -624,15 +1399,14 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]
       NewEmptyRow$`$50% of median income - total number of people below poverty line` <- 
         round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL50,3))]*
-                1000000*NewEmptyRow$Population)
+                NewEmptyRow$Population)
       NewEmptyRow$`$50% of median income - absolute poverty gap` <- 
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL50,3))]*
         round(PL50,3)*365
       IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL50)]/365
       NewEmptyRow$`$50% of median income - income gap ratio` <- mean((PL50-IGPdata)/PL50)
       rm(IGPdata)
-      NewEmptyRow$`$50% of median income - watts index` <- 
-        Temp$watts[which(round(Temp$povertyline,3)==round(PL50,3))]
+      NewEmptyRow$`$50% of median income - watts index` <- Watts(GPinterDistroDetailed$threshold,365*PL50)
       rm(PL50)
       
       PL60 <- IdealPLs[which.min(abs(IdealPLs-round(.6*12*NewEmptyRow$Median_estimated/365,3)))][1]
@@ -642,40 +1416,33 @@ for (i in UniqueHHS[c(1:length(UniqueHHS))]){
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]
       NewEmptyRow$`$60% of median income - total number of people below poverty line` <- 
         round(Temp$headcount[which(round(Temp$povertyline,3)==round(PL60,3))]*
-                1000000*NewEmptyRow$Population)
+                NewEmptyRow$Population)
       NewEmptyRow$`$60% of median income - absolute poverty gap` <- 
         Temp$povertygap[which(round(Temp$povertyline,3)==round(PL60,3))]*
         round(PL60,3)*365
       IGPdata <- GPinterDistroDetailed$threshold[which(GPinterDistroDetailed$threshold<=365*PL60)]/365
       NewEmptyRow$`$60% of median income - income gap ratio` <- mean((PL60-IGPdata)/PL60)
       rm(IGPdata)
-      NewEmptyRow$`$60% of median income - watts index` <- 
-        Temp$watts[which(round(Temp$povertyline,3)==round(PL60,3))]
+      NewEmptyRow$`$60% of median income - watts index` <- Watts(GPinterDistroDetailed$threshold,365*PL60)
       rm(PL60)
     }
     
     # NewEmptyRow[,which(is.na(NewEmptyRow[1,]))]
     ExportDataFrame <- rbind(ExportDataFrame,NewEmptyRow)
     rm(NewEmptyRow,distribution)
-  
+    
   } else {
-      print(paste0('All headcounts are NA at ',i))
-    }
+    print(paste0('All headcounts are NA at ',i))
+  }
 }
 close(pb)
 
-save(list = 'ExportDataFrame',file = '~/PhD/Sources/OWID/ExportDataFrame.RData')
-# Now check which is original and which not
-# by comparing with the original set of HHS:
+save(list = 'ExportDataFrame',file = '~/PhD/Sources/OWID/ExportDataFrameNewFinal.RData')
+# load('~/PhD/Sources/OWID/ExportDataFrameNewFinal.RData')
+#rm(list= ls()[!(ls() %in% c('ExportDataFrame'))])
+#gc()
 
-HHS <- povcalnet(
-  country = "all",
-  povline = 1.9,
-  year = "all",
-  aggregate = FALSE,
-  fill_gaps = F,
-  coverage = "all",
-  ppp = NULL,
-  url = "http://iresearch.worldbank.org",
-  format = "csv"
-)
+#### Question ####
+# should I include the missing HHS, or not? I don't think it makes much sense for the PovcalNet, I would try to do that in PIP.
+# EAC 2010 has two means 465.6219 464.6207, that's why I am using as.numeric(names(sort(table(Temp$mean),decreasing = T)[1]))[1]
+# WLD 1995 two populations 5705.720253 5706.720253 corresponding to  1       15161 counts
