@@ -9,11 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(RCurl)
+library(knitr)
 ```
 
-
+Read in Michalis' povcal data
 ```{r}
-df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/MainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
 
 ```
 
@@ -31,36 +32,454 @@ df<- df %>%
 
 ```
 
-Separate out Urban/Rural entities (except for Argentina, where we only have Urban-only data. For Argentina we will add an annotation. )
+Rename vars (We should do rearrange Michalis' script to structure the variables like this and then delete this section)
+
 ```{r}
+
+
+orig_varnames<- c(
+
+"Entity",
+"Year",
+"X.1.per.day...share.of.population.below.poverty.line",
+"X.1.per.day...poverty.gap.index",
+"X.1.per.day...total.number.of.people.below.poverty.line",
+"X.1.per.day...absolute.poverty.gap",
+"X.1.per.day...income.gap.ratio",
+"X.1.per.day...watts.index",
+"X.1.9.per.day...share.of.population.below.poverty.line",
+"X.1.9.per.day...poverty.gap.index",
+"X.1.9.per.day...total.number.of.people.below.poverty.line",
+"X.1.9.per.day...absolute.poverty.gap",
+"X.1.9.per.day...income.gap.ratio",
+"X.1.9.per.day...watts.index",
+"X.3.2.per.day...share.of.population.below.poverty.line",
+"X.3.2.per.day...poverty.gap.index",
+"X.3.2.per.day...total.number.of.people.below.poverty.line",
+"X.3.2.per.day...absolute.poverty.gap",
+"X.3.2.per.day...income.gap.ratio",
+"X.3.2.per.day...watts.index",
+"X.5.5.per.day...share.of.population.below.poverty.line",
+"X.5.5.per.day...poverty.gap.index",
+"X.5.5.per.day...total.number.of.people.below.poverty.line",
+"X.5.5.per.day...absolute.poverty.gap",
+"X.5.5.per.day...income.gap.ratio",
+"X.5.5.per.day...watts.index",
+"X.10.per.day...share.of.population.below.poverty.line",
+"X.10.per.day...poverty.gap.index",
+"X.10.per.day...total.number.of.people.below.poverty.line",
+"X.10.per.day...absolute.poverty.gap",
+"X.10.per.day...income.gap.ratio",
+"X.10.per.day...watts.index",
+"X.15.per.day...share.of.population.below.poverty.line",
+"X.15.per.day...poverty.gap.index",
+"X.15.per.day...total.number.of.people.below.poverty.line",
+"X.15.per.day...absolute.poverty.gap",
+"X.15.per.day...income.gap.ratio",
+"X.15.per.day...watts.index",
+"X.20.per.day...share.of.population.below.poverty.line",
+"X.20.per.day...poverty.gap.index",
+"X.20.per.day...total.number.of.people.below.poverty.line",
+"X.20.per.day...absolute.poverty.gap",
+"X.20.per.day...income.gap.ratio",
+"X.20.per.day...watts.index",
+"X.30.per.day...share.of.population.below.poverty.line",
+"X.30.per.day...poverty.gap.index",
+"X.30.per.day...total.number.of.people.below.poverty.line",
+"X.30.per.day...absolute.poverty.gap",
+"X.30.per.day...income.gap.ratio",
+"X.30.per.day...watts.index",
+"X.40.per.day...share.of.population.below.poverty.line",
+"X.40.per.day...poverty.gap.index",
+"X.40.per.day...total.number.of.people.below.poverty.line",
+"X.40.per.day...absolute.poverty.gap",
+"X.40.per.day...income.gap.ratio",
+"X.40.per.day...watts.index",
+"X40..of.median.income...share.of.population.below.poverty.line",
+"X40..of.median.income...poverty.gap.index",
+"X40..of.median.income...total.number.of.people.below.poverty.line",
+"X40..of.median.income...absolute.poverty.gap",
+"X40..of.median.income...income.gap.ratio",
+"X40..of.median.income...watts.index",
+"X50..of.median.income...share.of.population.below.poverty.line",
+"X50..of.median.income...poverty.gap.index",
+"X50..of.median.income...total.number.of.people.below.poverty.line",
+"X50..of.median.income...absolute.poverty.gap",
+"X50..of.median.income...income.gap.ratio",
+"X50..of.median.income...watts.index",
+"X60..of.median.income...share.of.population.below.poverty.line",
+"X60..of.median.income...poverty.gap.index",
+"X60..of.median.income...total.number.of.people.below.poverty.line",
+"X60..of.median.income...absolute.poverty.gap",
+"X60..of.median.income...income.gap.ratio",
+"X60..of.median.income...watts.index",
+"MeanPerMonth",
+"MeanPerMonth_estimated",
+"MedianPerMonth",
+"MedianPerMonth_estimated",
+"PPP",
+"Population",
+"Decile.1...share.of.income.or.consumption",
+"Decile.2...share.of.income.or.consumption",
+"Decile.3...share.of.income.or.consumption",
+"Decile.4...share.of.income.or.consumption",
+"Decile.5...share.of.income.or.consumption",
+"Decile.6...share.of.income.or.consumption",
+"Decile.7...share.of.income.or.consumption",
+"Decile.8...share.of.income.or.consumption",
+"Decile.9...share.of.income.or.consumption",
+"Decile.10...share.of.income.or.consumption",
+"Decile.1...threshold.of.income.or.consumption.per.month",
+"Decile.2...threshold.of.income.or.consumption.per.month",
+"Decile.3...threshold.of.income.or.consumption.per.month",
+"Decile.4...threshold.of.income.or.consumption.per.month",
+"Decile.5...threshold.of.income.or.consumption.per.month",
+"Decile.6...threshold.of.income.or.consumption.per.month",
+"Decile.7...threshold.of.income.or.consumption.per.month",
+"Decile.8...threshold.of.income.or.consumption.per.month",
+"Decile.9...threshold.of.income.or.consumption.per.month",
+"Decile.1...average.income.or.consumption.per.month",
+"Decile.2...average.income.or.consumption.per.month",
+"Decile.3...average.income.or.consumption.per.month",
+"Decile.4...average.income.or.consumption.per.month",
+"Decile.5...average.income.or.consumption.per.month",
+"Decile.6...average.income.or.consumption.per.month",
+"Decile.7...average.income.or.consumption.per.month",
+"Decile.8...average.income.or.consumption.per.month",
+"Decile.9...average.income.or.consumption.per.month",
+"Decile.10...average.income.or.consumption.per.month",
+"Gini.index",
+"Gini_estimated",
+"Polarization",
+"Polarization_estimated",
+"MLD",
+"MLD_estimated",
+"Palma",
+"P90.P10.ratio",
+"P90.50.ratio",
+"Entropy_0_5",
+"Entropy_1_0",
+"Entropy_1_5",
+"Entropy_2_0",
+"Atkinson_0_5",
+"Atkinson_1_0",
+"Atkinson_1_5",
+"Atkinson_2_0",
+"Theil_0_0",
+"Theil_0_5",
+"Theil_1_0",
+"Theil_1_5",
+"Theil_2_0",
+"Var.Coeff",
+"datayear",
+"isinterpolated",
+"usemicrodata",
+"coveragetype",
+"datatype",
+"IsSurveyYear",
+"OriginalMedian",
+"OriginalMean",
+"OriginalDecileShares",
+"MonotonicityBreaks",
+"RowsWithIncreasingHeadcount",
+"DataframeRowsForGpinter",
+"LessThan33Rows",
+"ISO3DataYearCovType",
+"ISO3Year"
+)
+
+
+new_varnames<- c(
+
+"Entity",
+"Year",
+"headcount_ratio_1_00",
+"poverty_gap_index_1_00",
+"headcount_1_00",
+"total_shortall_annual_1_00",
+"income_gap_ratio_1_00",
+"watts_index_1_00",
+"headcount_ratio_1_90",
+"poverty_gap_index_1_90",
+"headcount_1_90",
+"total_shortall_annual_1_90",
+"income_gap_ratio_1_90",
+"watts_index_1_90",
+"headcount_ratio_3_20",
+"poverty_gap_index_3_20",
+"headcount_3_20",
+"total_shortall_annual_3_20",
+"income_gap_ratio_3_20",
+"watts_index_3_20",
+"headcount_ratio_5_50",
+"poverty_gap_index_5_50",
+"headcount_5_50",
+"total_shortall_annual_5_50",
+"income_gap_ratio_5_50",
+"watts_index_5_50",
+"headcount_ratio_10_00",
+"poverty_gap_index_10_00",
+"headcount_10_00",
+"total_shortall_annual_10_00",
+"income_gap_ratio_10_00",
+"watts_index_10_00",
+"headcount_ratio_",
+"poverty_gap_index_15_00",
+"headcount_15_00",
+"total_shortall_annual_15_00",
+"income_gap_ratio_15_00",
+"watts_index_15_00",
+"headcount_ratio_20_00",
+"poverty_gap_index_20_00",
+"headcount_20_00",
+"total_shortall_annual_20_00",
+"income_gap_ratio_20_00",
+"watts_index_20_00",
+"headcount_ratio_30_00",
+"poverty_gap_index_30_00",
+"headcount_30_00",
+"total_shortall_annual_30_00",
+"income_gap_ratio_30_00",
+"watts_index_30_00",
+"headcount_ratio_40_00",
+"poverty_gap_index_40_00",
+"headcount_40_00",
+"total_shortall_annual_40_00",
+"income_gap_ratio_40_00",
+"watts_index_40_00",
+"headcount_ratio_40_median",
+"poverty_gap_index_40_median",
+"headcount_40_median",
+"total_shortall_annual_40_median",
+"income_gap_ratio_40_median",
+"watts_index_40_median",
+"headcount_ratio_50_median",
+"poverty_gap_index_50_median",
+"headcount_50_median",
+"total_shortall_annual_50_median",
+"income_gap_ratio_50_median",
+"watts_index_50_median",
+"headcount_ratio_60_median",
+"poverty_gap_index_60_median",
+"headcount_60_median",
+"total_shortall_annual_60_median",
+"income_gap_ratio_60_median",
+"watts_index_60_median",
+"MeanPerMonth",
+"MeanPerMonth_estimated",
+"MedianPerMonth",
+"MedianPerMonth_estimated",
+"PPP",
+"Population",
+"share_decile_1",
+"share_decile_2",
+"share_decile_3",
+"share_decile_4",
+"share_decile_5",
+"share_decile_6",
+"share_decile_7",
+"share_decile_8",
+"share_decile_9",
+"share_decile_10",
+"threshold_decile_1",
+"threshold_decile_2",
+"threshold_decile_3",
+"threshold_decile_4",
+"threshold_decile_5",
+"threshold_decile_6",
+"threshold_decile_7",
+"threshold_decile_8",
+"threshold_decile_9",
+"average_decile_1",
+"average_decile_2",
+"average_decile_3",
+"average_decile_4",
+"average_decile_5",
+"average_decile_6",
+"average_decile_7",
+"average_decile_8",
+"average_decile_9",
+"average_decile_10",
+"Gini",
+"Gini_estimated",
+"Polarization",
+"Polarization_estimated",
+"MLD",
+"MLD_estimated",
+"Palma",
+"P90_P10_ratio",
+"P90_50_ratio",
+"Entropy_0_5",
+"Entropy_1_0",
+"Entropy_1_5",
+"Entropy_2_0",
+"Atkinson_0_5",
+"Atkinson_1_0",
+"Atkinson_1_5",
+"Atkinson_2_0",
+"Theil_0_0",
+"Theil_0_5",
+"Theil_1_0",
+"Theil_1_5",
+"Theil_2_0",
+"Var.Coeff",
+"datayear",
+"isinterpolated",
+"usemicrodata",
+"coveragetype",
+"datatype",
+"IsSurveyYear",
+"OriginalMedian",
+"OriginalMean",
+"OriginalDecileShares",
+"MonotonicityBreaks",
+"RowsWithIncreasingHeadcount",
+"DataframeRowsForGpinter",
+"LessThan33Rows",
+"ISO3DataYearCovType",
+"ISO3Year"
+)
+
+varname_map<- data.frame(orig_varnames,new_varnames)
 
 
 ```
 
 
-Rename columns to work with explorers
+Swap in new varnames
 ```{r}
-names(df) <- gsub("[.]", "_", names(df))
+df<- df %>%
+  pivot_longer(cols = !c(Entity, Year, coveragetype, datatype, ISO3Year, ISO3DataYearCovType), names_to = "orig_varnames", values_to = "value")
+
+# Merge in new var names
+
+df<- left_join(df, varname_map)
+
+# check there are no unmatched vars
+br<- df %>%
+  filter(is.na(new_varnames))
 
 ```
+
+
+
+
+Demark Urban/Rural entities.
+```{r}
+df<- df %>%
+  mutate(Entity = if_else(coveragetype == "R",
+                          paste0(Entity, " -  Rural"),
+                          Entity)) %>%
+  mutate(Entity = if_else(coveragetype == "U",
+                          paste0(Entity, " -  Urban"),
+                          Entity))
+
+```
+
+
+Read in explorer control stubs
+```{r}
+control_stubs <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+
+```
+
+
+
+
+-----
+
+Separate out key/id variables
+```{r}
+df_key_vars<- df %>%
+  select(Entity, Year, isinterpolated, IsSurveyYear, coveragetype, datatype)
+```
+
+Separate out absolute poverty line specific vars in long format
+```{r}
+df_abs_pov<- cbind(df_key_vars, df[, grep("per_day", names(df))]) 
+
+df_abs_pov<- df_abs_pov %>%
+  pivot_longer(cols = starts_with("X_"),
+               names_to = "old_varname",
+               values_to = "value") %>%
+  mutate(abs_pov_line_text = gsub("_per_day.*","",old_varname)) %>%
+  mutate(abs_pov_line_text = gsub("X_","",abs_pov_line_text))
+  mutate(var = gsub(".*_{3}","",old_varname)) %>%
+  select(-old_varname)
+
+# Pivot wider
+df_abs_pov<- df_abs_pov %>%
+  pivot_wider(names_from = var,
+              values_from = value)
+
+
+```
+
+Calculate new variables on the absolute poverty data
+```{r}
+# Absolute poverty gap per day
+df_abs_pov<- df_abs_pov %>%
+mutate(absolute_poverty_gap_per_day = absolute_poverty_gap/365)
+
+# Average (absolute) shortfall per day
+df_abs_pov<- df_abs_pov %>%
+mutate(average_shortfall_per_day = absolute_poverty_gap_per_day/total_number_of_people_below_poverty_line)
+
+
+```
+
+
+
+A set of poverty lines to refer to the poverty-line specific variables
+```{r}
+
+
+abs_pov_lines<- data.frame("rough_pov_line" = unique(df_abs_pov$abs_pov_line_text))
+                           
+abs_pov_lines<- abs_pov_lines %>%
+  mutate(math_pov_line = gsub("_",".",rough_pov_line)) %>%
+  mutate(math_pov_line = as.numeric(math_pov_line)) %>%
+  mutate(clear_pov_line = paste0("$",str_trim(format(round(math_pov_line, 2), nsmall = 2)), " per day"))
+  
+
+ 
+# 
+#                        data.frame(rough_pov_line =  c("1_9",
+#                     "3_2",
+#                     "5_5",
+#                     "10",
+#                     "15",
+#                     "20",
+#                     "30",
+#                     "40"),
+#                           clean_pov_line = c( "$1.90 a day",
+#                     "$3.20 a day",
+#                     "$5.50 a day",
+#                     "$10 a day",
+#                     "$15 a day",
+#                     "$20 a day",
+#                     "$30 a day",
+#                     "$40 a day"))
+
+```
+
+
+
+
 ## Controls and data for poverty explorer
 ```{r}
 poverty_metrics<- data.frame(metric_dropdown = c("Share in poverty",
                             "Number of people in poverty",
-                            "Average shortfall to poverty line, per day",
-                            "Average shortfall to poverty line, per year",
-                            "Total shortfall to poverty line, per day",
-                            "Total shortfall to poverty line, per year",
+                            "Average shortfall to poverty line",
                             "Income gap ratio",
-                            "Poverty gap index"),
+                            "Poverty gap index",
+                            "Total shortfall to poverty line"),
                      metric_slug_snippet = c("share_of_population_below_poverty_line",
                                                "total_number_of_people_below_poverty_line",
                                              "average_shortfall_per_day",
-                                             "average_shortfall_per_year",
-                                             "absolute_poverty_gap_per_day",
-                                             "absolute_poverty_gap",
                                              "income_gap_ratio",
-                                             "poverty_gap_index"))
+                                             "poverty_gap_index",
+                                             "absolute_poverty_gap_per_day"))
 ```
 
 Absolute poverty controls
@@ -68,46 +487,29 @@ Absolute poverty controls
 ```{r}
 
 
-pov_lines<- data.frame(rough_pov_line =  c("1_9",
-                    "3_2",
-                    "5_5",
-                    "10",
-                    "15",
-                    "20",
-                    "30",
-                    "40"),
-                          clean_pov_line = c( "$1.90 a day",
-                    "$3.20 a day",
-                    "$5.50 a day",
-                    "$10 a day",
-                    "$15 a day",
-                    "$20 a day",
-                    "$30 a day",
-                    "$40 a day"))
-
 
 
 poverty_metrics<- poverty_metrics %>%
   mutate(title_snippet = c("Poverty: Share of population living on less than",
                            "Poverty: Number of people living on less than",
                             "Depth of poverty: Average daily shortfall below",
-                            "Depth of poverty: Average annual shortfall below",
-                            "Total daily shortfall to a poverty line of",
-                            "Total annual shortfall below a poverty line of",
-                            "Depth of poverty: Income gap ratio at",
-                            "Poverty gap index at"))
-
+                           "Depth of poverty: Income gap ratio at",
+                           "Poverty gap index at",
+                            "Total daily shortfall below"))
 
 
 abs_pov_controls<- expand.grid("metric_dropdown" = poverty_metrics$metric_dropdown,
-                               "rough_pov_line" = pov_lines$rough_pov_line) 
+                               "rough_pov_line" = unique(df_abs_pov$abs_pov_line_text))
 
-abs_pov_controls <- left_join(abs_pov_controls, pov_lines) %>%
-  rename(pov_line_dropdown = clean_pov_line)
+
+clear_pov_line<-  paste0("$", format(round(abs_pov_controls$rough_pov_line, 2), nsmall = 2), " per day")
+
+abs_pov_controls<- abs_pov_controls %>%
+  mutate(clear_pov_line = paste0("$", format(round(rough_pov_line, 2), nsmall = 2), " per day"))
 
 abs_pov_controls <- left_join(abs_pov_controls, poverty_metrics) %>%
-  mutate(ySlugs = paste0("X_", rough_pov_line, "_per_day___", metric_slug_snippet),
-         title = paste0(title_snippet, " ", pov_line_dropdown))
+  mutate(ySlugs = paste0(rough_pov_line, "_per_day_", metric_slug_snippet),
+         title = paste0(title_snippet, " $", ) 
 
 
 ```
