@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(RCurl)
 library(knitr)
+library(readxl)
+library(openxlsx)
 ```
 
 Read in Michalis' povcal data
@@ -391,6 +393,56 @@ control_stubs<- control_stubs[rowSums(control_stubs=="") != ncol(control_stubs),
 
 
 For each row, for each Aux1, for each Aux2... etc, make a new row swapping in Aux values
+```{r}
+
+
+
+
+
+loadWorkbook_url <- function(url) {
+    temp_file <- tempfile(fileext = ".xlsx")
+    download.file(url = url, destfile = temp_file, mode = "wb", quiet = TRUE)
+    loadWorkbook(temp_file)
+}
+
+
+xlsxFile <- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Copy_of_Michalis_work/control_stubs.xlsx"
+
+head(read.xlsx(xlsxFile))
+
+test<- openxlsx::read.xlsx(url, sheet = "control_stubs")
+
+tab <- readxl::read_excel(loadWorkbook_url(url), sheet = "control_stubs")
+
+aux_list<- list()
+
+
+
+
+my_data <- read_excel("my_file.xlsx", sheet = "data")
+
+aux_list[["abs_povline_currency"]]<- c(
+  "1",
+  "1.90",
+  "3.20",
+  "5.50")
+
+aux_list[["welfare"]]<- c(
+  "incomes or consumption",
+  "incomes",
+  "consumption")
+
+for(i in 1:nrow(control_stubs)){
+
+  i<- 1
+  aux_items_this_row<- as.list(strsplit(control_stubs[i,"Aux"], ',\\s')[[1]])
+  
+  aux_items_this_row[[2]]
+  
+  
+  }
+
+```
 
 
 
