@@ -379,10 +379,18 @@ df<- df %>%
 
 Read in explorer control stubs
 ```{r}
-control_stubs <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+control_stubs <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Copy_of_Michalis_work/control_stubs.csv")
+
+# For some reason it's grabbing lots of empty rows/cols as variables -  drop these
+
+control_stubs<- control_stubs[, colSums(is.na(control_stubs)) != nrow(control_stubs)]
+
+control_stubs<- control_stubs[rowSums(control_stubs=="") != ncol(control_stubs),]
 
 ```
 
+
+For each row, for each Aux1, for each Aux2... etc, make a new row swapping in Aux values
 
 
 
