@@ -392,6 +392,31 @@ control_stubs<- control_stubs[rowSums(control_stubs=="") != ncol(control_stubs),
 ```
 
 
+This function takes a dataframe (`df_block`) and within it replaces a set of key words for a set of values. The key words and replacement values are specified by `sheet_name` (string) and `replacements_row` (a 1 row dataframe). The key words are strings, constructed as "[`sheet_name`$`column_header`]", where `column_header` is each of the variable names in `replacements_row`. The replacement values are the corresponding values of `replacements_row`.
+
+```{r}
+myReplaceFun<- function(df_block, replacements_row){
+  
+  replacements_row<- list_aux_sheet[[1]]
+  
+  search_for_strs<- paste0("[", aux_sheet, "$", names(replacements_row), "]")
+
+  df_block_replaced<- df_block
+    for(i in 1:length(search_for_strs)){
+      
+      
+      search_for_str<- search_for_strs[[i]]
+      replace_with_str<- replacements_row[1,i]
+        
+      df_block_replaced<- data.frame(lapply(df_block, function(x) {gsub(search_for_str, replace_with_str, x)}))
+
+    } 
+  
+  search_for_str<- 
+
+```
+
+
 For each row, for each Aux1, for each Aux2... etc, make a new row swapping in Aux values
 ```{r}
 
@@ -419,23 +444,7 @@ nested_list[["control_stubs"]]<- split(control_stubs, seq(nrow(control_stubs)))
 
  #Use lapply with additional functions to move to the next aux block
 
-# This function replaces the key words across a dataframe for a line of a given aux sheet
-myReplaceFun<- function(df_block, replacements_row){
-  
-  replacements_row<- list_aux_sheet[[1]]
-  
-  search_for_strs<- paste0("[", aux_sheet, "$", names(replacements_row), "]")
 
-  df_block_replaced<- df_block
-    for(i in 1:length(search_for_strs)){
-      
-      
-      search_for_str<- search_for_strs[[i]]
-      replace_with_str<- replacements_row[1,i]
-        
-      df_block_replaced<- data.frame(lapply(df_block_replaced, function(x) {gsub(search_for_str, replace_with_str, x)}))
-
-    } 
   
   
   
