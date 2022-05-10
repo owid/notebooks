@@ -6,7 +6,8 @@ library(lubridate)
 URL <- "https://yougov.co.uk/_pubapis/v5/uk/trackers/dietery-choices-of-brits-eg-vegeterian-flexitarian-meat-eater-etc/download/"
 
 get_sheet_data <- function(age_group) {
-  df <- rio::import(URL, format = "xlsx", sheet = "All adults")
+  message(age_group)
+  df <- rio::import(URL, format = "xlsx", sheet = age_group)
   setDT(df)
   setnames(df, "Which of these best describes your diet?", "Entity")
   df <- df[!Entity %in% c("Base", "Unweighted base")]
@@ -16,7 +17,9 @@ get_sheet_data <- function(age_group) {
   return(df)
 }
 
+age_groups <- c("All adults", "18-24", "25-49", "50-64", "65+")
 
+df <- rbindlist(lapply(age_groups, get_sheet_data))
 
 setcolorder(df, c("Entity", "Year"))
 df[, Year := as.integer(ymd(Year) - ymd("20190101"))]
