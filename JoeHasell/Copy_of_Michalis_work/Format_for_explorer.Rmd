@@ -14,6 +14,8 @@ library(readxl)
 library(openxlsx)
 ```
 
+##Prep the data
+
 Read in Michalis' povcal data
 ```{r}
 df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
@@ -380,7 +382,125 @@ df<- df %>%
 
 
 
-## Controls
+Add calculated vars
+```{r}
+kable(unique(controls_multiplied_up$slug))
+
+```
+
+
+Specify which variables to keep for a list of explorers
+```{r}
+
+explorer_vars<- list()
+
+
+poverty_var_stubs<- c("headcount_ratio",
+                      "headcount",
+                      "avg_shortfall",
+                      "income_gap_ratio",
+                      "total_shortall_daily",
+                      "poverty_gap_index")
+
+pov_lines<- c("1_00",
+              "1_90",
+              "3_20",
+              "5_50",
+              "10_00",
+              "15_00",
+              "20_00",
+              "30_00",
+              "40_00")
+
+pov_stub_line_combos<- expand.grid(poverty_var_stubs = poverty_var_stubs, 
+                    pov_lines = pov_lines)
+  
+
+explorer_vars[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, "_", pov_stub_line_combos$pov_lines)
+  
+
+  # And so on for other 
+# explorer_vars[["across_distr"]]<- c(
+#   
+# )
+
+
+  
+
+```
+
+
+For each explorer, filter the data for the specified vars, flip back to wide format, and then split by welfare/datatype and save as separate csvs
+```{r}
+
+for(explorer in explorer_vars)
+
+check<- df %>% filter(new_varnames %in% explorer_vars[["poverty"]]) 
+
+```
+
+
+Flip the data back to wide format
+```{r}
+
+```
+
+
+
+
+```{r}
+
+# Income only, including extrapolated years
+inc<- df %>%
+  filter(datatype == "income")
+
+write.csv(inc, "data/inc.csv", row.names = FALSE)
+
+# Income only, excluding extrapolated years
+inc_no_extrap<- df %>%
+  filter(IsSurveyYear == TRUE,
+         datatype == "income")
+
+write.csv(inc_no_extrap, "data/inc_no_extrap.csv", row.names = FALSE)
+
+  
+# Consumption only, including extrapolated years
+cons<- df %>%
+  filter(datatype == "consumption")
+
+write.csv(cons, "data/cons.csv", row.names = FALSE)
+
+# Consumption only, excluding extrapolated years
+cons_no_extrap<- df %>%
+  filter(IsSurveyYear == TRUE,
+         datatype == "consumption")  
+
+write.csv(cons_no_extrap, "data/cons_no_extrap.csv", row.names = FALSE)
+
+
+# Both income and consumption, including extrapolated years
+write.csv(df, "data/inc_or_cons.csv", row.names = FALSE)
+
+
+# Both income and consumption, excluding extrapolated years
+inc_or_cons_no_extrap<- df %>%
+  filter(IsSurveyYear == TRUE)
+
+# Check for years where there are both income and consumption surveys
+
+write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = FALSE)
+  
+
+
+
+
+```
+
+
+
+
+
+## Prep the controls
 
 Pull in the control stubs
 ```{r}
@@ -516,147 +636,8 @@ controls_multiplied_up<-  controls_multiplied_up %>% distinct()
 
 
 
-
-For each row, for each Aux1, for each Aux2... etc, make a new row swapping in Aux values
-```{r}
-
-xlsx_url <- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Copy_of_Michalis_work/control_stubs.xlsx"
-
-control_stubs_sheet_name<- "control_stubs"
-
-
-wb<- loadWorkbook(xlsx_url)
-
-# Load the stubs as a dataframe
-control_stubs<- read.xlsx(xlsx_url, sheet = control_stubs_sheet_name)
-
-# a vector of the names of the other sheets (the Aux vars)
-aux_sheets<- names(wb)
-aux_sheets<- aux_sheets[aux_sheets != "control_stubs"]
-
-
-# Make a list of rows in control_stubs
-
-nested_list<- list()
-
-nested_list[["control_stubs"]]<- split(control_stubs, seq(nrow(control_stubs)))
-
-
- #Use lapply with additional functions to move to the next aux block
-
-
-  
-  
-  
-  
-  return(df_block_replaced)
-  
-}
-
-
-# Function to go through an aux sheet and multiply up a dataframe with the options in each row of the aux sheet. Argument x will be the dataframe (this will be the element of the list the funciton will be applied to). Argument aux_sheet is a string that is the name of the aux_sheet.
-myfun<- function(df_block, aux_sheet){
-  
-  df_block<- nested_list[["control_stubs"]][[1]]
-  aux_sheet<- "abs_povline"
-  
-  # make a list out of the rows of the auxsheet
-  
-  df_aux_sheet<- read.xlsx(xlsx_url, sheet = aux_sheet)
-  
-  list_aux_sheet<- split(df_aux_sheet, seq(nrow(df_aux_sheet)))
-  
-  # apply across list replacing elements in the dataframe passed to function
-  replaced_list<- lapply(list_aux_sheet, myReplaceFun, =df_block)
-  
-  list of cols
-    each row
-        replace_with_str<- df_test_aux[aux_list_row, col_name]
-  
-
-      search_for_str<- paste0("[", aux_list, "{", col_name, "}]")
-  
-      # Replace str across whole dataframe
-       data.frame(lapply(data, function(x) {gsub(search_for_str, replace_with_str, x)}))
-  
-    
-}
-
-  
-for (aux_sheet in aux_sheets) {
-nested_list[[aux_sheet]]<- lapply(nested_list[[1]], myfun, aux_sheet = aux_sheet)
-
-
-  }
-
-# collapse highest order of list into a single df
-
-
-
-
-
-
 -----
-# An empty dataframe to append the completed set of controls for each row of control_stubs
-full_controls<- control_stubs[0,]
-
-# For each row in control_stubs...
-for(i in 1:nrow(control_stubs)){
-
-  i<- 1
-  
-  # Make a list of the Aux vars used in this row
-  aux_items_this_row<- as.list(strsplit(control_stubs[i,"Aux"], ',\\s')[[1]])
-  
-  # Make a dataframe of just the one row of control_stubs in question
-  controls_to_repeat<-  control_stubs[i,]
-  
-  for(aux_list in aux_items_this_row){
-    
-    controls_to_repeat
-  }
-  
-  aux_list<- "abs_povline"
-  for(aux_element in c("1_00", "5_00")){
-    
-    
-    
-  }
-  
-  # grab column names
-  
-  # for each column col_name ....
-  
-    # for each row aux_list_row
-  
-    replace_with_str<- df_test_aux[aux_list_row, col_name]
-  
-
-    search_for_str<- paste0("[", aux_list, "{", col_name, "}]")
-  
-  # Replace str with value
-  data <- data.frame(lapply(data, function(x) {gsub(search_for_str, replace_with_str, x)}))
-  
-  
-  # append to running dataframe
-  
-df_test_aux<- data.frame("text" = c("1", "5"),
-                         "slug_suffix"= c("1_00", "5_00"))  
-  
-  
-  pov_lines<- 
-  
-  test<- expand.grid(controls_to_repeat, pov_lines)
-  
-  
-  }
-
-```
-
-
-
------
-
+#OLD STUFF
 Separate out key/id variables
 ```{r}
 df_key_vars<- df %>%
