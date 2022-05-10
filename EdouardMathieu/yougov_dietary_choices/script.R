@@ -2,6 +2,7 @@ library(rio)
 library(stringr)
 library(data.table)
 library(lubridate)
+library(plyr)
 
 URL <- "https://yougov.co.uk/_pubapis/v5/uk/trackers/dietery-choices-of-brits-eg-vegeterian-flexitarian-meat-eater-etc/download/"
 
@@ -13,7 +14,12 @@ get_sheet_data <- function(age_group) {
   df <- df[!Entity %in% c("Base", "Unweighted base")]
   df[, Entity := str_replace(Entity, " \\(.*", "")]
   df <- transpose(df, make.names = TRUE, keep.names = "Year")
-  df[, Entity := age_group]
+  df[, Entity := mapvalues(
+    age_group,
+    c("All adults", "18-24", "25-49", "50-64", "65+"),
+    c("All adults", "18-24y", "25-49y", "50-64y", "65y+"),
+    warn_missing = FALSE
+  )]
   return(df)
 }
 
