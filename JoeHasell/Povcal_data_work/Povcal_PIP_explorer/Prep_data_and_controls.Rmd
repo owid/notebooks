@@ -420,7 +420,7 @@ explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, 
   
 
   # And so on for other 
-# explorer_vars[["across_distr"]]<- c(
+# explorer_vars[["across_distribution"]]<- c(
 #   
 # )
 
