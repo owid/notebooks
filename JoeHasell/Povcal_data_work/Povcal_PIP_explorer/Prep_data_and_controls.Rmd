@@ -450,7 +450,7 @@ for(explorer in explorers){
   
 
     # Income only, including extrapolated years
-    df_by_survey_type[["inc"]]<- df_explorer %>%
+    df_by_survey_type[["inc_extrap"]]<- df_explorer %>%
       filter(datatype == "income")
 
     # Income only, excluding extrapolated years
@@ -459,7 +459,7 @@ for(explorer in explorers){
              datatype == "income")
 
     # Consumption only, including extrapolated years
-    df_by_survey_type[["cons"]]<- df_explorer %>%
+    df_by_survey_type[["cons_extrap"]]<- df_explorer %>%
       filter(datatype == "consumption")
     
     # Consumption only, excluding extrapolated years
@@ -468,7 +468,7 @@ for(explorer in explorers){
              datatype == "consumption")
     
     # Both income and consumption, including extrapolated years
-    df_by_survey_type[["inc_or_cons"]]<- df_explorer
+    df_by_survey_type[["inc_or_cons_extrap"]]<- df_explorer
     
     # Both income and consumption, excluding extrapolated years
     df_by_survey_type[["inc_or_cons_no_extrap"]]<- df_explorer %>%
@@ -488,49 +488,6 @@ for(explorer in explorers){
   
   }
   
-#   filename<- "inc.csv"
-#     fp<- paste0("data/", names(explorer_var_sets)[i], "/", filename)
-#     write.csv(filter_by_survey, fp, row.names = FALSE)
-# 
-#     # Income only, excluding extrapolated years
-#     filter_by_survey<- df_explorer %>%
-#       filter(IsSurveyYear == TRUE,
-#              datatype == "income")
-# 
-#     filename<- "inc_no_extrap.csv"
-#     fp<- paste0("data/", names(explorer_var_sets)[i], "/", filename)
-#     write.csv(filter_by_survey, fp, row.names = FALSE)
-# 
-#     # Consumption only, including extrapolated years
-#     filter_by_survey<- df_explorer %>%
-#       filter(datatype == "consumption")
-# 
-#     filename<- "cons.csv"
-#     fp<- paste0("data/", names(explorer_var_sets)[i], "/", filename)
-#     write.csv(filter_by_survey, fp, row.names = FALSE)
-#     
-# 
-# # Consumption only, excluding extrapolated years
-# cons_no_extrap<- df %>%
-#   filter(IsSurveyYear == TRUE,
-#          datatype == "consumption")
-# 
-# write.csv(cons_no_extrap, "data/cons_no_extrap.csv", row.names = FALSE)
-# 
-# 
-# # Both income and consumption, including extrapolated years
-# write.csv(df, "data/inc_or_cons.csv", row.names = FALSE)
-# 
-# 
-# # Both income and consumption, excluding extrapolated years
-# inc_or_cons_no_extrap<- df %>%
-#   filter(IsSurveyYear == TRUE)
-# 
-# # Check for years where there are both income and consumption surveys
-# 
-# write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = FALSE)
-  
-
 
   
 }
@@ -545,7 +502,7 @@ for(explorer in explorers){
 Pull in the control stubs
 ```{r}
 
-xlsx_url <- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Copy_of_Michalis_work/control_stubs.xlsx"
+xlsx_url <- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Povcal_data_work/Povcal_PIP_explorer/control_stubs.xlsx"
 
 control_stubs_sheet_name<- "control_stubs"
 
