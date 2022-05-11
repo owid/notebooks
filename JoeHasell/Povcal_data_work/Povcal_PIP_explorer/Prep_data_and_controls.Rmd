@@ -419,7 +419,7 @@ new_vars[["avg_shortfall"]]<- df %>%
 # Collapse list of new vars into a single data frame and append to main data
 df_new_vars_together<- bind_rows(new_vars)
 
-df<- bind_rows(df, new_vars)
+df<- bind_rows(df, df_new_vars_together)
 
 
 
@@ -480,9 +480,7 @@ for(explorer in explorers){
   df_explorer<- df %>% filter(new_varnames %in% explorer_var_sets[[explorer]])
 
   # Flip to long wide format
-  df_explorer<- df_explorer %>%
-    select(-orig_varnames) %>% #drop original varnames. New varnames will become column names
-    pivot_wider(names_from = "new_varnames", values_from = "value")
+  df_explorer<- df_explorer %>%pivot_wider(names_from = "new_varnames", values_from = "value")
 
   # Split by survey data type and save separately
   df_by_survey_type<- list()
