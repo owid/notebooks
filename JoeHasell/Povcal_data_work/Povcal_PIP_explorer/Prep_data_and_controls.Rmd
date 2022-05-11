@@ -634,6 +634,6 @@ controls_multiplied_up<-  controls_multiplied_up %>% distinct()
 Write controls to csv
 ```{r}
 
-write.csv(controls_multiplied_up, "poverty_explorer_controls.csv", row.names = FALSE)
+write.csv(controls_multiplied_up, "poverty_explorer_controls.csv", row.names = FALSE, na = "")
 
 ```
