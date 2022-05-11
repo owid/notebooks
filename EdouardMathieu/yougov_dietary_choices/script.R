@@ -30,3 +30,14 @@ df <- rbindlist(lapply(age_groups, get_sheet_data))
 setcolorder(df, c("Entity", "Year"))
 df[, Year := as.integer(ymd(Year) - ymd("20190101"))]
 fwrite(df, "YouGov - Dietary choices of Brits.csv")
+
+pivoted <- df %>% gather(diet, share, 3:8) %>% spread(Entity, share) %>% data.table
+setnames(pivoted, "diet", "Entity")
+setcolorder(pivoted, c("Entity", "Year"))
+pivoted[, `All adults` := NULL]
+setnames(
+  pivoted,
+  c("18-24y", "25-49y", "50-64y", "65y+"),
+  c("18-24 years old", "25-49 years old", "50-64 years old", "Over 65s")
+)
+fwrite(pivoted, "YouGov - Dietary choices of Brits - Pivoted version.csv")
