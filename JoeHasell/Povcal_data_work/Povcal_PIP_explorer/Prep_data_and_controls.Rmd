@@ -363,6 +363,10 @@ df<- left_join(df, varname_map)
 br<- df %>%
   filter(is.na(new_varnames))
 
+# drop original varnames
+df<- df %>%
+  select(-orig_varnames)
+
 ```
 
 
@@ -380,10 +384,45 @@ df<- df %>%
 
 ```
 
+Change units of some vars
+```{r}
+# Convert shares into percentages  
+df<- df %>%
+  mutate(value = if_else(grepl("headcount_ratio|income_gap_ratio|	
+poverty_gap_index",new_varnames),
+                         value*100,
+                         value))
 
+```
 
 Add calculated vars
 ```{r}
+new_vars<- list()
+
+# Calculate daily shortfall from annual shortfall
+new_vars[["daily_total_shortfall"]]<- df %>%
+  filter(grepl("total_shortall_annual",new_varnames)) %>%
+  mutate(new_varnames = str_replace(new_varnames, "total_shortall_annual", "total_shortall_daily"),
+         value = value/365)
+  
+
+# Calculate absolute shortfall per person in poverty (absolute poverty lines)
+new_vars[["avg_shortfall"]]<- df %>%
+  filter(grepl("income_gap_ratio",new_varnames) & !grepl("median",new_varnames)) %>%
+  mutate(pov_line_text = str_replace(new_varnames, "income_gap_ratio_", "")) %>% #grab poverty line from varname
+  mutate(pov_line_math = as.numeric(str_replace(pov_line_text, "_", "."))) %>% #convert povline to numeric
+  mutate(new_varnames = str_replace(new_varnames, "income_gap_ratio", "avg_shortfall"),
+         value = value/100 * pov_line_math) %>%
+  select(-c(pov_line_text, pov_line_math))
+  
+
+# Collapse list of new vars into a single data frame and append to main data
+df_new_vars_together<- bind_rows(new_vars)
+
+df<- bind_rows(df, new_vars)
+
+
+
 
 ```
 
