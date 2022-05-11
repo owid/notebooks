@@ -353,7 +353,7 @@ varname_map<- data.frame(orig_varnames,new_varnames)
 Swap in new varnames
 ```{r}
 df<- df %>%
-  pivot_longer(cols = !c(Entity, Year, coveragetype, datatype, ISO3Year, ISO3DataYearCovType), names_to = "orig_varnames", values_to = "value")
+  pivot_longer(cols = !c(Entity, Year, coveragetype, datatype, ISO3Year, ISO3DataYearCovType, IsSurveyYear), names_to = "orig_varnames", values_to = "value")
 
 # Merge in new var names
 
@@ -384,7 +384,6 @@ df<- df %>%
 
 Add calculated vars
 ```{r}
-kable(unique(controls_multiplied_up$slug))
 
 ```
 
@@ -433,84 +432,112 @@ explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, 
 For each explorer, filter the data for the specified vars, flip back to wide format, and then split by survey data type and save as separate csvs
 ```{r}
 
-for(explorer_var_set in explorer_var_sets){
+ # Get a vector of names of the different explorers
+  explorers<- names(explorer_var_sets)
+
+for(explorer in explorers){
   
   # Filter for specified vars (NB df is still in long format)
-  df_explorer<- df %>% filter(new_varnames %in% explorer_var_set)
-  
+  df_explorer<- df %>% filter(new_varnames %in% explorer_var_sets[[explorer]])
+
   # Flip to long wide format
   df_explorer<- df_explorer %>%
     select(-orig_varnames) %>% #drop original varnames. New varnames will become column names
     pivot_wider(names_from = "new_varnames", values_from = "value")
-  
+
   # Split by survey data type and save separately
+  df_by_survey_type<- list()
   
+
+    # Income only, including extrapolated years
+    df_by_survey_type[["inc"]]<- df_explorer %>%
+      filter(datatype == "income")
+
+    # Income only, excluding extrapolated years
+    df_by_survey_type[["inc_no_extrap"]]<- df_explorer %>%
+      filter(IsSurveyYear == TRUE,
+             datatype == "income")
+
+    # Consumption only, including extrapolated years
+    df_by_survey_type[["cons"]]<- df_explorer %>%
+      filter(datatype == "consumption")
+    
+    # Consumption only, excluding extrapolated years
+    df_by_survey_type[["cons_no_extrap"]]<- df_explorer %>%
+      filter(IsSurveyYear == TRUE,
+             datatype == "consumption")
+    
+    # Both income and consumption, including extrapolated years
+    df_by_survey_type[["inc_or_cons"]]<- df_explorer
+    
+    # Both income and consumption, excluding extrapolated years
+    df_by_survey_type[["inc_or_cons_no_extrap"]]<- df_explorer %>%
+      filter(IsSurveyYear == TRUE)
+    
+    
+  # Get a vector of names of the different survey types
+  survey_types<- names(df_by_survey_type)
+  
+  # save the separated csvs
+  for(survey_type in survey_types){
+    
+  filename<- paste0(survey_type,".csv")
+  fp<- paste0("data/", explorer, "/", filename)
+  
+  write.csv(df_by_survey_type[[survey_type]], fp, row.names = FALSE)
+  
+  }
+  
+#   filename<- "inc.csv"
+#     fp<- paste0("data/", names(explorer_var_sets)[i], "/", filename)
+#     write.csv(filter_by_survey, fp, row.names = FALSE)
+# 
+#     # Income only, excluding extrapolated years
+#     filter_by_survey<- df_explorer %>%
+#       filter(IsSurveyYear == TRUE,
+#              datatype == "income")
+# 
+#     filename<- "inc_no_extrap.csv"
+#     fp<- paste0("data/", names(explorer_var_sets)[i], "/", filename)
+#     write.csv(filter_by_survey, fp, row.names = FALSE)
+# 
+#     # Consumption only, including extrapolated years
+#     filter_by_survey<- df_explorer %>%
+#       filter(datatype == "consumption")
+# 
+#     filename<- "cons.csv"
+#     fp<- paste0("data/", names(explorer_var_sets)[i], "/", filename)
+#     write.csv(filter_by_survey, fp, row.names = FALSE)
+#     
+# 
+# # Consumption only, excluding extrapolated years
+# cons_no_extrap<- df %>%
+#   filter(IsSurveyYear == TRUE,
+#          datatype == "consumption")
+# 
+# write.csv(cons_no_extrap, "data/cons_no_extrap.csv", row.names = FALSE)
+# 
+# 
+# # Both income and consumption, including extrapolated years
+# write.csv(df, "data/inc_or_cons.csv", row.names = FALSE)
+# 
+# 
+# # Both income and consumption, excluding extrapolated years
+# inc_or_cons_no_extrap<- df %>%
+#   filter(IsSurveyYear == TRUE)
+# 
+# # Check for years where there are both income and consumption surveys
+# 
+# write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = FALSE)
+  
+
+
   
 }
 
 
 
 ```
-
-
-Flip the data back to wide format
-```{r}
-
-```
-
-
-
-
-```{r}
-
-# Income only, including extrapolated years
-inc<- df %>%
-  filter(datatype == "income")
-
-write.csv(inc, "data/inc.csv", row.names = FALSE)
-
-# Income only, excluding extrapolated years
-inc_no_extrap<- df %>%
-  filter(IsSurveyYear == TRUE,
-         datatype == "income")
-
-write.csv(inc_no_extrap, "data/inc_no_extrap.csv", row.names = FALSE)
-
-  
-# Consumption only, including extrapolated years
-cons<- df %>%
-  filter(datatype == "consumption")
-
-write.csv(cons, "data/cons.csv", row.names = FALSE)
-
-# Consumption only, excluding extrapolated years
-cons_no_extrap<- df %>%
-  filter(IsSurveyYear == TRUE,
-         datatype == "consumption")  
-
-write.csv(cons_no_extrap, "data/cons_no_extrap.csv", row.names = FALSE)
-
-
-# Both income and consumption, including extrapolated years
-write.csv(df, "data/inc_or_cons.csv", row.names = FALSE)
-
-
-# Both income and consumption, excluding extrapolated years
-inc_or_cons_no_extrap<- df %>%
-  filter(IsSurveyYear == TRUE)
-
-# Check for years where there are both income and consumption surveys
-
-write.csv(inc_or_cons_no_extrap, "data/inc_or_cons_no_extrap.csv", row.names = FALSE)
-  
-
-
-
-
-```
-
-
-
 
 
 ## Prep the controls
@@ -646,6 +673,8 @@ controls_multiplied_up<-  controls_multiplied_up %>% distinct()
 
 
 ```
+
+
 
 
 
