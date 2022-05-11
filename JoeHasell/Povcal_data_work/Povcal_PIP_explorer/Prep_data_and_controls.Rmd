@@ -388,8 +388,7 @@ Change units of some vars
 ```{r}
 # Convert shares into percentages  
 df<- df %>%
-  mutate(value = if_else(grepl("headcount_ratio|income_gap_ratio|	
-poverty_gap_index",new_varnames),
+  mutate(value = if_else(grepl("headcount_ratio|income_gap_ratio|poverty_gap_index",new_varnames),
                          value*100,
                          value))
 
