@@ -1,0 +1,102 @@
+---
+title: "Happiness Report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+library(readxl)
+```
+
+Download files
+```{r}
+
+dir.create('data/input', recursive = TRUE)
+
+if (!file.exists('data/input/happiness_report_historical.xls')){
+  download.file('https://happiness-report.s3.amazonaws.com/2021/DataPanelWHR2021C2.xls', 'data/input/happiness_report_historical.xls')
+}
+
+if (!file.exists('data/input/happiness_report_2021.xls')){
+  download.file('https://happiness-report.s3.amazonaws.com/2021/DataForFigure2.1WHR2021C2.xls', 'data/input/happiness_report_2021.xls')
+}
+
+if (!file.exists('data/input/happiness_report_2022.xls')){
+  download.file('https://happiness-report.s3.amazonaws.com/2022/Appendix_2_Data_for_Figure_2.1.xls', 'data/input/happiness_report_2022.xls')
+}
+
+
+```
+
+Read in data - 2021 report has historical data whereas the 2022 report only has data for 2022. Combine the data.
+
+```{r}
+
+df_hist <- read_xls('data/input/happiness_report_historical.xls') %>% 
+  select(entity = 'Country name', year, life_ladder = 'Life Ladder')
+
+df_21 <- read_xls('data/input/happiness_report_2021.xls') %>%
+  mutate(year = 2021) %>% 
+  select(entity = 'Country name', year, life_ladder = 'Ladder score')
+
+df_22 <- read_xls('data/input/happiness_report_2022.xls') %>% 
+  mutate(year = 2022) %>% 
+  select(entity = Country,year, life_ladder = 'Happiness score')
+
+df <- rbind(df_hist,df_21, df_22)
+```
+
+Getting out countries so that they can be standardised
+```{r}
+df %>% 
+  select(Country = entity) %>% 
+  write.csv(., "data/input/countries_to_standardise.csv", row.names = FALSE)
+
+```
+
+Read in the standardised countries dataframe
+```{r}
+
+countries <- read.csv('data/input/countries_to_standardise_country_standardized.csv') %>% 
+  select(entity = Country, our_world_in_data_name = Our.World.In.Data.Name) %>% 
+  distinct()
+
+```
+Standardise the entities
+```{r}
+df_stan <- df %>% 
+  left_join(., countries, by = 'entity') %>% 
+  select(entity = our_world_in_data_name, year, life_ladder) %>% 
+  arrange(entity, year) %>% 
+  filter(entity != 'xx')
+
+
+df_stan
+
+```
+Plot the data to check it looks okay
+```{r}
+ggplot(df_stan, aes(x = year, y = life_ladder, group = entity))+
+  geom_line()+
+  geom_point()+
+    facet_wrap(.~entity)
+
+```
+
+Write out the output for uploading 
+
+```{r}
+dir.create('data/output')
+
+write.csv(df_stan, 'data/output/world_happiness_report.csv', row.names = FALSE)
+
+```
+
+
+
