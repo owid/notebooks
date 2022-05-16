@@ -31,6 +31,7 @@ df_sel = df_fil[
         "Year",
         "Sex",
         "Age-standardized death rate per 100 000 standard population",
+        "Death rate per 100 000 population",
     ]
 ]
 
@@ -38,7 +39,10 @@ df_sel = df_fil[
 df_piv = df_sel.pivot_table(
     index=["Country Name", "Year"],
     columns=["Sex"],
-    values=["Age-standardized death rate per 100 000 standard population"],
+    values=[
+        "Age-standardized death rate per 100 000 standard population",
+        "Death rate per 100 000 population",
+    ],
 ).reset_index()
 df_piv.columns = ["_".join(a) for a in df_piv.columns.to_flat_index()]
 df_piv.rename(
@@ -48,6 +52,9 @@ df_piv.rename(
         "Age-standardized death rate per 100 000 standard population_All": "age-standardized_death_rate_per_100k_both_sexes",
         "Age-standardized death rate per 100 000 standard population_Female": "age-standardized_death_rate_per_100k_female",
         "Age-standardized death rate per 100 000 standard population_Male": "age-standardized_death_rate_per_100k_male",
+        "Death rate per 100 000 population_All": "crude_death_rate_per_100k_both_sexes",
+        "Death rate per 100 000 population_Female": "crude_death_rate_per_100k_female",
+        "Death rate per 100 000 population_Male": "crude_death_rate_per_100k_male",
     },
     inplace=True,
 )
@@ -72,6 +79,9 @@ df_fin = df_piv.merge(countries, on="Country", how="left").rename(
         "age-standardized_death_rate_per_100k_both_sexes",
         "age-standardized_death_rate_per_100k_female",
         "age-standardized_death_rate_per_100k_male",
+        "crude_death_rate_per_100k_both_sexes",
+        "crude_death_rate_per_100k_female",
+        "crude_death_rate_per_100k_male",
     ]
 ]
 
@@ -81,6 +91,9 @@ df_fin[
         "age-standardized_death_rate_per_100k_both_sexes",
         "age-standardized_death_rate_per_100k_female",
         "age-standardized_death_rate_per_100k_male",
+        "crude_death_rate_per_100k_both_sexes",
+        "crude_death_rate_per_100k_female",
+        "crude_death_rate_per_100k_male",
     ]
 ] = round(
     df_fin[
@@ -88,6 +101,9 @@ df_fin[
             "age-standardized_death_rate_per_100k_both_sexes",
             "age-standardized_death_rate_per_100k_female",
             "age-standardized_death_rate_per_100k_male",
+            "crude_death_rate_per_100k_both_sexes",
+            "crude_death_rate_per_100k_female",
+            "crude_death_rate_per_100k_male",
         ]
     ],
     2,
@@ -95,6 +111,6 @@ df_fin[
 
 # Saving out the final data
 df_fin.to_csv(
-    "FionaSpooner/lung_cancer_deaths/data/output/who_age_standardized_trachea_bronchus_lung_cancer_mortality.csv",
+    "FionaSpooner/lung_cancer_deaths/data/output/who_trachea_bronchus_lung_cancer_mortality.csv",
     index=False,
 )
