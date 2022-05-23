@@ -2,7 +2,7 @@ import requests
 from datetime import date, timedelta
 import pdfplumber
 import pandas as pd
-from owid import catalog
+from owid.catalog import RemoteCatalog
 import numpy as np
 
 
@@ -71,8 +71,10 @@ def extract_vd_cases() -> pd.DataFrame:
 
 
 def owid_population() -> pd.DataFrame:
+
+    rc = RemoteCatalog(channels=["garden"])
     population = (
-        catalog.find("population", dataset="key_indicators", namespace="owid")
+        rc.find("population", namespace="owid", dataset="key_indicators")
         .load()
         .reset_index()
         .rename(columns={"country": "entity"})[["entity", "year", "population"]]
