@@ -1,8 +1,8 @@
 Entity,Year,Guinea Worm Reported Cases,Year Certified Guinea Worm Free,Certifcation
-Angola,2018,1.0,,
-Angola,2019,1.0,,
-Angola,2020,1.0,,
-Angola,2021,0.0,Not yet certified,
+Angola,2018,1.0,,Not yet certified
+Angola,2019,1.0,,Not yet certified
+Angola,2020,1.0,,Endemic
+Angola,2021,0.0,Endemic,Endemic
 Benin,1987,400.0,,
 Benin,1988,13892.0,,
 Benin,1989,7172.0,,
@@ -97,9 +97,9 @@ Cameroon,2014,0.0,,Certified Guinea worm disease free (previously endemic)
 Cameroon,2015,0.0,,Certified Guinea worm disease free (previously endemic)
 Cameroon,2016,0.0,,Certified Guinea worm disease free (previously endemic)
 Cameroon,2017,0.0,,Certified Guinea worm disease free (previously endemic)
-Cameroon,2019,1.0,,
-Cameroon,2020,1.0,,
-Cameroon,2021,0.0, 2007,
+Cameroon,2019,1.0,,Certified Guinea worm disease free (previously endemic)
+Cameroon,2020,1.0,,Certified Guinea worm disease free (previously endemic)
+Cameroon,2021,0.0, 2007,Certified Guinea worm disease free (previously endemic)
 Central African Republic,1989,0.0,,
 Central African Republic,1990,0.0,,
 Central African Republic,1991,0.0,,
@@ -159,10 +159,10 @@ Chad,2014,13.0,,Endemic
 Chad,2015,9.0,,Endemic
 Chad,2016,16.0,,Endemic
 Chad,2017,13.0,,Endemic
-Chad,2018,17.0,,
-Chad,2019,48.0,,
-Chad,2020,12.0,,
-Chad,2021,8.0,Endemic,
+Chad,2018,17.0,,Endemic
+Chad,2019,48.0,,Endemic
+Chad,2020,12.0,,Endemic
+Chad,2021,8.0,Endemic,Endemic
 Cote d'Ivoire,1989,1555.0,,
 Cote d'Ivoire,1990,1360.0,,
 Cote d'Ivoire,1991,12690.0,,
@@ -223,10 +223,10 @@ Ethiopia,2014,3.0,,Endemic
 Ethiopia,2015,3.0,,Endemic
 Ethiopia,2016,3.0,,Endemic
 Ethiopia,2017,12.0,,Endemic
-Ethiopia,2018,0.0,,
-Ethiopia,2019,0.0,,
-Ethiopia,2020,11.0,,
-Ethiopia,2021,1.0,Endemic,
+Ethiopia,2018,0.0,,Endemic
+Ethiopia,2019,0.0,,Endemic
+Ethiopia,2020,11.0,,Endemic
+Ethiopia,2021,1.0,Endemic,Endemic
 Ghana,1989,179556.0,,
 Ghana,1990,123793.0,,
 Ghana,1991,66697.0,,
@@ -346,10 +346,10 @@ Mali,2014,40.0,,Endemic
 Mali,2015,5.0,,Endemic
 Mali,2016,0.0,,Endemic
 Mali,2017,0.0,,Endemic
-Mali,2018,0.0,,
-Mali,2019,0.0,,
-Mali,2020,1.0,,
-Mali,2021,2.0,Endemic,
+Mali,2018,0.0,,Endemic
+Mali,2019,0.0,,Endemic
+Mali,2020,1.0,,Endemic
+Mali,2021,2.0,Endemic,Endemic
 Mauritania,1989,447.0,,
 Mauritania,1990,8036.0,,
 Mauritania,1991,0.0,,
@@ -531,10 +531,10 @@ South Sudan,2014,70.0,,Endemic
 South Sudan,2015,5.0,,Endemic
 South Sudan,2016,6.0,,Endemic
 South Sudan,2017,0.0,,Endemic
-South Sudan,2018,10.0,,
-South Sudan,2019,4.0,,
-South Sudan,2020,1.0,,
-South Sudan,2021,4.0,Endemic,
+South Sudan,2018,10.0,,Endemic
+South Sudan,2019,4.0,,Endemic
+South Sudan,2020,1.0,,Endemic
+South Sudan,2021,4.0,Endemic,Endemic
 Sudan,1986,822.0,,
 Sudan,1987,399.0,,
 Sudan,1988,542.0,,
@@ -691,195 +691,195 @@ Yemen,2014,0.0,,Certified Guinea worm disease free (previously endemic)
 Yemen,2015,0.0,,Certified Guinea worm disease free (previously endemic)
 Yemen,2016,0.0,,Certified Guinea worm disease free (previously endemic)
 Yemen,2017,0.0,,Certified Guinea worm disease free (previously endemic)
-Afghanistan,2021,, 2007,
-Albania,2021,, 1998,
-Algeria,2021,, 2007,
-Andorra,2021,, 1998,
-Antigua and Barbuda,2021,, 2000,
-Argentina,2021,, 2000,
-Armenia,2021,, 1998,
-Australia,2021,, 2000,
-Austria,2021,, 1997,
-Azerbaijan,2021,, 1998,
-Bahamas,2021,, 2000,
-Bahrain,2021,, 1998,
-Bangladesh,2021,, 1998,
-Barbados,2021,, 1997,
-Belarus,2021,, 1998,
-Belgium,2021,, 1997,
-Belize,2021,, 2000,
-Benin,2021,, 2009,
-Bhutan,2021,, 1998,
-Bolivia,2021,, 1998,
-Bosnia and Herzegovina,2021,, 2011,
-Botswana,2021,, 1998,
-Brazil,2021,, 1997,
-Brunei,2021,, 2011,
-Bulgaria,2021,, 1997,
-Burkina Faso,2021,, 2011,
-Burundi,2021,, 2000,
-Cape Verde,2021,, 2004,
-Cambodia,2021,, 2009,
-Canada,2021,, 1998,
-Central African Republic,2021,, 2007,
-Chile,2021,, 2000,
-China,2021,, 1998,
-Colombia,2021,, 1997,
-Comoros,2021,, 2004,
-Congo,2021,, 2004,
-Cook Islands,2021,, 1997,
-Costa Rica,2021,, 2000,
-Cote d'Ivoire,2021,, 2013,
-Croatia,2021,, 1998,
-Cuba,2021,, 1997,
-Cyprus,2021,, 1998,
-Czechia,2021,, 1998,
-North Korea,2021,, 2000,
-Democratic Republic of Congo,2021,,Not yet certified,
-Denmark,2021,, 1998,
-Djibouti,2021,, 2007,
-Dominica,2021,, 1998,
-Dominican Republic,2021,, 1997,
-Ecuador,2021,, 2000,
-Egypt,2021,, 1998,
-El Salvador,2021,, 1998,
-Equatorial Guinea,2021,, 2004,
-Eritrea,2021,, 2011,
-Estonia,2021,, 1998,
-Fiji,2021,, 1998,
-Finland,2021,, 1997,
-France,2021,, 1998,
-Gabon,2021,, 2007,
-Gambia,2021,, 2004,
-Georgia,2021,, 2000,
-Germany,2021,, 1998,
-Ghana,2021,, 2015,
-Greece,2021,, 2000,
-Greenland,2021,, 1998,
-Grenada,2021,, 1998,
-Guatemala,2021,, 2000,
-Guinea,2021,, 2009,
-Guinea-Bissau,2021,, 2004,
-Guyana,2021,, 2000,
-Haiti,2021,, 2000,
-Honduras,2021,, 2000,
-Hungary,2021,, 1998,
-Iceland,2021,, 1998,
-India,2021,, 2000,
-Indonesia,2021,, 1998,
-Iran,2021,, 1997,
-Iraq,2021,, 1998,
-Ireland,2021,, 1998,
-Israel,2021,, 2004,
-Italy,2021,, 1998,
-Jamaica,2021,, 1998,
-Japan,2021,, 1998,
-Jordan,2021,, 1998,
-Kazakhstan,2021,, 1998,
-Kenya,2021,,Pre-certification,
-Kiribati,2021,, 1997,
-Kuwait,2021,, 1998,
-Kyrgyzstan,2021,, 1998,
-Laos,2021,, 1998,
-Latvia,2021,, 1998,
-Lebanon,2021,, 1998,
-Lesotho,2021,, 2000,
-Liberia,2021,, 2007,
-Libya,2021,, 2000,
-Lithuania,2021,, 1998,
-Luxembourg,2021,, 1998,
-Madagascar,2021,, 2004,
-Malawi,2021,, 2000,
-Malaysia,2021,, 1998,
-Maldives,2021,, 1998,
-Malta,2021,, 1998,
-Marshall Islands,2021,, 2009,
-Mauritania,2021,, 2009,
-Mauritius,2021,, 2004,
-Mexico,2021,, 1998,
-Micronesia (country),2021,, 1998,
-Monaco,2021,, 1998,
-Mongolia,2021,, 1997,
-Montenegro,2021,, 2004,
-Morocco,2021,, 2000,
-Mozambique,2021,, 2007,
-Myanmar,2021,, 1998,
-Namibia,2021,, 2000,
-Nauru,2021,, 2000,
-Nepal,2021,, 1998,
-Netherlands,2021,, 1998,
-New Zealand,2021,, 2000,
-Nicaragua,2021,, 1998,
-Niger,2021,, 2013,
-Nigeria,2021,, 2013,
-Niue,2021,, 1998,
-Norway,2021,, 1998,
-Oman,2021,, 1998,
-Pakistan,2021,, 1997,
-Palau,2021,, 2009,
-Panama,2021,, 1998,
-Papua New Guinea,2021,, 1997,
-Paraguay,2021,, 2000,
-Peru,2021,, 2000,
-Philippines,2021,, 1998,
-Poland,2021,, 1998,
-Portugal,2021,, 2000,
-Qatar,2021,, 1998,
-South Korea,2021,, 1998,
-Moldova,2021,, 1998,
-Romania,2021,, 1997,
-Russia,2021,, 1998,
-Rwanda,2021,, 2004,
-Saint Kitts and Nevis,2021,, 1998,
-Saint Lucia,2021,, 1998,
-Saint Vincent and the Grenadines,2021,, 2000,
-Samoa,2021,, 1998,
-San Marino,2021,, 1998,
-Sao Tome and Principe,2021,, 2004,
-Saudi Arabia,2021,, 2000,
-Senegal,2021,, 2004,
-Serbia,2021,, 2004,
-Seychelles,2021,, 1998,
-Sierra Leone,2021,, 2007,
-Singapore,2021,, 1997,
-Slovakia,2021,, 1998,
-Slovenia,2021,, 1998,
-Solomon Islands,2021,, 1997,
-Somalia,2021,, 2013,
-South Africa,2021,, 2013,
-Spain,2021,, 1998,
-Sri Lanka,2021,, 1998,
-Sudan,2021,,Pre-certification,
-Suriname,2021,, 2000,
-Eswatini,2021,, 2007,
-Sweden,2021,, 1998,
-Switzerland,2021,, 1997,
-Syria,2021,, 1998,
-Tajikistan,2021,, 2000,
-Thailand,2021,, 2000,
-North Macedonia,2021,, 2004,
-Timor,2021,, 1998,
-Togo,2021,, 2011,
-Tonga,2021,, 1998,
-Trinidad and Tobago,2021,, 1997,
-Tunisia,2021,, 1998,
-Turkey,2021,, 2000,
-Turkmenistan,2021,, 2000,
-Tuvalu,2021,, 1998,
-Uganda,2021,, 2009,
-Ukraine,2021,, 1998,
-United Arab Emirates,2021,, 1998,
-United Kingdom,2021,, 1998,
-Tanzania,2021,, 2007,
-United States,2021,, 2000,
-Uruguay,2021,, 2004,
-Uzbekistan,2021,, 2000,
-Vanuatu,2021,, 1997,
-Venezuela,2021,, 2000,
-Vietnam,2021,, 1998,
-Yemen,2021,, 2004,
-Zambia,2021,, 2007,
-Zimbabwe,2021,, 1998,
+Afghanistan,2021,, 2007,Certified Guinea worm disease free
+Albania,2021,, 1998,Certified Guinea worm disease free
+Algeria,2021,, 2007,Certified Guinea worm disease free
+Andorra,2021,, 1998,Certified Guinea worm disease free
+Antigua and Barbuda,2021,, 2000,Certified Guinea worm disease free
+Argentina,2021,, 2000,Certified Guinea worm disease free
+Armenia,2021,, 1998,Certified Guinea worm disease free
+Australia,2021,, 2000,Certified Guinea worm disease free
+Austria,2021,, 1997,Certified Guinea worm disease free
+Azerbaijan,2021,, 1998,Certified Guinea worm disease free
+Bahamas,2021,, 2000,Certified Guinea worm disease free
+Bahrain,2021,, 1998,Certified Guinea worm disease free
+Bangladesh,2021,, 1998,Certified Guinea worm disease free
+Barbados,2021,, 1997,Certified Guinea worm disease free
+Belarus,2021,, 1998,Certified Guinea worm disease free
+Belgium,2021,, 1997,Certified Guinea worm disease free
+Belize,2021,, 2000,Certified Guinea worm disease free
+Benin,2021,, 2009,Certified Guinea worm disease free (previously endemic)
+Bhutan,2021,, 1998,Certified Guinea worm disease free
+Bolivia,2021,, 1998,Certified Guinea worm disease free
+Bosnia and Herzegovina,2021,, 2011,Certified Guinea worm disease free
+Botswana,2021,, 1998,Certified Guinea worm disease free
+Brazil,2021,, 1997,Certified Guinea worm disease free
+Brunei,2021,, 2011,Certified Guinea worm disease free
+Bulgaria,2021,, 1997,Certified Guinea worm disease free
+Burkina Faso,2021,, 2011,Certified Guinea worm disease free (previously endemic)
+Burundi,2021,, 2000,Certified Guinea worm disease free
+Cape Verde,2021,, 2004,Certified Guinea worm disease free
+Cambodia,2021,, 2009,Certified Guinea worm disease free
+Canada,2021,, 1998,Certified Guinea worm disease free
+Central African Republic,2021,, 2007,Certified Guinea worm disease free (previously endemic)
+Chile,2021,, 2000,Certified Guinea worm disease free
+China,2021,, 1998,Certified Guinea worm disease free
+Colombia,2021,, 1997,Certified Guinea worm disease free
+Comoros,2021,, 2004,Certified Guinea worm disease free
+Congo,2021,, 2004,Certified Guinea worm disease free
+Cook Islands,2021,, 1997,Certified Guinea worm disease free
+Costa Rica,2021,, 2000,Certified Guinea worm disease free
+Cote d'Ivoire,2021,, 2013,Certified Guinea worm disease free (previously endemic)
+Croatia,2021,, 1998,Certified Guinea worm disease free
+Cuba,2021,, 1997,Certified Guinea worm disease free
+Cyprus,2021,, 1998,Certified Guinea worm disease free
+Czechia,2021,, 1998,Certified Guinea worm disease free
+North Korea,2021,, 2000,Certified Guinea worm disease free
+Democratic Republic of Congo,2021,,Not yet certified,Not yet certified
+Denmark,2021,, 1998,Certified Guinea worm disease free
+Djibouti,2021,, 2007,Certified Guinea worm disease free
+Dominica,2021,, 1998,Certified Guinea worm disease free
+Dominican Republic,2021,, 1997,Certified Guinea worm disease free
+Ecuador,2021,, 2000,Certified Guinea worm disease free
+Egypt,2021,, 1998,Certified Guinea worm disease free
+El Salvador,2021,, 1998,Certified Guinea worm disease free
+Equatorial Guinea,2021,, 2004,Certified Guinea worm disease free
+Eritrea,2021,, 2011,Certified Guinea worm disease free
+Estonia,2021,, 1998,Certified Guinea worm disease free
+Fiji,2021,, 1998,Certified Guinea worm disease free
+Finland,2021,, 1997,Certified Guinea worm disease free
+France,2021,, 1998,Certified Guinea worm disease free
+Gabon,2021,, 2007,Certified Guinea worm disease free
+Gambia,2021,, 2004,Certified Guinea worm disease free
+Georgia,2021,, 2000,Certified Guinea worm disease free
+Germany,2021,, 1998,Certified Guinea worm disease free
+Ghana,2021,, 2015,Certified Guinea worm disease free (previously endemic)
+Greece,2021,, 2000,Certified Guinea worm disease free
+Greenland,2021,, 1998,Certified Guinea worm disease free
+Grenada,2021,, 1998,Certified Guinea worm disease free
+Guatemala,2021,, 2000,Certified Guinea worm disease free
+Guinea,2021,, 2009,Certified Guinea worm disease free
+Guinea-Bissau,2021,, 2004,Certified Guinea worm disease free
+Guyana,2021,, 2000,Certified Guinea worm disease free
+Haiti,2021,, 2000,Certified Guinea worm disease free
+Honduras,2021,, 2000,Certified Guinea worm disease free
+Hungary,2021,, 1998,Certified Guinea worm disease free
+Iceland,2021,, 1998,Certified Guinea worm disease free
+India,2021,, 2000,Certified Guinea worm disease free (previously endemic)
+Indonesia,2021,, 1998,Certified Guinea worm disease free
+Iran,2021,, 1997,Certified Guinea worm disease free
+Iraq,2021,, 1998,Certified Guinea worm disease free
+Ireland,2021,, 1998,Certified Guinea worm disease free
+Israel,2021,, 2004,Certified Guinea worm disease free
+Italy,2021,, 1998,Certified Guinea worm disease free
+Jamaica,2021,, 1998,Certified Guinea worm disease free
+Japan,2021,, 1998,Certified Guinea worm disease free
+Jordan,2021,, 1998,Certified Guinea worm disease free
+Kazakhstan,2021,, 1998,Certified Guinea worm disease free
+Kenya,2021,,Pre-certification,Guinea worm disease free (pre-certification)
+Kiribati,2021,, 1997,Certified Guinea worm disease free
+Kuwait,2021,, 1998,Certified Guinea worm disease free
+Kyrgyzstan,2021,, 1998,Certified Guinea worm disease free
+Laos,2021,, 1998,Certified Guinea worm disease free
+Latvia,2021,, 1998,Certified Guinea worm disease free
+Lebanon,2021,, 1998,Certified Guinea worm disease free
+Lesotho,2021,, 2000,Certified Guinea worm disease free
+Liberia,2021,, 2007,Certified Guinea worm disease free
+Libya,2021,, 2000,Certified Guinea worm disease free
+Lithuania,2021,, 1998,Certified Guinea worm disease free
+Luxembourg,2021,, 1998,Certified Guinea worm disease free
+Madagascar,2021,, 2004,Certified Guinea worm disease free
+Malawi,2021,, 2000,Certified Guinea worm disease free
+Malaysia,2021,, 1998,Certified Guinea worm disease free
+Maldives,2021,, 1998,Certified Guinea worm disease free
+Malta,2021,, 1998,Certified Guinea worm disease free
+Marshall Islands,2021,, 2009,Certified Guinea worm disease free
+Mauritania,2021,, 2009,Certified Guinea worm disease free (previously endemic)
+Mauritius,2021,, 2004,Certified Guinea worm disease free
+Mexico,2021,, 1998,Certified Guinea worm disease free
+Micronesia (country),2021,, 1998,Certified Guinea worm disease free
+Monaco,2021,, 1998,Certified Guinea worm disease free
+Mongolia,2021,, 1997,Certified Guinea worm disease free
+Montenegro,2021,, 2004,Certified Guinea worm disease free
+Morocco,2021,, 2000,Certified Guinea worm disease free
+Mozambique,2021,, 2007,Certified Guinea worm disease free
+Myanmar,2021,, 1998,Certified Guinea worm disease free
+Namibia,2021,, 2000,Certified Guinea worm disease free
+Nauru,2021,, 2000,Certified Guinea worm disease free
+Nepal,2021,, 1998,Certified Guinea worm disease free
+Netherlands,2021,, 1998,Certified Guinea worm disease free
+New Zealand,2021,, 2000,Certified Guinea worm disease free
+Nicaragua,2021,, 1998,Certified Guinea worm disease free
+Niger,2021,, 2013,Certified Guinea worm disease free (previously endemic)
+Nigeria,2021,, 2013,Certified Guinea worm disease free (previously endemic)
+Niue,2021,, 1998,Certified Guinea worm disease free
+Norway,2021,, 1998,Certified Guinea worm disease free
+Oman,2021,, 1998,Certified Guinea worm disease free
+Pakistan,2021,, 1997,Certified Guinea worm disease free (previously endemic)
+Palau,2021,, 2009,Certified Guinea worm disease free
+Panama,2021,, 1998,Certified Guinea worm disease free
+Papua New Guinea,2021,, 1997,Certified Guinea worm disease free
+Paraguay,2021,, 2000,Certified Guinea worm disease free
+Peru,2021,, 2000,Certified Guinea worm disease free
+Philippines,2021,, 1998,Certified Guinea worm disease free
+Poland,2021,, 1998,Certified Guinea worm disease free
+Portugal,2021,, 2000,Certified Guinea worm disease free
+Qatar,2021,, 1998,Certified Guinea worm disease free
+South Korea,2021,, 1998,Certified Guinea worm disease free
+Moldova,2021,, 1998,Certified Guinea worm disease free
+Romania,2021,, 1997,Certified Guinea worm disease free
+Russia,2021,, 1998,Certified Guinea worm disease free
+Rwanda,2021,, 2004,Certified Guinea worm disease free
+Saint Kitts and Nevis,2021,, 1998,Certified Guinea worm disease free
+Saint Lucia,2021,, 1998,Certified Guinea worm disease free
+Saint Vincent and the Grenadines,2021,, 2000,Certified Guinea worm disease free
+Samoa,2021,, 1998,Certified Guinea worm disease free
+San Marino,2021,, 1998,Certified Guinea worm disease free
+Sao Tome and Principe,2021,, 2004,Certified Guinea worm disease free
+Saudi Arabia,2021,, 2000,Certified Guinea worm disease free
+Senegal,2021,, 2004,Certified Guinea worm disease free (previously endemic)
+Serbia,2021,, 2004,Certified Guinea worm disease free
+Seychelles,2021,, 1998,Certified Guinea worm disease free
+Sierra Leone,2021,, 2007,Certified Guinea worm disease free
+Singapore,2021,, 1997,Certified Guinea worm disease free
+Slovakia,2021,, 1998,Certified Guinea worm disease free
+Slovenia,2021,, 1998,Certified Guinea worm disease free
+Solomon Islands,2021,, 1997,Certified Guinea worm disease free
+Somalia,2021,, 2013,Certified Guinea worm disease free
+South Africa,2021,, 2013,Certified Guinea worm disease free
+Spain,2021,, 1998,Certified Guinea worm disease free
+Sri Lanka,2021,, 1998,Certified Guinea worm disease free
+Sudan,2021,,Pre-certification,Guinea worm disease free (pre-certification)
+Suriname,2021,, 2000,Certified Guinea worm disease free
+Eswatini,2021,, 2007,Certified Guinea worm disease free
+Sweden,2021,, 1998,Certified Guinea worm disease free
+Switzerland,2021,, 1997,Certified Guinea worm disease free
+Syria,2021,, 1998,Certified Guinea worm disease free
+Tajikistan,2021,, 2000,Certified Guinea worm disease free
+Thailand,2021,, 2000,Certified Guinea worm disease free
+North Macedonia,2021,, 2004,Certified Guinea worm disease free
+Timor,2021,, 1998,Certified Guinea worm disease free
+Togo,2021,, 2011,Certified Guinea worm disease free (previously endemic)
+Tonga,2021,, 1998,Certified Guinea worm disease free
+Trinidad and Tobago,2021,, 1997,Certified Guinea worm disease free
+Tunisia,2021,, 1998,Certified Guinea worm disease free
+Turkey,2021,, 2000,Certified Guinea worm disease free
+Turkmenistan,2021,, 2000,Certified Guinea worm disease free
+Tuvalu,2021,, 1998,Certified Guinea worm disease free
+Uganda,2021,, 2009,Certified Guinea worm disease free (previously endemic)
+Ukraine,2021,, 1998,Certified Guinea worm disease free
+United Arab Emirates,2021,, 1998,Certified Guinea worm disease free
+United Kingdom,2021,, 1998,Certified Guinea worm disease free
+Tanzania,2021,, 2007,Certified Guinea worm disease free
+United States,2021,, 2000,Certified Guinea worm disease free
+Uruguay,2021,, 2004,Certified Guinea worm disease free
+Uzbekistan,2021,, 2000,Certified Guinea worm disease free
+Vanuatu,2021,, 1997,Certified Guinea worm disease free
+Venezuela,2021,, 2000,Certified Guinea worm disease free
+Vietnam,2021,, 1998,Certified Guinea worm disease free
+Yemen,2021,, 2004,Certified Guinea worm disease free (previously endemic)
+Zambia,2021,, 2007,Certified Guinea worm disease free
+Zimbabwe,2021,, 1998,Certified Guinea worm disease free
 Afghanistan,1996,,,Not yet certified
 Afghanistan,1997,,,Not yet certified
 Afghanistan,1998,,,Not yet certified
@@ -902,6 +902,9 @@ Afghanistan,2014,,,Certified Guinea worm disease free
 Afghanistan,2015,,,Certified Guinea worm disease free
 Afghanistan,2016,,,Certified Guinea worm disease free
 Afghanistan,2017,,,Certified Guinea worm disease free
+Afghanistan,2018,,,Certified Guinea worm disease free
+Afghanistan,2019,,,Certified Guinea worm disease free
+Afghanistan,2020,,,Certified Guinea worm disease free
 Albania,1996,,,Not yet certified
 Albania,1997,,,Not yet certified
 Albania,1998,,,Not yet certified
@@ -924,6 +927,9 @@ Albania,2014,,,Certified Guinea worm disease free
 Albania,2015,,,Certified Guinea worm disease free
 Albania,2016,,,Certified Guinea worm disease free
 Albania,2017,,,Certified Guinea worm disease free
+Albania,2018,,,Certified Guinea worm disease free
+Albania,2019,,,Certified Guinea worm disease free
+Albania,2020,,,Certified Guinea worm disease free
 Algeria,1996,,,Not yet certified
 Algeria,1997,,,Not yet certified
 Algeria,1998,,,Not yet certified
@@ -946,6 +952,9 @@ Algeria,2014,,,Certified Guinea worm disease free
 Algeria,2015,,,Certified Guinea worm disease free
 Algeria,2016,,,Certified Guinea worm disease free
 Algeria,2017,,,Certified Guinea worm disease free
+Algeria,2018,,,Certified Guinea worm disease free
+Algeria,2019,,,Certified Guinea worm disease free
+Algeria,2020,,,Certified Guinea worm disease free
 Andorra,1996,,,Not yet certified
 Andorra,1997,,,Not yet certified
 Andorra,1998,,,Not yet certified
@@ -968,6 +977,9 @@ Andorra,2014,,,Certified Guinea worm disease free
 Andorra,2015,,,Certified Guinea worm disease free
 Andorra,2016,,,Certified Guinea worm disease free
 Andorra,2017,,,Certified Guinea worm disease free
+Andorra,2018,,,Certified Guinea worm disease free
+Andorra,2019,,,Certified Guinea worm disease free
+Andorra,2020,,,Certified Guinea worm disease free
 Angola,1996,,,Not yet certified
 Angola,1997,,,Not yet certified
 Angola,1998,,,Not yet certified
@@ -1012,6 +1024,9 @@ Antigua and Barbuda,2014,,,Certified Guinea worm disease free
 Antigua and Barbuda,2015,,,Certified Guinea worm disease free
 Antigua and Barbuda,2016,,,Certified Guinea worm disease free
 Antigua and Barbuda,2017,,,Certified Guinea worm disease free
+Antigua and Barbuda,2018,,,Certified Guinea worm disease free
+Antigua and Barbuda,2019,,,Certified Guinea worm disease free
+Antigua and Barbuda,2020,,,Certified Guinea worm disease free
 Argentina,1996,,,Not yet certified
 Argentina,1997,,,Not yet certified
 Argentina,1998,,,Not yet certified
@@ -1034,6 +1049,9 @@ Argentina,2014,,,Certified Guinea worm disease free
 Argentina,2015,,,Certified Guinea worm disease free
 Argentina,2016,,,Certified Guinea worm disease free
 Argentina,2017,,,Certified Guinea worm disease free
+Argentina,2018,,,Certified Guinea worm disease free
+Argentina,2019,,,Certified Guinea worm disease free
+Argentina,2020,,,Certified Guinea worm disease free
 Armenia,1996,,,Not yet certified
 Armenia,1997,,,Not yet certified
 Armenia,1998,,,Not yet certified
@@ -1056,6 +1074,9 @@ Armenia,2014,,,Certified Guinea worm disease free
 Armenia,2015,,,Certified Guinea worm disease free
 Armenia,2016,,,Certified Guinea worm disease free
 Armenia,2017,,,Certified Guinea worm disease free
+Armenia,2018,,,Certified Guinea worm disease free
+Armenia,2019,,,Certified Guinea worm disease free
+Armenia,2020,,,Certified Guinea worm disease free
 Australia,1996,,,Not yet certified
 Australia,1997,,,Not yet certified
 Australia,1998,,,Not yet certified
@@ -1078,6 +1099,9 @@ Australia,2014,,,Certified Guinea worm disease free
 Australia,2015,,,Certified Guinea worm disease free
 Australia,2016,,,Certified Guinea worm disease free
 Australia,2017,,,Certified Guinea worm disease free
+Australia,2018,,,Certified Guinea worm disease free
+Australia,2019,,,Certified Guinea worm disease free
+Australia,2020,,,Certified Guinea worm disease free
 Austria,1996,,,Not yet certified
 Austria,1997,,,Not yet certified
 Austria,1998,,,Certified Guinea worm disease free
@@ -1100,6 +1124,9 @@ Austria,2014,,,Certified Guinea worm disease free
 Austria,2015,,,Certified Guinea worm disease free
 Austria,2016,,,Certified Guinea worm disease free
 Austria,2017,,,Certified Guinea worm disease free
+Austria,2018,,,Certified Guinea worm disease free
+Austria,2019,,,Certified Guinea worm disease free
+Austria,2020,,,Certified Guinea worm disease free
 Azerbaijan,1996,,,Not yet certified
 Azerbaijan,1997,,,Not yet certified
 Azerbaijan,1998,,,Not yet certified
@@ -1122,6 +1149,9 @@ Azerbaijan,2014,,,Certified Guinea worm disease free
 Azerbaijan,2015,,,Certified Guinea worm disease free
 Azerbaijan,2016,,,Certified Guinea worm disease free
 Azerbaijan,2017,,,Certified Guinea worm disease free
+Azerbaijan,2018,,,Certified Guinea worm disease free
+Azerbaijan,2019,,,Certified Guinea worm disease free
+Azerbaijan,2020,,,Certified Guinea worm disease free
 Bahamas,1996,,,Not yet certified
 Bahamas,1997,,,Not yet certified
 Bahamas,1998,,,Not yet certified
@@ -1144,6 +1174,9 @@ Bahamas,2014,,,Certified Guinea worm disease free
 Bahamas,2015,,,Certified Guinea worm disease free
 Bahamas,2016,,,Certified Guinea worm disease free
 Bahamas,2017,,,Certified Guinea worm disease free
+Bahamas,2018,,,Certified Guinea worm disease free
+Bahamas,2019,,,Certified Guinea worm disease free
+Bahamas,2020,,,Certified Guinea worm disease free
 Bahrain,1996,,,Not yet certified
 Bahrain,1997,,,Not yet certified
 Bahrain,1998,,,Not yet certified
@@ -1166,6 +1199,9 @@ Bahrain,2014,,,Certified Guinea worm disease free
 Bahrain,2015,,,Certified Guinea worm disease free
 Bahrain,2016,,,Certified Guinea worm disease free
 Bahrain,2017,,,Certified Guinea worm disease free
+Bahrain,2018,,,Certified Guinea worm disease free
+Bahrain,2019,,,Certified Guinea worm disease free
+Bahrain,2020,,,Certified Guinea worm disease free
 Bangladesh,1996,,,Not yet certified
 Bangladesh,1997,,,Not yet certified
 Bangladesh,1998,,,Not yet certified
@@ -1188,6 +1224,9 @@ Bangladesh,2014,,,Certified Guinea worm disease free
 Bangladesh,2015,,,Certified Guinea worm disease free
 Bangladesh,2016,,,Certified Guinea worm disease free
 Bangladesh,2017,,,Certified Guinea worm disease free
+Bangladesh,2018,,,Certified Guinea worm disease free
+Bangladesh,2019,,,Certified Guinea worm disease free
+Bangladesh,2020,,,Certified Guinea worm disease free
 Barbados,1996,,,Not yet certified
 Barbados,1997,,,Not yet certified
 Barbados,1998,,,Certified Guinea worm disease free
@@ -1210,6 +1249,9 @@ Barbados,2014,,,Certified Guinea worm disease free
 Barbados,2015,,,Certified Guinea worm disease free
 Barbados,2016,,,Certified Guinea worm disease free
 Barbados,2017,,,Certified Guinea worm disease free
+Barbados,2018,,,Certified Guinea worm disease free
+Barbados,2019,,,Certified Guinea worm disease free
+Barbados,2020,,,Certified Guinea worm disease free
 Belarus,1996,,,Not yet certified
 Belarus,1997,,,Not yet certified
 Belarus,1998,,,Not yet certified
@@ -1232,6 +1274,9 @@ Belarus,2014,,,Certified Guinea worm disease free
 Belarus,2015,,,Certified Guinea worm disease free
 Belarus,2016,,,Certified Guinea worm disease free
 Belarus,2017,,,Certified Guinea worm disease free
+Belarus,2018,,,Certified Guinea worm disease free
+Belarus,2019,,,Certified Guinea worm disease free
+Belarus,2020,,,Certified Guinea worm disease free
 Belgium,1996,,,Not yet certified
 Belgium,1997,,,Not yet certified
 Belgium,1998,,,Certified Guinea worm disease free
@@ -1254,6 +1299,9 @@ Belgium,2014,,,Certified Guinea worm disease free
 Belgium,2015,,,Certified Guinea worm disease free
 Belgium,2016,,,Certified Guinea worm disease free
 Belgium,2017,,,Certified Guinea worm disease free
+Belgium,2018,,,Certified Guinea worm disease free
+Belgium,2019,,,Certified Guinea worm disease free
+Belgium,2020,,,Certified Guinea worm disease free
 Belize,1996,,,Not yet certified
 Belize,1997,,,Not yet certified
 Belize,1998,,,Not yet certified
@@ -1276,6 +1324,12 @@ Belize,2014,,,Certified Guinea worm disease free
 Belize,2015,,,Certified Guinea worm disease free
 Belize,2016,,,Certified Guinea worm disease free
 Belize,2017,,,Certified Guinea worm disease free
+Belize,2018,,,Certified Guinea worm disease free
+Belize,2019,,,Certified Guinea worm disease free
+Belize,2020,,,Certified Guinea worm disease free
+Benin,2018,,,Certified Guinea worm disease free (previously endemic)
+Benin,2019,,,Certified Guinea worm disease free (previously endemic)
+Benin,2020,,,Certified Guinea worm disease free (previously endemic)
 Bhutan,1996,,,Not yet certified
 Bhutan,1997,,,Not yet certified
 Bhutan,1998,,,Not yet certified
@@ -1298,6 +1352,9 @@ Bhutan,2014,,,Certified Guinea worm disease free
 Bhutan,2015,,,Certified Guinea worm disease free
 Bhutan,2016,,,Certified Guinea worm disease free
 Bhutan,2017,,,Certified Guinea worm disease free
+Bhutan,2018,,,Certified Guinea worm disease free
+Bhutan,2019,,,Certified Guinea worm disease free
+Bhutan,2020,,,Certified Guinea worm disease free
 Bolivia,1996,,,Not yet certified
 Bolivia,1997,,,Not yet certified
 Bolivia,1998,,,Not yet certified
@@ -1320,6 +1377,9 @@ Bolivia,2014,,,Certified Guinea worm disease free
 Bolivia,2015,,,Certified Guinea worm disease free
 Bolivia,2016,,,Certified Guinea worm disease free
 Bolivia,2017,,,Certified Guinea worm disease free
+Bolivia,2018,,,Certified Guinea worm disease free
+Bolivia,2019,,,Certified Guinea worm disease free
+Bolivia,2020,,,Certified Guinea worm disease free
 Bosnia and Herzegovina,1996,,,Not yet certified
 Bosnia and Herzegovina,1997,,,Not yet certified
 Bosnia and Herzegovina,1998,,,Not yet certified
@@ -1342,6 +1402,9 @@ Bosnia and Herzegovina,2014,,,Certified Guinea worm disease free
 Bosnia and Herzegovina,2015,,,Certified Guinea worm disease free
 Bosnia and Herzegovina,2016,,,Certified Guinea worm disease free
 Bosnia and Herzegovina,2017,,,Certified Guinea worm disease free
+Bosnia and Herzegovina,2018,,,Certified Guinea worm disease free
+Bosnia and Herzegovina,2019,,,Certified Guinea worm disease free
+Bosnia and Herzegovina,2020,,,Certified Guinea worm disease free
 Botswana,1996,,,Not yet certified
 Botswana,1997,,,Not yet certified
 Botswana,1998,,,Not yet certified
@@ -1364,6 +1427,9 @@ Botswana,2014,,,Certified Guinea worm disease free
 Botswana,2015,,,Certified Guinea worm disease free
 Botswana,2016,,,Certified Guinea worm disease free
 Botswana,2017,,,Certified Guinea worm disease free
+Botswana,2018,,,Certified Guinea worm disease free
+Botswana,2019,,,Certified Guinea worm disease free
+Botswana,2020,,,Certified Guinea worm disease free
 Brazil,1996,,,Not yet certified
 Brazil,1997,,,Not yet certified
 Brazil,1998,,,Certified Guinea worm disease free
@@ -1386,6 +1452,9 @@ Brazil,2014,,,Certified Guinea worm disease free
 Brazil,2015,,,Certified Guinea worm disease free
 Brazil,2016,,,Certified Guinea worm disease free
 Brazil,2017,,,Certified Guinea worm disease free
+Brazil,2018,,,Certified Guinea worm disease free
+Brazil,2019,,,Certified Guinea worm disease free
+Brazil,2020,,,Certified Guinea worm disease free
 Brunei,1996,,,Not yet certified
 Brunei,1997,,,Not yet certified
 Brunei,1998,,,Not yet certified
@@ -1408,6 +1477,9 @@ Brunei,2014,,,Certified Guinea worm disease free
 Brunei,2015,,,Certified Guinea worm disease free
 Brunei,2016,,,Certified Guinea worm disease free
 Brunei,2017,,,Certified Guinea worm disease free
+Brunei,2018,,,Certified Guinea worm disease free
+Brunei,2019,,,Certified Guinea worm disease free
+Brunei,2020,,,Certified Guinea worm disease free
 Bulgaria,1996,,,Not yet certified
 Bulgaria,1997,,,Not yet certified
 Bulgaria,1998,,,Certified Guinea worm disease free
@@ -1430,6 +1502,12 @@ Bulgaria,2014,,,Certified Guinea worm disease free
 Bulgaria,2015,,,Certified Guinea worm disease free
 Bulgaria,2016,,,Certified Guinea worm disease free
 Bulgaria,2017,,,Certified Guinea worm disease free
+Bulgaria,2018,,,Certified Guinea worm disease free
+Bulgaria,2019,,,Certified Guinea worm disease free
+Bulgaria,2020,,,Certified Guinea worm disease free
+Burkina Faso,2018,,,Certified Guinea worm disease free (previously endemic)
+Burkina Faso,2019,,,Certified Guinea worm disease free (previously endemic)
+Burkina Faso,2020,,,Certified Guinea worm disease free (previously endemic)
 Burundi,1996,,,Not yet certified
 Burundi,1997,,,Not yet certified
 Burundi,1998,,,Not yet certified
@@ -1452,6 +1530,9 @@ Burundi,2014,,,Certified Guinea worm disease free
 Burundi,2015,,,Certified Guinea worm disease free
 Burundi,2016,,,Certified Guinea worm disease free
 Burundi,2017,,,Certified Guinea worm disease free
+Burundi,2018,,,Certified Guinea worm disease free
+Burundi,2019,,,Certified Guinea worm disease free
+Burundi,2020,,,Certified Guinea worm disease free
 Cape Verde,1996,,,Not yet certified
 Cape Verde,1997,,,Not yet certified
 Cape Verde,1998,,,Not yet certified
@@ -1474,6 +1555,9 @@ Cape Verde,2014,,,Certified Guinea worm disease free
 Cape Verde,2015,,,Certified Guinea worm disease free
 Cape Verde,2016,,,Certified Guinea worm disease free
 Cape Verde,2017,,,Certified Guinea worm disease free
+Cape Verde,2018,,,Certified Guinea worm disease free
+Cape Verde,2019,,,Certified Guinea worm disease free
+Cape Verde,2020,,,Certified Guinea worm disease free
 Cambodia,1996,,,Not yet certified
 Cambodia,1997,,,Not yet certified
 Cambodia,1998,,,Not yet certified
@@ -1496,6 +1580,10 @@ Cambodia,2014,,,Certified Guinea worm disease free
 Cambodia,2015,,,Certified Guinea worm disease free
 Cambodia,2016,,,Certified Guinea worm disease free
 Cambodia,2017,,,Certified Guinea worm disease free
+Cambodia,2018,,,Certified Guinea worm disease free
+Cambodia,2019,,,Certified Guinea worm disease free
+Cambodia,2020,,,Certified Guinea worm disease free
+Cameroon,2018,,,Certified Guinea worm disease free (previously endemic)
 Canada,1996,,,Not yet certified
 Canada,1997,,,Not yet certified
 Canada,1998,,,Not yet certified
@@ -1518,6 +1606,12 @@ Canada,2014,,,Certified Guinea worm disease free
 Canada,2015,,,Certified Guinea worm disease free
 Canada,2016,,,Certified Guinea worm disease free
 Canada,2017,,,Certified Guinea worm disease free
+Canada,2018,,,Certified Guinea worm disease free
+Canada,2019,,,Certified Guinea worm disease free
+Canada,2020,,,Certified Guinea worm disease free
+Central African Republic,2018,,,Certified Guinea worm disease free (previously endemic)
+Central African Republic,2019,,,Certified Guinea worm disease free (previously endemic)
+Central African Republic,2020,,,Certified Guinea worm disease free (previously endemic)
 Chile,1996,,,Not yet certified
 Chile,1997,,,Not yet certified
 Chile,1998,,,Not yet certified
@@ -1540,6 +1634,9 @@ Chile,2014,,,Certified Guinea worm disease free
 Chile,2015,,,Certified Guinea worm disease free
 Chile,2016,,,Certified Guinea worm disease free
 Chile,2017,,,Certified Guinea worm disease free
+Chile,2018,,,Certified Guinea worm disease free
+Chile,2019,,,Certified Guinea worm disease free
+Chile,2020,,,Certified Guinea worm disease free
 China,1996,,,Not yet certified
 China,1997,,,Not yet certified
 China,1998,,,Not yet certified
@@ -1562,6 +1659,9 @@ China,2014,,,Certified Guinea worm disease free
 China,2015,,,Certified Guinea worm disease free
 China,2016,,,Certified Guinea worm disease free
 China,2017,,,Certified Guinea worm disease free
+China,2018,,,Certified Guinea worm disease free
+China,2019,,,Certified Guinea worm disease free
+China,2020,,,Certified Guinea worm disease free
 Colombia,1996,,,Not yet certified
 Colombia,1997,,,Not yet certified
 Colombia,1998,,,Certified Guinea worm disease free
@@ -1584,6 +1684,9 @@ Colombia,2014,,,Certified Guinea worm disease free
 Colombia,2015,,,Certified Guinea worm disease free
 Colombia,2016,,,Certified Guinea worm disease free
 Colombia,2017,,,Certified Guinea worm disease free
+Colombia,2018,,,Certified Guinea worm disease free
+Colombia,2019,,,Certified Guinea worm disease free
+Colombia,2020,,,Certified Guinea worm disease free
 Comoros,1996,,,Not yet certified
 Comoros,1997,,,Not yet certified
 Comoros,1998,,,Not yet certified
@@ -1606,6 +1709,9 @@ Comoros,2014,,,Certified Guinea worm disease free
 Comoros,2015,,,Certified Guinea worm disease free
 Comoros,2016,,,Certified Guinea worm disease free
 Comoros,2017,,,Certified Guinea worm disease free
+Comoros,2018,,,Certified Guinea worm disease free
+Comoros,2019,,,Certified Guinea worm disease free
+Comoros,2020,,,Certified Guinea worm disease free
 Congo,1996,,,Not yet certified
 Congo,1997,,,Not yet certified
 Congo,1998,,,Not yet certified
@@ -1628,6 +1734,9 @@ Congo,2014,,,Certified Guinea worm disease free
 Congo,2015,,,Certified Guinea worm disease free
 Congo,2016,,,Certified Guinea worm disease free
 Congo,2017,,,Certified Guinea worm disease free
+Congo,2018,,,Certified Guinea worm disease free
+Congo,2019,,,Certified Guinea worm disease free
+Congo,2020,,,Certified Guinea worm disease free
 Cook Islands,1996,,,Not yet certified
 Cook Islands,1997,,,Not yet certified
 Cook Islands,1998,,,Certified Guinea worm disease free
@@ -1650,6 +1759,9 @@ Cook Islands,2014,,,Certified Guinea worm disease free
 Cook Islands,2015,,,Certified Guinea worm disease free
 Cook Islands,2016,,,Certified Guinea worm disease free
 Cook Islands,2017,,,Certified Guinea worm disease free
+Cook Islands,2018,,,Certified Guinea worm disease free
+Cook Islands,2019,,,Certified Guinea worm disease free
+Cook Islands,2020,,,Certified Guinea worm disease free
 Costa Rica,1996,,,Not yet certified
 Costa Rica,1997,,,Not yet certified
 Costa Rica,1998,,,Not yet certified
@@ -1672,6 +1784,12 @@ Costa Rica,2014,,,Certified Guinea worm disease free
 Costa Rica,2015,,,Certified Guinea worm disease free
 Costa Rica,2016,,,Certified Guinea worm disease free
 Costa Rica,2017,,,Certified Guinea worm disease free
+Costa Rica,2018,,,Certified Guinea worm disease free
+Costa Rica,2019,,,Certified Guinea worm disease free
+Costa Rica,2020,,,Certified Guinea worm disease free
+Cote d'Ivoire,2018,,,Certified Guinea worm disease free (previously endemic)
+Cote d'Ivoire,2019,,,Certified Guinea worm disease free (previously endemic)
+Cote d'Ivoire,2020,,,Certified Guinea worm disease free (previously endemic)
 Croatia,1996,,,Not yet certified
 Croatia,1997,,,Not yet certified
 Croatia,1998,,,Not yet certified
@@ -1694,6 +1812,9 @@ Croatia,2014,,,Certified Guinea worm disease free
 Croatia,2015,,,Certified Guinea worm disease free
 Croatia,2016,,,Certified Guinea worm disease free
 Croatia,2017,,,Certified Guinea worm disease free
+Croatia,2018,,,Certified Guinea worm disease free
+Croatia,2019,,,Certified Guinea worm disease free
+Croatia,2020,,,Certified Guinea worm disease free
 Cuba,1996,,,Not yet certified
 Cuba,1997,,,Not yet certified
 Cuba,1998,,,Certified Guinea worm disease free
@@ -1716,6 +1837,9 @@ Cuba,2014,,,Certified Guinea worm disease free
 Cuba,2015,,,Certified Guinea worm disease free
 Cuba,2016,,,Certified Guinea worm disease free
 Cuba,2017,,,Certified Guinea worm disease free
+Cuba,2018,,,Certified Guinea worm disease free
+Cuba,2019,,,Certified Guinea worm disease free
+Cuba,2020,,,Certified Guinea worm disease free
 Cyprus,1996,,,Not yet certified
 Cyprus,1997,,,Not yet certified
 Cyprus,1998,,,Not yet certified
@@ -1738,6 +1862,9 @@ Cyprus,2014,,,Certified Guinea worm disease free
 Cyprus,2015,,,Certified Guinea worm disease free
 Cyprus,2016,,,Certified Guinea worm disease free
 Cyprus,2017,,,Certified Guinea worm disease free
+Cyprus,2018,,,Certified Guinea worm disease free
+Cyprus,2019,,,Certified Guinea worm disease free
+Cyprus,2020,,,Certified Guinea worm disease free
 Czechia,1996,,,Not yet certified
 Czechia,1997,,,Not yet certified
 Czechia,1998,,,Not yet certified
@@ -1760,6 +1887,9 @@ Czechia,2014,,,Certified Guinea worm disease free
 Czechia,2015,,,Certified Guinea worm disease free
 Czechia,2016,,,Certified Guinea worm disease free
 Czechia,2017,,,Certified Guinea worm disease free
+Czechia,2018,,,Certified Guinea worm disease free
+Czechia,2019,,,Certified Guinea worm disease free
+Czechia,2020,,,Certified Guinea worm disease free
 North Korea,1996,,,Not yet certified
 North Korea,1997,,,Not yet certified
 North Korea,1998,,,Not yet certified
@@ -1782,6 +1912,9 @@ North Korea,2014,,,Certified Guinea worm disease free
 North Korea,2015,,,Certified Guinea worm disease free
 North Korea,2016,,,Certified Guinea worm disease free
 North Korea,2017,,,Certified Guinea worm disease free
+North Korea,2018,,,Certified Guinea worm disease free
+North Korea,2019,,,Certified Guinea worm disease free
+North Korea,2020,,,Certified Guinea worm disease free
 Democratic Republic of Congo,1996,,,Not yet certified
 Democratic Republic of Congo,1997,,,Not yet certified
 Democratic Republic of Congo,1998,,,Not yet certified
@@ -1804,6 +1937,9 @@ Democratic Republic of Congo,2014,,,Not yet certified
 Democratic Republic of Congo,2015,,,Not yet certified
 Democratic Republic of Congo,2016,,,Not yet certified
 Democratic Republic of Congo,2017,,,Not yet certified
+Democratic Republic of Congo,2018,,,Not yet certified
+Democratic Republic of Congo,2019,,,Not yet certified
+Democratic Republic of Congo,2020,,,Not yet certified
 Denmark,1996,,,Not yet certified
 Denmark,1997,,,Not yet certified
 Denmark,1998,,,Not yet certified
@@ -1826,6 +1962,9 @@ Denmark,2014,,,Certified Guinea worm disease free
 Denmark,2015,,,Certified Guinea worm disease free
 Denmark,2016,,,Certified Guinea worm disease free
 Denmark,2017,,,Certified Guinea worm disease free
+Denmark,2018,,,Certified Guinea worm disease free
+Denmark,2019,,,Certified Guinea worm disease free
+Denmark,2020,,,Certified Guinea worm disease free
 Djibouti,1996,,,Not yet certified
 Djibouti,1997,,,Not yet certified
 Djibouti,1998,,,Not yet certified
@@ -1848,6 +1987,9 @@ Djibouti,2014,,,Certified Guinea worm disease free
 Djibouti,2015,,,Certified Guinea worm disease free
 Djibouti,2016,,,Certified Guinea worm disease free
 Djibouti,2017,,,Certified Guinea worm disease free
+Djibouti,2018,,,Certified Guinea worm disease free
+Djibouti,2019,,,Certified Guinea worm disease free
+Djibouti,2020,,,Certified Guinea worm disease free
 Dominica,1996,,,Not yet certified
 Dominica,1997,,,Not yet certified
 Dominica,1998,,,Not yet certified
@@ -1870,6 +2012,9 @@ Dominica,2014,,,Certified Guinea worm disease free
 Dominica,2015,,,Certified Guinea worm disease free
 Dominica,2016,,,Certified Guinea worm disease free
 Dominica,2017,,,Certified Guinea worm disease free
+Dominica,2018,,,Certified Guinea worm disease free
+Dominica,2019,,,Certified Guinea worm disease free
+Dominica,2020,,,Certified Guinea worm disease free
 Dominican Republic,1996,,,Not yet certified
 Dominican Republic,1997,,,Not yet certified
 Dominican Republic,1998,,,Certified Guinea worm disease free
@@ -1892,6 +2037,9 @@ Dominican Republic,2014,,,Certified Guinea worm disease free
 Dominican Republic,2015,,,Certified Guinea worm disease free
 Dominican Republic,2016,,,Certified Guinea worm disease free
 Dominican Republic,2017,,,Certified Guinea worm disease free
+Dominican Republic,2018,,,Certified Guinea worm disease free
+Dominican Republic,2019,,,Certified Guinea worm disease free
+Dominican Republic,2020,,,Certified Guinea worm disease free
 Ecuador,1996,,,Not yet certified
 Ecuador,1997,,,Not yet certified
 Ecuador,1998,,,Not yet certified
@@ -1914,6 +2062,9 @@ Ecuador,2014,,,Certified Guinea worm disease free
 Ecuador,2015,,,Certified Guinea worm disease free
 Ecuador,2016,,,Certified Guinea worm disease free
 Ecuador,2017,,,Certified Guinea worm disease free
+Ecuador,2018,,,Certified Guinea worm disease free
+Ecuador,2019,,,Certified Guinea worm disease free
+Ecuador,2020,,,Certified Guinea worm disease free
 Egypt,1996,,,Not yet certified
 Egypt,1997,,,Not yet certified
 Egypt,1998,,,Not yet certified
@@ -1936,6 +2087,9 @@ Egypt,2014,,,Certified Guinea worm disease free
 Egypt,2015,,,Certified Guinea worm disease free
 Egypt,2016,,,Certified Guinea worm disease free
 Egypt,2017,,,Certified Guinea worm disease free
+Egypt,2018,,,Certified Guinea worm disease free
+Egypt,2019,,,Certified Guinea worm disease free
+Egypt,2020,,,Certified Guinea worm disease free
 El Salvador,1996,,,Not yet certified
 El Salvador,1997,,,Not yet certified
 El Salvador,1998,,,Not yet certified
@@ -1958,6 +2112,9 @@ El Salvador,2014,,,Certified Guinea worm disease free
 El Salvador,2015,,,Certified Guinea worm disease free
 El Salvador,2016,,,Certified Guinea worm disease free
 El Salvador,2017,,,Certified Guinea worm disease free
+El Salvador,2018,,,Certified Guinea worm disease free
+El Salvador,2019,,,Certified Guinea worm disease free
+El Salvador,2020,,,Certified Guinea worm disease free
 Equatorial Guinea,1996,,,Not yet certified
 Equatorial Guinea,1997,,,Not yet certified
 Equatorial Guinea,1998,,,Not yet certified
@@ -1980,6 +2137,9 @@ Equatorial Guinea,2014,,,Certified Guinea worm disease free
 Equatorial Guinea,2015,,,Certified Guinea worm disease free
 Equatorial Guinea,2016,,,Certified Guinea worm disease free
 Equatorial Guinea,2017,,,Certified Guinea worm disease free
+Equatorial Guinea,2018,,,Certified Guinea worm disease free
+Equatorial Guinea,2019,,,Certified Guinea worm disease free
+Equatorial Guinea,2020,,,Certified Guinea worm disease free
 Eritrea,1996,,,Not yet certified
 Eritrea,1997,,,Not yet certified
 Eritrea,1998,,,Not yet certified
@@ -2002,6 +2162,9 @@ Eritrea,2014,,,Certified Guinea worm disease free
 Eritrea,2015,,,Certified Guinea worm disease free
 Eritrea,2016,,,Certified Guinea worm disease free
 Eritrea,2017,,,Certified Guinea worm disease free
+Eritrea,2018,,,Certified Guinea worm disease free
+Eritrea,2019,,,Certified Guinea worm disease free
+Eritrea,2020,,,Certified Guinea worm disease free
 Estonia,1996,,,Not yet certified
 Estonia,1997,,,Not yet certified
 Estonia,1998,,,Not yet certified
@@ -2024,6 +2187,9 @@ Estonia,2014,,,Certified Guinea worm disease free
 Estonia,2015,,,Certified Guinea worm disease free
 Estonia,2016,,,Certified Guinea worm disease free
 Estonia,2017,,,Certified Guinea worm disease free
+Estonia,2018,,,Certified Guinea worm disease free
+Estonia,2019,,,Certified Guinea worm disease free
+Estonia,2020,,,Certified Guinea worm disease free
 Fiji,1996,,,Not yet certified
 Fiji,1997,,,Not yet certified
 Fiji,1998,,,Not yet certified
@@ -2046,6 +2212,9 @@ Fiji,2014,,,Certified Guinea worm disease free
 Fiji,2015,,,Certified Guinea worm disease free
 Fiji,2016,,,Certified Guinea worm disease free
 Fiji,2017,,,Certified Guinea worm disease free
+Fiji,2018,,,Certified Guinea worm disease free
+Fiji,2019,,,Certified Guinea worm disease free
+Fiji,2020,,,Certified Guinea worm disease free
 Finland,1996,,,Not yet certified
 Finland,1997,,,Not yet certified
 Finland,1998,,,Certified Guinea worm disease free
@@ -2068,6 +2237,9 @@ Finland,2014,,,Certified Guinea worm disease free
 Finland,2015,,,Certified Guinea worm disease free
 Finland,2016,,,Certified Guinea worm disease free
 Finland,2017,,,Certified Guinea worm disease free
+Finland,2018,,,Certified Guinea worm disease free
+Finland,2019,,,Certified Guinea worm disease free
+Finland,2020,,,Certified Guinea worm disease free
 France,1996,,,Not yet certified
 France,1997,,,Not yet certified
 France,1998,,,Not yet certified
@@ -2090,6 +2262,9 @@ France,2014,,,Certified Guinea worm disease free
 France,2015,,,Certified Guinea worm disease free
 France,2016,,,Certified Guinea worm disease free
 France,2017,,,Certified Guinea worm disease free
+France,2018,,,Certified Guinea worm disease free
+France,2019,,,Certified Guinea worm disease free
+France,2020,,,Certified Guinea worm disease free
 Gabon,1996,,,Not yet certified
 Gabon,1997,,,Not yet certified
 Gabon,1998,,,Not yet certified
@@ -2112,6 +2287,9 @@ Gabon,2014,,,Certified Guinea worm disease free
 Gabon,2015,,,Certified Guinea worm disease free
 Gabon,2016,,,Certified Guinea worm disease free
 Gabon,2017,,,Certified Guinea worm disease free
+Gabon,2018,,,Certified Guinea worm disease free
+Gabon,2019,,,Certified Guinea worm disease free
+Gabon,2020,,,Certified Guinea worm disease free
 Gambia,1996,,,Not yet certified
 Gambia,1997,,,Not yet certified
 Gambia,1998,,,Not yet certified
@@ -2134,6 +2312,9 @@ Gambia,2014,,,Certified Guinea worm disease free
 Gambia,2015,,,Certified Guinea worm disease free
 Gambia,2016,,,Certified Guinea worm disease free
 Gambia,2017,,,Certified Guinea worm disease free
+Gambia,2018,,,Certified Guinea worm disease free
+Gambia,2019,,,Certified Guinea worm disease free
+Gambia,2020,,,Certified Guinea worm disease free
 Georgia,1996,,,Not yet certified
 Georgia,1997,,,Not yet certified
 Georgia,1998,,,Not yet certified
@@ -2156,6 +2337,9 @@ Georgia,2014,,,Certified Guinea worm disease free
 Georgia,2015,,,Certified Guinea worm disease free
 Georgia,2016,,,Certified Guinea worm disease free
 Georgia,2017,,,Certified Guinea worm disease free
+Georgia,2018,,,Certified Guinea worm disease free
+Georgia,2019,,,Certified Guinea worm disease free
+Georgia,2020,,,Certified Guinea worm disease free
 Germany,1996,,,Not yet certified
 Germany,1997,,,Not yet certified
 Germany,1998,,,Not yet certified
@@ -2178,6 +2362,12 @@ Germany,2014,,,Certified Guinea worm disease free
 Germany,2015,,,Certified Guinea worm disease free
 Germany,2016,,,Certified Guinea worm disease free
 Germany,2017,,,Certified Guinea worm disease free
+Germany,2018,,,Certified Guinea worm disease free
+Germany,2019,,,Certified Guinea worm disease free
+Germany,2020,,,Certified Guinea worm disease free
+Ghana,2018,,,Certified Guinea worm disease free (previously endemic)
+Ghana,2019,,,Certified Guinea worm disease free (previously endemic)
+Ghana,2020,,,Certified Guinea worm disease free (previously endemic)
 Greece,1996,,,Not yet certified
 Greece,1997,,,Not yet certified
 Greece,1998,,,Not yet certified
@@ -2200,6 +2390,9 @@ Greece,2014,,,Certified Guinea worm disease free
 Greece,2015,,,Certified Guinea worm disease free
 Greece,2016,,,Certified Guinea worm disease free
 Greece,2017,,,Certified Guinea worm disease free
+Greece,2018,,,Certified Guinea worm disease free
+Greece,2019,,,Certified Guinea worm disease free
+Greece,2020,,,Certified Guinea worm disease free
 Greenland,1996,,,Not yet certified
 Greenland,1997,,,Not yet certified
 Greenland,1998,,,Not yet certified
@@ -2222,6 +2415,9 @@ Greenland,2014,,,Certified Guinea worm disease free
 Greenland,2015,,,Certified Guinea worm disease free
 Greenland,2016,,,Certified Guinea worm disease free
 Greenland,2017,,,Certified Guinea worm disease free
+Greenland,2018,,,Certified Guinea worm disease free
+Greenland,2019,,,Certified Guinea worm disease free
+Greenland,2020,,,Certified Guinea worm disease free
 Grenada,1996,,,Not yet certified
 Grenada,1997,,,Not yet certified
 Grenada,1998,,,Not yet certified
@@ -2244,6 +2440,9 @@ Grenada,2014,,,Certified Guinea worm disease free
 Grenada,2015,,,Certified Guinea worm disease free
 Grenada,2016,,,Certified Guinea worm disease free
 Grenada,2017,,,Certified Guinea worm disease free
+Grenada,2018,,,Certified Guinea worm disease free
+Grenada,2019,,,Certified Guinea worm disease free
+Grenada,2020,,,Certified Guinea worm disease free
 Guatemala,1996,,,Not yet certified
 Guatemala,1997,,,Not yet certified
 Guatemala,1998,,,Not yet certified
@@ -2266,6 +2465,9 @@ Guatemala,2014,,,Certified Guinea worm disease free
 Guatemala,2015,,,Certified Guinea worm disease free
 Guatemala,2016,,,Certified Guinea worm disease free
 Guatemala,2017,,,Certified Guinea worm disease free
+Guatemala,2018,,,Certified Guinea worm disease free
+Guatemala,2019,,,Certified Guinea worm disease free
+Guatemala,2020,,,Certified Guinea worm disease free
 Guinea,1996,,,Not yet certified
 Guinea,1997,,,Not yet certified
 Guinea,1998,,,Not yet certified
@@ -2288,6 +2490,9 @@ Guinea,2014,,,Certified Guinea worm disease free
 Guinea,2015,,,Certified Guinea worm disease free
 Guinea,2016,,,Certified Guinea worm disease free
 Guinea,2017,,,Certified Guinea worm disease free
+Guinea,2018,,,Certified Guinea worm disease free
+Guinea,2019,,,Certified Guinea worm disease free
+Guinea,2020,,,Certified Guinea worm disease free
 Guinea-Bissau,1996,,,Not yet certified
 Guinea-Bissau,1997,,,Not yet certified
 Guinea-Bissau,1998,,,Not yet certified
@@ -2310,6 +2515,9 @@ Guinea-Bissau,2014,,,Certified Guinea worm disease free
 Guinea-Bissau,2015,,,Certified Guinea worm disease free
 Guinea-Bissau,2016,,,Certified Guinea worm disease free
 Guinea-Bissau,2017,,,Certified Guinea worm disease free
+Guinea-Bissau,2018,,,Certified Guinea worm disease free
+Guinea-Bissau,2019,,,Certified Guinea worm disease free
+Guinea-Bissau,2020,,,Certified Guinea worm disease free
 Guyana,1996,,,Not yet certified
 Guyana,1997,,,Not yet certified
 Guyana,1998,,,Not yet certified
@@ -2332,6 +2540,9 @@ Guyana,2014,,,Certified Guinea worm disease free
 Guyana,2015,,,Certified Guinea worm disease free
 Guyana,2016,,,Certified Guinea worm disease free
 Guyana,2017,,,Certified Guinea worm disease free
+Guyana,2018,,,Certified Guinea worm disease free
+Guyana,2019,,,Certified Guinea worm disease free
+Guyana,2020,,,Certified Guinea worm disease free
 Haiti,1996,,,Not yet certified
 Haiti,1997,,,Not yet certified
 Haiti,1998,,,Not yet certified
@@ -2354,6 +2565,9 @@ Haiti,2014,,,Certified Guinea worm disease free
 Haiti,2015,,,Certified Guinea worm disease free
 Haiti,2016,,,Certified Guinea worm disease free
 Haiti,2017,,,Certified Guinea worm disease free
+Haiti,2018,,,Certified Guinea worm disease free
+Haiti,2019,,,Certified Guinea worm disease free
+Haiti,2020,,,Certified Guinea worm disease free
 Honduras,1996,,,Not yet certified
 Honduras,1997,,,Not yet certified
 Honduras,1998,,,Not yet certified
@@ -2376,6 +2590,9 @@ Honduras,2014,,,Certified Guinea worm disease free
 Honduras,2015,,,Certified Guinea worm disease free
 Honduras,2016,,,Certified Guinea worm disease free
 Honduras,2017,,,Certified Guinea worm disease free
+Honduras,2018,,,Certified Guinea worm disease free
+Honduras,2019,,,Certified Guinea worm disease free
+Honduras,2020,,,Certified Guinea worm disease free
 Hungary,1996,,,Not yet certified
 Hungary,1997,,,Not yet certified
 Hungary,1998,,,Not yet certified
@@ -2398,6 +2615,9 @@ Hungary,2014,,,Certified Guinea worm disease free
 Hungary,2015,,,Certified Guinea worm disease free
 Hungary,2016,,,Certified Guinea worm disease free
 Hungary,2017,,,Certified Guinea worm disease free
+Hungary,2018,,,Certified Guinea worm disease free
+Hungary,2019,,,Certified Guinea worm disease free
+Hungary,2020,,,Certified Guinea worm disease free
 Iceland,1996,,,Not yet certified
 Iceland,1997,,,Not yet certified
 Iceland,1998,,,Not yet certified
@@ -2420,6 +2640,12 @@ Iceland,2014,,,Certified Guinea worm disease free
 Iceland,2015,,,Certified Guinea worm disease free
 Iceland,2016,,,Certified Guinea worm disease free
 Iceland,2017,,,Certified Guinea worm disease free
+Iceland,2018,,,Certified Guinea worm disease free
+Iceland,2019,,,Certified Guinea worm disease free
+Iceland,2020,,,Certified Guinea worm disease free
+India,2018,,,Certified Guinea worm disease free (previously endemic)
+India,2019,,,Certified Guinea worm disease free (previously endemic)
+India,2020,,,Certified Guinea worm disease free (previously endemic)
 Indonesia,1996,,,Not yet certified
 Indonesia,1997,,,Not yet certified
 Indonesia,1998,,,Not yet certified
@@ -2442,6 +2668,9 @@ Indonesia,2014,,,Certified Guinea worm disease free
 Indonesia,2015,,,Certified Guinea worm disease free
 Indonesia,2016,,,Certified Guinea worm disease free
 Indonesia,2017,,,Certified Guinea worm disease free
+Indonesia,2018,,,Certified Guinea worm disease free
+Indonesia,2019,,,Certified Guinea worm disease free
+Indonesia,2020,,,Certified Guinea worm disease free
 Iran,1996,,,Not yet certified
 Iran,1997,,,Not yet certified
 Iran,1998,,,Certified Guinea worm disease free
@@ -2464,6 +2693,9 @@ Iran,2014,,,Certified Guinea worm disease free
 Iran,2015,,,Certified Guinea worm disease free
 Iran,2016,,,Certified Guinea worm disease free
 Iran,2017,,,Certified Guinea worm disease free
+Iran,2018,,,Certified Guinea worm disease free
+Iran,2019,,,Certified Guinea worm disease free
+Iran,2020,,,Certified Guinea worm disease free
 Iraq,1996,,,Not yet certified
 Iraq,1997,,,Not yet certified
 Iraq,1998,,,Not yet certified
@@ -2486,6 +2718,9 @@ Iraq,2014,,,Certified Guinea worm disease free
 Iraq,2015,,,Certified Guinea worm disease free
 Iraq,2016,,,Certified Guinea worm disease free
 Iraq,2017,,,Certified Guinea worm disease free
+Iraq,2018,,,Certified Guinea worm disease free
+Iraq,2019,,,Certified Guinea worm disease free
+Iraq,2020,,,Certified Guinea worm disease free
 Ireland,1996,,,Not yet certified
 Ireland,1997,,,Not yet certified
 Ireland,1998,,,Not yet certified
@@ -2508,6 +2743,9 @@ Ireland,2014,,,Certified Guinea worm disease free
 Ireland,2015,,,Certified Guinea worm disease free
 Ireland,2016,,,Certified Guinea worm disease free
 Ireland,2017,,,Certified Guinea worm disease free
+Ireland,2018,,,Certified Guinea worm disease free
+Ireland,2019,,,Certified Guinea worm disease free
+Ireland,2020,,,Certified Guinea worm disease free
 Israel,1996,,,Not yet certified
 Israel,1997,,,Not yet certified
 Israel,1998,,,Not yet certified
@@ -2530,6 +2768,9 @@ Israel,2014,,,Certified Guinea worm disease free
 Israel,2015,,,Certified Guinea worm disease free
 Israel,2016,,,Certified Guinea worm disease free
 Israel,2017,,,Certified Guinea worm disease free
+Israel,2018,,,Certified Guinea worm disease free
+Israel,2019,,,Certified Guinea worm disease free
+Israel,2020,,,Certified Guinea worm disease free
 Italy,1996,,,Not yet certified
 Italy,1997,,,Not yet certified
 Italy,1998,,,Not yet certified
@@ -2552,6 +2793,9 @@ Italy,2014,,,Certified Guinea worm disease free
 Italy,2015,,,Certified Guinea worm disease free
 Italy,2016,,,Certified Guinea worm disease free
 Italy,2017,,,Certified Guinea worm disease free
+Italy,2018,,,Certified Guinea worm disease free
+Italy,2019,,,Certified Guinea worm disease free
+Italy,2020,,,Certified Guinea worm disease free
 Jamaica,1996,,,Not yet certified
 Jamaica,1997,,,Not yet certified
 Jamaica,1998,,,Not yet certified
@@ -2574,6 +2818,9 @@ Jamaica,2014,,,Certified Guinea worm disease free
 Jamaica,2015,,,Certified Guinea worm disease free
 Jamaica,2016,,,Certified Guinea worm disease free
 Jamaica,2017,,,Certified Guinea worm disease free
+Jamaica,2018,,,Certified Guinea worm disease free
+Jamaica,2019,,,Certified Guinea worm disease free
+Jamaica,2020,,,Certified Guinea worm disease free
 Japan,1996,,,Not yet certified
 Japan,1997,,,Not yet certified
 Japan,1998,,,Not yet certified
@@ -2596,6 +2843,9 @@ Japan,2014,,,Certified Guinea worm disease free
 Japan,2015,,,Certified Guinea worm disease free
 Japan,2016,,,Certified Guinea worm disease free
 Japan,2017,,,Certified Guinea worm disease free
+Japan,2018,,,Certified Guinea worm disease free
+Japan,2019,,,Certified Guinea worm disease free
+Japan,2020,,,Certified Guinea worm disease free
 Jordan,1996,,,Not yet certified
 Jordan,1997,,,Not yet certified
 Jordan,1998,,,Not yet certified
@@ -2618,6 +2868,9 @@ Jordan,2014,,,Certified Guinea worm disease free
 Jordan,2015,,,Certified Guinea worm disease free
 Jordan,2016,,,Certified Guinea worm disease free
 Jordan,2017,,,Certified Guinea worm disease free
+Jordan,2018,,,Certified Guinea worm disease free
+Jordan,2019,,,Certified Guinea worm disease free
+Jordan,2020,,,Certified Guinea worm disease free
 Kazakhstan,1996,,,Not yet certified
 Kazakhstan,1997,,,Not yet certified
 Kazakhstan,1998,,,Not yet certified
@@ -2640,6 +2893,12 @@ Kazakhstan,2014,,,Certified Guinea worm disease free
 Kazakhstan,2015,,,Certified Guinea worm disease free
 Kazakhstan,2016,,,Certified Guinea worm disease free
 Kazakhstan,2017,,,Certified Guinea worm disease free
+Kazakhstan,2018,,,Certified Guinea worm disease free
+Kazakhstan,2019,,,Certified Guinea worm disease free
+Kazakhstan,2020,,,Certified Guinea worm disease free
+Kenya,2018,,,Guinea worm disease free (pre-certification)
+Kenya,2019,,,Guinea worm disease free (pre-certification)
+Kenya,2020,,,Guinea worm disease free (pre-certification)
 Kiribati,1996,,,Not yet certified
 Kiribati,1997,,,Not yet certified
 Kiribati,1998,,,Certified Guinea worm disease free
@@ -2662,6 +2921,9 @@ Kiribati,2014,,,Certified Guinea worm disease free
 Kiribati,2015,,,Certified Guinea worm disease free
 Kiribati,2016,,,Certified Guinea worm disease free
 Kiribati,2017,,,Certified Guinea worm disease free
+Kiribati,2018,,,Certified Guinea worm disease free
+Kiribati,2019,,,Certified Guinea worm disease free
+Kiribati,2020,,,Certified Guinea worm disease free
 Kuwait,1996,,,Not yet certified
 Kuwait,1997,,,Not yet certified
 Kuwait,1998,,,Not yet certified
@@ -2684,6 +2946,9 @@ Kuwait,2014,,,Certified Guinea worm disease free
 Kuwait,2015,,,Certified Guinea worm disease free
 Kuwait,2016,,,Certified Guinea worm disease free
 Kuwait,2017,,,Certified Guinea worm disease free
+Kuwait,2018,,,Certified Guinea worm disease free
+Kuwait,2019,,,Certified Guinea worm disease free
+Kuwait,2020,,,Certified Guinea worm disease free
 Kyrgyzstan,1996,,,Not yet certified
 Kyrgyzstan,1997,,,Not yet certified
 Kyrgyzstan,1998,,,Not yet certified
@@ -2706,6 +2971,9 @@ Kyrgyzstan,2014,,,Certified Guinea worm disease free
 Kyrgyzstan,2015,,,Certified Guinea worm disease free
 Kyrgyzstan,2016,,,Certified Guinea worm disease free
 Kyrgyzstan,2017,,,Certified Guinea worm disease free
+Kyrgyzstan,2018,,,Certified Guinea worm disease free
+Kyrgyzstan,2019,,,Certified Guinea worm disease free
+Kyrgyzstan,2020,,,Certified Guinea worm disease free
 Laos,1996,,,Not yet certified
 Laos,1997,,,Not yet certified
 Laos,1998,,,Not yet certified
@@ -2728,6 +2996,9 @@ Laos,2014,,,Certified Guinea worm disease free
 Laos,2015,,,Certified Guinea worm disease free
 Laos,2016,,,Certified Guinea worm disease free
 Laos,2017,,,Certified Guinea worm disease free
+Laos,2018,,,Certified Guinea worm disease free
+Laos,2019,,,Certified Guinea worm disease free
+Laos,2020,,,Certified Guinea worm disease free
 Latvia,1996,,,Not yet certified
 Latvia,1997,,,Not yet certified
 Latvia,1998,,,Not yet certified
@@ -2750,6 +3021,9 @@ Latvia,2014,,,Certified Guinea worm disease free
 Latvia,2015,,,Certified Guinea worm disease free
 Latvia,2016,,,Certified Guinea worm disease free
 Latvia,2017,,,Certified Guinea worm disease free
+Latvia,2018,,,Certified Guinea worm disease free
+Latvia,2019,,,Certified Guinea worm disease free
+Latvia,2020,,,Certified Guinea worm disease free
 Lebanon,1996,,,Not yet certified
 Lebanon,1997,,,Not yet certified
 Lebanon,1998,,,Not yet certified
@@ -2772,6 +3046,9 @@ Lebanon,2014,,,Certified Guinea worm disease free
 Lebanon,2015,,,Certified Guinea worm disease free
 Lebanon,2016,,,Certified Guinea worm disease free
 Lebanon,2017,,,Certified Guinea worm disease free
+Lebanon,2018,,,Certified Guinea worm disease free
+Lebanon,2019,,,Certified Guinea worm disease free
+Lebanon,2020,,,Certified Guinea worm disease free
 Lesotho,1996,,,Not yet certified
 Lesotho,1997,,,Not yet certified
 Lesotho,1998,,,Not yet certified
@@ -2794,6 +3071,9 @@ Lesotho,2014,,,Certified Guinea worm disease free
 Lesotho,2015,,,Certified Guinea worm disease free
 Lesotho,2016,,,Certified Guinea worm disease free
 Lesotho,2017,,,Certified Guinea worm disease free
+Lesotho,2018,,,Certified Guinea worm disease free
+Lesotho,2019,,,Certified Guinea worm disease free
+Lesotho,2020,,,Certified Guinea worm disease free
 Liberia,1996,,,Not yet certified
 Liberia,1997,,,Not yet certified
 Liberia,1998,,,Not yet certified
@@ -2816,6 +3096,9 @@ Liberia,2014,,,Certified Guinea worm disease free
 Liberia,2015,,,Certified Guinea worm disease free
 Liberia,2016,,,Certified Guinea worm disease free
 Liberia,2017,,,Certified Guinea worm disease free
+Liberia,2018,,,Certified Guinea worm disease free
+Liberia,2019,,,Certified Guinea worm disease free
+Liberia,2020,,,Certified Guinea worm disease free
 Libya,1996,,,Not yet certified
 Libya,1997,,,Not yet certified
 Libya,1998,,,Not yet certified
@@ -2838,6 +3121,9 @@ Libya,2014,,,Certified Guinea worm disease free
 Libya,2015,,,Certified Guinea worm disease free
 Libya,2016,,,Certified Guinea worm disease free
 Libya,2017,,,Certified Guinea worm disease free
+Libya,2018,,,Certified Guinea worm disease free
+Libya,2019,,,Certified Guinea worm disease free
+Libya,2020,,,Certified Guinea worm disease free
 Lithuania,1996,,,Not yet certified
 Lithuania,1997,,,Not yet certified
 Lithuania,1998,,,Not yet certified
@@ -2860,6 +3146,9 @@ Lithuania,2014,,,Certified Guinea worm disease free
 Lithuania,2015,,,Certified Guinea worm disease free
 Lithuania,2016,,,Certified Guinea worm disease free
 Lithuania,2017,,,Certified Guinea worm disease free
+Lithuania,2018,,,Certified Guinea worm disease free
+Lithuania,2019,,,Certified Guinea worm disease free
+Lithuania,2020,,,Certified Guinea worm disease free
 Luxembourg,1996,,,Not yet certified
 Luxembourg,1997,,,Not yet certified
 Luxembourg,1998,,,Not yet certified
@@ -2882,6 +3171,9 @@ Luxembourg,2014,,,Certified Guinea worm disease free
 Luxembourg,2015,,,Certified Guinea worm disease free
 Luxembourg,2016,,,Certified Guinea worm disease free
 Luxembourg,2017,,,Certified Guinea worm disease free
+Luxembourg,2018,,,Certified Guinea worm disease free
+Luxembourg,2019,,,Certified Guinea worm disease free
+Luxembourg,2020,,,Certified Guinea worm disease free
 Madagascar,1996,,,Not yet certified
 Madagascar,1997,,,Not yet certified
 Madagascar,1998,,,Not yet certified
@@ -2904,6 +3196,9 @@ Madagascar,2014,,,Certified Guinea worm disease free
 Madagascar,2015,,,Certified Guinea worm disease free
 Madagascar,2016,,,Certified Guinea worm disease free
 Madagascar,2017,,,Certified Guinea worm disease free
+Madagascar,2018,,,Certified Guinea worm disease free
+Madagascar,2019,,,Certified Guinea worm disease free
+Madagascar,2020,,,Certified Guinea worm disease free
 Malawi,1996,,,Not yet certified
 Malawi,1997,,,Not yet certified
 Malawi,1998,,,Not yet certified
@@ -2926,6 +3221,9 @@ Malawi,2014,,,Certified Guinea worm disease free
 Malawi,2015,,,Certified Guinea worm disease free
 Malawi,2016,,,Certified Guinea worm disease free
 Malawi,2017,,,Certified Guinea worm disease free
+Malawi,2018,,,Certified Guinea worm disease free
+Malawi,2019,,,Certified Guinea worm disease free
+Malawi,2020,,,Certified Guinea worm disease free
 Malaysia,1996,,,Not yet certified
 Malaysia,1997,,,Not yet certified
 Malaysia,1998,,,Not yet certified
@@ -2948,6 +3246,9 @@ Malaysia,2014,,,Certified Guinea worm disease free
 Malaysia,2015,,,Certified Guinea worm disease free
 Malaysia,2016,,,Certified Guinea worm disease free
 Malaysia,2017,,,Certified Guinea worm disease free
+Malaysia,2018,,,Certified Guinea worm disease free
+Malaysia,2019,,,Certified Guinea worm disease free
+Malaysia,2020,,,Certified Guinea worm disease free
 Maldives,1996,,,Not yet certified
 Maldives,1997,,,Not yet certified
 Maldives,1998,,,Not yet certified
@@ -2970,6 +3271,9 @@ Maldives,2014,,,Certified Guinea worm disease free
 Maldives,2015,,,Certified Guinea worm disease free
 Maldives,2016,,,Certified Guinea worm disease free
 Maldives,2017,,,Certified Guinea worm disease free
+Maldives,2018,,,Certified Guinea worm disease free
+Maldives,2019,,,Certified Guinea worm disease free
+Maldives,2020,,,Certified Guinea worm disease free
 Malta,1996,,,Not yet certified
 Malta,1997,,,Not yet certified
 Malta,1998,,,Not yet certified
@@ -2992,6 +3296,9 @@ Malta,2014,,,Certified Guinea worm disease free
 Malta,2015,,,Certified Guinea worm disease free
 Malta,2016,,,Certified Guinea worm disease free
 Malta,2017,,,Certified Guinea worm disease free
+Malta,2018,,,Certified Guinea worm disease free
+Malta,2019,,,Certified Guinea worm disease free
+Malta,2020,,,Certified Guinea worm disease free
 Marshall Islands,1996,,,Not yet certified
 Marshall Islands,1997,,,Not yet certified
 Marshall Islands,1998,,,Not yet certified
@@ -3014,6 +3321,12 @@ Marshall Islands,2014,,,Certified Guinea worm disease free
 Marshall Islands,2015,,,Certified Guinea worm disease free
 Marshall Islands,2016,,,Certified Guinea worm disease free
 Marshall Islands,2017,,,Certified Guinea worm disease free
+Marshall Islands,2018,,,Certified Guinea worm disease free
+Marshall Islands,2019,,,Certified Guinea worm disease free
+Marshall Islands,2020,,,Certified Guinea worm disease free
+Mauritania,2018,,,Certified Guinea worm disease free (previously endemic)
+Mauritania,2019,,,Certified Guinea worm disease free (previously endemic)
+Mauritania,2020,,,Certified Guinea worm disease free (previously endemic)
 Mauritius,1996,,,Not yet certified
 Mauritius,1997,,,Not yet certified
 Mauritius,1998,,,Not yet certified
@@ -3036,6 +3349,9 @@ Mauritius,2014,,,Certified Guinea worm disease free
 Mauritius,2015,,,Certified Guinea worm disease free
 Mauritius,2016,,,Certified Guinea worm disease free
 Mauritius,2017,,,Certified Guinea worm disease free
+Mauritius,2018,,,Certified Guinea worm disease free
+Mauritius,2019,,,Certified Guinea worm disease free
+Mauritius,2020,,,Certified Guinea worm disease free
 Mexico,1996,,,Not yet certified
 Mexico,1997,,,Not yet certified
 Mexico,1998,,,Not yet certified
@@ -3058,6 +3374,9 @@ Mexico,2014,,,Certified Guinea worm disease free
 Mexico,2015,,,Certified Guinea worm disease free
 Mexico,2016,,,Certified Guinea worm disease free
 Mexico,2017,,,Certified Guinea worm disease free
+Mexico,2018,,,Certified Guinea worm disease free
+Mexico,2019,,,Certified Guinea worm disease free
+Mexico,2020,,,Certified Guinea worm disease free
 Micronesia (country),1996,,,Not yet certified
 Micronesia (country),1997,,,Not yet certified
 Micronesia (country),1998,,,Not yet certified
@@ -3080,6 +3399,9 @@ Micronesia (country),2014,,,Certified Guinea worm disease free
 Micronesia (country),2015,,,Certified Guinea worm disease free
 Micronesia (country),2016,,,Certified Guinea worm disease free
 Micronesia (country),2017,,,Certified Guinea worm disease free
+Micronesia (country),2018,,,Certified Guinea worm disease free
+Micronesia (country),2019,,,Certified Guinea worm disease free
+Micronesia (country),2020,,,Certified Guinea worm disease free
 Monaco,1996,,,Not yet certified
 Monaco,1997,,,Not yet certified
 Monaco,1998,,,Not yet certified
@@ -3102,6 +3424,9 @@ Monaco,2014,,,Certified Guinea worm disease free
 Monaco,2015,,,Certified Guinea worm disease free
 Monaco,2016,,,Certified Guinea worm disease free
 Monaco,2017,,,Certified Guinea worm disease free
+Monaco,2018,,,Certified Guinea worm disease free
+Monaco,2019,,,Certified Guinea worm disease free
+Monaco,2020,,,Certified Guinea worm disease free
 Mongolia,1996,,,Not yet certified
 Mongolia,1997,,,Not yet certified
 Mongolia,1998,,,Certified Guinea worm disease free
@@ -3124,6 +3449,9 @@ Mongolia,2014,,,Certified Guinea worm disease free
 Mongolia,2015,,,Certified Guinea worm disease free
 Mongolia,2016,,,Certified Guinea worm disease free
 Mongolia,2017,,,Certified Guinea worm disease free
+Mongolia,2018,,,Certified Guinea worm disease free
+Mongolia,2019,,,Certified Guinea worm disease free
+Mongolia,2020,,,Certified Guinea worm disease free
 Montenegro,1996,,,Not yet certified
 Montenegro,1997,,,Not yet certified
 Montenegro,1998,,,Not yet certified
@@ -3146,6 +3474,9 @@ Montenegro,2014,,,Certified Guinea worm disease free
 Montenegro,2015,,,Certified Guinea worm disease free
 Montenegro,2016,,,Certified Guinea worm disease free
 Montenegro,2017,,,Certified Guinea worm disease free
+Montenegro,2018,,,Certified Guinea worm disease free
+Montenegro,2019,,,Certified Guinea worm disease free
+Montenegro,2020,,,Certified Guinea worm disease free
 Morocco,1996,,,Not yet certified
 Morocco,1997,,,Not yet certified
 Morocco,1998,,,Not yet certified
@@ -3168,6 +3499,9 @@ Morocco,2014,,,Certified Guinea worm disease free
 Morocco,2015,,,Certified Guinea worm disease free
 Morocco,2016,,,Certified Guinea worm disease free
 Morocco,2017,,,Certified Guinea worm disease free
+Morocco,2018,,,Certified Guinea worm disease free
+Morocco,2019,,,Certified Guinea worm disease free
+Morocco,2020,,,Certified Guinea worm disease free
 Mozambique,1996,,,Not yet certified
 Mozambique,1997,,,Not yet certified
 Mozambique,1998,,,Not yet certified
@@ -3190,6 +3524,9 @@ Mozambique,2014,,,Certified Guinea worm disease free
 Mozambique,2015,,,Certified Guinea worm disease free
 Mozambique,2016,,,Certified Guinea worm disease free
 Mozambique,2017,,,Certified Guinea worm disease free
+Mozambique,2018,,,Certified Guinea worm disease free
+Mozambique,2019,,,Certified Guinea worm disease free
+Mozambique,2020,,,Certified Guinea worm disease free
 Myanmar,1996,,,Not yet certified
 Myanmar,1997,,,Not yet certified
 Myanmar,1998,,,Not yet certified
@@ -3212,6 +3549,9 @@ Myanmar,2014,,,Certified Guinea worm disease free
 Myanmar,2015,,,Certified Guinea worm disease free
 Myanmar,2016,,,Certified Guinea worm disease free
 Myanmar,2017,,,Certified Guinea worm disease free
+Myanmar,2018,,,Certified Guinea worm disease free
+Myanmar,2019,,,Certified Guinea worm disease free
+Myanmar,2020,,,Certified Guinea worm disease free
 Namibia,1996,,,Not yet certified
 Namibia,1997,,,Not yet certified
 Namibia,1998,,,Not yet certified
@@ -3234,6 +3574,9 @@ Namibia,2014,,,Certified Guinea worm disease free
 Namibia,2015,,,Certified Guinea worm disease free
 Namibia,2016,,,Certified Guinea worm disease free
 Namibia,2017,,,Certified Guinea worm disease free
+Namibia,2018,,,Certified Guinea worm disease free
+Namibia,2019,,,Certified Guinea worm disease free
+Namibia,2020,,,Certified Guinea worm disease free
 Nauru,1996,,,Not yet certified
 Nauru,1997,,,Not yet certified
 Nauru,1998,,,Not yet certified
@@ -3256,6 +3599,9 @@ Nauru,2014,,,Certified Guinea worm disease free
 Nauru,2015,,,Certified Guinea worm disease free
 Nauru,2016,,,Certified Guinea worm disease free
 Nauru,2017,,,Certified Guinea worm disease free
+Nauru,2018,,,Certified Guinea worm disease free
+Nauru,2019,,,Certified Guinea worm disease free
+Nauru,2020,,,Certified Guinea worm disease free
 Nepal,1996,,,Not yet certified
 Nepal,1997,,,Not yet certified
 Nepal,1998,,,Not yet certified
@@ -3278,6 +3624,9 @@ Nepal,2014,,,Certified Guinea worm disease free
 Nepal,2015,,,Certified Guinea worm disease free
 Nepal,2016,,,Certified Guinea worm disease free
 Nepal,2017,,,Certified Guinea worm disease free
+Nepal,2018,,,Certified Guinea worm disease free
+Nepal,2019,,,Certified Guinea worm disease free
+Nepal,2020,,,Certified Guinea worm disease free
 Netherlands,1996,,,Not yet certified
 Netherlands,1997,,,Not yet certified
 Netherlands,1998,,,Not yet certified
@@ -3300,6 +3649,9 @@ Netherlands,2014,,,Certified Guinea worm disease free
 Netherlands,2015,,,Certified Guinea worm disease free
 Netherlands,2016,,,Certified Guinea worm disease free
 Netherlands,2017,,,Certified Guinea worm disease free
+Netherlands,2018,,,Certified Guinea worm disease free
+Netherlands,2019,,,Certified Guinea worm disease free
+Netherlands,2020,,,Certified Guinea worm disease free
 New Zealand,1996,,,Not yet certified
 New Zealand,1997,,,Not yet certified
 New Zealand,1998,,,Not yet certified
@@ -3322,6 +3674,9 @@ New Zealand,2014,,,Certified Guinea worm disease free
 New Zealand,2015,,,Certified Guinea worm disease free
 New Zealand,2016,,,Certified Guinea worm disease free
 New Zealand,2017,,,Certified Guinea worm disease free
+New Zealand,2018,,,Certified Guinea worm disease free
+New Zealand,2019,,,Certified Guinea worm disease free
+New Zealand,2020,,,Certified Guinea worm disease free
 Nicaragua,1996,,,Not yet certified
 Nicaragua,1997,,,Not yet certified
 Nicaragua,1998,,,Not yet certified
@@ -3344,6 +3699,15 @@ Nicaragua,2014,,,Certified Guinea worm disease free
 Nicaragua,2015,,,Certified Guinea worm disease free
 Nicaragua,2016,,,Certified Guinea worm disease free
 Nicaragua,2017,,,Certified Guinea worm disease free
+Nicaragua,2018,,,Certified Guinea worm disease free
+Nicaragua,2019,,,Certified Guinea worm disease free
+Nicaragua,2020,,,Certified Guinea worm disease free
+Niger,2018,,,Certified Guinea worm disease free (previously endemic)
+Niger,2019,,,Certified Guinea worm disease free (previously endemic)
+Niger,2020,,,Certified Guinea worm disease free (previously endemic)
+Nigeria,2018,,,Certified Guinea worm disease free (previously endemic)
+Nigeria,2019,,,Certified Guinea worm disease free (previously endemic)
+Nigeria,2020,,,Certified Guinea worm disease free (previously endemic)
 Niue,1996,,,Not yet certified
 Niue,1997,,,Not yet certified
 Niue,1998,,,Not yet certified
@@ -3366,6 +3730,9 @@ Niue,2014,,,Certified Guinea worm disease free
 Niue,2015,,,Certified Guinea worm disease free
 Niue,2016,,,Certified Guinea worm disease free
 Niue,2017,,,Certified Guinea worm disease free
+Niue,2018,,,Certified Guinea worm disease free
+Niue,2019,,,Certified Guinea worm disease free
+Niue,2020,,,Certified Guinea worm disease free
 Norway,1996,,,Not yet certified
 Norway,1997,,,Not yet certified
 Norway,1998,,,Not yet certified
@@ -3388,6 +3755,9 @@ Norway,2014,,,Certified Guinea worm disease free
 Norway,2015,,,Certified Guinea worm disease free
 Norway,2016,,,Certified Guinea worm disease free
 Norway,2017,,,Certified Guinea worm disease free
+Norway,2018,,,Certified Guinea worm disease free
+Norway,2019,,,Certified Guinea worm disease free
+Norway,2020,,,Certified Guinea worm disease free
 Oman,1996,,,Not yet certified
 Oman,1997,,,Not yet certified
 Oman,1998,,,Not yet certified
@@ -3410,6 +3780,12 @@ Oman,2014,,,Certified Guinea worm disease free
 Oman,2015,,,Certified Guinea worm disease free
 Oman,2016,,,Certified Guinea worm disease free
 Oman,2017,,,Certified Guinea worm disease free
+Oman,2018,,,Certified Guinea worm disease free
+Oman,2019,,,Certified Guinea worm disease free
+Oman,2020,,,Certified Guinea worm disease free
+Pakistan,2018,,,Certified Guinea worm disease free (previously endemic)
+Pakistan,2019,,,Certified Guinea worm disease free (previously endemic)
+Pakistan,2020,,,Certified Guinea worm disease free (previously endemic)
 Palau,1996,,,Not yet certified
 Palau,1997,,,Not yet certified
 Palau,1998,,,Not yet certified
@@ -3432,6 +3808,9 @@ Palau,2014,,,Certified Guinea worm disease free
 Palau,2015,,,Certified Guinea worm disease free
 Palau,2016,,,Certified Guinea worm disease free
 Palau,2017,,,Certified Guinea worm disease free
+Palau,2018,,,Certified Guinea worm disease free
+Palau,2019,,,Certified Guinea worm disease free
+Palau,2020,,,Certified Guinea worm disease free
 Panama,1996,,,Not yet certified
 Panama,1997,,,Not yet certified
 Panama,1998,,,Not yet certified
@@ -3454,6 +3833,9 @@ Panama,2014,,,Certified Guinea worm disease free
 Panama,2015,,,Certified Guinea worm disease free
 Panama,2016,,,Certified Guinea worm disease free
 Panama,2017,,,Certified Guinea worm disease free
+Panama,2018,,,Certified Guinea worm disease free
+Panama,2019,,,Certified Guinea worm disease free
+Panama,2020,,,Certified Guinea worm disease free
 Papua New Guinea,1996,,,Not yet certified
 Papua New Guinea,1997,,,Not yet certified
 Papua New Guinea,1998,,,Certified Guinea worm disease free
@@ -3476,6 +3858,9 @@ Papua New Guinea,2014,,,Certified Guinea worm disease free
 Papua New Guinea,2015,,,Certified Guinea worm disease free
 Papua New Guinea,2016,,,Certified Guinea worm disease free
 Papua New Guinea,2017,,,Certified Guinea worm disease free
+Papua New Guinea,2018,,,Certified Guinea worm disease free
+Papua New Guinea,2019,,,Certified Guinea worm disease free
+Papua New Guinea,2020,,,Certified Guinea worm disease free
 Paraguay,1996,,,Not yet certified
 Paraguay,1997,,,Not yet certified
 Paraguay,1998,,,Not yet certified
@@ -3498,6 +3883,9 @@ Paraguay,2014,,,Certified Guinea worm disease free
 Paraguay,2015,,,Certified Guinea worm disease free
 Paraguay,2016,,,Certified Guinea worm disease free
 Paraguay,2017,,,Certified Guinea worm disease free
+Paraguay,2018,,,Certified Guinea worm disease free
+Paraguay,2019,,,Certified Guinea worm disease free
+Paraguay,2020,,,Certified Guinea worm disease free
 Peru,1996,,,Not yet certified
 Peru,1997,,,Not yet certified
 Peru,1998,,,Not yet certified
@@ -3520,6 +3908,9 @@ Peru,2014,,,Certified Guinea worm disease free
 Peru,2015,,,Certified Guinea worm disease free
 Peru,2016,,,Certified Guinea worm disease free
 Peru,2017,,,Certified Guinea worm disease free
+Peru,2018,,,Certified Guinea worm disease free
+Peru,2019,,,Certified Guinea worm disease free
+Peru,2020,,,Certified Guinea worm disease free
 Philippines,1996,,,Not yet certified
 Philippines,1997,,,Not yet certified
 Philippines,1998,,,Not yet certified
@@ -3542,6 +3933,9 @@ Philippines,2014,,,Certified Guinea worm disease free
 Philippines,2015,,,Certified Guinea worm disease free
 Philippines,2016,,,Certified Guinea worm disease free
 Philippines,2017,,,Certified Guinea worm disease free
+Philippines,2018,,,Certified Guinea worm disease free
+Philippines,2019,,,Certified Guinea worm disease free
+Philippines,2020,,,Certified Guinea worm disease free
 Poland,1996,,,Not yet certified
 Poland,1997,,,Not yet certified
 Poland,1998,,,Not yet certified
@@ -3564,6 +3958,9 @@ Poland,2014,,,Certified Guinea worm disease free
 Poland,2015,,,Certified Guinea worm disease free
 Poland,2016,,,Certified Guinea worm disease free
 Poland,2017,,,Certified Guinea worm disease free
+Poland,2018,,,Certified Guinea worm disease free
+Poland,2019,,,Certified Guinea worm disease free
+Poland,2020,,,Certified Guinea worm disease free
 Portugal,1996,,,Not yet certified
 Portugal,1997,,,Not yet certified
 Portugal,1998,,,Not yet certified
@@ -3586,6 +3983,9 @@ Portugal,2014,,,Certified Guinea worm disease free
 Portugal,2015,,,Certified Guinea worm disease free
 Portugal,2016,,,Certified Guinea worm disease free
 Portugal,2017,,,Certified Guinea worm disease free
+Portugal,2018,,,Certified Guinea worm disease free
+Portugal,2019,,,Certified Guinea worm disease free
+Portugal,2020,,,Certified Guinea worm disease free
 Qatar,1996,,,Not yet certified
 Qatar,1997,,,Not yet certified
 Qatar,1998,,,Not yet certified
@@ -3608,6 +4008,9 @@ Qatar,2014,,,Certified Guinea worm disease free
 Qatar,2015,,,Certified Guinea worm disease free
 Qatar,2016,,,Certified Guinea worm disease free
 Qatar,2017,,,Certified Guinea worm disease free
+Qatar,2018,,,Certified Guinea worm disease free
+Qatar,2019,,,Certified Guinea worm disease free
+Qatar,2020,,,Certified Guinea worm disease free
 South Korea,1996,,,Not yet certified
 South Korea,1997,,,Not yet certified
 South Korea,1998,,,Not yet certified
@@ -3630,6 +4033,9 @@ South Korea,2014,,,Certified Guinea worm disease free
 South Korea,2015,,,Certified Guinea worm disease free
 South Korea,2016,,,Certified Guinea worm disease free
 South Korea,2017,,,Certified Guinea worm disease free
+South Korea,2018,,,Certified Guinea worm disease free
+South Korea,2019,,,Certified Guinea worm disease free
+South Korea,2020,,,Certified Guinea worm disease free
 Moldova,1996,,,Not yet certified
 Moldova,1997,,,Not yet certified
 Moldova,1998,,,Not yet certified
@@ -3652,6 +4058,9 @@ Moldova,2014,,,Certified Guinea worm disease free
 Moldova,2015,,,Certified Guinea worm disease free
 Moldova,2016,,,Certified Guinea worm disease free
 Moldova,2017,,,Certified Guinea worm disease free
+Moldova,2018,,,Certified Guinea worm disease free
+Moldova,2019,,,Certified Guinea worm disease free
+Moldova,2020,,,Certified Guinea worm disease free
 Romania,1996,,,Not yet certified
 Romania,1997,,,Not yet certified
 Romania,1998,,,Certified Guinea worm disease free
@@ -3674,6 +4083,9 @@ Romania,2014,,,Certified Guinea worm disease free
 Romania,2015,,,Certified Guinea worm disease free
 Romania,2016,,,Certified Guinea worm disease free
 Romania,2017,,,Certified Guinea worm disease free
+Romania,2018,,,Certified Guinea worm disease free
+Romania,2019,,,Certified Guinea worm disease free
+Romania,2020,,,Certified Guinea worm disease free
 Russia,1996,,,Not yet certified
 Russia,1997,,,Not yet certified
 Russia,1998,,,Not yet certified
@@ -3696,6 +4108,9 @@ Russia,2014,,,Certified Guinea worm disease free
 Russia,2015,,,Certified Guinea worm disease free
 Russia,2016,,,Certified Guinea worm disease free
 Russia,2017,,,Certified Guinea worm disease free
+Russia,2018,,,Certified Guinea worm disease free
+Russia,2019,,,Certified Guinea worm disease free
+Russia,2020,,,Certified Guinea worm disease free
 Rwanda,1996,,,Not yet certified
 Rwanda,1997,,,Not yet certified
 Rwanda,1998,,,Not yet certified
@@ -3718,6 +4133,9 @@ Rwanda,2014,,,Certified Guinea worm disease free
 Rwanda,2015,,,Certified Guinea worm disease free
 Rwanda,2016,,,Certified Guinea worm disease free
 Rwanda,2017,,,Certified Guinea worm disease free
+Rwanda,2018,,,Certified Guinea worm disease free
+Rwanda,2019,,,Certified Guinea worm disease free
+Rwanda,2020,,,Certified Guinea worm disease free
 Saint Kitts and Nevis,1996,,,Not yet certified
 Saint Kitts and Nevis,1997,,,Not yet certified
 Saint Kitts and Nevis,1998,,,Not yet certified
@@ -3740,6 +4158,9 @@ Saint Kitts and Nevis,2014,,,Certified Guinea worm disease free
 Saint Kitts and Nevis,2015,,,Certified Guinea worm disease free
 Saint Kitts and Nevis,2016,,,Certified Guinea worm disease free
 Saint Kitts and Nevis,2017,,,Certified Guinea worm disease free
+Saint Kitts and Nevis,2018,,,Certified Guinea worm disease free
+Saint Kitts and Nevis,2019,,,Certified Guinea worm disease free
+Saint Kitts and Nevis,2020,,,Certified Guinea worm disease free
 Saint Lucia,1996,,,Not yet certified
 Saint Lucia,1997,,,Not yet certified
 Saint Lucia,1998,,,Not yet certified
@@ -3762,6 +4183,9 @@ Saint Lucia,2014,,,Certified Guinea worm disease free
 Saint Lucia,2015,,,Certified Guinea worm disease free
 Saint Lucia,2016,,,Certified Guinea worm disease free
 Saint Lucia,2017,,,Certified Guinea worm disease free
+Saint Lucia,2018,,,Certified Guinea worm disease free
+Saint Lucia,2019,,,Certified Guinea worm disease free
+Saint Lucia,2020,,,Certified Guinea worm disease free
 Saint Vincent and the Grenadines,1996,,,Not yet certified
 Saint Vincent and the Grenadines,1997,,,Not yet certified
 Saint Vincent and the Grenadines,1998,,,Not yet certified
@@ -3784,6 +4208,9 @@ Saint Vincent and the Grenadines,2014,,,Certified Guinea worm disease free
 Saint Vincent and the Grenadines,2015,,,Certified Guinea worm disease free
 Saint Vincent and the Grenadines,2016,,,Certified Guinea worm disease free
 Saint Vincent and the Grenadines,2017,,,Certified Guinea worm disease free
+Saint Vincent and the Grenadines,2018,,,Certified Guinea worm disease free
+Saint Vincent and the Grenadines,2019,,,Certified Guinea worm disease free
+Saint Vincent and the Grenadines,2020,,,Certified Guinea worm disease free
 Samoa,1996,,,Not yet certified
 Samoa,1997,,,Not yet certified
 Samoa,1998,,,Not yet certified
@@ -3806,6 +4233,9 @@ Samoa,2014,,,Certified Guinea worm disease free
 Samoa,2015,,,Certified Guinea worm disease free
 Samoa,2016,,,Certified Guinea worm disease free
 Samoa,2017,,,Certified Guinea worm disease free
+Samoa,2018,,,Certified Guinea worm disease free
+Samoa,2019,,,Certified Guinea worm disease free
+Samoa,2020,,,Certified Guinea worm disease free
 San Marino,1996,,,Not yet certified
 San Marino,1997,,,Not yet certified
 San Marino,1998,,,Not yet certified
@@ -3828,6 +4258,9 @@ San Marino,2014,,,Certified Guinea worm disease free
 San Marino,2015,,,Certified Guinea worm disease free
 San Marino,2016,,,Certified Guinea worm disease free
 San Marino,2017,,,Certified Guinea worm disease free
+San Marino,2018,,,Certified Guinea worm disease free
+San Marino,2019,,,Certified Guinea worm disease free
+San Marino,2020,,,Certified Guinea worm disease free
 Sao Tome and Principe,1996,,,Not yet certified
 Sao Tome and Principe,1997,,,Not yet certified
 Sao Tome and Principe,1998,,,Not yet certified
@@ -3850,6 +4283,9 @@ Sao Tome and Principe,2014,,,Certified Guinea worm disease free
 Sao Tome and Principe,2015,,,Certified Guinea worm disease free
 Sao Tome and Principe,2016,,,Certified Guinea worm disease free
 Sao Tome and Principe,2017,,,Certified Guinea worm disease free
+Sao Tome and Principe,2018,,,Certified Guinea worm disease free
+Sao Tome and Principe,2019,,,Certified Guinea worm disease free
+Sao Tome and Principe,2020,,,Certified Guinea worm disease free
 Saudi Arabia,1996,,,Not yet certified
 Saudi Arabia,1997,,,Not yet certified
 Saudi Arabia,1998,,,Not yet certified
@@ -3872,6 +4308,12 @@ Saudi Arabia,2014,,,Certified Guinea worm disease free
 Saudi Arabia,2015,,,Certified Guinea worm disease free
 Saudi Arabia,2016,,,Certified Guinea worm disease free
 Saudi Arabia,2017,,,Certified Guinea worm disease free
+Saudi Arabia,2018,,,Certified Guinea worm disease free
+Saudi Arabia,2019,,,Certified Guinea worm disease free
+Saudi Arabia,2020,,,Certified Guinea worm disease free
+Senegal,2018,,,Certified Guinea worm disease free (previously endemic)
+Senegal,2019,,,Certified Guinea worm disease free (previously endemic)
+Senegal,2020,,,Certified Guinea worm disease free (previously endemic)
 Serbia,1996,,,Not yet certified
 Serbia,1997,,,Not yet certified
 Serbia,1998,,,Not yet certified
@@ -3894,6 +4336,9 @@ Serbia,2014,,,Certified Guinea worm disease free
 Serbia,2015,,,Certified Guinea worm disease free
 Serbia,2016,,,Certified Guinea worm disease free
 Serbia,2017,,,Certified Guinea worm disease free
+Serbia,2018,,,Certified Guinea worm disease free
+Serbia,2019,,,Certified Guinea worm disease free
+Serbia,2020,,,Certified Guinea worm disease free
 Seychelles,1996,,,Not yet certified
 Seychelles,1997,,,Not yet certified
 Seychelles,1998,,,Not yet certified
@@ -3916,6 +4361,9 @@ Seychelles,2014,,,Certified Guinea worm disease free
 Seychelles,2015,,,Certified Guinea worm disease free
 Seychelles,2016,,,Certified Guinea worm disease free
 Seychelles,2017,,,Certified Guinea worm disease free
+Seychelles,2018,,,Certified Guinea worm disease free
+Seychelles,2019,,,Certified Guinea worm disease free
+Seychelles,2020,,,Certified Guinea worm disease free
 Sierra Leone,1996,,,Guinea worm disease free (pre-certification)
 Sierra Leone,1997,,,Not yet certified
 Sierra Leone,1998,,,Not yet certified
@@ -3938,6 +4386,9 @@ Sierra Leone,2014,,,Certified Guinea worm disease free
 Sierra Leone,2015,,,Certified Guinea worm disease free
 Sierra Leone,2016,,,Certified Guinea worm disease free
 Sierra Leone,2017,,,Certified Guinea worm disease free
+Sierra Leone,2018,,,Certified Guinea worm disease free
+Sierra Leone,2019,,,Certified Guinea worm disease free
+Sierra Leone,2020,,,Certified Guinea worm disease free
 Singapore,1996,,,Not yet certified
 Singapore,1997,,,Not yet certified
 Singapore,1998,,,Certified Guinea worm disease free
@@ -3960,6 +4411,9 @@ Singapore,2014,,,Certified Guinea worm disease free
 Singapore,2015,,,Certified Guinea worm disease free
 Singapore,2016,,,Certified Guinea worm disease free
 Singapore,2017,,,Certified Guinea worm disease free
+Singapore,2018,,,Certified Guinea worm disease free
+Singapore,2019,,,Certified Guinea worm disease free
+Singapore,2020,,,Certified Guinea worm disease free
 Slovakia,1996,,,Not yet certified
 Slovakia,1997,,,Not yet certified
 Slovakia,1998,,,Not yet certified
@@ -3982,6 +4436,9 @@ Slovakia,2014,,,Certified Guinea worm disease free
 Slovakia,2015,,,Certified Guinea worm disease free
 Slovakia,2016,,,Certified Guinea worm disease free
 Slovakia,2017,,,Certified Guinea worm disease free
+Slovakia,2018,,,Certified Guinea worm disease free
+Slovakia,2019,,,Certified Guinea worm disease free
+Slovakia,2020,,,Certified Guinea worm disease free
 Slovenia,1996,,,Not yet certified
 Slovenia,1997,,,Not yet certified
 Slovenia,1998,,,Not yet certified
@@ -4004,6 +4461,9 @@ Slovenia,2014,,,Certified Guinea worm disease free
 Slovenia,2015,,,Certified Guinea worm disease free
 Slovenia,2016,,,Certified Guinea worm disease free
 Slovenia,2017,,,Certified Guinea worm disease free
+Slovenia,2018,,,Certified Guinea worm disease free
+Slovenia,2019,,,Certified Guinea worm disease free
+Slovenia,2020,,,Certified Guinea worm disease free
 Solomon Islands,1996,,,Not yet certified
 Solomon Islands,1997,,,Not yet certified
 Solomon Islands,1998,,,Certified Guinea worm disease free
@@ -4026,6 +4486,9 @@ Solomon Islands,2014,,,Certified Guinea worm disease free
 Solomon Islands,2015,,,Certified Guinea worm disease free
 Solomon Islands,2016,,,Certified Guinea worm disease free
 Solomon Islands,2017,,,Certified Guinea worm disease free
+Solomon Islands,2018,,,Certified Guinea worm disease free
+Solomon Islands,2019,,,Certified Guinea worm disease free
+Solomon Islands,2020,,,Certified Guinea worm disease free
 Somalia,1996,,,Not yet certified
 Somalia,1997,,,Not yet certified
 Somalia,1998,,,Not yet certified
@@ -4048,6 +4511,9 @@ Somalia,2014,,,Certified Guinea worm disease free
 Somalia,2015,,,Certified Guinea worm disease free
 Somalia,2016,,,Certified Guinea worm disease free
 Somalia,2017,,,Certified Guinea worm disease free
+Somalia,2018,,,Certified Guinea worm disease free
+Somalia,2019,,,Certified Guinea worm disease free
+Somalia,2020,,,Certified Guinea worm disease free
 South Africa,1996,,,Not yet certified
 South Africa,1997,,,Not yet certified
 South Africa,1998,,,Not yet certified
@@ -4070,6 +4536,9 @@ South Africa,2014,,,Certified Guinea worm disease free
 South Africa,2015,,,Certified Guinea worm disease free
 South Africa,2016,,,Certified Guinea worm disease free
 South Africa,2017,,,Certified Guinea worm disease free
+South Africa,2018,,,Certified Guinea worm disease free
+South Africa,2019,,,Certified Guinea worm disease free
+South Africa,2020,,,Certified Guinea worm disease free
 Spain,1996,,,Not yet certified
 Spain,1997,,,Not yet certified
 Spain,1998,,,Not yet certified
@@ -4092,6 +4561,9 @@ Spain,2014,,,Certified Guinea worm disease free
 Spain,2015,,,Certified Guinea worm disease free
 Spain,2016,,,Certified Guinea worm disease free
 Spain,2017,,,Certified Guinea worm disease free
+Spain,2018,,,Certified Guinea worm disease free
+Spain,2019,,,Certified Guinea worm disease free
+Spain,2020,,,Certified Guinea worm disease free
 Sri Lanka,1996,,,Not yet certified
 Sri Lanka,1997,,,Not yet certified
 Sri Lanka,1998,,,Not yet certified
@@ -4114,6 +4586,12 @@ Sri Lanka,2014,,,Certified Guinea worm disease free
 Sri Lanka,2015,,,Certified Guinea worm disease free
 Sri Lanka,2016,,,Certified Guinea worm disease free
 Sri Lanka,2017,,,Certified Guinea worm disease free
+Sri Lanka,2018,,,Certified Guinea worm disease free
+Sri Lanka,2019,,,Certified Guinea worm disease free
+Sri Lanka,2020,,,Certified Guinea worm disease free
+Sudan,2018,,,Guinea worm disease free (pre-certification)
+Sudan,2019,,,Guinea worm disease free (pre-certification)
+Sudan,2020,,,Guinea worm disease free (pre-certification)
 Suriname,1996,,,Not yet certified
 Suriname,1997,,,Not yet certified
 Suriname,1998,,,Not yet certified
@@ -4136,6 +4614,9 @@ Suriname,2014,,,Certified Guinea worm disease free
 Suriname,2015,,,Certified Guinea worm disease free
 Suriname,2016,,,Certified Guinea worm disease free
 Suriname,2017,,,Certified Guinea worm disease free
+Suriname,2018,,,Certified Guinea worm disease free
+Suriname,2019,,,Certified Guinea worm disease free
+Suriname,2020,,,Certified Guinea worm disease free
 Eswatini,1996,,,Not yet certified
 Eswatini,1997,,,Not yet certified
 Eswatini,1998,,,Not yet certified
@@ -4158,6 +4639,9 @@ Eswatini,2014,,,Certified Guinea worm disease free
 Eswatini,2015,,,Certified Guinea worm disease free
 Eswatini,2016,,,Certified Guinea worm disease free
 Eswatini,2017,,,Certified Guinea worm disease free
+Eswatini,2018,,,Certified Guinea worm disease free
+Eswatini,2019,,,Certified Guinea worm disease free
+Eswatini,2020,,,Certified Guinea worm disease free
 Sweden,1996,,,Not yet certified
 Sweden,1997,,,Not yet certified
 Sweden,1998,,,Not yet certified
@@ -4180,6 +4664,9 @@ Sweden,2014,,,Certified Guinea worm disease free
 Sweden,2015,,,Certified Guinea worm disease free
 Sweden,2016,,,Certified Guinea worm disease free
 Sweden,2017,,,Certified Guinea worm disease free
+Sweden,2018,,,Certified Guinea worm disease free
+Sweden,2019,,,Certified Guinea worm disease free
+Sweden,2020,,,Certified Guinea worm disease free
 Switzerland,1996,,,Not yet certified
 Switzerland,1997,,,Not yet certified
 Switzerland,1998,,,Certified Guinea worm disease free
@@ -4202,6 +4689,9 @@ Switzerland,2014,,,Certified Guinea worm disease free
 Switzerland,2015,,,Certified Guinea worm disease free
 Switzerland,2016,,,Certified Guinea worm disease free
 Switzerland,2017,,,Certified Guinea worm disease free
+Switzerland,2018,,,Certified Guinea worm disease free
+Switzerland,2019,,,Certified Guinea worm disease free
+Switzerland,2020,,,Certified Guinea worm disease free
 Syria,1996,,,Not yet certified
 Syria,1997,,,Not yet certified
 Syria,1998,,,Not yet certified
@@ -4224,6 +4714,9 @@ Syria,2014,,,Certified Guinea worm disease free
 Syria,2015,,,Certified Guinea worm disease free
 Syria,2016,,,Certified Guinea worm disease free
 Syria,2017,,,Certified Guinea worm disease free
+Syria,2018,,,Certified Guinea worm disease free
+Syria,2019,,,Certified Guinea worm disease free
+Syria,2020,,,Certified Guinea worm disease free
 Tajikistan,1996,,,Not yet certified
 Tajikistan,1997,,,Not yet certified
 Tajikistan,1998,,,Not yet certified
@@ -4246,6 +4739,9 @@ Tajikistan,2014,,,Certified Guinea worm disease free
 Tajikistan,2015,,,Certified Guinea worm disease free
 Tajikistan,2016,,,Certified Guinea worm disease free
 Tajikistan,2017,,,Certified Guinea worm disease free
+Tajikistan,2018,,,Certified Guinea worm disease free
+Tajikistan,2019,,,Certified Guinea worm disease free
+Tajikistan,2020,,,Certified Guinea worm disease free
 Thailand,1996,,,Not yet certified
 Thailand,1997,,,Not yet certified
 Thailand,1998,,,Not yet certified
@@ -4268,6 +4764,9 @@ Thailand,2014,,,Certified Guinea worm disease free
 Thailand,2015,,,Certified Guinea worm disease free
 Thailand,2016,,,Certified Guinea worm disease free
 Thailand,2017,,,Certified Guinea worm disease free
+Thailand,2018,,,Certified Guinea worm disease free
+Thailand,2019,,,Certified Guinea worm disease free
+Thailand,2020,,,Certified Guinea worm disease free
 North Macedonia,1996,,,Not yet certified
 North Macedonia,1997,,,Not yet certified
 North Macedonia,1998,,,Not yet certified
@@ -4290,6 +4789,9 @@ North Macedonia,2014,,,Certified Guinea worm disease free
 North Macedonia,2015,,,Certified Guinea worm disease free
 North Macedonia,2016,,,Certified Guinea worm disease free
 North Macedonia,2017,,,Certified Guinea worm disease free
+North Macedonia,2018,,,Certified Guinea worm disease free
+North Macedonia,2019,,,Certified Guinea worm disease free
+North Macedonia,2020,,,Certified Guinea worm disease free
 Timor,1996,,,Not yet certified
 Timor,1997,,,Not yet certified
 Timor,1998,,,Not yet certified
@@ -4312,6 +4814,12 @@ Timor,2014,,,Certified Guinea worm disease free
 Timor,2015,,,Certified Guinea worm disease free
 Timor,2016,,,Certified Guinea worm disease free
 Timor,2017,,,Certified Guinea worm disease free
+Timor,2018,,,Certified Guinea worm disease free
+Timor,2019,,,Certified Guinea worm disease free
+Timor,2020,,,Certified Guinea worm disease free
+Togo,2018,,,Certified Guinea worm disease free (previously endemic)
+Togo,2019,,,Certified Guinea worm disease free (previously endemic)
+Togo,2020,,,Certified Guinea worm disease free (previously endemic)
 Tonga,1996,,,Not yet certified
 Tonga,1997,,,Not yet certified
 Tonga,1998,,,Not yet certified
@@ -4334,6 +4842,9 @@ Tonga,2014,,,Certified Guinea worm disease free
 Tonga,2015,,,Certified Guinea worm disease free
 Tonga,2016,,,Certified Guinea worm disease free
 Tonga,2017,,,Certified Guinea worm disease free
+Tonga,2018,,,Certified Guinea worm disease free
+Tonga,2019,,,Certified Guinea worm disease free
+Tonga,2020,,,Certified Guinea worm disease free
 Trinidad and Tobago,1996,,,Not yet certified
 Trinidad and Tobago,1997,,,Not yet certified
 Trinidad and Tobago,1998,,,Certified Guinea worm disease free
@@ -4356,6 +4867,9 @@ Trinidad and Tobago,2014,,,Certified Guinea worm disease free
 Trinidad and Tobago,2015,,,Certified Guinea worm disease free
 Trinidad and Tobago,2016,,,Certified Guinea worm disease free
 Trinidad and Tobago,2017,,,Certified Guinea worm disease free
+Trinidad and Tobago,2018,,,Certified Guinea worm disease free
+Trinidad and Tobago,2019,,,Certified Guinea worm disease free
+Trinidad and Tobago,2020,,,Certified Guinea worm disease free
 Tunisia,1996,,,Not yet certified
 Tunisia,1997,,,Not yet certified
 Tunisia,1998,,,Not yet certified
@@ -4378,6 +4892,9 @@ Tunisia,2014,,,Certified Guinea worm disease free
 Tunisia,2015,,,Certified Guinea worm disease free
 Tunisia,2016,,,Certified Guinea worm disease free
 Tunisia,2017,,,Certified Guinea worm disease free
+Tunisia,2018,,,Certified Guinea worm disease free
+Tunisia,2019,,,Certified Guinea worm disease free
+Tunisia,2020,,,Certified Guinea worm disease free
 Turkey,1996,,,Not yet certified
 Turkey,1997,,,Not yet certified
 Turkey,1998,,,Not yet certified
@@ -4400,6 +4917,9 @@ Turkey,2014,,,Certified Guinea worm disease free
 Turkey,2015,,,Certified Guinea worm disease free
 Turkey,2016,,,Certified Guinea worm disease free
 Turkey,2017,,,Certified Guinea worm disease free
+Turkey,2018,,,Certified Guinea worm disease free
+Turkey,2019,,,Certified Guinea worm disease free
+Turkey,2020,,,Certified Guinea worm disease free
 Turkmenistan,1996,,,Not yet certified
 Turkmenistan,1997,,,Not yet certified
 Turkmenistan,1998,,,Not yet certified
@@ -4422,6 +4942,9 @@ Turkmenistan,2014,,,Certified Guinea worm disease free
 Turkmenistan,2015,,,Certified Guinea worm disease free
 Turkmenistan,2016,,,Certified Guinea worm disease free
 Turkmenistan,2017,,,Certified Guinea worm disease free
+Turkmenistan,2018,,,Certified Guinea worm disease free
+Turkmenistan,2019,,,Certified Guinea worm disease free
+Turkmenistan,2020,,,Certified Guinea worm disease free
 Tuvalu,1996,,,Not yet certified
 Tuvalu,1997,,,Not yet certified
 Tuvalu,1998,,,Not yet certified
@@ -4444,6 +4967,12 @@ Tuvalu,2014,,,Certified Guinea worm disease free
 Tuvalu,2015,,,Certified Guinea worm disease free
 Tuvalu,2016,,,Certified Guinea worm disease free
 Tuvalu,2017,,,Certified Guinea worm disease free
+Tuvalu,2018,,,Certified Guinea worm disease free
+Tuvalu,2019,,,Certified Guinea worm disease free
+Tuvalu,2020,,,Certified Guinea worm disease free
+Uganda,2018,,,Certified Guinea worm disease free (previously endemic)
+Uganda,2019,,,Certified Guinea worm disease free (previously endemic)
+Uganda,2020,,,Certified Guinea worm disease free (previously endemic)
 Ukraine,1996,,,Not yet certified
 Ukraine,1997,,,Not yet certified
 Ukraine,1998,,,Not yet certified
@@ -4466,6 +4995,9 @@ Ukraine,2014,,,Certified Guinea worm disease free
 Ukraine,2015,,,Certified Guinea worm disease free
 Ukraine,2016,,,Certified Guinea worm disease free
 Ukraine,2017,,,Certified Guinea worm disease free
+Ukraine,2018,,,Certified Guinea worm disease free
+Ukraine,2019,,,Certified Guinea worm disease free
+Ukraine,2020,,,Certified Guinea worm disease free
 United Arab Emirates,1996,,,Not yet certified
 United Arab Emirates,1997,,,Not yet certified
 United Arab Emirates,1998,,,Not yet certified
@@ -4488,6 +5020,9 @@ United Arab Emirates,2014,,,Certified Guinea worm disease free
 United Arab Emirates,2015,,,Certified Guinea worm disease free
 United Arab Emirates,2016,,,Certified Guinea worm disease free
 United Arab Emirates,2017,,,Certified Guinea worm disease free
+United Arab Emirates,2018,,,Certified Guinea worm disease free
+United Arab Emirates,2019,,,Certified Guinea worm disease free
+United Arab Emirates,2020,,,Certified Guinea worm disease free
 United Kingdom,1996,,,Not yet certified
 United Kingdom,1997,,,Not yet certified
 United Kingdom,1998,,,Not yet certified
@@ -4510,6 +5045,9 @@ United Kingdom,2014,,,Certified Guinea worm disease free
 United Kingdom,2015,,,Certified Guinea worm disease free
 United Kingdom,2016,,,Certified Guinea worm disease free
 United Kingdom,2017,,,Certified Guinea worm disease free
+United Kingdom,2018,,,Certified Guinea worm disease free
+United Kingdom,2019,,,Certified Guinea worm disease free
+United Kingdom,2020,,,Certified Guinea worm disease free
 Tanzania,1996,,,Not yet certified
 Tanzania,1997,,,Not yet certified
 Tanzania,1998,,,Not yet certified
@@ -4532,6 +5070,9 @@ Tanzania,2014,,,Certified Guinea worm disease free
 Tanzania,2015,,,Certified Guinea worm disease free
 Tanzania,2016,,,Certified Guinea worm disease free
 Tanzania,2017,,,Certified Guinea worm disease free
+Tanzania,2018,,,Certified Guinea worm disease free
+Tanzania,2019,,,Certified Guinea worm disease free
+Tanzania,2020,,,Certified Guinea worm disease free
 United States,1996,,,Not yet certified
 United States,1997,,,Not yet certified
 United States,1998,,,Not yet certified
@@ -4554,6 +5095,9 @@ United States,2014,,,Certified Guinea worm disease free
 United States,2015,,,Certified Guinea worm disease free
 United States,2016,,,Certified Guinea worm disease free
 United States,2017,,,Certified Guinea worm disease free
+United States,2018,,,Certified Guinea worm disease free
+United States,2019,,,Certified Guinea worm disease free
+United States,2020,,,Certified Guinea worm disease free
 Uruguay,1996,,,Not yet certified
 Uruguay,1997,,,Not yet certified
 Uruguay,1998,,,Not yet certified
@@ -4576,6 +5120,9 @@ Uruguay,2014,,,Certified Guinea worm disease free
 Uruguay,2015,,,Certified Guinea worm disease free
 Uruguay,2016,,,Certified Guinea worm disease free
 Uruguay,2017,,,Certified Guinea worm disease free
+Uruguay,2018,,,Certified Guinea worm disease free
+Uruguay,2019,,,Certified Guinea worm disease free
+Uruguay,2020,,,Certified Guinea worm disease free
 Uzbekistan,1996,,,Not yet certified
 Uzbekistan,1997,,,Not yet certified
 Uzbekistan,1998,,,Not yet certified
@@ -4598,6 +5145,9 @@ Uzbekistan,2014,,,Certified Guinea worm disease free
 Uzbekistan,2015,,,Certified Guinea worm disease free
 Uzbekistan,2016,,,Certified Guinea worm disease free
 Uzbekistan,2017,,,Certified Guinea worm disease free
+Uzbekistan,2018,,,Certified Guinea worm disease free
+Uzbekistan,2019,,,Certified Guinea worm disease free
+Uzbekistan,2020,,,Certified Guinea worm disease free
 Vanuatu,1996,,,Not yet certified
 Vanuatu,1997,,,Not yet certified
 Vanuatu,1998,,,Certified Guinea worm disease free
@@ -4620,6 +5170,9 @@ Vanuatu,2014,,,Certified Guinea worm disease free
 Vanuatu,2015,,,Certified Guinea worm disease free
 Vanuatu,2016,,,Certified Guinea worm disease free
 Vanuatu,2017,,,Certified Guinea worm disease free
+Vanuatu,2018,,,Certified Guinea worm disease free
+Vanuatu,2019,,,Certified Guinea worm disease free
+Vanuatu,2020,,,Certified Guinea worm disease free
 Venezuela,1996,,,Not yet certified
 Venezuela,1997,,,Not yet certified
 Venezuela,1998,,,Not yet certified
@@ -4642,6 +5195,9 @@ Venezuela,2014,,,Certified Guinea worm disease free
 Venezuela,2015,,,Certified Guinea worm disease free
 Venezuela,2016,,,Certified Guinea worm disease free
 Venezuela,2017,,,Certified Guinea worm disease free
+Venezuela,2018,,,Certified Guinea worm disease free
+Venezuela,2019,,,Certified Guinea worm disease free
+Venezuela,2020,,,Certified Guinea worm disease free
 Vietnam,1996,,,Not yet certified
 Vietnam,1997,,,Not yet certified
 Vietnam,1998,,,Not yet certified
@@ -4664,6 +5220,12 @@ Vietnam,2014,,,Certified Guinea worm disease free
 Vietnam,2015,,,Certified Guinea worm disease free
 Vietnam,2016,,,Certified Guinea worm disease free
 Vietnam,2017,,,Certified Guinea worm disease free
+Vietnam,2018,,,Certified Guinea worm disease free
+Vietnam,2019,,,Certified Guinea worm disease free
+Vietnam,2020,,,Certified Guinea worm disease free
+Yemen,2018,,,Certified Guinea worm disease free (previously endemic)
+Yemen,2019,,,Certified Guinea worm disease free (previously endemic)
+Yemen,2020,,,Certified Guinea worm disease free (previously endemic)
 Zambia,1996,,,Not yet certified
 Zambia,1997,,,Not yet certified
 Zambia,1998,,,Not yet certified
@@ -4686,6 +5248,9 @@ Zambia,2014,,,Certified Guinea worm disease free
 Zambia,2015,,,Certified Guinea worm disease free
 Zambia,2016,,,Certified Guinea worm disease free
 Zambia,2017,,,Certified Guinea worm disease free
+Zambia,2018,,,Certified Guinea worm disease free
+Zambia,2019,,,Certified Guinea worm disease free
+Zambia,2020,,,Certified Guinea worm disease free
 Zimbabwe,1996,,,Not yet certified
 Zimbabwe,1997,,,Not yet certified
 Zimbabwe,1998,,,Not yet certified
@@ -4708,3 +5273,6 @@ Zimbabwe,2014,,,Certified Guinea worm disease free
 Zimbabwe,2015,,,Certified Guinea worm disease free
 Zimbabwe,2016,,,Certified Guinea worm disease free
 Zimbabwe,2017,,,Certified Guinea worm disease free
+Zimbabwe,2018,,,Certified Guinea worm disease free
+Zimbabwe,2019,,,Certified Guinea worm disease free
+Zimbabwe,2020,,,Certified Guinea worm disease free
