@@ -62,7 +62,7 @@ dataframes <- list(
 df <- reduce(dataframes, full_join, by = c("location", "date"))
 
 # Entity cleaning
-country_mapping <- fread("~/git/mpox/mapping.csv")
+country_mapping <- fread("country_mapping.csv")
 df <- merge(df, country_mapping, all.x = TRUE, on = "location")
 if (any(is.na(df$new))) {
   stop("Missing location mapping", cat(df[is.na(new), unique(location)], sep = "\n"))
@@ -74,4 +74,4 @@ setcolorder(df, "location")
 df[, date := date(date)]
 df <- df[date < today()]
 setorder(df, location, date)
-fwrite(df, "~/git/notebooks/EdouardMathieu/monkeypox/monkeypox.csv")
+fwrite(df, "owid-monkeypox-data.csv")
