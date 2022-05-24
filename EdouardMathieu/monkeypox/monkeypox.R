@@ -73,5 +73,5 @@ setcolorder(df, "location")
 
 df[, date := date(date)]
 df <- df[date < today()]
-setorder(df, date, location)
+setorder(df, location, date)
 fwrite(df, "~/git/notebooks/EdouardMathieu/monkeypox/monkeypox.csv")
