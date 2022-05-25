@@ -53,14 +53,6 @@ df <- df[!is.na(Status) & !is.na(Country) & Status != "excluded"]
 df <- df[, c("Status", "Country", "Date_entry", "Date_confirmation")]
 setnames(df, c("Status", "Country"), c("status", "location"))
 
-dataframes <- list(
-  aggregate(df, "confirmed", "confirmation"),
-  aggregate(df, "confirmed", "entry"),
-  aggregate(df, "all", "entry")
-)
-
-df <- reduce(dataframes, full_join, by = c("location", "date"))
-
 # Entity cleaning
 country_mapping <- fread("country_mapping.csv")
 df <- merge(df, country_mapping, all.x = TRUE, on = "location")
@@ -70,6 +62,14 @@ if (any(is.na(df$new))) {
 df[, location := NULL]
 setnames(df, "new", "location")
 setcolorder(df, "location")
+
+dataframes <- list(
+  aggregate(df, "confirmed", "confirmation"),
+  aggregate(df, "confirmed", "entry"),
+  aggregate(df, "all", "entry")
+)
+
+df <- reduce(dataframes, full_join, by = c("location", "date"))
 
 df[, date := date(date)]
 df <- df[date < today()]
