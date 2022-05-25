@@ -77,14 +77,16 @@ setorder(df, location, date)
 fwrite(df, "owid-monkeypox-data.csv")
 
 # Twitter update
+explorer_url <- "https://ourworldindata.org/explorers/monkeypox?facet=none&hideControls=false&Metric=Confirmed+cases&Frequency=7-day+average&Shown+by=Date+of+confirmation&country=~OWID_WRL"
 max <- df[location != "World" & !is.na(total_confirmed_by_confirmation), max(total_confirmed_by_confirmation, na.rm = T), location]
 setorder(max, -V1)
 update <- sprintf(
-  "Monkeypox update:\n%s total confirmed cases\n+%s per day in the last week\n\nCountries with the most confirmed cases:\n%s\n\nData by @globaldothealth",
+  "Monkeypox update:\n%s total confirmed cases\n+%s per day (rolling average)\n\nCountries with the most confirmed cases:\n%s\n\nData by @globaldothealth: %s",
   max(df$total_confirmed_by_confirmation, na.rm = T),
   round(tail(df$`7day_confirmed_by_confirmation`, 1)),
-  paste0(sprintf("%s: %s", head(max$location, 5), head(max$V1, 5)), collapse = "\n")
+  paste0(sprintf("%s: %s", head(max$location, 5), head(max$V1, 5)), collapse = "\n"),
+  explorer_url
 )
 clipr::write_clip(update)
-browseURL("https://ourworldindata.org/explorers/monkeypox?facet=none&hideControls=false&Metric=Confirmed+cases&Frequency=7-day+average&Shown+by=Date+of+confirmation&country=~OWID_WRL")
+browseURL(explorer_url)
 browseURL("https://twitter.com/compose/tweet")
