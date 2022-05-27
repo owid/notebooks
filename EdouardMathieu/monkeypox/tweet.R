@@ -3,7 +3,7 @@ explorer_url <- "https://ourworldindata.org/explorers/monkeypox?facet=none&hideC
 top <- df[location != "World" & !is.na(total_confirmed_by_confirmation), max(total_confirmed_by_confirmation, na.rm = T), location]
 setorder(top, -V1)
 update <- sprintf(
-  "Monkeypox update:\n%s total confirmed cases\n+%s per day (rolling average)\n\nCountries with the most confirmed cases:\n%s\n\nData by @globaldothealth: %s",
+  "Monkeypox update:\n%s total confirmed cases\n+%s per day (7-day average)\n\nCountries with the most confirmed cases:\n%s\n\nData by @globaldothealth: %s",
   max(df$total_confirmed_by_confirmation, na.rm = T),
   round(latest_avg),
   paste0(sprintf("%s: %s", head(top$location, 5), head(top$V1, 5)), collapse = "\n"),
