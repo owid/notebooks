@@ -1,8 +1,10 @@
 rm(list = ls())
+library(googlesheets4)
 library(plyr)
 library(data.table)
 library(purrr)
 library(dplyr)
+library(tidyr)
 library(lubridate)
 
 aggregate <- function(df, case_type, date_type) {
@@ -20,7 +22,7 @@ aggregate <- function(df, case_type, date_type) {
   df <- rbindlist(list(df, world), use.names = T)
   
   # Fill missing dates with 0 for all countries
-  date <- seq(min(df$date), max(df$date), by = 1)
+  date <- seq(min(df$date), max(df$date), by = "1 day")
   location <- unique(df$location)
   df_range <- data.table(crossing(date, location))
   df <- merge(df, df_range, by = c("location", "date"), all = T)
@@ -46,7 +48,8 @@ aggregate <- function(df, case_type, date_type) {
   return(df)
 }
 
-df <- fread("https://github.com/globaldothealth/monkeypox/raw/main/latest.csv")
+df <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
+setDT(df)
 stopifnot(length(unique(df$Status)) == 3)
 
 df <- df[!is.na(Status) & !is.na(Country) & Status != "excluded"]
