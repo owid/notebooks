@@ -80,6 +80,4 @@ setorder(df, location, date)
 fwrite(df, "owid-monkeypox-data.csv")
 
 # Twitter update
-latest_avg <- df[location == "World", tail(`7day_confirmed_by_confirmation`, 1)]
-max_avg <- df[location == "World", max(`7day_confirmed_by_confirmation`, na.rm = T)]
-if (latest_avg == max_avg) source("tweet.R")
+source("tweet.R")
