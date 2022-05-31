@@ -3,6 +3,8 @@ title: "Maternal Mortality Rate - Gapminder & WHO"
 output: html_document
 ---
 
+Maternal mortality ratio...
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 install.packages('janitor',repos = "http://cran.us.r-project.org")
@@ -37,7 +39,7 @@ The first three year ranges seem to be wrong as in another source (https://docs.
 
 There are also two cases where the year for Finland has been entered wrongly three times, there are two 1772s, 1775s & 1967s, the second of each should be 1872, 1875 and 1967 respectively.
 
-There are also two errors for New Zealand, and one error for both Swecen and the US.
+There are also two errors for New Zealand, and one error for both Sweden and the US.
 ```{r}
 
 df$year[1:3] <- c(1875, 1885,1895)
@@ -47,8 +49,13 @@ df['year'][df$year == '1967' & df$Country == 'Finland' & df$`Maternal deaths` ==
 df['year'][df$year == '1967' & df$Country == 'Sweden' & df$`Maternal deaths` == 39,] <- '1957'
 df['year'][df$year == '1967' & df$Country == 'United States' & df$`Maternal deaths` == 1766.28,] <- '1957'
 df['year'][df$year =='1989-02'& df$Country == 'New Zealand',] <- '1889-02'
+
+#Sri Lankas MMR drops to 0 in 1990 which seems wrong - we set it to NA instead.
+df['MMR'][df$Country == "Sri Lanka" & df$year == 1990] <- NA
 #Dropping an erroneous row for NZ in 1950 - there are two values but the first is incorrect. You can using the maternal deaths and live births columns. 
 df <- df[-which(df$year == '1950' & df$Country == 'New Zealand' & df$MMR == 90),]
+
+
 ```
 
 
@@ -153,7 +160,7 @@ df_sel <-df_sel %>%
   ungroup() %>% 
   distinct()
 
-df_sel <- df_sel[-which(df_sel$nn >1 & df_sel$source == 'WHO_GHO'),]
+df_sel <- df_sel[-which(df_sel$nn >1 & df_sel$source == 'GapMinder'),]
 
 df_sel %>% 
   group_by(entity, year) %>% 
@@ -164,7 +171,7 @@ df_sel %>%
 
 df_sel <- df_sel %>% select(-c(n, nn))
 ```
-
+Standardising the country names for use on OWID. Writing the data out.
 
 ```{r}
 stand_countries <- read.csv("data/input/countries_to_standardise_country_standardized.csv")
@@ -175,14 +182,60 @@ df_fin <- df_sel %>% left_join(.,stand_countries, by = c("entity" = "Country")) 
 
 df_fin$maternal_mortality_rate[is.na(df_fin$maternal_mortality_rate)] <- ""
 
-write.csv(df_fin, "data/output/maternal_mortality_rate_upload.csv", row.names = FALSE)
-
 ```
+
+```{r}
+entities_to_drop <- c("Africa Eastern and Southern", "Africa Western and Central", "Arab World",
+                      "Caribbean small states", "Central Europe and the Baltics", "Early-demographic dividend", "East Asia & Pacific", "East Asia & Pacific (excluding high income)", "East Asia & Pacific (IDA & IBRD countries)", "Europe & Central Asia", "Euro area", "Europe & Central Asia (excluding high income)", "Europe & Central Asia (IDA & IBRD countries)", "Fragile and conflict affected situations", "Heavily indebted poor countries (HIPC)", "High income", "IBRD only", "IDA & IBRD total", "IDA blend", "IDA only", "IDA total", "Late-demographic dividend", "Latin America & Caribbean (excluding high income)", "Latin America & the Caribbean (IDA & IBRD countries)", "Least developed countries: UN classification", "Middle East & North Africa", "Middle East & North Africa (excluding high income)", 
+                      "Middle East & North Africa (IDA & IBRD countries)", "Middle income", "North America", "Not classified", "OECD members", "Other small states", "Pacific island small states", "Post-demographic dividend", "Pre-demographic dividend", "Small states", "South Asia (IDA & IBRD)", "South Asia", "Sub-Saharan Africa (excluding high income)", "Sub-Saharan Africa (IDA & IBRD countries)")
+
+df_fin <- df_fin %>% 
+ filter(!entity %in% entities_to_drop)
+```
+
+
+
 
 Plot to see what it looks like:
 ```{r}
 
-ggplot(data = df_sel %>% filter(entity== "Sweden"), aes(x = year, y = maternal_mortality_rate, group = entity, colour = entity))+
+ggplot(data = df_fin %>% filter(entity== "Sweden"), aes(x = year, y = as.numeric(maternal_mortality_rate), group = entity, colour = entity))+
   geom_line()
+
+```
+
+```{r}
+
+df_clean <- df_fin %>% 
+  filter(year %in% c(2000, 2017)) %>% 
+  filter(complete.cases(.)) %>%
+  mutate(maternal_mortality_rate = as.numeric(maternal_mortality_rate)) %>% 
+  group_by(entity) %>% 
+    add_count() %>% 
+  filter(n == 2)
+  
+df_wide <- df_clean %>% 
+  pivot_wider(., names_from = 'year',names_glue = "{.value}_{year}", values_from = 'maternal_mortality_rate') %>% 
+  mutate(change = ((maternal_mortality_rate_2017 - maternal_mortality_rate_2000)/maternal_mortality_rate_2000)*100, baseline = 0) %>% 
+  select(entity, change, baseline) %>% 
+  pivot_longer(cols = c("change", "baseline")) %>% 
+  mutate(name = gsub("change", 2017, name), name = gsub("baseline", 2000, name)) %>% 
+  mutate(year = as.numeric(name)) %>% 
+  select(entity, year, relative_change_mmr = value)
+
+
+```
+Combining with the full time-line of MMR
+
+```{r}
+
+df_out <- df_wide %>% right_join(., df_fin, by = c("entity","year"))
+df_out$relative_change_mmr[is.na(df_out$relative_change_mmr)] <- ""
+```
+
+
+Writing out the data
+```{r}
+write.csv(df_out, "data/output/maternal_mortality_rate_upload.csv", row.names = FALSE)
 
 ```
