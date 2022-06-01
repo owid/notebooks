@@ -412,7 +412,7 @@ new_vars[["daily_total_shortfall"]]<- df %>%
          value = value/365)
   
 
-# Calculate absolute shortfall per person in poverty (absolute poverty lines)
+# Calculate absolute shortfall per person in poverty (absolute poverty lines only)
 new_vars[["avg_shortfall"]]<- df %>%
   filter(grepl("income_gap_ratio",new_varnames) & !grepl("median",new_varnames)) %>%
   mutate(pov_line_text = str_replace(new_varnames, "income_gap_ratio_", "")) %>% #grab poverty line from varname
@@ -428,8 +428,6 @@ df_new_vars_together<- bind_rows(new_vars)
 df<- bind_rows(df, df_new_vars_together)
 
 
-
-
 ```
 
 
@@ -439,14 +437,16 @@ Specify which variables to keep for a list of explorers
 explorer_var_sets<- list()
 
 
-poverty_var_stubs<- c("headcount_ratio",
+poverty_var_stubs<- c(
+                      "headcount_ratio",
                       "headcount",
                       "avg_shortfall",
                       "income_gap_ratio",
                       "total_shortall_daily",
                       "poverty_gap_index")
 
-pov_lines<- c("1_00",
+pov_lines<- c(
+              "1_00",
               "1_90",
               "3_20",
               "5_50",
@@ -454,11 +454,21 @@ pov_lines<- c("1_00",
               "15_00",
               "20_00",
               "30_00",
-              "40_00")
+              "40_00",
+              "40_median",
+              "50_median",
+              "60_median"
+)
 
+
+# Make a dataframe with all possible pairings of vars and povlines
 pov_stub_line_combos<- expand.grid(poverty_var_stubs = poverty_var_stubs, 
                     pov_lines = pov_lines)
   
+# Drop the avg_shortfall var for relative poverty lines (I wasn't able to calucalate these above -  It is something that should be added to Michalis' script. When that is done, we can remove this exclusion)
+pov_stub_line_combos<- pov_stub_line_combos %>%
+  filter(!(grepl("_median", pov_lines) & poverty_var_stubs == "avg_shortfall"))
+
 
 explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, "_", pov_stub_line_combos$pov_lines)
   
@@ -540,42 +550,13 @@ for(explorer in explorers){
 ```
 
 
-## Prep the controls
+## Build the controls in google sheet
 
 ```{r}
 
 gsheets_id<- "1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE"
 
-global_controls<- list()
-  
-global_controls[["explorerTitle"]]<- "Poverty explorer"
-global_controls[["selection"]]<- c("India", "Mozambique")
-global_controls[["isPublished"]]<- "'false"
-global_controls[["googleSheet"]]<- "https://docs.google.com/spreadsheets/d/1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE/edit#gid=1080881077"
-global_controls[["hasMapTab"]]<- "'true"
-
-
-tables<- data.frame(
-  table = c(
-    "inc_or_cons_extrap",
-    "inc_or_cons_no_extrap",
-    "inc_extrap",
-    "inc_no_extrap",
-    "cons_extrap",
-    "cons_no_extrap"
-  ))
-
-tables_fp<- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Povcal_data_work/Povcal_PIP_explorer/data/poverty/"
-
-tables$links<- paste0(tables_fp,tables$table, ".csv")
-
-
+build_OWID_controls(gsheets_id)
    
 ```
 
-Write controls to csv
-```{r}
-
-write.csv(controls_multiplied_up, "poverty_explorer_controls.csv", row.names = FALSE, na = "")
-
-```

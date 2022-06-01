@@ -318,23 +318,17 @@ build_OWID_controls<- function(gsheets_id){
   }
   
   
-  
 
 
 
-
-
-# Test main function
-
-
-# Load packages
-
-library(tidyverse)
-library(googlesheets4)
-
-gsheets_id<- "1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE"
-
-
-build_OWID_controls(gsheets_id)
+# # Test main function
+# 
+# # Load packages
+# library(tidyverse)
+# library(googlesheets4)
+# 
+# gsheets_id<- "1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE"
+# 
+# build_OWID_controls(gsheets_id)
 
 
