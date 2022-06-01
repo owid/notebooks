@@ -234,7 +234,7 @@ new_varnames<- c(
 "total_shortall_annual_10_00",
 "income_gap_ratio_10_00",
 "watts_index_10_00",
-"headcount_ratio_",
+"headcount_ratio_15_00",
 "poverty_gap_index_15_00",
 "headcount_15_00",
 "total_shortall_annual_15_00",
@@ -420,12 +420,131 @@ new_vars[["avg_shortfall"]]<- df %>%
   mutate(new_varnames = str_replace(new_varnames, "income_gap_ratio", "avg_shortfall"),
          value = value/100 * pov_line_math) %>%
   select(-c(pov_line_text, pov_line_math))
-  
 
-# Collapse list of new vars into a single data frame and append to main data
+
+
+
+# Collapse list of new vars into a single data frame and append  to main data
 df_new_vars_together<- bind_rows(new_vars)
 
 df<- bind_rows(df, df_new_vars_together)
+
+
+
+# calculate numbers in poverty between pov lines for stacked area
+ headcount_stacked_calcs<- df %>%
+  filter(grepl("headcount_",new_varnames) & !grepl("ratio",new_varnames) & !grepl("median",new_varnames)) %>%
+  mutate(pov_line_text = str_replace(new_varnames, "headcount_", "")) %>% #grab poverty line from varname
+  mutate(pov_line_math = as.numeric(str_replace(pov_line_text, "_", "."))) #convert povline to numeric
+  
+  # An ordered dataframe of povlines and their variable stubs
+   ordered_povlines<- headcount_stacked_calcs %>%
+    select(pov_line_text, pov_line_math) %>%
+    unique() %>%
+    arrange(pov_line_math)
+   
+
+   
+   # create a list for these stacked vars
+   stacked_headcounts<- list()
+   
+   # Go through each poverty line...
+   for(i in 1: length(ordered_povlines$pov_line_math)){
+     
+     this_povline_stub<- ordered_povlines$pov_line_text[i]
+     povline_below_stub<- ordered_povlines$pov_line_text[i-1] #empty if 1=1
+    
+     # if it's the lowest (first) poverty line...
+     if(i==1){
+       
+       # create a 'stacked_below' variable equal to the headcount
+       stacked_headcounts[[paste0("headcount_stacked_below_", this_povline_stub)]]<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         mutate(new_varnames = str_replace(new_varnames, "headcount_", "headcount_stacked_below_"))
+    
+     # else if it's the highest (last) poverty line...     
+     } else if(i==length(ordered_povlines$pov_line_math)){
+       
+       # create a 'stacked_above' variable equal to the population minus headcount
+       
+       df_upper<- df %>%
+         filter(new_varnames == "Population") %>%
+         rename(upper=value) %>%
+         select(-new_varnames)
+       
+       df_lower<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         rename(lower=value) %>%
+         select(-new_varnames)
+       
+       df_calc<- merge(df_upper, df_lower) %>%
+         mutate(value = upper-lower,
+                new_varnames = paste0("headcount_stacked_above_", this_povline_stub)) %>%
+         select(-c(upper, lower))
+       
+       stacked_headcounts[[paste0("headcount_stacked_above_", this_povline_stub)]]<- df_calc
+       
+       
+       # create a 'stacked_below' variable equal to the headcount minus headcount of poverty line below
+       
+       df_upper<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         rename(upper=value) %>%
+         select(-new_varnames)
+       
+       df_lower<- df %>%
+         filter(new_varnames == paste0("headcount_", povline_below_stub)) %>%
+         rename(lower=value) %>%
+         select(-new_varnames)
+       
+       df_calc<- merge(df_upper, df_lower) %>%
+         mutate(value = upper-lower,
+                new_varnames = paste0("headcount_stacked_below_", this_povline_stub)) %>%
+         select(-c(upper, lower))
+       
+       stacked_headcounts[[paste0("headcount_stacked_below_", this_povline_stub)]]<- df_calc
+      
+      # else it will be an in between poverty line, in which case... 
+     } else{
+     
+      # create a 'stacked_below' variable equal to the headcount minus headcount of poverty line below
+         df_upper<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         rename(upper=value) %>%
+         select(-new_varnames)
+       
+       df_lower<- df %>%
+         filter(new_varnames == paste0("headcount_", povline_below_stub)) %>%
+         rename(lower=value) %>%
+         select(-new_varnames)
+       
+       df_calc<- merge(df_upper, df_lower) %>%
+         mutate(value = upper-lower,
+                new_varnames = paste0("headcount_stacked_below_", this_povline_stub)) %>%
+         select(-c(upper, lower))
+       
+       stacked_headcounts[[paste0("headcount_stacked_below_", this_povline_stub)]]<- df_calc
+       
+     }
+   }
+
+   
+  # Collapse list of new stacked_headcounts vars into a single data frame and append to main data
+  df_stacked_headcount_vars<- bind_rows(stacked_headcounts)  
+
+  df<- bind_rows(df, df_stacked_headcount_vars)
+
+  # calculate shares of population and append to main data
+   df_pop<- df %>%
+         filter(new_varnames == "Population") %>%
+         rename(Population=value) %>%
+         select(-new_varnames)
+  
+  df_stacked_shares_vars<- left_join(df_stacked_headcount_vars, df_pop) %>%
+    mutate(value = value/Population) %>%
+    mutate(new_varnames = str_replace(new_varnames, "headcount_stacked", "headcount_ratio_stacked"))
+    
+   df<- bind_rows(df, df_stacked_shares_vars)
 
 
 ```

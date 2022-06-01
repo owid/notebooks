@@ -3,7 +3,6 @@
 
 
 
-
 # The final function -  build_OWID_controls - is built by nesting two other functions 
   # iteratively (like Russian dolls). Collectively, the work to multiply up the controls
   # specified in the control_stubs sheet across the values givin the Aux sheets
@@ -16,6 +15,9 @@
   # variable names in `replacements_row`. The replacement values are the corresponding values 
   # of `replacements_row`.
 myReplaceFun<- function(df_block, sheet_name, replacements_row){
+  
+  # Replace any NAs with empty strings
+  replacements_row[is.na(replacements_row)]<- ""
   
   # Backslashes for regex special character escapes
   search_for_strs<- paste0("\\[", sheet_name, "\\$", names(replacements_row), "\\]")
@@ -30,8 +32,8 @@ myReplaceFun<- function(df_block, sheet_name, replacements_row){
   return(df_block_replaced)
 }
 
-  ## Test this function
-  # df_block<- data.frame(col1 = c("headcount_ratio_[abs_povline$slug_suffix]","headcount_[abs_povline$slug_suffix]"), 
+  # # Test this function
+  # df_block<- data.frame(col1 = c("headcount_ratio_[abs_povline$slug_suffix]","headcount_[abs_povline$slug_suffix]"),
   #                     col2 = c("$[abs_povline$text] a day","$[abs_povline$text] a day"))
   # 
   # sheet_name<- "abs_povline"
@@ -146,7 +148,7 @@ build_OWID_controls<- function(gsheets_id){
   
   for(aux_sheet in aux_sheets){
     
-    df_replacements_rows<- read_sheet(gsheets_id, sheet = aux_sheet)
+    df_replacements_rows<- read_sheet(gsheets_id, sheet = aux_sheet, trim_ws = FALSE)
     
     running_list<- lapply(running_list, applymyReplaceFunRowwise, sheet_name = aux_sheet, df_replacements_rows =  df_replacements_rows)
     
@@ -269,6 +271,12 @@ build_OWID_controls<- function(gsheets_id){
           
           # rename columns to final explorer names
           names(df_table_controls_this_table)<- table_columns$final_explorer_names #Note names vector is in same order
+          
+          # Filter out any controls with name missing (because of multi-metric rows)
+          df_table_controls_this_table<- df_table_controls_this_table %>%
+            filter(!is.na(name))
+          
+          
           
           # table link and header
 
