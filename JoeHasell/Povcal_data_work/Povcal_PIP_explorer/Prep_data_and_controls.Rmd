@@ -10,8 +10,15 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(RCurl)
 library(knitr)
-library(readxl)
-library(openxlsx)
+
+library(googlesheets4)
+
+```
+
+Load functions
+```{r}
+source("scripts/explorer_controls_builder.R")
+
 ```
 
 ##Prep the data
@@ -535,136 +542,35 @@ for(explorer in explorers){
 
 ## Prep the controls
 
-Pull in the control stubs
 ```{r}
 
-xlsx_url <- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Povcal_data_work/Povcal_PIP_explorer/control_stubs.xlsx"
+gsheets_id<- "1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE"
 
-control_stubs_sheet_name<- "control_stubs"
-
-# Load the stubs as a dataframe
-control_stubs<- read.xlsx(xlsx_url, sheet = control_stubs_sheet_name)
-
-```
-
-Make a vector of the names of the other sheets (these are the Aux sheets, which will be used to multiply-up the control stubs, replacing the various combination of values contained in the Aux sheets)
-```{r}
-
-wb<- loadWorkbook(xlsx_url)
-
-# a vector of the names of the other sheets (the Aux vars)
-aux_sheets<- names(wb)
-aux_sheets<- aux_sheets[aux_sheets != "control_stubs"]
-
-```
-
-
-The first step in multiplying up the control stubs is to convert the dataframe of control stubs to a list of rows.
-```{r}
-
-running_list<- split(control_stubs, seq(nrow(control_stubs)))
-
-```
-
-
-###Functions to multiply up the control stubs with the Aux values
-
-This function takes a dataframe (`df_block`) and within it replaces a set of key words for a set of values. The key words and replacement values are specified by `sheet_name` (string) and `replacements_row` (a 1 row dataframe). The key words are strings, constructed as "[`sheet_name`$`column_header`]", where `column_header` is each of the variable names in `replacements_row`. The replacement values are the corresponding values of `replacements_row`.
-
-```{r}
-myReplaceFun<- function(df_block, sheet_name, replacements_row){
+global_controls<- list()
   
-    # Backslashes for regex special character escapes
-  search_for_strs<- paste0("\\[", sheet_name, "\\$", names(replacements_row), "\\]")
-  
-  replace_with_strs<- as.vector(t(replacements_row))
-
-  replace_vector_over_col <- function(x) (str_replace_all(x, setNames(replace_with_strs,search_for_strs)))
-  
-  df_block_replaced<- df_block %>% 
-      mutate(across(everything(), replace_vector_over_col))
-
-  return(df_block_replaced)
-  }
-    
-
-```
-
-Test this function
-```{r}
-df_block<- data.frame(col1 = c("headcount_ratio_[abs_povline$slug_suffix]","headcount_[abs_povline$slug_suffix]"), 
-                      col2 = c("$[abs_povline$text] a day","$[abs_povline$text] a day"))
-
-sheet_name<- "abs_povline"
-
-replacements_row<- data.frame("text" = "1",
-                              "slug_suffix" = "1_00",
-                              "math" = "1")
+global_controls[["explorerTitle"]]<- "Poverty explorer"
+global_controls[["selection"]]<- c("India", "Mozambique")
+global_controls[["isPublished"]]<- "'false"
+global_controls[["googleSheet"]]<- "https://docs.google.com/spreadsheets/d/1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE/edit#gid=1080881077"
+global_controls[["hasMapTab"]]<- "'true"
 
 
+tables<- data.frame(
+  table = c(
+    "inc_or_cons_extrap",
+    "inc_or_cons_no_extrap",
+    "inc_extrap",
+    "inc_no_extrap",
+    "cons_extrap",
+    "cons_no_extrap"
+  ))
 
-kable(myReplaceFun(df_block = df_block,
-                            sheet_name = sheet_name,
-                            replacements_row = replacements_row))
+tables_fp<- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Povcal_data_work/Povcal_PIP_explorer/data/poverty/"
 
-```
-
-A function that splits a dataframe (`df_replacements_rows`, where each row is a replacements_row in myReplaceFun) into a list of dataframes by row, applies the myReplaceFun on each of those rows, and then aggregates the resulting list back into a single dataframe. The arguments `df_block` and `sheet_name` are passed to myReplaceFun for all rows.
-```{r}
-applymyReplaceFunRowwise<- function(df_block, sheet_name, df_replacements_rows){
-
- list_replacements_rows<- split(df_replacements_rows, seq(nrow(df_replacements_rows)))
- 
- list_replaced_df_blocks<- lapply(list_replacements_rows, myReplaceFun, df_block = df_block, sheet_name = sheet_name)
-
-  df_replaced_df_blocks<- bind_rows(list_replaced_df_blocks)
-
-  return(df_replaced_df_blocks)
-
-}  
-  
-```
-
-Test this function
-```{r}
-
-df_block<- data.frame(col1 = c("headcount_ratio_[abs_povline$slug_suffix]","headcount_[abs_povline$slug_suffix]"), 
-                      col2 = c("$[abs_povline$text] a day","$[abs_povline$text] a day"))
-
-sheet_name<- "abs_povline"
-
-df_replacements_rows<- data.frame("text" = c("1", "2"),
-                                  "slug_suffix" = c("1_00", "2_00"),
-                                  "math" = c("1", "2"))
+tables$links<- paste0(tables_fp,tables$table, ".csv")
 
 
-
-kable(applymyReplaceFunRowwise(df_block = df_block,
-                            sheet_name = sheet_name,
-                            df_replacements_rows = df_replacements_rows))
-
-
-```
-
-
-Now lets run applymyReplaceFunRowwise iteratively. In the first iteration, it runs across the list containing the control stubs. The output of this first iteration is a list of (multirow) dataframes which is the control stubs multiplied up by only one set of Aux values. Further iterations then run across this list of dataframes, which itself outputs a list of dataframes. And so on, for each Aux sheet.
-
-```{r}
-for(aux_sheet in aux_sheets){
-  
-  df_replacements_rows<- read.xlsx(xlsx_url, sheet = aux_sheet)
-    
-    running_list<- lapply(running_list, applymyReplaceFunRowwise, sheet_name = aux_sheet, df_replacements_rows =  df_replacements_rows)
    
-}
-
-# collapse the output into a single df
-controls_multiplied_up<- bind_rows(running_list)
-
-# drop any duplicate rows (these will be created where a control stub row doesn't make use of all Aux sheets)
-controls_multiplied_up<-  controls_multiplied_up %>% distinct()
-
-
 ```
 
 Write controls to csv
