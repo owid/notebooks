@@ -440,7 +440,7 @@ df<- bind_rows(df, df_new_vars_together)
 
 # calculate numbers in poverty between pov lines for stacked area
  headcount_stacked_calcs<- df %>%
-  filter(grepl("headcount_",new_varnames) & !grepl("ratio",new_varnames) & !grepl("median",new_varnames)) %>%
+  filter(grepl("headcount_",new_varnames) & !grepl("ratio",new_varnames) & !grepl("multi",new_varnames) & !grepl("median",new_varnames)) %>%
   mutate(pov_line_text = str_replace(new_varnames, "headcount_", "")) %>% #grab poverty line from varname
   mutate(pov_line_math = as.numeric(str_replace(pov_line_text, "_", "."))) #convert povline to numeric
   
@@ -566,6 +566,8 @@ explorer_var_sets<- list()
 poverty_var_stubs<- c(
                       "headcount_ratio",
                       "headcount",
+                      "multi_headcount_ratio",
+                      "multi_headcount",
                       "headcount_ratio_stacked_below",
                       "headcount_stacked_below",
                       "avg_shortfall",
