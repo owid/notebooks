@@ -575,64 +575,64 @@ br<- df %>%
 Specify which variables to keep for a list of explorers
 ```{r}
 
-explorer_var_sets<- list()
-
-
-poverty_var_stubs<- c(
-                      "headcount_ratio",
-                      "headcount",
-                      "multi_headcount_ratio",
-                      "multi_headcount",
-                      "headcount_ratio_stacked_below",
-                      "headcount_stacked_below",
-                      "avg_shortfall",
-                      "income_gap_ratio",
-                      "total_shortall_daily",
-                      "poverty_gap_index")
-
-pov_lines<- c(
-              "1_00",
-              "1_90",
-              "3_20",
-              "5_50",
-              "10_00",
-              "15_00",
-              "20_00",
-              "30_00",
-              "40_00",
-              "40_median",
-              "50_median",
-              "60_median"
-)
-
-
-# Make a dataframe with all possible pairings of vars and povlines
-pov_stub_line_combos<- expand.grid(poverty_var_stubs = poverty_var_stubs, 
-                    pov_lines = pov_lines)
-  
-# Drop the avg_shortfall var for relative poverty lines (I wasn't able to calucalate these above -  It is something that should be added to Michalis' script. When that is done, we can remove this exclusion)
-pov_stub_line_combos<- pov_stub_line_combos %>%
-  filter(!(grepl("_median", pov_lines) & poverty_var_stubs == "avg_shortfall"))
-
-
-# join the var and povline stubs
-explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, "_", pov_stub_line_combos$pov_lines)
-
-
-# Add the 'stacked_above' vars
-explorer_var_sets[["poverty"]]<- c(explorer_var_sets[["poverty"]],
-                                   "headcount_ratio_stacked_above_30_00",
-                                   "headcount_stacked_above_30_00")
-                                   
-  
-
-  # And so on for other 
-# explorer_vars[["across_distribution"]]<- c(
-#   
+# explorer_var_sets<- list()
+# 
+# 
+# poverty_var_stubs<- c(
+#                       "headcount_ratio",
+#                       "headcount",
+#                       "multi_headcount_ratio",
+#                       "multi_headcount",
+#                       "headcount_ratio_stacked_below",
+#                       "headcount_stacked_below",
+#                       "avg_shortfall",
+#                       "income_gap_ratio",
+#                       "total_shortall_daily",
+#                       "poverty_gap_index")
+# 
+# pov_lines<- c(
+#               "1_00",
+#               "1_90",
+#               "3_20",
+#               "5_50",
+#               "10_00",
+#               "15_00",
+#               "20_00",
+#               "30_00",
+#               "40_00",
+#               "40_median",
+#               "50_median",
+#               "60_median"
 # )
-
-
-  
+# 
+# 
+# # Make a dataframe with all possible pairings of vars and povlines
+# pov_stub_line_combos<- expand.grid(poverty_var_stubs = poverty_var_stubs, 
+#                     pov_lines = pov_lines)
+#   
+# # Drop the avg_shortfall var for relative poverty lines (I wasn't able to calucalate these above -  It is something that should be added to Michalis' script. When that is done, we can remove this exclusion)
+# pov_stub_line_combos<- pov_stub_line_combos %>%
+#   filter(!(grepl("_median", pov_lines) & poverty_var_stubs == "avg_shortfall"))
+# 
+# 
+# # join the var and povline stubs
+# explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, "_", pov_stub_line_combos$pov_lines)
+# 
+# 
+# # Add the 'stacked_above' vars
+# explorer_var_sets[["poverty"]]<- c(explorer_var_sets[["poverty"]],
+#                                    "headcount_ratio_stacked_above_30_00",
+#                                    "headcount_stacked_above_30_00")
+#                                    
+#   
+# 
+#   # And so on for other 
+# # explorer_vars[["across_distribution"]]<- c(
+# #   
+# # )
+# 
+# 
+#   
 
 ```
 
@@ -640,44 +640,101 @@ explorer_var_sets[["poverty"]]<- c(explorer_var_sets[["poverty"]],
 For each explorer, filter the data for the specified vars, flip back to wide format, and then split by survey data type and save as separate csvs
 ```{r}
 
- # Get a vector of names of the different explorers
-  explorers<- names(explorer_var_sets)
+#  # Get a vector of names of the different explorers
+#   explorers<- names(explorer_var_sets)
+# 
+# for(explorer in explorers){
+#   
+#   # Filter for specified vars (NB df is still in long format)
+#   df_explorer<- df %>% filter(new_varnames %in% explorer_var_sets[[explorer]])
+# 
+#   # Flip to long wide format
+#   df_explorer<- df_explorer %>%pivot_wider(names_from = "new_varnames", values_from = "value")
+# 
+#   # Split by survey data type and save separately
+#   df_by_survey_type<- list()
+#   
+# 
+#     # Income only, including extrapolated years
+#     df_by_survey_type[["inc_extrap"]]<- df_explorer %>%
+#       filter(datatype == "income")
+# 
+#     # Income only, excluding extrapolated years
+#     df_by_survey_type[["inc_no_extrap"]]<- df_explorer %>%
+#       filter(IsSurveyYear == TRUE,
+#              datatype == "income")
+# 
+#     # Consumption only, including extrapolated years
+#     df_by_survey_type[["cons_extrap"]]<- df_explorer %>%
+#       filter(datatype == "consumption")
+#     
+#     # Consumption only, excluding extrapolated years
+#     df_by_survey_type[["cons_no_extrap"]]<- df_explorer %>%
+#       filter(IsSurveyYear == TRUE,
+#              datatype == "consumption")
+#     
+#     # Both income and consumption, including extrapolated years
+#     df_by_survey_type[["inc_or_cons_extrap"]]<- df_explorer
+#     
+#     # Both income and consumption, excluding extrapolated years
+#     df_by_survey_type[["inc_or_cons_no_extrap"]]<- df_explorer %>%
+#       filter(IsSurveyYear == TRUE)
+#     
+#     
+#   # Get a vector of names of the different survey types
+#   survey_types<- names(df_by_survey_type)
+#   
+#   # save the separated csvs
+#   for(survey_type in survey_types){
+#     
+#   filename<- paste0(survey_type,".csv")
+#   fp<- paste0("data/", explorer, "/", filename)
+#   
+#   write.csv(df_by_survey_type[[survey_type]], fp, row.names = FALSE)
+#   
+#   }
+#   
+# 
+#   
+# }
+# 
 
-for(explorer in explorers){
-  
-  # Filter for specified vars (NB df is still in long format)
-  df_explorer<- df %>% filter(new_varnames %in% explorer_var_sets[[explorer]])
+
+```
+
+flip back to wide format, and then split by survey data type and save as separate csvs
+```{r}
 
   # Flip to long wide format
-  df_explorer<- df_explorer %>%pivot_wider(names_from = "new_varnames", values_from = "value")
+  df<- df %>%pivot_wider(names_from = "new_varnames", values_from = "value")
 
   # Split by survey data type and save separately
   df_by_survey_type<- list()
   
 
     # Income only, including extrapolated years
-    df_by_survey_type[["inc_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["inc_extrap"]]<- df %>%
       filter(datatype == "income")
 
     # Income only, excluding extrapolated years
-    df_by_survey_type[["inc_no_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["inc_no_extrap"]]<- df %>%
       filter(IsSurveyYear == TRUE,
              datatype == "income")
 
     # Consumption only, including extrapolated years
-    df_by_survey_type[["cons_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["cons_extrap"]]<- df %>%
       filter(datatype == "consumption")
     
     # Consumption only, excluding extrapolated years
-    df_by_survey_type[["cons_no_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["cons_no_extrap"]]<- df %>%
       filter(IsSurveyYear == TRUE,
              datatype == "consumption")
     
     # Both income and consumption, including extrapolated years
-    df_by_survey_type[["inc_or_cons_extrap"]]<- df_explorer
+    df_by_survey_type[["inc_or_cons_extrap"]]<- df
     
     # Both income and consumption, excluding extrapolated years
-    df_by_survey_type[["inc_or_cons_no_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["inc_or_cons_no_extrap"]]<- df %>%
       filter(IsSurveyYear == TRUE)
     
     
@@ -688,29 +745,33 @@ for(explorer in explorers){
   for(survey_type in survey_types){
     
   filename<- paste0(survey_type,".csv")
-  fp<- paste0("data/", explorer, "/", filename)
+  fp<- paste0("data/", filename)
   
   write.csv(df_by_survey_type[[survey_type]], fp, row.names = FALSE)
   
   }
   
 
-  
-}
 
 
 
 ```
 
 
-
 ## Build the controls in google sheet
 
 ```{r}
 
-gsheets_id<- "1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE"
+gsheets_ids<- c(
+  "1K572GXWWoGfFfKU7mGRxv7ghgs1p1onhHm-pIViNDeE", #across the distribution
+  "1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE" #poverty
+  )
+
+for(gsheets_id in gsheets_ids){
 
 build_OWID_controls(gsheets_id)
+  
+}
    
 ```
 
