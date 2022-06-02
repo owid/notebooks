@@ -431,16 +431,10 @@ new_vars[["avg_shortfall"]]<- df %>%
 
 
 
-# Collapse list of new vars into a single data frame and append  to main data
-df_new_vars_together<- bind_rows(new_vars)
-
-df<- bind_rows(df, df_new_vars_together)
-
-
 
 # calculate numbers in poverty between pov lines for stacked area
  headcount_stacked_calcs<- df %>%
-  filter(grepl("headcount_",new_varnames) & !grepl("ratio",new_varnames) & !grepl("multi",new_varnames) & !grepl("median",new_varnames)) %>%
+  filter(grepl("headcount_",new_varnames) & !grepl("ratio",new_varnames)  & !grepl("median",new_varnames)) %>%
   mutate(pov_line_text = str_replace(new_varnames, "headcount_", "")) %>% #grab poverty line from varname
   mutate(pov_line_math = as.numeric(str_replace(pov_line_text, "_", "."))) #convert povline to numeric
   
@@ -454,13 +448,13 @@ df<- bind_rows(df, df_new_vars_together)
    
    # create a list for these stacked vars
    stacked_headcounts<- list()
-   
+
    # Go through each poverty line...
    for(i in 1: length(ordered_povlines$pov_line_math)){
      
      this_povline_stub<- ordered_povlines$pov_line_text[i]
      povline_below_stub<- ordered_povlines$pov_line_text[i-1] #empty if 1=1
-    
+  
      # if it's the lowest (first) poverty line...
      if(i==1){
        
@@ -541,6 +535,8 @@ df<- bind_rows(df, df_new_vars_together)
 
   df<- bind_rows(df, df_stacked_headcount_vars)
 
+  
+
   # calculate shares of population and append to main data
    df_pop<- df %>%
          filter(new_varnames == "Population") %>%
@@ -549,11 +545,25 @@ df<- bind_rows(df, df_new_vars_together)
   
   df_stacked_shares_vars<- left_join(df_stacked_headcount_vars, df_pop) %>%
     mutate(value = value/Population * 100) %>%
-    mutate(new_varnames = str_replace(new_varnames, "headcount_stacked", "headcount_ratio_stacked"))
+    mutate(new_varnames = str_replace(new_varnames, "headcount_stacked", "headcount_ratio_stacked")) %>%
+    select(-Population)
     
    df<- bind_rows(df, df_stacked_shares_vars)
 
+   
+# Collapse list of new vars into a single data frame and append  to main data
+df_new_vars_together<- bind_rows(new_vars)
 
+df<- bind_rows(df, df_new_vars_together)
+
+
+   
+```
+
+```{r}
+
+br<- df %>%
+  filter(grepl("stacked", new_varnames))
 ```
 
 
@@ -686,6 +696,7 @@ for(explorer in explorers){
 
 
 ```
+
 
 
 ## Build the controls in google sheet
