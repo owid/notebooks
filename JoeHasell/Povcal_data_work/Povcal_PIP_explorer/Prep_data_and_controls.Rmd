@@ -405,6 +405,13 @@ Add calculated vars
 ```{r}
 new_vars<- list()
 
+
+# Duplicate headcount and headcount ratio vars as a hacky way to have shorter names when shown in a multimetric chart with lots of povlines
+new_vars[["headcount_alts"]]<- df %>%
+  filter(grepl("headcount_",new_varnames) & !grepl("median",new_varnames)) %>%
+  mutate(new_varnames = str_replace(new_varnames, "headcount_", "multi_headcount_"))
+         
+         
 # Calculate daily shortfall from annual shortfall
 new_vars[["daily_total_shortfall"]]<- df %>%
   filter(grepl("total_shortall_annual",new_varnames)) %>%
@@ -541,7 +548,7 @@ df<- bind_rows(df, df_new_vars_together)
          select(-new_varnames)
   
   df_stacked_shares_vars<- left_join(df_stacked_headcount_vars, df_pop) %>%
-    mutate(value = value/Population) %>%
+    mutate(value = value/Population * 100) %>%
     mutate(new_varnames = str_replace(new_varnames, "headcount_stacked", "headcount_ratio_stacked"))
     
    df<- bind_rows(df, df_stacked_shares_vars)
