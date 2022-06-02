@@ -621,8 +621,8 @@ explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, 
 
 # Add the 'stacked_above' vars
 explorer_var_sets[["poverty"]]<- c(explorer_var_sets[["poverty"]],
-                                   "headcount_ratio_stacked_above_40_00",
-                                   "headcount_stacked_above_40_00")
+                                   "headcount_ratio_stacked_above_30_00",
+                                   "headcount_stacked_above_30_00")
                                    
   
 
