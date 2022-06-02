@@ -3,7 +3,7 @@ max_avg <- df[location == "World", max(`7day_confirmed_by_confirmation`, na.rm =
 
 if (latest_avg == max_avg) {
   
-  explorer_url <- "https://ourworldindata.org/explorers/monkeypox?facet=none&hideControls=false&Metric=Confirmed+cases&Frequency=Cumulative&Shown+by=Date+of+confirmation&country=~OWID_WRL"
+  explorer_url <- "https://ourworldindata.org/explorers/monkeypox?facet=none&hideControls=false&Metric=Confirmed+cases&Frequency=7-day+average&Shown+by=Date+of+confirmation&country=~OWID_WRL"
   
   top <- df[location != "World" & !is.na(total_confirmed_by_confirmation), max(total_confirmed_by_confirmation, na.rm = T), location]
   setorder(top, -V1)
