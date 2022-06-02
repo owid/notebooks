@@ -455,6 +455,12 @@ new_vars[["daily_total_shortfall"]]<- df %>%
   filter(grepl("total_shortall_annual",new_varnames)) %>%
   mutate(new_varnames = str_replace(new_varnames, "total_shortall_annual", "total_shortall_daily"),
          value = value/365)
+
+
+# Express income shares as percentages
+new_vars[["share_decile"]]<- df %>%
+  filter(grepl("share_decile",new_varnames)) %>%
+         mutate(value = value*100)
   
 
 # Calculate absolute shortfall per person in poverty (absolute poverty lines only)
