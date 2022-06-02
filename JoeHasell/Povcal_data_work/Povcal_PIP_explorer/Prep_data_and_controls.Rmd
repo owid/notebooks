@@ -444,6 +444,11 @@ new_vars[["avg_shortfall"]]<- df %>%
     unique() %>%
     arrange(pov_line_math)
    
+   
+   selected_povlines<- c(1,1.90, 3.20, 5.50, 10, 30)
+   
+   ordered_povlines<- ordered_povlines %>%
+     filter(pov_line_math %in% selected_povlines)
 
    
    # create a list for these stacked vars
