@@ -404,67 +404,81 @@ df<- df %>%
 
 ```
 
+
 Add calculated vars
 ```{r}
-new_vars<- list()
-
-
-# Duplicate headcount and headcount ratio vars as a hacky way to have shorter names when shown in a multimetric chart with lots of povlines
-new_vars[["headcount_alts"]]<- df %>%
-  filter(grepl("headcount_",new_varnames) & !grepl("median",new_varnames)) %>%
-  mutate(new_varnames = str_replace(new_varnames, "headcount_", "multi_headcount_"))
-         
 
 # Calculate daily decile averages and thresholds from annual values
-new_vars[["threshold_annual"]]<- df %>%
+new_var<- df %>%
   filter(grepl("threshold_annual",new_varnames)) %>%
   mutate(new_varnames = str_replace(new_varnames, "threshold_annual", "threshold_daily"),
          value = value/365)
 
-new_vars[["average_annual"]]<- df %>%
+df<- bind_rows(df, new_var)
+
+
+new_var<- df %>%
   filter(grepl("average_annual",new_varnames)) %>%
   mutate(new_varnames = str_replace(new_varnames, "average_annual", "average_daily"),
          value = value/365)
 
+df<- bind_rows(df, new_var)
+
 
 # Calculate daily and annual means from monthly values
-new_vars[["mean_daily"]]<- df %>%
+new_var<- df %>%
   filter(new_varnames== "MeanPerMonth") %>%
   mutate(new_varnames = str_replace(new_varnames, "MeanPerMonth", "mean_daily"),
          value = value/(365/12))
 
-new_vars[["mean_annual"]]<- df %>%
+df<- bind_rows(df, new_var)
+
+
+new_var<- df %>%
   filter(new_varnames== "MeanPerMonth") %>%
   mutate(new_varnames = str_replace(new_varnames, "MeanPerMonth", "mean_annual"),
          value = value*12)
 
+df<- bind_rows(df, new_var)
+
+
 # Calculate daily and annual median from monthly values
-new_vars[["median_daily"]]<- df %>%
+new_var<- df %>%
   filter(new_varnames== "MedianPerMonth") %>%
   mutate(new_varnames = str_replace(new_varnames, "MedianPerMonth", "median_daily"),
          value = value/(365/12))
 
-new_vars[["median_annual"]]<- df %>%
+df<- bind_rows(df, new_var)
+
+
+new_var<- df %>%
   filter(new_varnames== "MedianPerMonth") %>%
   mutate(new_varnames = str_replace(new_varnames, "MedianPerMonth", "median_annual"),
          value = value*12)
 
-  
+df<- bind_rows(df, new_var)
+
+
 # Calculate daily shortfall from annual shortfall
-new_vars[["daily_total_shortfall"]]<- df %>%
+new_var<- df %>%
   filter(grepl("total_shortall_annual",new_varnames)) %>%
   mutate(new_varnames = str_replace(new_varnames, "total_shortall_annual", "total_shortall_daily"),
          value = value/365)
 
+df<- bind_rows(df, new_var)
+
+
 
 # Express income shares as percentages
-new_vars[["share_decile"]]<- df %>%
-  filter(grepl("share_decile",new_varnames)) %>%
-         mutate(value = value*100)
-  
+df<- df %>%
+  mutate(value = if_else(grepl("share_decile",new_varnames),
+                        value*100,
+                        value))
+
+
 
 # Calculate absolute shortfall per person in poverty (absolute poverty lines only)
-new_vars[["avg_shortfall"]]<- df %>%
+new_var<- df %>%
   filter(grepl("income_gap_ratio",new_varnames) & !grepl("median",new_varnames)) %>%
   mutate(pov_line_text = str_replace(new_varnames, "income_gap_ratio_", "")) %>% #grab poverty line from varname
   mutate(pov_line_math = as.numeric(str_replace(pov_line_text, "_", "."))) %>% #convert povline to numeric
@@ -472,7 +486,7 @@ new_vars[["avg_shortfall"]]<- df %>%
          value = value/100 * pov_line_math) %>%
   select(-c(pov_line_text, pov_line_math))
 
-
+df<- bind_rows(df, new_var)
 
 
 
@@ -586,7 +600,7 @@ new_vars[["avg_shortfall"]]<- df %>%
 
   
 
-  # calculate shares of population and append to main data
+  # For stacked headcount values, calculate shares of population and append to main data
    df_pop<- df %>%
          filter(new_varnames == "Population") %>%
          rename(Population=value) %>%
@@ -599,22 +613,25 @@ new_vars[["avg_shortfall"]]<- df %>%
     
    df<- bind_rows(df, df_stacked_shares_vars)
 
+
+
+# Duplicate headcount and headcount ratio vars as a hacky way to have shorter names when shown in a multimetric chart with lots of povlines
+new_var<- df %>%
+  filter(grepl("headcount_",new_varnames) & !grepl("median",new_varnames) & !grepl("stacked",new_varnames)) %>%
+  mutate(new_varnames = str_replace(new_varnames, "headcount_", "multi_headcount_"))
+         
+df<- bind_rows(df, new_var)   
    
-# Collapse list of new vars into a single data frame and append  to main data
-df_new_vars_together<- bind_rows(new_vars)
+# Duplicate decile share/average/threshold vars as a hacky way to have shorter names when shown in a multimetric chart with lots of povlines
+new_var<- df %>%
+  filter(grepl("decile",new_varnames)) %>%
+  mutate(new_varnames = str_replace(new_varnames, "decile", "multi_decile"))
 
-df<- bind_rows(df, df_new_vars_together)
-
+df<- bind_rows(df, new_var)
+ 
 
    
 ```
-
-```{r}
-
-br<- df %>%
-  filter(grepl("stacked", new_varnames))
-```
-
 
 Specify which variables to keep for a list of explorers
 ```{r}
@@ -745,6 +762,12 @@ For each explorer, filter the data for the specified vars, flip back to wide for
 
 
 ```
+
+```{r}
+df_no_values<- df %>%select(-value)
+br<- df_no_values[duplicated(df_no_values),]
+```
+
 
 flip back to wide format, and then split by survey data type and save as separate csvs
 ```{r}
