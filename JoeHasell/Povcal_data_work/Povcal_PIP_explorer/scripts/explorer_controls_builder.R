@@ -224,6 +224,12 @@ build_OWID_controls<- function(gsheets_id){
         # rename columns to final explorer names
         names(df_grapher_controls)<- graphers_columns$final_explorer_names #Note names vector is in same order
 
+        
+        # Filter out any controls with title missing (which will have ben added to build multi-metric rows)
+        df_grapher_controls<- df_grapher_controls %>%
+          filter(!is.na(title))
+        
+        
         # Print the controls one row down, and from second column
         print_row<- print_row + 1
         print_col<- 2
