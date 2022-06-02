@@ -10,15 +10,25 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(RCurl)
 library(knitr)
-library(readxl)
-library(openxlsx)
+
+library(googlesheets4)
+
+```
+
+Load functions
+```{r}
+source("scripts/explorer_controls_builder.R")
+
 ```
 
 ##Prep the data
 
 Read in Michalis' povcal data
 ```{r}
-df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+# df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+
+df <- read.csv("PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+
 
 ```
 
@@ -227,7 +237,7 @@ new_varnames<- c(
 "total_shortall_annual_10_00",
 "income_gap_ratio_10_00",
 "watts_index_10_00",
-"headcount_ratio_",
+"headcount_ratio_15_00",
 "poverty_gap_index_15_00",
 "headcount_15_00",
 "total_shortall_annual_15_00",
@@ -285,25 +295,25 @@ new_varnames<- c(
 "share_decile_8",
 "share_decile_9",
 "share_decile_10",
-"threshold_decile_1",
-"threshold_decile_2",
-"threshold_decile_3",
-"threshold_decile_4",
-"threshold_decile_5",
-"threshold_decile_6",
-"threshold_decile_7",
-"threshold_decile_8",
-"threshold_decile_9",
-"average_decile_1",
-"average_decile_2",
-"average_decile_3",
-"average_decile_4",
-"average_decile_5",
-"average_decile_6",
-"average_decile_7",
-"average_decile_8",
-"average_decile_9",
-"average_decile_10",
+"threshold_annual_decile_1",
+"threshold_annual_decile_2",
+"threshold_annual_decile_3",
+"threshold_annual_decile_4",
+"threshold_annual_decile_5",
+"threshold_annual_decile_6",
+"threshold_annual_decile_7",
+"threshold_annual_decile_8",
+"threshold_annual_decile_9",
+"average_annual_decile_1",
+"average_annual_decile_2",
+"average_annual_decile_3",
+"average_annual_decile_4",
+"average_annual_decile_5",
+"average_annual_decile_6",
+"average_annual_decile_7",
+"average_annual_decile_8",
+"average_annual_decile_9",
+"average_annual_decile_10",
 "Gini",
 "Gini_estimated",
 "Polarization",
@@ -398,14 +408,62 @@ Add calculated vars
 ```{r}
 new_vars<- list()
 
+
+# Duplicate headcount and headcount ratio vars as a hacky way to have shorter names when shown in a multimetric chart with lots of povlines
+new_vars[["headcount_alts"]]<- df %>%
+  filter(grepl("headcount_",new_varnames) & !grepl("median",new_varnames)) %>%
+  mutate(new_varnames = str_replace(new_varnames, "headcount_", "multi_headcount_"))
+         
+
+# Calculate daily decile averages and thresholds from annual values
+new_vars[["threshold_annual"]]<- df %>%
+  filter(grepl("threshold_annual",new_varnames)) %>%
+  mutate(new_varnames = str_replace(new_varnames, "threshold_annual", "threshold_daily"),
+         value = value/365)
+
+new_vars[["average_annual"]]<- df %>%
+  filter(grepl("average_annual",new_varnames)) %>%
+  mutate(new_varnames = str_replace(new_varnames, "average_annual", "average_daily"),
+         value = value/365)
+
+
+# Calculate daily and annual means from monthly values
+new_vars[["mean_daily"]]<- df %>%
+  filter(new_varnames== "MeanPerMonth") %>%
+  mutate(new_varnames = str_replace(new_varnames, "MeanPerMonth", "mean_daily"),
+         value = value/(365/12))
+
+new_vars[["mean_annual"]]<- df %>%
+  filter(new_varnames== "MeanPerMonth") %>%
+  mutate(new_varnames = str_replace(new_varnames, "MeanPerMonth", "mean_annual"),
+         value = value*12)
+
+# Calculate daily and annual median from monthly values
+new_vars[["median_daily"]]<- df %>%
+  filter(new_varnames== "MedianPerMonth") %>%
+  mutate(new_varnames = str_replace(new_varnames, "MedianPerMonth", "median_daily"),
+         value = value/(365/12))
+
+new_vars[["median_annual"]]<- df %>%
+  filter(new_varnames== "MedianPerMonth") %>%
+  mutate(new_varnames = str_replace(new_varnames, "MedianPerMonth", "median_annual"),
+         value = value*12)
+
+  
 # Calculate daily shortfall from annual shortfall
 new_vars[["daily_total_shortfall"]]<- df %>%
   filter(grepl("total_shortall_annual",new_varnames)) %>%
   mutate(new_varnames = str_replace(new_varnames, "total_shortall_annual", "total_shortall_daily"),
          value = value/365)
+
+
+# Express income shares as percentages
+new_vars[["share_decile"]]<- df %>%
+  filter(grepl("share_decile",new_varnames)) %>%
+         mutate(value = value*100)
   
 
-# Calculate absolute shortfall per person in poverty (absolute poverty lines)
+# Calculate absolute shortfall per person in poverty (absolute poverty lines only)
 new_vars[["avg_shortfall"]]<- df %>%
   filter(grepl("income_gap_ratio",new_varnames) & !grepl("median",new_varnames)) %>%
   mutate(pov_line_text = str_replace(new_varnames, "income_gap_ratio_", "")) %>% #grab poverty line from varname
@@ -413,56 +471,212 @@ new_vars[["avg_shortfall"]]<- df %>%
   mutate(new_varnames = str_replace(new_varnames, "income_gap_ratio", "avg_shortfall"),
          value = value/100 * pov_line_math) %>%
   select(-c(pov_line_text, pov_line_math))
+
+
+
+
+
+# calculate numbers in poverty between pov lines for stacked area
+ headcount_stacked_calcs<- df %>%
+  filter(grepl("headcount_",new_varnames) & !grepl("ratio",new_varnames)  & !grepl("median",new_varnames)) %>%
+  mutate(pov_line_text = str_replace(new_varnames, "headcount_", "")) %>% #grab poverty line from varname
+  mutate(pov_line_math = as.numeric(str_replace(pov_line_text, "_", "."))) #convert povline to numeric
+  
+  # An ordered dataframe of povlines and their variable stubs
+   ordered_povlines<- headcount_stacked_calcs %>%
+    select(pov_line_text, pov_line_math) %>%
+    unique() %>%
+    arrange(pov_line_math)
+   
+   
+   selected_povlines<- c(1,1.90, 3.20, 5.50, 10, 30)
+   
+   ordered_povlines<- ordered_povlines %>%
+     filter(pov_line_math %in% selected_povlines)
+
+   
+   # create a list for these stacked vars
+   stacked_headcounts<- list()
+
+   # Go through each poverty line...
+   for(i in 1: length(ordered_povlines$pov_line_math)){
+     
+     this_povline_stub<- ordered_povlines$pov_line_text[i]
+     povline_below_stub<- ordered_povlines$pov_line_text[i-1] #empty if 1=1
+  
+     # if it's the lowest (first) poverty line...
+     if(i==1){
+       
+       # create a 'stacked_below' variable equal to the headcount
+       stacked_headcounts[[paste0("headcount_stacked_below_", this_povline_stub)]]<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         mutate(new_varnames = str_replace(new_varnames, "headcount_", "headcount_stacked_below_"))
+    
+     # else if it's the highest (last) poverty line...     
+     } else if(i==length(ordered_povlines$pov_line_math)){
+       
+       # create a 'stacked_above' variable equal to the population minus headcount
+       
+       df_upper<- df %>%
+         filter(new_varnames == "Population") %>%
+         rename(upper=value) %>%
+         select(-new_varnames)
+       
+       df_lower<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         rename(lower=value) %>%
+         select(-new_varnames)
+       
+       df_calc<- merge(df_upper, df_lower) %>%
+         mutate(value = upper-lower,
+                new_varnames = paste0("headcount_stacked_above_", this_povline_stub)) %>%
+         select(-c(upper, lower))
+       
+       stacked_headcounts[[paste0("headcount_stacked_above_", this_povline_stub)]]<- df_calc
+       
+       
+       # create a 'stacked_below' variable equal to the headcount minus headcount of poverty line below
+       
+       df_upper<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         rename(upper=value) %>%
+         select(-new_varnames)
+       
+       df_lower<- df %>%
+         filter(new_varnames == paste0("headcount_", povline_below_stub)) %>%
+         rename(lower=value) %>%
+         select(-new_varnames)
+       
+       df_calc<- merge(df_upper, df_lower) %>%
+         mutate(value = upper-lower,
+                new_varnames = paste0("headcount_stacked_below_", this_povline_stub)) %>%
+         select(-c(upper, lower))
+       
+       stacked_headcounts[[paste0("headcount_stacked_below_", this_povline_stub)]]<- df_calc
+      
+      # else it will be an in between poverty line, in which case... 
+     } else{
+     
+      # create a 'stacked_below' variable equal to the headcount minus headcount of poverty line below
+         df_upper<- df %>%
+         filter(new_varnames == paste0("headcount_", this_povline_stub)) %>%
+         rename(upper=value) %>%
+         select(-new_varnames)
+       
+       df_lower<- df %>%
+         filter(new_varnames == paste0("headcount_", povline_below_stub)) %>%
+         rename(lower=value) %>%
+         select(-new_varnames)
+       
+       df_calc<- merge(df_upper, df_lower) %>%
+         mutate(value = upper-lower,
+                new_varnames = paste0("headcount_stacked_below_", this_povline_stub)) %>%
+         select(-c(upper, lower))
+       
+       stacked_headcounts[[paste0("headcount_stacked_below_", this_povline_stub)]]<- df_calc
+       
+     }
+   }
+
+   
+  # Collapse list of new stacked_headcounts vars into a single data frame and append to main data
+  df_stacked_headcount_vars<- bind_rows(stacked_headcounts)  
+
+  df<- bind_rows(df, df_stacked_headcount_vars)
+
   
 
-# Collapse list of new vars into a single data frame and append to main data
+  # calculate shares of population and append to main data
+   df_pop<- df %>%
+         filter(new_varnames == "Population") %>%
+         rename(Population=value) %>%
+         select(-new_varnames)
+  
+  df_stacked_shares_vars<- left_join(df_stacked_headcount_vars, df_pop) %>%
+    mutate(value = value/Population * 100) %>%
+    mutate(new_varnames = str_replace(new_varnames, "headcount_stacked", "headcount_ratio_stacked")) %>%
+    select(-Population)
+    
+   df<- bind_rows(df, df_stacked_shares_vars)
+
+   
+# Collapse list of new vars into a single data frame and append  to main data
 df_new_vars_together<- bind_rows(new_vars)
 
 df<- bind_rows(df, df_new_vars_together)
 
 
+   
+```
 
+```{r}
 
+br<- df %>%
+  filter(grepl("stacked", new_varnames))
 ```
 
 
 Specify which variables to keep for a list of explorers
 ```{r}
 
-explorer_var_sets<- list()
-
-
-poverty_var_stubs<- c("headcount_ratio",
-                      "headcount",
-                      "avg_shortfall",
-                      "income_gap_ratio",
-                      "total_shortall_daily",
-                      "poverty_gap_index")
-
-pov_lines<- c("1_00",
-              "1_90",
-              "3_20",
-              "5_50",
-              "10_00",
-              "15_00",
-              "20_00",
-              "30_00",
-              "40_00")
-
-pov_stub_line_combos<- expand.grid(poverty_var_stubs = poverty_var_stubs, 
-                    pov_lines = pov_lines)
-  
-
-explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, "_", pov_stub_line_combos$pov_lines)
-  
-
-  # And so on for other 
-# explorer_vars[["across_distribution"]]<- c(
-#   
+# explorer_var_sets<- list()
+# 
+# 
+# poverty_var_stubs<- c(
+#                       "headcount_ratio",
+#                       "headcount",
+#                       "multi_headcount_ratio",
+#                       "multi_headcount",
+#                       "headcount_ratio_stacked_below",
+#                       "headcount_stacked_below",
+#                       "avg_shortfall",
+#                       "income_gap_ratio",
+#                       "total_shortall_daily",
+#                       "poverty_gap_index")
+# 
+# pov_lines<- c(
+#               "1_00",
+#               "1_90",
+#               "3_20",
+#               "5_50",
+#               "10_00",
+#               "15_00",
+#               "20_00",
+#               "30_00",
+#               "40_00",
+#               "40_median",
+#               "50_median",
+#               "60_median"
 # )
-
-
-  
+# 
+# 
+# # Make a dataframe with all possible pairings of vars and povlines
+# pov_stub_line_combos<- expand.grid(poverty_var_stubs = poverty_var_stubs, 
+#                     pov_lines = pov_lines)
+#   
+# # Drop the avg_shortfall var for relative poverty lines (I wasn't able to calucalate these above -  It is something that should be added to Michalis' script. When that is done, we can remove this exclusion)
+# pov_stub_line_combos<- pov_stub_line_combos %>%
+#   filter(!(grepl("_median", pov_lines) & poverty_var_stubs == "avg_shortfall"))
+# 
+# 
+# # join the var and povline stubs
+# explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, "_", pov_stub_line_combos$pov_lines)
+# 
+# 
+# # Add the 'stacked_above' vars
+# explorer_var_sets[["poverty"]]<- c(explorer_var_sets[["poverty"]],
+#                                    "headcount_ratio_stacked_above_30_00",
+#                                    "headcount_stacked_above_30_00")
+#                                    
+#   
+# 
+#   # And so on for other 
+# # explorer_vars[["across_distribution"]]<- c(
+# #   
+# # )
+# 
+# 
+#   
 
 ```
 
@@ -470,44 +684,101 @@ explorer_var_sets[["poverty"]]<- paste0(pov_stub_line_combos$poverty_var_stubs, 
 For each explorer, filter the data for the specified vars, flip back to wide format, and then split by survey data type and save as separate csvs
 ```{r}
 
- # Get a vector of names of the different explorers
-  explorers<- names(explorer_var_sets)
+#  # Get a vector of names of the different explorers
+#   explorers<- names(explorer_var_sets)
+# 
+# for(explorer in explorers){
+#   
+#   # Filter for specified vars (NB df is still in long format)
+#   df_explorer<- df %>% filter(new_varnames %in% explorer_var_sets[[explorer]])
+# 
+#   # Flip to long wide format
+#   df_explorer<- df_explorer %>%pivot_wider(names_from = "new_varnames", values_from = "value")
+# 
+#   # Split by survey data type and save separately
+#   df_by_survey_type<- list()
+#   
+# 
+#     # Income only, including extrapolated years
+#     df_by_survey_type[["inc_extrap"]]<- df_explorer %>%
+#       filter(datatype == "income")
+# 
+#     # Income only, excluding extrapolated years
+#     df_by_survey_type[["inc_no_extrap"]]<- df_explorer %>%
+#       filter(IsSurveyYear == TRUE,
+#              datatype == "income")
+# 
+#     # Consumption only, including extrapolated years
+#     df_by_survey_type[["cons_extrap"]]<- df_explorer %>%
+#       filter(datatype == "consumption")
+#     
+#     # Consumption only, excluding extrapolated years
+#     df_by_survey_type[["cons_no_extrap"]]<- df_explorer %>%
+#       filter(IsSurveyYear == TRUE,
+#              datatype == "consumption")
+#     
+#     # Both income and consumption, including extrapolated years
+#     df_by_survey_type[["inc_or_cons_extrap"]]<- df_explorer
+#     
+#     # Both income and consumption, excluding extrapolated years
+#     df_by_survey_type[["inc_or_cons_no_extrap"]]<- df_explorer %>%
+#       filter(IsSurveyYear == TRUE)
+#     
+#     
+#   # Get a vector of names of the different survey types
+#   survey_types<- names(df_by_survey_type)
+#   
+#   # save the separated csvs
+#   for(survey_type in survey_types){
+#     
+#   filename<- paste0(survey_type,".csv")
+#   fp<- paste0("data/", explorer, "/", filename)
+#   
+#   write.csv(df_by_survey_type[[survey_type]], fp, row.names = FALSE)
+#   
+#   }
+#   
+# 
+#   
+# }
+# 
 
-for(explorer in explorers){
-  
-  # Filter for specified vars (NB df is still in long format)
-  df_explorer<- df %>% filter(new_varnames %in% explorer_var_sets[[explorer]])
+
+```
+
+flip back to wide format, and then split by survey data type and save as separate csvs
+```{r}
 
   # Flip to long wide format
-  df_explorer<- df_explorer %>%pivot_wider(names_from = "new_varnames", values_from = "value")
+  df<- df %>%pivot_wider(names_from = "new_varnames", values_from = "value")
 
   # Split by survey data type and save separately
   df_by_survey_type<- list()
   
 
     # Income only, including extrapolated years
-    df_by_survey_type[["inc_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["inc_extrap"]]<- df %>%
       filter(datatype == "income")
 
     # Income only, excluding extrapolated years
-    df_by_survey_type[["inc_no_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["inc_no_extrap"]]<- df %>%
       filter(IsSurveyYear == TRUE,
              datatype == "income")
 
     # Consumption only, including extrapolated years
-    df_by_survey_type[["cons_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["cons_extrap"]]<- df %>%
       filter(datatype == "consumption")
     
     # Consumption only, excluding extrapolated years
-    df_by_survey_type[["cons_no_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["cons_no_extrap"]]<- df %>%
       filter(IsSurveyYear == TRUE,
              datatype == "consumption")
     
     # Both income and consumption, including extrapolated years
-    df_by_survey_type[["inc_or_cons_extrap"]]<- df_explorer
+    df_by_survey_type[["inc_or_cons_extrap"]]<- df
     
     # Both income and consumption, excluding extrapolated years
-    df_by_survey_type[["inc_or_cons_no_extrap"]]<- df_explorer %>%
+    df_by_survey_type[["inc_or_cons_no_extrap"]]<- df %>%
       filter(IsSurveyYear == TRUE)
     
     
@@ -518,158 +789,37 @@ for(explorer in explorers){
   for(survey_type in survey_types){
     
   filename<- paste0(survey_type,".csv")
-  fp<- paste0("data/", explorer, "/", filename)
+  fp<- paste0("data/", filename)
   
   write.csv(df_by_survey_type[[survey_type]], fp, row.names = FALSE)
   
   }
   
 
+
+
+
+```
+
+
+## Build the controls in google sheet
+
+```{r}
+
+gsheets_ids<- c(
+  "1K572GXWWoGfFfKU7mGRxv7ghgs1p1onhHm-pIViNDeE", #across the distribution
+  "1-65yg7odNc6wym6VxXc5Sj0Dt0A9QPaL8mfzUhc1yHE" #poverty
+  )
+
+gsheets_ids<- c(
+  "1K572GXWWoGfFfKU7mGRxv7ghgs1p1onhHm-pIViNDeE" #across the distribution
+  )
+
+for(gsheets_id in gsheets_ids){
+
+build_OWID_controls(gsheets_id)
   
 }
-
-
-
-```
-
-
-## Prep the controls
-
-Pull in the control stubs
-```{r}
-
-xlsx_url <- "https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Povcal_data_work/Povcal_PIP_explorer/control_stubs.xlsx"
-
-control_stubs_sheet_name<- "control_stubs"
-
-# Load the stubs as a dataframe
-control_stubs<- read.xlsx(xlsx_url, sheet = control_stubs_sheet_name)
-
-```
-
-Make a vector of the names of the other sheets (these are the Aux sheets, which will be used to multiply-up the control stubs, replacing the various combination of values contained in the Aux sheets)
-```{r}
-
-wb<- loadWorkbook(xlsx_url)
-
-# a vector of the names of the other sheets (the Aux vars)
-aux_sheets<- names(wb)
-aux_sheets<- aux_sheets[aux_sheets != "control_stubs"]
-
-```
-
-
-The first step in multiplying up the control stubs is to convert the dataframe of control stubs to a list of rows.
-```{r}
-
-running_list<- split(control_stubs, seq(nrow(control_stubs)))
-
-```
-
-
-###Functions to multiply up the control stubs with the Aux values
-
-This function takes a dataframe (`df_block`) and within it replaces a set of key words for a set of values. The key words and replacement values are specified by `sheet_name` (string) and `replacements_row` (a 1 row dataframe). The key words are strings, constructed as "[`sheet_name`$`column_header`]", where `column_header` is each of the variable names in `replacements_row`. The replacement values are the corresponding values of `replacements_row`.
-
-```{r}
-myReplaceFun<- function(df_block, sheet_name, replacements_row){
-  
-    # Backslashes for regex special character escapes
-  search_for_strs<- paste0("\\[", sheet_name, "\\$", names(replacements_row), "\\]")
-  
-  replace_with_strs<- as.vector(t(replacements_row))
-
-  replace_vector_over_col <- function(x) (str_replace_all(x, setNames(replace_with_strs,search_for_strs)))
-  
-  df_block_replaced<- df_block %>% 
-      mutate(across(everything(), replace_vector_over_col))
-
-  return(df_block_replaced)
-  }
-    
-
-```
-
-Test this function
-```{r}
-df_block<- data.frame(col1 = c("headcount_ratio_[abs_povline$slug_suffix]","headcount_[abs_povline$slug_suffix]"), 
-                      col2 = c("$[abs_povline$text] a day","$[abs_povline$text] a day"))
-
-sheet_name<- "abs_povline"
-
-replacements_row<- data.frame("text" = "1",
-                              "slug_suffix" = "1_00",
-                              "math" = "1")
-
-
-
-kable(myReplaceFun(df_block = df_block,
-                            sheet_name = sheet_name,
-                            replacements_row = replacements_row))
-
-```
-
-A function that splits a dataframe (`df_replacements_rows`, where each row is a replacements_row in myReplaceFun) into a list of dataframes by row, applies the myReplaceFun on each of those rows, and then aggregates the resulting list back into a single dataframe. The arguments `df_block` and `sheet_name` are passed to myReplaceFun for all rows.
-```{r}
-applymyReplaceFunRowwise<- function(df_block, sheet_name, df_replacements_rows){
-
- list_replacements_rows<- split(df_replacements_rows, seq(nrow(df_replacements_rows)))
- 
- list_replaced_df_blocks<- lapply(list_replacements_rows, myReplaceFun, df_block = df_block, sheet_name = sheet_name)
-
-  df_replaced_df_blocks<- bind_rows(list_replaced_df_blocks)
-
-  return(df_replaced_df_blocks)
-
-}  
-  
-```
-
-Test this function
-```{r}
-
-df_block<- data.frame(col1 = c("headcount_ratio_[abs_povline$slug_suffix]","headcount_[abs_povline$slug_suffix]"), 
-                      col2 = c("$[abs_povline$text] a day","$[abs_povline$text] a day"))
-
-sheet_name<- "abs_povline"
-
-df_replacements_rows<- data.frame("text" = c("1", "2"),
-                                  "slug_suffix" = c("1_00", "2_00"),
-                                  "math" = c("1", "2"))
-
-
-
-kable(applymyReplaceFunRowwise(df_block = df_block,
-                            sheet_name = sheet_name,
-                            df_replacements_rows = df_replacements_rows))
-
-
-```
-
-
-Now lets run applymyReplaceFunRowwise iteratively. In the first iteration, it runs across the list containing the control stubs. The output of this first iteration is a list of (multirow) dataframes which is the control stubs multiplied up by only one set of Aux values. Further iterations then run across this list of dataframes, which itself outputs a list of dataframes. And so on, for each Aux sheet.
-
-```{r}
-for(aux_sheet in aux_sheets){
-  
-  df_replacements_rows<- read.xlsx(xlsx_url, sheet = aux_sheet)
-    
-    running_list<- lapply(running_list, applymyReplaceFunRowwise, sheet_name = aux_sheet, df_replacements_rows =  df_replacements_rows)
    
-}
-
-# collapse the output into a single df
-controls_multiplied_up<- bind_rows(running_list)
-
-# drop any duplicate rows (these will be created where a control stub row doesn't make use of all Aux sheets)
-controls_multiplied_up<-  controls_multiplied_up %>% distinct()
-
-
 ```
 
-Write controls to csv
-```{r}
-
-write.csv(controls_multiplied_up, "poverty_explorer_controls.csv", row.names = FALSE, na = "")
-
-```
