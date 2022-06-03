@@ -51,9 +51,9 @@ aggregate <- function(df, case_type, date_type) {
 df <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
 setDT(df)
 df <- df[!is.na(Status) & !is.na(Country)]
-stopifnot(length(unique(df$Status)) == 3)
+stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "suspected")))
 
-df <- df[Status != "excluded"]
+df <- df[Status != "discarded"]
 df <- df[, c("Status", "Country", "Date_entry", "Date_confirmation")]
 setnames(df, c("Status", "Country"), c("status", "location"))
 
