@@ -1,0 +1,231 @@
+---
+title: "The structure of the PIP data and how the API works"
+author: "Michail Moatsos"
+date: "`r format(Sys.time(), '%d %b %Y')`"
+output:
+  pdf_document:
+    citation_package: natbib
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+  #word_document:
+  bookdown::word_document2:
+    # citation_package: natbib
+    fig_caption: yes
+    # always_allow_html: yes
+    # keep_tex: yes
+    # number_sections: yes
+  html_document:
+    df_print: paged
+    citation_package: natbib
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+biblio-style: apalike
+header-includes:
+- \usepackage{float}
+- \usepackage{placeins}
+- \usepackage{enotez}
+- \usepackage{longtable}
+- \usepackage{booktabs}
+- \usepackage{pdflscape}
+- \usepackage{array}
+- \usepackage[skip=0.333\baselineskip]{caption}
+- \setlength\extrarowheight{2pt}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+- \newcommand*{\secref}[1]{Section~\ref{#1}}
+- \setcounter{section}{0}
+bibliography: /home/michalis/PhD/library.bib
+abstract: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(jsonlite)
+library(httr)
+rm(list= ls())
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+load("HHS_PIP.RData")
+HHS$iso3year <- paste0(HHS$country_code,HHS$reporting_year)
+```
+
+This document explains the structure of the PIP data and how the API can be accessed. A broader coverage of the methodology used by the World Bank to construct PIP can be found at https://worldbank.github.io/PIP-Methodology/index.html.
+
+# PIP data structure
+
+PIP data provide a key set of identifiers and poverty/inequality related variables from `r length(unique(HHS$country_code))` countries around the world, sparsely covering the period `r min(HHS$reporting_year, na.rm=T)` to `r max(HHS$reporting_year, na.rm=T)`. Keep in mind that the data come in two flavors. One that includes only years for which there are available household surveys in the countries covered. And one that also includes estimates for some variables when countries do not have a household survey. The former has `r nrow(HHS)` entries in total and the latter has `r nrow(HHS2)`. The data in what follows use the dataset that only includes country-years (that is a combination of a particular country in a particular year) with household surveys.
+
+Keep in mind that three countries (India, China, and Indonesia) have three household survey entries at each for which one exists. These three entries correspond to the Rural section of the country, the Urban section of the country and a National one which is a stitching of the two.
+
+Also keep in mind that there are some countries that may have two different household surveys conducted in the same year, for example one being consumption based and the other income based. Therefore a combination of a country and a year do not uniquely identify a household survey in PIP.
+
+There are five broad groups of variables available: 
+
+* Time/Space identifiers, 
+* Poverty and Inequality indicators, 
+* Household Survey metadata, 
+* Metadata variables and 
+* Auxiliary variables.
+ 
+## Time/Space Identifiers
+
+These include information on region, country and year. Specifically:
+
+* **region_name**: 
+
+```{r , include=T}
+table(HHS$region_name)
+```
+
+* **region_code**: 
+
+```{r , include=T}
+table(HHS$region_code)
+```
+
+* **country_name** (only top 20 are shown):
+```{r , include=T}
+head(sort(table(HHS$country_name),decreasing = T),20)
+```
+
+* **country_code** (closely following ISO3 standard):
+```{r , include=T}
+sort(table(HHS$country_code),decreasing = T)
+```
+* **reporting_year**:
+```{r , include=T}
+table(HHS$reporting_year)
+```
+
+
+## Poverty and Inequality indicators
+
+Variable descriptions in this section are copied from PovcalNet, and "Statistical Measurement of Income
+Polarization. A cross-national comparison" by Axel Schmidt (2002).
+
+* **poverty_line**, typically it has the value of 1.9 dollars corrected for purchasing power parity differences across countries.
+
+* **headcount**, % of population living in households with consumption or income per person below the poverty line:
+
+* **poverty_gap**, the mean shortfall of income from the poverty line. The mean is based on the entire population treating the nonpoor as having a shortfall of zero, and the shortfall is expressed as a proportion of the poverty line.
+
+* **poverty_severity**, (poverty gap squared) the mean squared shortfall of income from the poverty line. The mean is based on the entire population treating the nonpoor as having a shortfall of zero, and the shortfall is expressed as a proportion of the poverty line (and then squared).
+
+* **watts**, this is the mean across the population of the proportionate poverty gaps, as measured by the log of the ratio of the poverty line to income, where the mean is formed over the whole population, counting the nonpoor as having a zero poverty gap.
+
+* **mean**, is the average daily household per capita income or consumption expenditure from the survey in 2011 PPP.
+
+* **median**, is the median of daily household per capita income or consumption expenditure from the survey in 2011 PPP.
+
+* **mld**, stands for the mean log deviation. This is an index of inequality, given by the mean across the population of the log of the overall mean divided by individual income.
+
+* **gini**, a measure of inequality between 0 (everyone has the same income) and 100 (richest person has all the income).
+
+* **polarization**, "Polarization deals with building homogeneous clusters that oppose each other. Maximum polarization is reached if half the population is penniless, while the others share the total income equally" (Schmidt, 2002). Increased polarization indicates a disappearing middle class. (Wolfson M. (1994) When inequalities diverge, The American Economic Review, 84, p. 353-358.). The World Bank does not offer an exact definition here.
+
+* **decile1:decile10**, these variables represent the share of total income or consumption accruing to each decile of the population starting from the least well-off (corresponding to decile1) and ending with the most well-off (corresponding to decile10).
+
+## Household Survey metadata
+
+Interestingly survey_year is not exactly the calendar year. For example there are survey years with a value of 2005.23 (Iran) or 2001.31 (Senegal), etc. Actually, about `r round(100*length(which(HHS$survey_year%%1>0))/nrow(HHS),2)`% of the entries do not exactly correspond to a calendar year.
+
+* **reporting_level**: the coverage of the national level regions for each entry in the PIP database. This variable needs to be seen in combination with variable survey_coverage. survey_coverage reports the coverage of the actual survey, while reporting_level indicates the level at which the data from the actual survey are reported by PIP. For example, the survey_coverage of surveys from China, India, and Indonesia are national, but in PIP they are offered on the rural, urban and national (aggregated) reporting_level.
+
+```{r , include=T}
+table(HHS$reporting_level)
+```
+
+* **survey_acronym**: the acronym of the HHS used. The 16 most used are:
+```{r , include=T}
+head(sort(table(HHS$survey_acronym),decreasing = T),16)
+```
+
+* **survey_coverage**: the coverage of the national level regions for each HHS.
+
+```{r , include=T}
+table(HHS$survey_coverage)
+```
+
+* **survey_year**: the exact survey year. Do note that they do not always include integer year values. For example, see Solomon Islands has a survey_year value of 2012.79. This relates to the fact that data collection dates started 2012-10 and ended in 2013-11. The exact form of how the two are averaged/weighted is not directly clear from the available information at PIP.
+
+* **welfare_type**: consumption or income based
+
+```{r , include=T}
+table(HHS$welfare_type)
+```
+
+* **survey_comparability**: "The comparability metadata database is organized as follows. Each survey point (i.e., a combination of
+country, year, welfare and data type) has a corresponding value in the comparability column. Within the
+same country, all the survey points with the same value in the comparability variable are considered
+comparable or, at least, no substantial reason to break the series was found. The oldest comparable series
+in each country starts with the value zero (0) in the comparability variable. When comparability is broken,
+the value changes to one (1) for the year of the break and it goes on until the comparability is broken again
+in a subsequent year. The process repeats until the most recent surveys point available. In this way, the
+most recent comparable poverty series per country is such with the highest value in the comparability
+column." from the September 2019 PovcalNet Update : What's New available at https://openknowledge.worldbank.org/handle/10986/32478.
+
+```{r , include=T}
+table(HHS$survey_comparability)
+```
+
+* **comparable_spell**: continuous years that are comparable based on the methodology used in the HHS. The 18 most common spells are shown here:
+
+```{r , include=T}
+head(sort(table(HHS$comparable_spell),decreasing = T),18)
+```
+
+## Metadata variables
+
+* **is_interpolated**: only makes sense in the imputed/interpolated version of the PIP data which are available from API when setting the relevant flag to TRUE (fill_gaps=TRUE). Mind you that in that case one gets less entries with this indicator at FALSE. This is because the interpolated set of data only start in 1981, and some duplicated years are removed (for example, by countries that have both an income and a consumption HHS available in a year).
+
+```{r , include=T}
+table(HHS2$is_interpolated)
+```
+* **distribution_type**
+```{r , include=T}
+table(HHS2$distribution_type)
+```
+* **estimation_type**
+```{r , include=T}
+table(HHS2$estimation_type)
+```
+
+## Auxiliary variables
+
+* **cpi**: chain consumption price index using 2011 as a reference year. It shows the volatility of prices across years.
+
+* **ppp**: PPP exchange rates from the 2011 ICP round. Basically PPP exchange rates are very similar to the usual market exchange rates. We tend to use PPPs when we wish to compare living standards across countries. Their main advantage is that they correct the market exchange rates for non-tradable goods, since the market exchange rates are mainly representative of the tradable goods sector.
+
+* **reporting_pop**: population of the particular country.
+
+* **reporting_gdp**: gross domestic product per capita in PPP terms of the particular country.
+
+* **reporting_pce**: private consumption/expenditure per capita in PPP terms of the particular country.
+
+# The PIP API
+
+## How the PIP API works? 
+
+The way I have collected the data from the PIP is through the API examples that they report on page: https://pip.worldbank.org/api.
+
+The commands I use for getting the regional (aggregate) level data (in R) are as follows, where jjj stands for a particular poverty line values: 
+
+**res = GET(paste0("https://api.worldbank.org/pip/v1/pip-grp?country=all&year=all&povline=",
+                                         jjj,"&group_by=wb&format=json"))**
+                                         
+Temp <- fromJSON(rawToChar(res$content))
+
+Now Temp contains a snapshot of the entire database on the regional (aggregate) level.
+
+A similar command gets you the data at the country level:
+
+**res = GET("https://api.worldbank.org/pip/v1/pip?country=all&year=all&povline=1.9")**
+
+And if you also want the interpolated data you can use:
+
+**res = GET("https://api.worldbank.org/pip/v1/pip?country=all&year=all&povline=1.9&fill_gaps=true")**
+
+All the above commands return the data in json format.
+
+Some additional parameters, not used here, can be found at https://pip.worldbank.org/api.

@@ -1,0 +1,105 @@
+---
+title: "Issues and Feedback with the PIP data and the API"
+author: "Michail Moatsos"
+date: "`r format(Sys.time(), '%d %b %Y')`"
+output:
+  pdf_document:
+    citation_package: natbib
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+  #word_document:
+  bookdown::word_document2:
+    # citation_package: natbib
+    fig_caption: yes
+    # always_allow_html: yes
+    # keep_tex: yes
+    # number_sections: yes
+  html_document:
+    df_print: paged
+    citation_package: natbib
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+biblio-style: apalike
+header-includes:
+- \usepackage{float}
+- \usepackage{placeins}
+- \usepackage{enotez}
+- \usepackage{longtable}
+- \usepackage{booktabs}
+- \usepackage{pdflscape}
+- \usepackage{array}
+- \usepackage[skip=0.333\baselineskip]{caption}
+- \setlength\extrarowheight{2pt}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+- \newcommand*{\secref}[1]{Section~\ref{#1}}
+- \setcounter{section}{0}
+bibliography: /home/michalis/PhD/library.bib
+abstract: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(httr)
+library(jsonlite)
+rm(list= ls())
+load('~/PhD/Sources/OWID/ExportDataFramePIP.RData')
+```
+
+This document distills and highlights the key quirks/problems with the PIP API that I have discovered.
+
+# Monotonicity
+
+Getting regional or country distributions at a high frequency (for example by requesting the API to fetch the complete set of household surveys at 10000 or more distinct poverty lines) one gets into trouble because quite often headcount rates are not always increasing or constant compared to the previous (lower) poverty line requested, but a decrease is observed. For example, EAP at 1981 at the poverty line of $0.612/day. At 0.611 the headcount is 0.1429, but all values returned using poverty lines 0.612, 0.613, 0.614, 0.615, 0.616, 0.617 and 0.618, give a headcount **lower** than 0.1429. This can be verified with a direct call to the API:
+
+```{r , include=T}
+
+res = GET(paste0("https://api.worldbank.org/pip/v1/pip-grp?country=all&year=1981&povline=",
+                 0.611,"&group_by=wb&format=json"))
+Temp <- fromJSON(rawToChar(res$content))
+Temp <- subset(Temp,Temp$region_code=='EAP')
+res = GET(paste0("https://api.worldbank.org/pip/v1/pip-grp?country=all&year=1981&povline=",
+                 0.612,"&group_by=wb&format=json"))
+Temp2 <- fromJSON(rawToChar(res$content))
+Temp2 <- subset(Temp2,Temp2$region_code=='EAP')
+
+```
+
+Which confirms the issue that EAP at 0.612 is `r Temp2$headcount` which is lower than `r Temp$headcount` the reported headcount at 0.611.
+
+Other regional cases, 286 in total, with monotonicity breaks are included in the appendix. Also in terms of country level monotonicity breaks I have counted `r length(ExportDataFrame$ISO3Year[which(ExportDataFrame$MonotonicityBreaks>0)])` of them.
+
+A similar situation is also observed, but not investigated, for example with poverty_gap, poverty_severity and watts index at a poverty line of 0.011 for BDInational1995consumption.
+
+# HHS with more than one mean values 
+
+For example, for FJI at national coverage and measuring consumption, for the years 2014 up to 2019, the data contain more than one mean values across various poverty lines. In 2014, those values are 8.8123 and 8.8731.
+
+# GNBnational1981consumption
+
+GNBnational1981consumption's headcount only goes up to 0.8213 which corresponds to a poverty line of 4.748. This occurs to other GNB distributions as well in a similar manner.
+
+# Missing variable definitions
+
+The exact definitions for each reported variable used should be easily findable. It is not the case at the moment. For example, the difference between survey_coverage and reporting_level is rather unclear. Another example is survey_comparability. To find out how this is defined one has to look through a number of pages at the worldbank portal, and finally to read "September 2019 PovcalNet Update : What's New" pdf to understand what is precisely meant by 0, 1, 2, etc.
+
+# Parallel calls to API
+
+If one attempts to request a high frequency version of the dataset (say by requesting the data from the API at 10000 distinct poverty lines), and this is attempted in parallel mode with 5 or more parallel "workers" or instances, the consequence of this is that several poverty lines do not return a result.
+
+# Non-unique variable values 
+
+EAC 2010 has two means 465.6219 464.6207, and WLD 1995 two population values 5705.720253 5706.720253. But this is not an exhaustive list, there must be plenty more like them on country level as well. Another example is the reporting_gdp column returns two unique values 526.3314 and 551.7318 for GIN, national, consumption in 1981.
+
+# Appendix
+
+## Regional cases of monotonicity breaks
+
+```{r , include=T, echo=F}
+
+load('MonotonicityBreaks.RData')
+MonotonicityBreaks
+
+```
