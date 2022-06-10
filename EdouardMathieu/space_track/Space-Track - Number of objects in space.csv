@@ -1,0 +1,436 @@
+ENTITY,YEAR,Number of objects
+Rocket bodies,1958,1
+Payloads,1958,1
+Debris,1958,1
+Rocket bodies,1959,3
+Payloads,1959,4
+Debris,1959,4
+Rocket bodies,1960,9
+Payloads,1960,10
+Debris,1960,15
+Rocket bodies,1961,13
+Payloads,1961,16
+Debris,1961,292
+Rocket bodies,1962,23
+Payloads,1962,26
+Debris,1962,308
+Rocket bodies,1963,34
+Payloads,1963,40
+Debris,1963,424
+Rocket bodies,1964,51
+Payloads,1964,68
+Debris,1964,501
+Rocket bodies,1965,81
+Payloads,1965,128
+Debris,1965,1169
+Rocket bodies,1966,103
+Payloads,1966,153
+Debris,1966,1342
+Rocket bodies,1967,129
+Payloads,1967,185
+Debris,1967,1402
+Rocket bodies,1968,151
+Payloads,1968,211
+Debris,1968,1679
+Rocket bodies,1969,172
+Payloads,1969,240
+Debris,1969,1922
+Rocket bodies,1970,201
+Payloads,1970,280
+Debris,1970,2480
+Rocket bodies,1971,243
+Payloads,1971,350
+Debris,1971,2637
+Rocket bodies,1972,277
+Payloads,1972,405
+Debris,1972,2891
+Rocket bodies,1973,308
+Payloads,1973,461
+Debris,1973,3118
+Rocket bodies,1974,348
+Payloads,1974,513
+Debris,1974,3350
+Rocket bodies,1975,406
+Payloads,1975,585
+Debris,1975,3911
+Rocket bodies,1976,470
+Payloads,1976,665
+Debris,1976,4333
+Rocket bodies,1977,514
+Payloads,1977,717
+Debris,1977,4545
+Rocket bodies,1978,544
+Payloads,1978,769
+Debris,1978,4679
+Rocket bodies,1979,555
+Payloads,1979,787
+Debris,1979,4797
+Rocket bodies,1980,566
+Payloads,1980,807
+Debris,1980,4771
+Rocket bodies,1981,605
+Payloads,1981,867
+Debris,1981,5147
+Rocket bodies,1982,626
+Payloads,1982,909
+Debris,1982,6966
+Rocket bodies,1983,683
+Payloads,1983,960
+Debris,1983,7194
+Rocket bodies,1984,737
+Payloads,1984,1019
+Debris,1984,7229
+Rocket bodies,1985,802
+Payloads,1985,1080
+Debris,1985,7384
+Rocket bodies,1986,839
+Payloads,1986,1148
+Debris,1986,7980
+Rocket bodies,1987,874
+Payloads,1987,1209
+Debris,1987,8374
+Rocket bodies,1988,906
+Payloads,1988,1239
+Debris,1988,8245
+Rocket bodies,1989,933
+Payloads,1989,1254
+Debris,1989,8129
+Rocket bodies,1990,977
+Payloads,1990,1305
+Debris,1990,8142
+Rocket bodies,1991,1002
+Payloads,1991,1341
+Debris,1991,8390
+Rocket bodies,1992,1045
+Payloads,1992,1366
+Debris,1992,8696
+Rocket bodies,1993,1089
+Payloads,1993,1401
+Debris,1993,10557
+Rocket bodies,1994,1130
+Payloads,1994,1443
+Debris,1994,11502
+Rocket bodies,1995,1156
+Payloads,1995,1462
+Debris,1995,11747
+Rocket bodies,1996,1184
+Payloads,1996,1486
+Debris,1996,11646
+Rocket bodies,1997,1223
+Payloads,1997,1564
+Debris,1997,12066
+Rocket bodies,1998,1233
+Payloads,1998,1957
+Debris,1998,11981
+Rocket bodies,1999,1238
+Payloads,1999,2012
+Debris,1999,15713
+Rocket bodies,2000,1233
+Payloads,2000,2041
+Debris,2000,15962
+Rocket bodies,2001,1209
+Payloads,2001,2043
+Debris,2001,16098
+Rocket bodies,2002,1199
+Payloads,2002,2063
+Debris,2002,15924
+Rocket bodies,2003,1210
+Payloads,2003,2088
+Debris,2003,15768
+Rocket bodies,2004,1215
+Payloads,2004,2109
+Debris,2004,15722
+Rocket bodies,2005,1217
+Payloads,2005,2124
+Debris,2005,15650
+Rocket bodies,2006,1233
+Payloads,2006,2156
+Debris,2006,16443
+Rocket bodies,2007,1256
+Payloads,2007,2197
+Debris,2007,16441
+Rocket bodies,2008,1275
+Payloads,2008,2237
+Debris,2008,15997
+Rocket bodies,2009,1286
+Payloads,2009,2293
+Debris,2009,15941
+Rocket bodies,2010,1310
+Payloads,2010,2324
+Debris,2010,15845
+Rocket bodies,2011,1320
+Payloads,2011,2360
+Debris,2011,15868
+Rocket bodies,2012,1331
+Payloads,2012,2394
+Debris,2012,15711
+Rocket bodies,2013,1336
+Payloads,2013,2514
+Debris,2013,15442
+Rocket bodies,2014,1340
+Payloads,2014,2562
+Debris,2014,15019
+Rocket bodies,2015,1358
+Payloads,2015,2582
+Debris,2015,14733
+Rocket bodies,2016,1378
+Payloads,2016,2637
+Debris,2016,14641
+Rocket bodies,2017,1401
+Payloads,2017,2910
+Debris,2017,14589
+Rocket bodies,2018,1443
+Payloads,2018,3105
+Debris,2018,14646
+Rocket bodies,2019,1462
+Payloads,2019,3390
+Debris,2019,14688
+Rocket bodies,2020,1469
+Payloads,2020,4458
+Debris,2020,14554
+Rocket bodies,2021,1495
+Payloads,2021,5974
+Debris,2021,14366
+Low Earth orbit,1958,2
+Low Earth orbit,1959,7
+Low Earth orbit,1960,19
+Low Earth orbit,1961,29
+Medium Earth orbit,1961,2
+Low Earth orbit,1962,49
+Medium Earth orbit,1962,3
+Low Earth orbit,1963,74
+Medium Earth orbit,1963,9
+Geostationary orbit,1963,1
+High Earth orbit,1963,2
+Low Earth orbit,1964,119
+Medium Earth orbit,1964,10
+Geostationary orbit,1964,2
+High Earth orbit,1964,3
+Low Earth orbit,1965,209
+Medium Earth orbit,1965,16
+Geostationary orbit,1965,3
+High Earth orbit,1965,5
+Low Earth orbit,1966,256
+Medium Earth orbit,1966,32
+Geostationary orbit,1966,4
+High Earth orbit,1966,6
+Low Earth orbit,1967,314
+Medium Earth orbit,1967,55
+Geostationary orbit,1967,8
+High Earth orbit,1967,8
+Low Earth orbit,1968,362
+Medium Earth orbit,1968,69
+Geostationary orbit,1968,10
+High Earth orbit,1968,9
+Low Earth orbit,1969,412
+Medium Earth orbit,1969,76
+Geostationary orbit,1969,14
+High Earth orbit,1969,13
+Low Earth orbit,1970,481
+Medium Earth orbit,1970,85
+Geostationary orbit,1970,17
+High Earth orbit,1970,14
+Low Earth orbit,1971,593
+Medium Earth orbit,1971,86
+Geostationary orbit,1971,22
+High Earth orbit,1971,16
+Low Earth orbit,1972,682
+Medium Earth orbit,1972,91
+Geostationary orbit,1972,25
+High Earth orbit,1972,18
+Low Earth orbit,1973,769
+Medium Earth orbit,1973,92
+Geostationary orbit,1973,29
+High Earth orbit,1973,23
+Low Earth orbit,1974,861
+Medium Earth orbit,1974,99
+Geostationary orbit,1974,36
+High Earth orbit,1974,24
+Low Earth orbit,1975,991
+Medium Earth orbit,1975,104
+Geostationary orbit,1975,49
+High Earth orbit,1975,25
+Low Earth orbit,1976,1135
+Medium Earth orbit,1976,109
+Geostationary orbit,1976,62
+High Earth orbit,1976,33
+Low Earth orbit,1977,1231
+Medium Earth orbit,1977,120
+Geostationary orbit,1977,72
+High Earth orbit,1977,41
+Low Earth orbit,1978,1313
+Medium Earth orbit,1978,130
+Geostationary orbit,1978,78
+High Earth orbit,1978,51
+Low Earth orbit,1979,1342
+Medium Earth orbit,1979,138
+Geostationary orbit,1979,88
+High Earth orbit,1979,57
+Low Earth orbit,1980,1373
+Medium Earth orbit,1980,148
+Geostationary orbit,1980,96
+High Earth orbit,1980,62
+Low Earth orbit,1981,1472
+Medium Earth orbit,1981,161
+Geostationary orbit,1981,108
+High Earth orbit,1981,69
+Low Earth orbit,1982,1535
+Medium Earth orbit,1982,174
+Geostationary orbit,1982,122
+High Earth orbit,1982,79
+Low Earth orbit,1983,1643
+Medium Earth orbit,1983,192
+Geostationary orbit,1983,137
+High Earth orbit,1983,89
+Low Earth orbit,1984,1756
+Medium Earth orbit,1984,222
+Geostationary orbit,1984,153
+High Earth orbit,1984,104
+Low Earth orbit,1985,1882
+Medium Earth orbit,1985,245
+Geostationary orbit,1985,173
+High Earth orbit,1985,113
+Low Earth orbit,1986,1987
+Medium Earth orbit,1986,259
+Geostationary orbit,1986,181
+High Earth orbit,1986,122
+Low Earth orbit,1987,2083
+Medium Earth orbit,1987,274
+Geostationary orbit,1987,192
+High Earth orbit,1987,130
+Low Earth orbit,1988,2145
+Medium Earth orbit,1988,290
+Geostationary orbit,1988,208
+High Earth orbit,1988,145
+Low Earth orbit,1989,2187
+Medium Earth orbit,1989,317
+Geostationary orbit,1989,218
+High Earth orbit,1989,162
+Low Earth orbit,1990,2282
+Medium Earth orbit,1990,336
+Geostationary orbit,1990,237
+High Earth orbit,1990,178
+Low Earth orbit,1991,2343
+Medium Earth orbit,1991,348
+Geostationary orbit,1991,250
+High Earth orbit,1991,196
+Low Earth orbit,1992,2411
+Medium Earth orbit,1992,372
+Geostationary orbit,1992,264
+High Earth orbit,1992,211
+Low Earth orbit,1993,2490
+Medium Earth orbit,1993,392
+Geostationary orbit,1993,277
+High Earth orbit,1993,221
+Low Earth orbit,1994,2573
+Medium Earth orbit,1994,413
+Geostationary orbit,1994,298
+High Earth orbit,1994,237
+Low Earth orbit,1995,2618
+Medium Earth orbit,1995,431
+Geostationary orbit,1995,316
+High Earth orbit,1995,253
+Low Earth orbit,1996,2670
+Medium Earth orbit,1996,439
+Geostationary orbit,1996,331
+High Earth orbit,1996,270
+Low Earth orbit,1997,2787
+Medium Earth orbit,1997,457
+Geostationary orbit,1997,346
+High Earth orbit,1997,288
+Low Earth orbit,1998,3190
+Medium Earth orbit,1998,466
+Geostationary orbit,1998,352
+High Earth orbit,1998,310
+Low Earth orbit,1999,3250
+Medium Earth orbit,1999,490
+Geostationary orbit,1999,363
+High Earth orbit,1999,321
+Low Earth orbit,2000,3274
+Medium Earth orbit,2000,512
+Geostationary orbit,2000,390
+High Earth orbit,2000,340
+Low Earth orbit,2001,3252
+Medium Earth orbit,2001,523
+Geostationary orbit,2001,404
+High Earth orbit,2001,350
+Low Earth orbit,2002,3262
+Medium Earth orbit,2002,532
+Geostationary orbit,2002,421
+High Earth orbit,2002,362
+Low Earth orbit,2003,3298
+Medium Earth orbit,2003,548
+Geostationary orbit,2003,442
+High Earth orbit,2003,370
+Low Earth orbit,2004,3324
+Medium Earth orbit,2004,563
+Geostationary orbit,2004,455
+High Earth orbit,2004,380
+Low Earth orbit,2005,3341
+Medium Earth orbit,2005,576
+Geostationary orbit,2005,471
+High Earth orbit,2005,387
+Low Earth orbit,2006,3389
+Medium Earth orbit,2006,591
+Geostationary orbit,2006,491
+High Earth orbit,2006,393
+Low Earth orbit,2007,3453
+Medium Earth orbit,2007,607
+Geostationary orbit,2007,507
+High Earth orbit,2007,401
+Low Earth orbit,2008,3512
+Medium Earth orbit,2008,628
+Geostationary orbit,2008,537
+High Earth orbit,2008,404
+Low Earth orbit,2009,3579
+Medium Earth orbit,2009,649
+Geostationary orbit,2009,565
+High Earth orbit,2009,407
+Low Earth orbit,2010,3634
+Medium Earth orbit,2010,673
+Geostationary orbit,2010,595
+High Earth orbit,2010,408
+Low Earth orbit,2011,3680
+Medium Earth orbit,2011,701
+Geostationary orbit,2011,624
+High Earth orbit,2011,408
+Low Earth orbit,2012,3725
+Medium Earth orbit,2012,722
+Geostationary orbit,2012,661
+High Earth orbit,2012,409
+Low Earth orbit,2013,3850
+Medium Earth orbit,2013,744
+Geostationary orbit,2013,685
+High Earth orbit,2013,411
+Low Earth orbit,2014,3902
+Medium Earth orbit,2014,781
+Geostationary orbit,2014,716
+High Earth orbit,2014,416
+Low Earth orbit,2015,3940
+Medium Earth orbit,2015,816
+Geostationary orbit,2015,752
+High Earth orbit,2015,418
+Low Earth orbit,2016,4015
+Medium Earth orbit,2016,838
+Geostationary orbit,2016,788
+High Earth orbit,2016,419
+Low Earth orbit,2017,4311
+Medium Earth orbit,2017,854
+Geostationary orbit,2017,824
+High Earth orbit,2017,419
+Low Earth orbit,2018,4548
+Medium Earth orbit,2018,901
+Geostationary orbit,2018,854
+High Earth orbit,2018,422
+Low Earth orbit,2019,4852
+Medium Earth orbit,2019,927
+Geostationary orbit,2019,883
+High Earth orbit,2019,423
+Low Earth orbit,2020,5927
+Medium Earth orbit,2020,937
+Geostationary orbit,2020,903
+High Earth orbit,2020,425
+Low Earth orbit,2021,7469
+Medium Earth orbit,2021,946
+Geostationary orbit,2021,927
+High Earth orbit,2021,427
