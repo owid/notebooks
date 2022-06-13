@@ -14,6 +14,17 @@ def get_impact(row):
     return df[["Crater Name", "Location", "Diameter (km)", "Age (Ma)"]]
 
 
+def clean_names(series):
+    return series.replace(
+        {
+            "South Australia": "Australia",
+            "Queensland": "Australia",
+            "Western Australia": "Australia",
+            "U.S.A.": "United States",
+        }
+    )
+
+
 def main():
     soup = BeautifulSoup(
         requests.get(f"{DOMAIN}/Diametersort.html").content, "html.parser"
@@ -23,7 +34,7 @@ def main():
 
     df = pd.concat(results).rename(columns={"Diameter (km)": "crater_diameter"})
 
-    df["Location"] = df.Location.str.replace(".*, ", "", regex=True)
+    df["Location"] = df.Location.str.replace(".*, ", "", regex=True).pipe(clean_names)
     df["entity"] = df["Crater Name"] + " (" + df.Location + ")"
     df["year"] = (
         df["Age (Ma)"].str.extract(r"([\d\.]+)").astype(float).mul(-1000000).astype(int)
