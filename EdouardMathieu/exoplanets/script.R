@@ -7,7 +7,7 @@ df <- fread("https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+dis
 df <- df[disc_year < year(today())]
 
 top_methods <- table(df$discoverymethod) %>% sort %>% tail(3) %>% names
-df[!discoverymethod %in% top_methods, discoverymethod := "Other method"]
+df[!discoverymethod %in% top_methods, discoverymethod := "Other methods"]
 df[, discoverymethod := str_to_sentence(discoverymethod)]
 
 df <- df[, .N, c("disc_year", "discoverymethod")]
