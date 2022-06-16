@@ -1,6 +1,6 @@
 *This is a code to get WID data to compare pretax data with different filters
 *Trying i, j, t and e for population unit
-*Trying 992, 996 and 999 as ages groups
+*Trying 992, 996 and 999 as age groups
 
 set more off
 
