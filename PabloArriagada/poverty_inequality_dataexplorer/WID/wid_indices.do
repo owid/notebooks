@@ -3,13 +3,13 @@
 set more off
 
 *Gets ppp data to convert to USD
-wid, indicators(xlcusp) year(2021) clear 
+wid, indicators(xlcusp) year(2017) clear 
 rename value ppp
 tempfile ppp
 save "`ppp'"
 
 *Gets average and threshold income for pre tax and post tax (nat and dis) data
-wid, indicators(aptinc tptinc adiinc tdiinc acainc tcainc) perc(p0p10 p10p20 p20p30 p30p40 p40p50 p50p60 p60p70 p70p80 p80p90 p90p100 p0p100 p99p100 p99.9p100 p99.99p100 p99.999p100) ages(992) pop(j) clear
+wid, indicators(aptinc tptinc adiinc tdiinc acainc tcainc) perc(p0p10 p10p20 p20p30 p30p40 p40p50 p50p60 p60p70 p70p80 p80p90 p90p100 p0p100 p99p100 p99.9p100 p99.99p100 p99.999p100) ages(992) pop(j) exclude clear
 
 *Merge with ppp data to transform monetary values to USD
 merge n:1 country using "`ppp'", keep(match)
@@ -20,7 +20,7 @@ tempfile avgthr
 save "`avgthr'"
 
 *Gets shares and Gini for pre and post tax income
-wid, indicators(sptinc gptinc sdiinc gdiinc scainc gcainc) perc(p0p10 p10p20 p20p30 p30p40 p40p50 p50p60 p60p70 p70p80 p80p90 p90p100 p0p100 p0p40 p0p50 p50p90 p99p100 p99.9p100 p99.99p100 p99.999p100) ages(992) pop(j) clear
+wid, indicators(sptinc gptinc sdiinc gdiinc scainc gcainc) perc(p0p10 p10p20 p20p30 p30p40 p40p50 p50p60 p60p70 p70p80 p80p90 p90p100 p0p100 p0p40 p0p50 p50p90 p99p100 p99.9p100 p99.99p100 p99.999p100) ages(992) pop(j) exclude clear
 
 *Union with average and threshold income
 append using "`avgthr'"
@@ -89,5 +89,9 @@ gen p90_p50_ratio_posttax_dis = p90p100_thr_posttax_dis / p50p60_thr_posttax_dis
 
 order country year *gini_pretax *gini*dis *gini*nat *_ratio*pretax *_ratio*dis *_ratio*nat *share_pretax *share*dis *share*nat *avg_pretax *avg*dis *avg*nat *thr_pretax *thr*dis *thr*nat
 
-export excel using "wid_indices.xlsx", firstrow(variables) replace
+sort country year
+
+*export excel using "wid_indices.xlsx", firstrow(variables) replace
+export delimited using "wid_indices.csv", replace
+
 save wid_indices, replace
