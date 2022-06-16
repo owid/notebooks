@@ -92,6 +92,6 @@ order country year *gini_pretax *gini*dis *gini*nat *_ratio*pretax *_ratio*dis *
 sort country year
 
 *export excel using "wid_indices.xlsx", firstrow(variables) replace
-export delimited using "wid_indices.csv", replace
+export delimited using "wid_indices_992j.csv", replace
 
-save wid_indices, replace
+save wid_indices_992j, replace
