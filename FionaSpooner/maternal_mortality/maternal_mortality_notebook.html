@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.587">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Maternal Mortality</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="maternal_mortality_notebook_files/libs/clipboard/clipboard.min.js"></script>
+<script src="maternal_mortality_notebook_files/libs/quarto-html/quarto.js"></script>
+<script src="maternal_mortality_notebook_files/libs/quarto-html/popper.min.js"></script>
+<script src="maternal_mortality_notebook_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="maternal_mortality_notebook_files/libs/quarto-html/anchor.min.js"></script>
+<link href="maternal_mortality_notebook_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="maternal_mortality_notebook_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="maternal_mortality_notebook_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="maternal_mortality_notebook_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="maternal_mortality_notebook_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#downloading-the-data-from-gapminder" id="toc-downloading-the-data-from-gapminder" class="nav-link active" data-scroll-target="#downloading-the-data-from-gapminder">Downloading the data from GapMinder</a></li>
+  <li><a href="#dealing-with-issues-in-the-data" id="toc-dealing-with-issues-in-the-data" class="nav-link" data-scroll-target="#dealing-with-issues-in-the-data">Dealing with issues in the data</a></li>
+  <li><a href="#finding-the-mid-point-of-each-year-range" id="toc-finding-the-mid-point-of-each-year-range" class="nav-link" data-scroll-target="#finding-the-mid-point-of-each-year-range">Finding the mid-point of each year range</a></li>
+  <li><a href="#reading-in-the-data-from-the-who" id="toc-reading-in-the-data-from-the-who" class="nav-link" data-scroll-target="#reading-in-the-data-from-the-who">Reading in the data from the WHO</a></li>
+  <li><a href="#cleaning-the-who-data" id="toc-cleaning-the-who-data" class="nav-link" data-scroll-target="#cleaning-the-who-data">Cleaning the WHO data</a></li>
+  <li><a href="#merging-the-who-data-with-the-gapminder-data" id="toc-merging-the-who-data-with-the-gapminder-data" class="nav-link" data-scroll-target="#merging-the-who-data-with-the-gapminder-data">Merging the WHO data with the GapMinder data</a></li>
+  <li><a href="#dealing-with-duplicate-datapoints" id="toc-dealing-with-duplicate-datapoints" class="nav-link" data-scroll-target="#dealing-with-duplicate-datapoints">Dealing with duplicate datapoints</a></li>
+  <li><a href="#standardising-the-country-names" id="toc-standardising-the-country-names" class="nav-link" data-scroll-target="#standardising-the-country-names">Standardising the country names</a></li>
+  <li><a href="#removing-regions-we-dont-want-to-include" id="toc-removing-regions-we-dont-want-to-include" class="nav-link" data-scroll-target="#removing-regions-we-dont-want-to-include">Removing regions we don’t want to include</a></li>
+  <li><a href="#plotting-the-data" id="toc-plotting-the-data" class="nav-link" data-scroll-target="#plotting-the-data">Plotting the data</a></li>
+  <li><a href="#calculating-the-proportional-change-since-2000" id="toc-calculating-the-proportional-change-since-2000" class="nav-link" data-scroll-target="#calculating-the-proportional-change-since-2000">Calculating the proportional change since 2000</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Maternal Mortality</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="downloading-the-data-from-gapminder" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-the-data-from-gapminder">Downloading the data from GapMinder</h2>
+<div class="cell">
+
+</div>
+<p>Download data from GapMinder and save it locally.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data/input"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">'https://www.gapminder.org/documentation/documentation/gapdata010.xls'</span>, <span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_gapminder_data.xls'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Read in the GapMinder data and take a look at it.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_gapminder_data.xls'</span>), <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>),]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  Country  year  MMR   `Live Births` `Maternal deat…` `Women reprodu…` `MM-rate`
+  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;                       &lt;dbl&gt;     &lt;dbl&gt;
+1 Austral… 1871… 643   &lt;NA&gt;          &lt;NA&gt;                           NA        NA
+2 Austral… 1881… 592   &lt;NA&gt;          &lt;NA&gt;                           NA        NA
+3 Austral… 1891… 560   &lt;NA&gt;          &lt;NA&gt;                           NA        NA
+4 Austral… 1901… 609   &lt;NA&gt;          &lt;NA&gt;                       940332         0
+5 Austral… 1906  538   107890        &lt;NA&gt;                           NA        NA
+6 Austral… 1907  556.… 110347        614                            NA        NA
+# … with 6 more variables: ...8 &lt;lgl&gt;, `Skilled attendance %` &lt;dbl&gt;,
+#   `Source MMR, maternal death and Live birth` &lt;chr&gt;, Comment &lt;chr&gt;,
+#   `Source women reproductive age` &lt;chr&gt;, Comments &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>We use janitor clean_names function to make the column names a bit neater.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">clean_names</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="dealing-with-issues-in-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="dealing-with-issues-in-the-data">Dealing with issues in the data</h2>
+<ul>
+<li><p>The first three rows in the ‘year’ column seem to be wrong as it seems as if each row covers 110 years, but in <a href="https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#">another source</a> they cover only 10 years.</p></li>
+<li><p>I will replace them manually here with the middle of each decade, as is used in the other data from the same source.</p></li>
+<li><p>There are cases where the year for Finland has been entered incorrectly three times, there are two 1772s, 1775s &amp; 1967s, the second of each should be 1872, 1875 and 1957 respectively.</p></li>
+<li><p>There are also two errors for New Zealand, and one error for both Sweden and the US.</p></li>
+<li><p>Sri Lanka’s maternal mortality rate seems to drop to zero in 1990, here we set it to NA instead.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1875</span>, <span class="dv">1885</span>,<span class="dv">1895</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1772'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Finland'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">487</span>,] <span class="ot">&lt;-</span> <span class="st">'1872'</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1775'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Finland'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">629</span>,] <span class="ot">&lt;-</span> <span class="st">'1875'</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1967'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Finland'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">77</span>,] <span class="ot">&lt;-</span> <span class="st">'1957'</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1967'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Sweden'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">39</span>,] <span class="ot">&lt;-</span> <span class="st">'1957'</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1967'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'United States'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="fl">1766.28</span>,] <span class="ot">&lt;-</span> <span class="st">'1957'</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span><span class="st">'1989-02'</span><span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'New Zealand'</span>,] <span class="ot">&lt;-</span> <span class="st">'1889-02'</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="sc">-</span><span class="fu">which</span>(df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1950'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'New Zealand'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>mmr <span class="sc">==</span> <span class="dv">90</span>),]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mmr'</span>][df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">"Sri Lanka"</span> <span class="sc">&amp;</span> df<span class="sc">$</span>year <span class="sc">==</span> <span class="dv">1990</span>,] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="finding-the-mid-point-of-each-year-range" class="level2">
+<h2 class="anchored" data-anchor-id="finding-the-mid-point-of-each-year-range">Finding the mid-point of each year range</h2>
+<p>For some rows a range of years is given for a particular maternal mortality rate. We want to find the mid-point of that range. We use this function to find the mid-value of years given.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mid_year <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">grepl</span>(<span class="st">"-"</span>, year)){</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    year_split <span class="ot">&lt;-</span>  <span class="fu">unlist</span>(<span class="fu">strsplit</span>(year, <span class="at">split =</span> <span class="st">"-"</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    year_begin <span class="ot">&lt;-</span> year_split[<span class="dv">1</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    year_end_len <span class="ot">&lt;-</span> <span class="fu">nchar</span>(year_split[<span class="dv">2</span>])</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    year_end_pref <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">-</span> year_end_len</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (year_end_pref <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      year_pref <span class="ot">&lt;-</span> <span class="fu">substr</span>(year_begin, <span class="dv">1</span>, year_end_pref)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      year_end <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">paste</span>(<span class="fu">c</span>(year_pref, year_split[<span class="dv">2</span>]),<span class="at">collapse =</span> <span class="st">""</span>))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      year_out <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">c</span>(<span class="fu">as.numeric</span>(year_begin), year_end)))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      year_out <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">as.numeric</span>(<span class="fu">c</span>(year_begin,year_split[<span class="dv">2</span>]))))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    year_out <span class="ot">&lt;-</span> year</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(year_out)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>year_out_all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(df<span class="sc">$</span>year, mid_year))</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>mid_year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(year_out_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Let’s check the mid-year estimates have worked as expected. There are three cases where the mid-year estimate is not the mid-point of the range of years. Let’s fix these manually.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(year, mid_year) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"-"</span>,year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">year_begin =</span> <span class="fu">substr</span>(year, <span class="dv">1</span>, <span class="dv">4</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(year_begin <span class="sc">&gt;=</span> mid_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  year    mid_year year_begin
+  &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;     
+1 1897-01     1849 1897      
+2 1889-02     1846 1889      
+3 1899-03     1851 1899      </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mid_year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">"1897-01"</span>,] <span class="ot">&lt;-</span> <span class="dv">1899</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mid_year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">"1889-02"</span>,] <span class="ot">&lt;-</span> <span class="dv">1895</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mid_year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">"1889-03"</span>,] <span class="ot">&lt;-</span> <span class="dv">1896</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Keeping only the columns we want to take forward.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">entity =</span> country, <span class="at">year =</span> mid_year, <span class="at">maternal_mortality_rate =</span> mmr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="reading-in-the-data-from-the-who" class="level2">
+<h2 class="anchored" data-anchor-id="reading-in-the-data-from-the-who">Reading in the data from the WHO</h2>
+<p>Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">'https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv'</span>, <span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_wdi_maternal_mortality.zip'</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_wdi_maternal_mortality.zip'</span>), <span class="at">exdir =</span> <span class="st">"data/input"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>des_file <span class="ot">&lt;-</span> <span class="fu">unzip</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_wdi_maternal_mortality.zip'</span>), <span class="at">list=</span><span class="cn">TRUE</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> des_file<span class="sc">$</span>Name[<span class="fu">startsWith</span>( des_file<span class="sc">$</span>Name,<span class="st">"API_SH.STA.MMRT_DS2"</span>)]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>who <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(<span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>, file_name), <span class="at">skip =</span> <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="cleaning-the-who-data" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-the-who-data">Cleaning the WHO data</h2>
+<p>Pivot and clean the WHO data to long format. Check the Gapminder countries are in the WHO dataset</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>who_clean <span class="ot">&lt;-</span> who <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, <span class="fu">starts_with</span>(<span class="st">"X"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>x) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">"x"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"x"</span>, <span class="st">""</span>, name))) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">entity =</span> country_name, year, <span class="at">maternal_mortality_rate =</span> value)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(who_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  entity  year maternal_mortality_rate
+  &lt;chr&gt;  &lt;dbl&gt;                   &lt;int&gt;
+1 Aruba   1960                      NA
+2 Aruba   1961                      NA
+3 Aruba   1962                      NA
+4 Aruba   1963                      NA
+5 Aruba   1964                      NA
+6 Aruba   1965                      NA</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">unique</span>(df<span class="sc">$</span>entity) <span class="sc">%in%</span> who_clean<span class="sc">$</span>entity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="merging-the-who-data-with-the-gapminder-data" class="level2">
+<h2 class="anchored" data-anchor-id="merging-the-who-data-with-the-gapminder-data">Merging the WHO data with the GapMinder data</h2>
+<p>Combine the two datasets and add a source column so we can keep track of where each datapoint comes from.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>source <span class="ot">&lt;-</span> <span class="st">'GapMinder'</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>who_clean<span class="sc">$</span>source <span class="ot">&lt;-</span> <span class="st">'WHO_GHO'</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>df_all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df, who_clean)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df_all<span class="sc">$</span>maternal_mortality_rate <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df_all<span class="sc">$</span>maternal_mortality_rate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="dealing-with-duplicate-datapoints" class="level2">
+<h2 class="anchored" data-anchor-id="dealing-with-duplicate-datapoints">Dealing with duplicate datapoints</h2>
+<p>Dealing with duplicate years - there are two identical values for NZ in 1950, we can drop one with distinct(). We remove NAs where there is a non-NA value in either Gapminder or WHO. If there are values for both Gapminder and WHO GHO we have a preference for WHO GHO.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_check <span class="ot">&lt;-</span>df_all <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span> df_check[<span class="sc">-</span><span class="fu">which</span>(df_check<span class="sc">$</span>n <span class="sc">&gt;</span><span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_check<span class="sc">$</span>maternal_mortality_rate)),]</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span>df_sel <span class="sc">%&gt;%</span> </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span> df_sel[<span class="sc">-</span><span class="fu">which</span>(df_sel<span class="sc">$</span>nn <span class="sc">&gt;</span><span class="dv">1</span> <span class="sc">&amp;</span> df_sel<span class="sc">$</span>source <span class="sc">==</span> <span class="st">'GapMinder'</span>),]</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>df_sel <span class="sc">%&gt;%</span> </span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nnn <span class="sc">&gt;</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 7
+# … with 7 variables: entity &lt;chr&gt;, year &lt;dbl&gt;, maternal_mortality_rate &lt;dbl&gt;,
+#   source &lt;chr&gt;, n &lt;int&gt;, nn &lt;int&gt;, nnn &lt;int&gt;</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span> df_sel <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(n, nn))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="standardising-the-country-names" class="level2">
+<h2 class="anchored" data-anchor-id="standardising-the-country-names">Standardising the country names</h2>
+<p>Standardising the country names for use on OWID. Writing the data out.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>stand_countries <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/input/countries_to_standardise_country_standardized.csv"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>df_fin <span class="ot">&lt;-</span> df_sel <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(.,stand_countries, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"entity"</span> <span class="ot">=</span> <span class="st">"Country"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">entity =</span> Our.World.In.Data.Name) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Our.World.In.Data.Name, source)) </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>df_fin<span class="sc">$</span>maternal_mortality_rate[<span class="fu">is.na</span>(df_fin<span class="sc">$</span>maternal_mortality_rate)] <span class="ot">&lt;-</span> <span class="st">""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="removing-regions-we-dont-want-to-include" class="level2">
+<h2 class="anchored" data-anchor-id="removing-regions-we-dont-want-to-include">Removing regions we don’t want to include</h2>
+<p>We don’t want to include all of the available regions in the data as it is difficult for us to define them clearly. We drop out a selection here.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>entities_to_drop <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Africa Eastern and Southern"</span>, <span class="st">"Africa Western and Central"</span>, <span class="st">"Arab World"</span>, <span class="st">"Early-demographic dividend"</span>, <span class="st">"East Asia &amp; Pacific (excluding high income)"</span>, <span class="st">"East Asia &amp; Pacific (IDA &amp; IBRD countries)"</span>, <span class="st">"Euro area"</span>, <span class="st">"Europe &amp; Central Asia (excluding high income)"</span>, <span class="st">"Europe &amp; Central Asia (IDA &amp; IBRD countries)"</span>, <span class="st">"Fragile and conflict affected situations"</span>, <span class="st">"Heavily indebted poor countries (HIPC)"</span>, <span class="st">"IBRD only"</span>, <span class="st">"IDA &amp; IBRD total"</span>, <span class="st">"IDA blend"</span>, <span class="st">"IDA only"</span>, <span class="st">"IDA total"</span>, <span class="st">"Late-demographic dividend"</span>, <span class="st">"Latin America &amp; Caribbean (excluding high income)"</span>, <span class="st">"Latin America &amp; the Caribbean (IDA &amp; IBRD countries)"</span>, <span class="st">"Least developed countries: UN classification"</span>, <span class="st">"Middle East &amp; North Africa (excluding high income)"</span>, </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Middle East &amp; North Africa (IDA &amp; IBRD countries)"</span>, <span class="st">"Not classified"</span>,  <span class="st">"Other small states"</span>, <span class="st">"Pacific island small states"</span>, <span class="st">"Post-demographic dividend"</span>, <span class="st">"Pre-demographic dividend"</span>, <span class="st">"Small states"</span>, <span class="st">"South Asia (IDA &amp; IBRD)"</span>, <span class="st">"Sub-Saharan Africa (excluding high income)"</span>, <span class="st">"Sub-Saharan Africa (IDA &amp; IBRD countries)"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>df_fin <span class="ot">&lt;-</span> df_fin <span class="sc">%&gt;%</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(<span class="sc">!</span>entity <span class="sc">%in%</span> entities_to_drop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="plotting-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-data">Plotting the data</h2>
+<p>Plot to see what it looks like:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df_fin <span class="sc">%&gt;%</span> <span class="fu">filter</span>(entity<span class="sc">==</span> <span class="st">"Sweden"</span>), <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> <span class="fu">as.numeric</span>(maternal_mortality_rate), <span class="at">group =</span> entity, <span class="at">colour =</span> entity))<span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="maternal_mortality_notebook_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="calculating-the-proportional-change-since-2000" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-the-proportional-change-since-2000">Calculating the proportional change since 2000</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df_clean <span class="ot">&lt;-</span> df_fin <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">2017</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(.)) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">maternal_mortality_rate =</span> <span class="fu">as.numeric</span>(maternal_mortality_rate)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">==</span> <span class="dv">2</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>df_wide <span class="ot">&lt;-</span> df_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(., <span class="at">names_from =</span> <span class="st">'year'</span>,<span class="at">names_glue =</span> <span class="st">"{.value}_{year}"</span>, <span class="at">values_from =</span> <span class="st">'maternal_mortality_rate'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">change =</span> ((maternal_mortality_rate_2017 <span class="sc">-</span> maternal_mortality_rate_2000)<span class="sc">/</span>maternal_mortality_rate_2000)<span class="sc">*</span><span class="dv">100</span>, <span class="at">baseline =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(entity, change, baseline) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"change"</span>, <span class="st">"baseline"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">gsub</span>(<span class="st">"change"</span>, <span class="dv">2017</span>, name), <span class="at">name =</span> <span class="fu">gsub</span>(<span class="st">"baseline"</span>, <span class="dv">2000</span>, name)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(name)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(entity, year, <span class="at">relative_change_mmr =</span> value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Combining with the proportional change data wit the full time-series of maternal mortality rate.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df_out <span class="ot">&lt;-</span> df_wide <span class="sc">%&gt;%</span> <span class="fu">right_join</span>(., df_fin, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"entity"</span>,<span class="st">"year"</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df_out<span class="sc">$</span>relative_change_mmr[<span class="fu">is.na</span>(df_out<span class="sc">$</span>relative_change_mmr)] <span class="ot">&lt;-</span> <span class="st">""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Writing out the data</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df_out, <span class="st">"data/output/maternal_mortality_rate_upload.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that there are five types of callouts, including: <code>note</code>, <code>tip</code>, <code>warning</code>, <code>caution</code>, and <code>important</code>.</p>
+</div>
+</div>
+<!-- -->
+
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb26" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Maternal Mortality"</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 0.9em</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 2</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Downloading the data from GapMinder</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>date <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>Download data from GapMinder and save it locally.</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data/input"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">'https://www.gapminder.org/documentation/documentation/gapdata010.xls'</span>, <span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_gapminder_data.xls'</span>))</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>Read in the GapMinder data and take a look at it. </span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_gapminder_data.xls'</span>), <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>),]</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>We use janitor clean_names function to make the column names a bit neater. </span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">clean_names</span>(df)</span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dealing with issues in the data</span></span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>The first three rows in the 'year' column seem to be wrong as it seems as if each row covers 110 years, but in <span class="co">[</span><span class="ot">another source</span><span class="co">](https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#)</span> they cover only 10 years.</span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>I will replace them manually here with the middle of each decade, as is used in the other data from the same source.</span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>There are cases where the year for Finland has been entered incorrectly three times, there are two 1772s, 1775s &amp; 1967s, the second of each should be 1872, 1875 and 1957 respectively.</span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>There are also two errors for New Zealand, and one error for both Sweden and the US.</span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Sri Lanka's maternal mortality rate seems to drop to zero in 1990, here we set it to NA instead.</span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1875</span>, <span class="dv">1885</span>,<span class="dv">1895</span>)</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1772'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Finland'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">487</span>,] <span class="ot">&lt;-</span> <span class="st">'1872'</span></span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1775'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Finland'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">629</span>,] <span class="ot">&lt;-</span> <span class="st">'1875'</span></span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1967'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Finland'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">77</span>,] <span class="ot">&lt;-</span> <span class="st">'1957'</span></span>
+<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1967'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'Sweden'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="dv">39</span>,] <span class="ot">&lt;-</span> <span class="st">'1957'</span></span>
+<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1967'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'United States'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>maternal_deaths <span class="sc">==</span> <span class="fl">1766.28</span>,] <span class="ot">&lt;-</span> <span class="st">'1957'</span></span>
+<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'year'</span>][df<span class="sc">$</span>year <span class="sc">==</span><span class="st">'1989-02'</span><span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'New Zealand'</span>,] <span class="ot">&lt;-</span> <span class="st">'1889-02'</span></span>
+<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="sc">-</span><span class="fu">which</span>(df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">'1950'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">'New Zealand'</span> <span class="sc">&amp;</span> df<span class="sc">$</span>mmr <span class="sc">==</span> <span class="dv">90</span>),]</span>
+<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mmr'</span>][df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">"Sri Lanka"</span> <span class="sc">&amp;</span> df<span class="sc">$</span>year <span class="sc">==</span> <span class="dv">1990</span>,] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## Finding the mid-point of each year range</span></span>
+<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a>For some rows a range of years is given for a particular maternal mortality rate. We want to find the mid-point of that range. We use this function to find the mid-value of years given.</span>
+<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>mid_year <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">grepl</span>(<span class="st">"-"</span>, year)){</span>
+<span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a>    year_split <span class="ot">&lt;-</span>  <span class="fu">unlist</span>(<span class="fu">strsplit</span>(year, <span class="at">split =</span> <span class="st">"-"</span>))</span>
+<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a>    year_begin <span class="ot">&lt;-</span> year_split[<span class="dv">1</span>]</span>
+<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a>    year_end_len <span class="ot">&lt;-</span> <span class="fu">nchar</span>(year_split[<span class="dv">2</span>])</span>
+<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a>    year_end_pref <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">-</span> year_end_len</span>
+<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (year_end_pref <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a>      year_pref <span class="ot">&lt;-</span> <span class="fu">substr</span>(year_begin, <span class="dv">1</span>, year_end_pref)</span>
+<span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a>      year_end <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">paste</span>(<span class="fu">c</span>(year_pref, year_split[<span class="dv">2</span>]),<span class="at">collapse =</span> <span class="st">""</span>))</span>
+<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a>      year_out <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">c</span>(<span class="fu">as.numeric</span>(year_begin), year_end)))</span>
+<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a>      year_out <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">as.numeric</span>(<span class="fu">c</span>(year_begin,year_split[<span class="dv">2</span>]))))</span>
+<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a>    year_out <span class="ot">&lt;-</span> year</span>
+<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-106"><a href="#cb26-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(year_out)</span>
+<span id="cb26-107"><a href="#cb26-107" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a>year_out_all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(df<span class="sc">$</span>year, mid_year))</span>
+<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>mid_year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(year_out_all)</span>
+<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-112"><a href="#cb26-112" aria-hidden="true" tabindex="-1"></a>Let's check the mid-year estimates have worked as expected. There are three cases where the mid-year estimate is not the mid-point of the range of years. Let's fix these manually.</span>
+<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(year, mid_year) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"-"</span>,year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-119"><a href="#cb26-119" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">year_begin =</span> <span class="fu">substr</span>(year, <span class="dv">1</span>, <span class="dv">4</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-120"><a href="#cb26-120" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(year_begin <span class="sc">&gt;=</span> mid_year)</span>
+<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mid_year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">"1897-01"</span>,] <span class="ot">&lt;-</span> <span class="dv">1899</span></span>
+<span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mid_year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">"1889-02"</span>,] <span class="ot">&lt;-</span> <span class="dv">1895</span></span>
+<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mid_year'</span>][df<span class="sc">$</span>year <span class="sc">==</span> <span class="st">"1889-03"</span>,] <span class="ot">&lt;-</span> <span class="dv">1896</span></span>
+<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-128"><a href="#cb26-128" aria-hidden="true" tabindex="-1"></a>Keeping only the columns we want to take forward.</span>
+<span id="cb26-131"><a href="#cb26-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-132"><a href="#cb26-132" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb26-133"><a href="#cb26-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">entity =</span> country, <span class="at">year =</span> mid_year, <span class="at">maternal_mortality_rate =</span> mmr)</span>
+<span id="cb26-134"><a href="#cb26-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-135"><a href="#cb26-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-136"><a href="#cb26-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-137"><a href="#cb26-137" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reading in the data from the WHO</span></span>
+<span id="cb26-138"><a href="#cb26-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-139"><a href="#cb26-139" aria-hidden="true" tabindex="-1"></a>Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.</span>
+<span id="cb26-140"><a href="#cb26-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-143"><a href="#cb26-143" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-144"><a href="#cb26-144" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">'https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv'</span>, <span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_wdi_maternal_mortality.zip'</span>))</span>
+<span id="cb26-145"><a href="#cb26-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-146"><a href="#cb26-146" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_wdi_maternal_mortality.zip'</span>), <span class="at">exdir =</span> <span class="st">"data/input"</span>)</span>
+<span id="cb26-147"><a href="#cb26-147" aria-hidden="true" tabindex="-1"></a>des_file <span class="ot">&lt;-</span> <span class="fu">unzip</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>,date,<span class="st">'_wdi_maternal_mortality.zip'</span>), <span class="at">list=</span><span class="cn">TRUE</span>)</span>
+<span id="cb26-148"><a href="#cb26-148" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> des_file<span class="sc">$</span>Name[<span class="fu">startsWith</span>( des_file<span class="sc">$</span>Name,<span class="st">"API_SH.STA.MMRT_DS2"</span>)]</span>
+<span id="cb26-149"><a href="#cb26-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-150"><a href="#cb26-150" aria-hidden="true" tabindex="-1"></a>who <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(<span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">'data/input/'</span>, file_name), <span class="at">skip =</span> <span class="dv">4</span>))</span>
+<span id="cb26-151"><a href="#cb26-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-152"><a href="#cb26-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-153"><a href="#cb26-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-154"><a href="#cb26-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-155"><a href="#cb26-155" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cleaning the WHO data</span></span>
+<span id="cb26-156"><a href="#cb26-156" aria-hidden="true" tabindex="-1"></a>Pivot and clean the WHO data to long format. Check the Gapminder countries are in the WHO dataset</span>
+<span id="cb26-159"><a href="#cb26-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-160"><a href="#cb26-160" aria-hidden="true" tabindex="-1"></a>who_clean <span class="ot">&lt;-</span> who <span class="sc">%&gt;%</span> </span>
+<span id="cb26-161"><a href="#cb26-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, <span class="fu">starts_with</span>(<span class="st">"X"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-162"><a href="#cb26-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>x) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-163"><a href="#cb26-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">"x"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-164"><a href="#cb26-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"x"</span>, <span class="st">""</span>, name))) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-165"><a href="#cb26-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">entity =</span> country_name, year, <span class="at">maternal_mortality_rate =</span> value)</span>
+<span id="cb26-166"><a href="#cb26-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-167"><a href="#cb26-167" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(who_clean)</span>
+<span id="cb26-168"><a href="#cb26-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-169"><a href="#cb26-169" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">unique</span>(df<span class="sc">$</span>entity) <span class="sc">%in%</span> who_clean<span class="sc">$</span>entity)</span>
+<span id="cb26-170"><a href="#cb26-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-171"><a href="#cb26-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-172"><a href="#cb26-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-173"><a href="#cb26-173" aria-hidden="true" tabindex="-1"></a><span class="fu">## Merging the WHO data with the GapMinder data</span></span>
+<span id="cb26-174"><a href="#cb26-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-175"><a href="#cb26-175" aria-hidden="true" tabindex="-1"></a>Combine the two datasets and add a source column so we can keep track of where each datapoint comes from. </span>
+<span id="cb26-178"><a href="#cb26-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-179"><a href="#cb26-179" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>source <span class="ot">&lt;-</span> <span class="st">'GapMinder'</span></span>
+<span id="cb26-180"><a href="#cb26-180" aria-hidden="true" tabindex="-1"></a>who_clean<span class="sc">$</span>source <span class="ot">&lt;-</span> <span class="st">'WHO_GHO'</span></span>
+<span id="cb26-181"><a href="#cb26-181" aria-hidden="true" tabindex="-1"></a>df_all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df, who_clean)</span>
+<span id="cb26-182"><a href="#cb26-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-183"><a href="#cb26-183" aria-hidden="true" tabindex="-1"></a>df_all<span class="sc">$</span>maternal_mortality_rate <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df_all<span class="sc">$</span>maternal_mortality_rate)</span>
+<span id="cb26-184"><a href="#cb26-184" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-185"><a href="#cb26-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-186"><a href="#cb26-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-187"><a href="#cb26-187" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dealing with duplicate datapoints</span></span>
+<span id="cb26-188"><a href="#cb26-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-189"><a href="#cb26-189" aria-hidden="true" tabindex="-1"></a>Dealing with duplicate years - there are two identical values for NZ in 1950, we can drop one with distinct(). We remove NAs where there is a non-NA value in either Gapminder or WHO.  If there are values for both Gapminder and WHO GHO we have a preference for WHO GHO. </span>
+<span id="cb26-190"><a href="#cb26-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-193"><a href="#cb26-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-194"><a href="#cb26-194" aria-hidden="true" tabindex="-1"></a>df_check <span class="ot">&lt;-</span>df_all <span class="sc">%&gt;%</span> </span>
+<span id="cb26-195"><a href="#cb26-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-196"><a href="#cb26-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb26-197"><a href="#cb26-197" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb26-198"><a href="#cb26-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-199"><a href="#cb26-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-200"><a href="#cb26-200" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span> df_check[<span class="sc">-</span><span class="fu">which</span>(df_check<span class="sc">$</span>n <span class="sc">&gt;</span><span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_check<span class="sc">$</span>maternal_mortality_rate)),]</span>
+<span id="cb26-201"><a href="#cb26-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-202"><a href="#cb26-202" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span>df_sel <span class="sc">%&gt;%</span> </span>
+<span id="cb26-203"><a href="#cb26-203" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-204"><a href="#cb26-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb26-205"><a href="#cb26-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb26-206"><a href="#cb26-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb26-207"><a href="#cb26-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-208"><a href="#cb26-208" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span> df_sel[<span class="sc">-</span><span class="fu">which</span>(df_sel<span class="sc">$</span>nn <span class="sc">&gt;</span><span class="dv">1</span> <span class="sc">&amp;</span> df_sel<span class="sc">$</span>source <span class="sc">==</span> <span class="st">'GapMinder'</span>),]</span>
+<span id="cb26-209"><a href="#cb26-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-210"><a href="#cb26-210" aria-hidden="true" tabindex="-1"></a>df_sel <span class="sc">%&gt;%</span> </span>
+<span id="cb26-211"><a href="#cb26-211" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-212"><a href="#cb26-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb26-213"><a href="#cb26-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nnn <span class="sc">&gt;</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-214"><a href="#cb26-214" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb26-215"><a href="#cb26-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-216"><a href="#cb26-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-217"><a href="#cb26-217" aria-hidden="true" tabindex="-1"></a>df_sel <span class="ot">&lt;-</span> df_sel <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(n, nn))</span>
+<span id="cb26-218"><a href="#cb26-218" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-219"><a href="#cb26-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-220"><a href="#cb26-220" aria-hidden="true" tabindex="-1"></a><span class="fu">## Standardising the country names</span></span>
+<span id="cb26-221"><a href="#cb26-221" aria-hidden="true" tabindex="-1"></a>Standardising the country names for use on OWID. Writing the data out.</span>
+<span id="cb26-222"><a href="#cb26-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-225"><a href="#cb26-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-226"><a href="#cb26-226" aria-hidden="true" tabindex="-1"></a>stand_countries <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/input/countries_to_standardise_country_standardized.csv"</span>)</span>
+<span id="cb26-227"><a href="#cb26-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-228"><a href="#cb26-228" aria-hidden="true" tabindex="-1"></a>df_fin <span class="ot">&lt;-</span> df_sel <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(.,stand_countries, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"entity"</span> <span class="ot">=</span> <span class="st">"Country"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-229"><a href="#cb26-229" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">entity =</span> Our.World.In.Data.Name) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-230"><a href="#cb26-230" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Our.World.In.Data.Name, source)) </span>
+<span id="cb26-231"><a href="#cb26-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-232"><a href="#cb26-232" aria-hidden="true" tabindex="-1"></a>df_fin<span class="sc">$</span>maternal_mortality_rate[<span class="fu">is.na</span>(df_fin<span class="sc">$</span>maternal_mortality_rate)] <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb26-233"><a href="#cb26-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-234"><a href="#cb26-234" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-235"><a href="#cb26-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-236"><a href="#cb26-236" aria-hidden="true" tabindex="-1"></a><span class="fu">## Removing regions we don't want to include</span></span>
+<span id="cb26-237"><a href="#cb26-237" aria-hidden="true" tabindex="-1"></a>We don't want to include all of the available regions in the data as it is difficult for us to define them clearly. We drop out a selection here. </span>
+<span id="cb26-238"><a href="#cb26-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-241"><a href="#cb26-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-242"><a href="#cb26-242" aria-hidden="true" tabindex="-1"></a>entities_to_drop <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Africa Eastern and Southern"</span>, <span class="st">"Africa Western and Central"</span>, <span class="st">"Arab World"</span>, <span class="st">"Early-demographic dividend"</span>, <span class="st">"East Asia &amp; Pacific (excluding high income)"</span>, <span class="st">"East Asia &amp; Pacific (IDA &amp; IBRD countries)"</span>, <span class="st">"Euro area"</span>, <span class="st">"Europe &amp; Central Asia (excluding high income)"</span>, <span class="st">"Europe &amp; Central Asia (IDA &amp; IBRD countries)"</span>, <span class="st">"Fragile and conflict affected situations"</span>, <span class="st">"Heavily indebted poor countries (HIPC)"</span>, <span class="st">"IBRD only"</span>, <span class="st">"IDA &amp; IBRD total"</span>, <span class="st">"IDA blend"</span>, <span class="st">"IDA only"</span>, <span class="st">"IDA total"</span>, <span class="st">"Late-demographic dividend"</span>, <span class="st">"Latin America &amp; Caribbean (excluding high income)"</span>, <span class="st">"Latin America &amp; the Caribbean (IDA &amp; IBRD countries)"</span>, <span class="st">"Least developed countries: UN classification"</span>, <span class="st">"Middle East &amp; North Africa (excluding high income)"</span>, </span>
+<span id="cb26-243"><a href="#cb26-243" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Middle East &amp; North Africa (IDA &amp; IBRD countries)"</span>, <span class="st">"Not classified"</span>,  <span class="st">"Other small states"</span>, <span class="st">"Pacific island small states"</span>, <span class="st">"Post-demographic dividend"</span>, <span class="st">"Pre-demographic dividend"</span>, <span class="st">"Small states"</span>, <span class="st">"South Asia (IDA &amp; IBRD)"</span>, <span class="st">"Sub-Saharan Africa (excluding high income)"</span>, <span class="st">"Sub-Saharan Africa (IDA &amp; IBRD countries)"</span>)</span>
+<span id="cb26-244"><a href="#cb26-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-245"><a href="#cb26-245" aria-hidden="true" tabindex="-1"></a>df_fin <span class="ot">&lt;-</span> df_fin <span class="sc">%&gt;%</span> </span>
+<span id="cb26-246"><a href="#cb26-246" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(<span class="sc">!</span>entity <span class="sc">%in%</span> entities_to_drop)</span>
+<span id="cb26-247"><a href="#cb26-247" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-248"><a href="#cb26-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-249"><a href="#cb26-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-250"><a href="#cb26-250" aria-hidden="true" tabindex="-1"></a><span class="fu">## Plotting the data</span></span>
+<span id="cb26-251"><a href="#cb26-251" aria-hidden="true" tabindex="-1"></a>Plot to see what it looks like:</span>
+<span id="cb26-254"><a href="#cb26-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-255"><a href="#cb26-255" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df_fin <span class="sc">%&gt;%</span> <span class="fu">filter</span>(entity<span class="sc">==</span> <span class="st">"Sweden"</span>), <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> <span class="fu">as.numeric</span>(maternal_mortality_rate), <span class="at">group =</span> entity, <span class="at">colour =</span> entity))<span class="sc">+</span></span>
+<span id="cb26-256"><a href="#cb26-256" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span>
+<span id="cb26-257"><a href="#cb26-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-258"><a href="#cb26-258" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-259"><a href="#cb26-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-260"><a href="#cb26-260" aria-hidden="true" tabindex="-1"></a><span class="fu">## Calculating the proportional change since 2000</span></span>
+<span id="cb26-261"><a href="#cb26-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-264"><a href="#cb26-264" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-265"><a href="#cb26-265" aria-hidden="true" tabindex="-1"></a>df_clean <span class="ot">&lt;-</span> df_fin <span class="sc">%&gt;%</span> </span>
+<span id="cb26-266"><a href="#cb26-266" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">2017</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-267"><a href="#cb26-267" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(.)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-268"><a href="#cb26-268" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">maternal_mortality_rate =</span> <span class="fu">as.numeric</span>(maternal_mortality_rate)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-269"><a href="#cb26-269" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entity) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-270"><a href="#cb26-270" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb26-271"><a href="#cb26-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">==</span> <span class="dv">2</span>)</span>
+<span id="cb26-272"><a href="#cb26-272" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-273"><a href="#cb26-273" aria-hidden="true" tabindex="-1"></a>df_wide <span class="ot">&lt;-</span> df_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb26-274"><a href="#cb26-274" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(., <span class="at">names_from =</span> <span class="st">'year'</span>,<span class="at">names_glue =</span> <span class="st">"{.value}_{year}"</span>, <span class="at">values_from =</span> <span class="st">'maternal_mortality_rate'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-275"><a href="#cb26-275" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">change =</span> ((maternal_mortality_rate_2017 <span class="sc">-</span> maternal_mortality_rate_2000)<span class="sc">/</span>maternal_mortality_rate_2000)<span class="sc">*</span><span class="dv">100</span>, <span class="at">baseline =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-276"><a href="#cb26-276" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(entity, change, baseline) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-277"><a href="#cb26-277" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"change"</span>, <span class="st">"baseline"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-278"><a href="#cb26-278" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">gsub</span>(<span class="st">"change"</span>, <span class="dv">2017</span>, name), <span class="at">name =</span> <span class="fu">gsub</span>(<span class="st">"baseline"</span>, <span class="dv">2000</span>, name)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-279"><a href="#cb26-279" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(name)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-280"><a href="#cb26-280" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(entity, year, <span class="at">relative_change_mmr =</span> value)</span>
+<span id="cb26-281"><a href="#cb26-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-282"><a href="#cb26-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-283"><a href="#cb26-283" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-284"><a href="#cb26-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-285"><a href="#cb26-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-286"><a href="#cb26-286" aria-hidden="true" tabindex="-1"></a>Combining with the proportional change data wit the full time-series of maternal mortality rate.</span>
+<span id="cb26-287"><a href="#cb26-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-290"><a href="#cb26-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-291"><a href="#cb26-291" aria-hidden="true" tabindex="-1"></a>df_out <span class="ot">&lt;-</span> df_wide <span class="sc">%&gt;%</span> <span class="fu">right_join</span>(., df_fin, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"entity"</span>,<span class="st">"year"</span>))</span>
+<span id="cb26-292"><a href="#cb26-292" aria-hidden="true" tabindex="-1"></a>df_out<span class="sc">$</span>relative_change_mmr[<span class="fu">is.na</span>(df_out<span class="sc">$</span>relative_change_mmr)] <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb26-293"><a href="#cb26-293" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-294"><a href="#cb26-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-295"><a href="#cb26-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-296"><a href="#cb26-296" aria-hidden="true" tabindex="-1"></a>Writing out the data</span>
+<span id="cb26-299"><a href="#cb26-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-300"><a href="#cb26-300" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df_out, <span class="st">"data/output/maternal_mortality_rate_upload.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-301"><a href="#cb26-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-302"><a href="#cb26-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-303"><a href="#cb26-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-304"><a href="#cb26-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-305"><a href="#cb26-305" aria-hidden="true" tabindex="-1"></a>::: {.callout-important}</span>
+<span id="cb26-306"><a href="#cb26-306" aria-hidden="true" tabindex="-1"></a>Note that there are five types of callouts, including:</span>
+<span id="cb26-307"><a href="#cb26-307" aria-hidden="true" tabindex="-1"></a><span class="in">`note`</span>, <span class="in">`tip`</span>, <span class="in">`warning`</span>, <span class="in">`caution`</span>, and <span class="in">`important`</span>.</span>
+<span id="cb26-308"><a href="#cb26-308" aria-hidden="true" tabindex="-1"></a>:::</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
