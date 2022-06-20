@@ -1,5 +1,5 @@
 ---
-title: "Maternal Mortality"
+title: "Maternal Mortality Ratio"
 execute:
   warning: false
   message: false
@@ -10,10 +10,20 @@ format:
     code-fold: true
     toc: true
     toc-depth: 2
+    self-contained: true
+comments:
+  hypothesis: true
 ---
 
-## Downloading the data from GapMinder
+The definition of maternal mortality is: 
 
+> "A death of a woman while pregnant or within 42 days of termination of pregnancy, irrespective of the duration and site of pregnancy, from any cause related or aggravated by the pregnancy or its management, but not from accidental or incidental causes."
+
+The definition of maternal mortality ratio is:
+
+> "The number of maternal deaths during a given time period per 100,000 live births during the same time period."
+
+## Downloading the GapMinder data
 
 ```{r}
 #| echo: false
@@ -25,27 +35,19 @@ library(ggplot2)
 date <- Sys.Date()
 ```
 
-Download data from GapMinder and save it locally.
+Firstly we download the data from GapMinder and save it locally. Then we read in the GapMinder data, clean up the column names and take a look at the data. 
+
 ```{r}
 dir.create("data/input", recursive = TRUE)
 download.file('https://www.gapminder.org/documentation/documentation/gapdata010.xls', paste0('data/input/',date,'_gapminder_data.xls'))
-```
-
-Read in the GapMinder data and take a look at it. 
-
-```{r}
 
 df <- read_xls(paste0('data/input/',date,'_gapminder_data.xls'), col_names = TRUE)
 df <- df[-(1:16),]
-head(df)
-
-```
-We use janitor clean_names function to make the column names a bit neater. 
-```{r}
 df <- janitor::clean_names(df)
 
+head(df)
 ```
-## Dealing with issues in the data
+## Cleaning the data
 
 There are some issues with the GapMinder data - we will manually clean them here: 
 
@@ -138,7 +140,7 @@ who <- clean_names(read.csv(paste0('data/input/', file_name), skip = 4))
 
 
 ## Cleaning the WHO data
-Pivot and clean the WHO data to long format. C
+Pivot and clean the WHO data to long format. Check the GapMinder countries are in the WHO dataset
 ```{r}
 
 who_clean <- who %>% 
@@ -149,13 +151,10 @@ who_clean <- who %>%
   select(entity = country_name, year, maternal_mortality_rate = value)
 
 head(who_clean)
-```
 
-Check the Gapminder countries are in the WHO dataset
-```{r}
 all(unique(df$entity) %in% who_clean$entity)
-
 ```
+
 
 ## Merging the WHO data with the GapMinder data
 
@@ -167,14 +166,17 @@ who_clean$source <- 'WHO_GHO'
 df_all <- rbind(df, who_clean)
 
 df_all$maternal_mortality_rate <- as.numeric(df_all$maternal_mortality_rate)
+
+head(df_all)
 ```
 
 
 ## Dealing with duplicate datapoints
 
-Dealing with duplicate years - there are two identical values for NZ in 1950, we can drop one with distinct(). We remove NAs where there is a non-NA value in either Gapminder or WHO.  If there are values for both Gapminder and WHO GHO we have a preference for WHO GHO. 
+Dealing with duplicate years - there are two identical values for NZ in 1950, we can drop one with distinct(). We remove NAs where there is a non-NA value in either Gapminder or WHO.  If there are values for both GapMinder and the WHO data we have a preference for the WHO data. 
 
 ```{r}
+#| output: false 
 df_check <-df_all %>% 
   group_by(entity, year) %>% 
   add_count() %>% 
@@ -191,19 +193,17 @@ df_sel <-df_sel %>%
 
 df_sel <- df_sel[-which(df_sel$nn >1 & df_sel$source == 'GapMinder'),]
 
-df_sel %>% 
+df_check <- df_sel %>% 
   group_by(entity, year) %>% 
-  add_count() %>% 
-  filter(nnn >1) %>% 
-  ungroup()
+  add_count()
 
+sum(df_check$nnn > 1) == 0
 
 df_sel <- df_sel %>% select(-c(n, nn))
 ```
 
 ## Standardising the country names
-Standardising the country names for use on OWID. Writing the data out.
-
+Standardising the country names for use on OWID.
 ```{r}
 stand_countries <- read.csv("data/input/countries_to_standardise_country_standardized.csv")
 
@@ -215,8 +215,9 @@ df_fin$maternal_mortality_rate[is.na(df_fin$maternal_mortality_rate)] <- ""
 
 ```
 
-## Removing regions we don't want to include
-We don't want to include all of the available regions in the data as it is difficult for us to define them clearly. We drop out a selection here. 
+## Cleaning geographic entities
+We don't want to include all of the available regions in the data as it is difficult for us to define them clearly, so we drop out a selection here. We also plot the data for Sweden to check the time-series looks as expected.
+
 
 ```{r}
 entities_to_drop <- c("Africa Eastern and Southern", "Africa Western and Central", "Arab World", "Early-demographic dividend", "East Asia & Pacific (excluding high income)", "East Asia & Pacific (IDA & IBRD countries)", "Euro area", "Europe & Central Asia (excluding high income)", "Europe & Central Asia (IDA & IBRD countries)", "Fragile and conflict affected situations", "Heavily indebted poor countries (HIPC)", "IBRD only", "IDA & IBRD total", "IDA blend", "IDA only", "IDA total", "Late-demographic dividend", "Latin America & Caribbean (excluding high income)", "Latin America & the Caribbean (IDA & IBRD countries)", "Least developed countries: UN classification", "Middle East & North Africa (excluding high income)", 
@@ -224,19 +225,18 @@ entities_to_drop <- c("Africa Eastern and Southern", "Africa Western and Central
 
 df_fin <- df_fin %>% 
  filter(!entity %in% entities_to_drop)
-```
 
-
-## Plotting the data
-Plot to see what it looks like:
-```{r}
 
 ggplot(data = df_fin %>% filter(entity== "Sweden"), aes(x = year, y = as.numeric(maternal_mortality_rate), group = entity, colour = entity))+
-  geom_line()
-
+  geom_line()+
+  theme_bw()+
+  labs(x = "Year", y = "Maternal Mortality Rate", title = "Maternal Mortality Rate")
 ```
 
+
 ## Calculating the proportional change since 2000
+
+We can also calculate the proportional change since 2000. This is useful for understanding the change in the data over time and we can use this data in a slope chart. 
 
 ```{r}
 
@@ -257,27 +257,24 @@ df_wide <- df_clean %>%
   mutate(year = as.numeric(name)) %>% 
   select(entity, year, relative_change_mmr = value)
 
+head(df_wide)
+
+ggplot(data = df_wide, aes(x = year, y = relative_change_mmr, group = entity))+
+geom_line(alpha = 0.2)+
+  labs(x = "Year", y = "Relative change since 2000", title = "Relative change in maternal mortality rate since 2000")+
+  theme_bw()+
+  theme(legend.position="none")
 
 ```
 
 
-Combining with the proportional change data wit the full time-series of maternal mortality rate.
+Lastly, we combine the proportional change data with the full time-series of maternal mortality rate and write out the data to a CSV file.
 
 ```{r}
 
 df_out <- df_wide %>% right_join(., df_fin, by = c("entity","year"))
 df_out$relative_change_mmr[is.na(df_out$relative_change_mmr)] <- ""
-```
-
-
-Writing out the data
-```{r}
 write.csv(df_out, "data/output/maternal_mortality_rate_upload.csv", row.names = FALSE)
 
 ```
 
-
-::: {.callout-important}
-Note that there are five types of callouts, including:
-`note`, `tip`, `warning`, `caution`, and `important`.
-:::
