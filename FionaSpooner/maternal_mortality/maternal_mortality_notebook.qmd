@@ -47,6 +47,8 @@ df <- janitor::clean_names(df)
 ```
 ## Dealing with issues in the data
 
+There are some issues with the GapMinder data - we will manually clean them here: 
+
 * The first three rows in the 'year' column seem to be wrong as it seems as if each row covers 110 years, but in [another source](https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#) they cover only 10 years.
 
 * I will replace them manually here with the middle of each decade, as is used in the other data from the same source.
@@ -100,7 +102,8 @@ year_out_all <- unlist(lapply(df$year, mid_year))
 df$mid_year <- as.numeric(year_out_all)
 ```
 
-Let's check the mid-year estimates have worked as expected. There are three cases where the mid-year estimate is not the mid-point of the range of years. Let's fix these manually.
+Let's check the mid-year estimates have worked as expected. There are three cases where the mid-year estimate is not the mid-point of the range of years. Let's fix these manually. 
+We will keep only the columns we want to take forward.
 ```{r}
 df %>% 
 select(year, mid_year) %>% 
@@ -112,16 +115,13 @@ df['mid_year'][df$year == "1897-01",] <- 1899
 df['mid_year'][df$year == "1889-02",] <- 1895
 df['mid_year'][df$year == "1889-03",] <- 1896
 
-```
 
-Keeping only the columns we want to take forward.
-```{r}
 df <- df %>% 
   select(entity = country, year = mid_year, maternal_mortality_rate = mmr)
-
 ```
 
-## Reading in the data from the WHO
+
+## Reading in the WHO data
 
 Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.
 
@@ -138,7 +138,7 @@ who <- clean_names(read.csv(paste0('data/input/', file_name), skip = 4))
 
 
 ## Cleaning the WHO data
-Pivot and clean the WHO data to long format. Check the Gapminder countries are in the WHO dataset
+Pivot and clean the WHO data to long format. C
 ```{r}
 
 who_clean <- who %>% 
@@ -149,7 +149,10 @@ who_clean <- who %>%
   select(entity = country_name, year, maternal_mortality_rate = value)
 
 head(who_clean)
+```
 
+Check the Gapminder countries are in the WHO dataset
+```{r}
 all(unique(df$entity) %in% who_clean$entity)
 
 ```
