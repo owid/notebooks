@@ -1,7 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py:light
+#     formats: ipynb,py:light,md
 #     text_representation:
 #       extension: .py
 #       format_name: light
@@ -138,7 +138,7 @@
 # <br>
 # Computed from *rtfpna* and the real domestic absorption (*rdana*), it is useful for comparing the growth of welfare-relevant productivity over time in each country.
 
-# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[] jp-MarkdownHeadingCollapsed=true
 # ### Other variables
 # -
 
