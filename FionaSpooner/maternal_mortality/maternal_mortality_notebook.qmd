@@ -15,6 +15,7 @@ comments:
   hypothesis: true
 ---
 
+
 The definition of maternal mortality is: 
 
 > "A death of a woman while pregnant or within 42 days of termination of pregnancy, irrespective of the duration and site of pregnancy, from any cause related or aggravated by the pregnancy or its management, but not from accidental or incidental causes."
@@ -22,6 +23,16 @@ The definition of maternal mortality is:
 The definition of maternal mortality ratio is:
 
 > "The number of maternal deaths during a given time period per 100,000 live births during the same time period."
+
+
+In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine two existing datasets:
+
+* GapMinder (1751-2008)
+* World Health Organization (2000-2017)
+
+We make the assumption that their methods are comparable and that the data can be combined without transformation.
+
+In years where there is an overlap in both time-series we use the data from the WHO.
 
 ## Downloading the GapMinder data
 
@@ -50,9 +61,11 @@ df <- janitor::clean_names(df)
 
 head(df)
 ```
-## Cleaning the data
+## Cleaning the GapMinder data
 
-There are some issues with the GapMinder data - we will manually clean them here: 
+:::{.callout-important}
+There are some issues with the GapMinder data - we will manually clean them here. 
+:::
 
 * The first three rows in the 'year' column seem to be wrong as it seems as if each row covers 110 years, but in [another source](https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#) they cover only 10 years.
 
