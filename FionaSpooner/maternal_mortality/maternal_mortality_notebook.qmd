@@ -32,6 +32,9 @@ library(dplyr)
 library(janitor)
 library(tidyr)
 library(ggplot2)
+library(plotly)
+library(htmlwidgets)
+library(zoo)
 date <- Sys.Date()
 ```
 
@@ -227,10 +230,13 @@ df_fin <- df_fin %>%
  filter(!entity %in% entities_to_drop)
 
 
-ggplot(data = df_fin %>% filter(entity== "Sweden"), aes(x = year, y = as.numeric(maternal_mortality_rate), group = entity, colour = entity))+
-  geom_line()+
-  theme_bw()+
-  labs(x = "Year", y = "Maternal Mortality Rate", title = "Maternal Mortality Rate")
+fig <- plot_ly(data = df_fin %>% filter(entity== "Sweden"), x = ~year,
+text = ~paste("MMR: ", round(as.numeric(maternal_mortality_rate),2), '<br>Year:', year)) %>% add_trace(y = ~as.numeric(maternal_mortality_rate), name = 'MMR',mode = 'lines') %>% layout(xaxis = list(title = 'Year'), 
+         yaxis = list(title = 'Maternal Mortality Ratio (per 100,000 live births)'))
+
+fig
+
+
 ```
 
 
@@ -257,14 +263,31 @@ df_wide <- df_clean %>%
   mutate(year = as.numeric(name)) %>% 
   select(entity, year, relative_change_mmr = value)
 
-head(df_wide)
 
-ggplot(data = df_wide, aes(x = year, y = relative_change_mmr, group = entity))+
-geom_line(alpha = 0.2)+
-  labs(x = "Year", y = "Relative change since 2000", title = "Relative change in maternal mortality rate since 2000")+
+slope_ggplot <-  df_wide %>%
+highlight_key(., ~entity)  %>%
+ggplot( aes(x = year, y = round(relative_change_mmr,2), group = entity, text = entity))+
+  labs(x = "Year", y = "Relative change since 2000 (%)", title = "Relative change in maternal mortality ratio since 2000 (%)")+
+  geom_line(color = "#888888" )+
   theme_bw()+
-  theme(legend.position="none")
+    theme(legend.position="none",
+    panel.background = element_rect(fill = "#ffffff"),
+    axis.ticks = element_blank(),
+    axis.text = element_text(color = "#888888")) 
 
+s <- attrs_selected(
+  line = list(color = "#0000FF",
+  width = 5)
+)
+
+ggplotly(tooltip = "text", slope_ggplot)%>% 
+config(displayModeBar = FALSE) %>%
+highlight(on = "plotly_hover",
+opacityDim = 0.7,
+color = "blue", 
+selected = s) %>%
+layout(hoverlabel = list(bgcolor = "blue", font = list(color = "FFFFFF", size = 14)))
+ 
 ```
 
 
