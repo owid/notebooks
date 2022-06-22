@@ -16,10 +16,10 @@ cd "/Users/bastianherre/Dropbox/Data/"
 global project "/Users/bastianherre/Dropbox/Data/"
 
 
-** Download dataset from https://freedomhouse.org/sites/default/files/2020-02/FOTP1980-FOTP2017_Public-Data.xlsx and move it into the folder "Freedom House 2022 freedom of the world".
+** Download dataset from https://freedomhouse.org/sites/default/files/2020-02/FOTP1980-FOTP2017_Public-Data.xlsx and move it into the folder "Freedom House 2017 freedom of the world".
 
 ** Import Freedom of the press dataset:
-import excel "Freedom House 2022 Freedom of the Press/FOTP1980-FOTP2017_Public-Data.xlsx", sheet("Data") clear
+import excel "Freedom House 2017 Freedom of the Press/FOTP1980-FOTP2017_Public-Data.xlsx", sheet("Data") clear
 
 
 ** Drop rows that are not observations:
@@ -183,8 +183,8 @@ sort country_name year
 
 
 * Export data:
-save "Freedom House 2022 Freedom of the Press/press_freedom_fh_owid.dta", replace
-export delimited "Freedom House 2022 Freedom of the Press/press_freedom_fh_owid.csv", replace
+save "Freedom House 2017 Freedom of the Press/press_freedom_fh_owid.dta", replace
+export delimited "Freedom House 2017 Freedom of the Press/press_freedom_fh_owid.csv", replace
 
 
 
