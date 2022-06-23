@@ -6,6 +6,7 @@ library(purrr)
 library(dplyr)
 library(tidyr)
 library(lubridate)
+setwd("~/git/notebooks/EdouardMathieu/monkeypox")
 
 aggregate <- function(df, case_type, date_type) {
   stopifnot(date_type %in% c("confirmation", "entry"))
