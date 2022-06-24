@@ -41,6 +41,7 @@
 
 # +
 import pandas as pd
+import numpy as np
 from pathlib import Path
 import time
 import seaborn as sns
@@ -127,7 +128,7 @@ wid_pretax_clean = wid_pretax[~wid_pretax['country_year'].isin(pretax_not130_lis
 wid_pretax_not130.percentile.value_counts(dropna=False)
 # -
 
-# All of them come from the 1%, the last percentile or one of its subdivisions.
+# **All of them come from the top 1%**, the last percentile or one of its subdivisions.
 
 # And filtering out the exceptions, now all the percentiles are represented uniformly in 5603 distributions:
 
@@ -147,7 +148,7 @@ posttax_nat_not130.describe(include='all')
 
 # Only one country is in this situation (France), with a range of years from 1900 to 1978 (median 1944). There is always 1 percentile for each of these distributions.
 #
-# All of these 64 percentiles are p99p100, the top 1%:
+# All of these 64 percentiles are **p99p100, the top 1%**:
 
 # +
 posttax_nat_not130_list = list(posttax_nat_not130.country_year.unique())
@@ -178,7 +179,7 @@ posttax_dis_not130.describe(include='all')
 
 posttax_dis_not130.country.value_counts(dropna=False)
 
-# In this case the percentiles are the top 1%, 0.1% and 0.01%:
+# In this case the percentiles are the **top 1%, 0.1% and 0.01%:**
 
 # +
 posttax_dis_not130_list = list(posttax_dis_not130.country_year.unique())
@@ -202,219 +203,111 @@ wid_posttax_dis_clean.percentile.value_counts(dropna=False)
 # +
 excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
 
-#wid_pretax_monotonicity = wid_pretax_clean[~wid_pretax_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-
-#This is for testing
-#wid_pretax_monotonicity = wid_pretax_monotonicity[wid_pretax_monotonicity['country_year'] == 'CL2016']
-#file = Path('CLfail.csv')
-#wid_pretax_monotonicity = pd.read_csv(file)
+wid_pretax_monotonicity = wid_pretax_clean[~wid_pretax_clean['percentile'].isin(excl_list)].reset_index(drop=True)
 
 distribution_list = list(wid_pretax_monotonicity['country_year'].unique())
 percentile_list = sorted(list(wid_pretax_monotonicity['p'].unique()))
 # -
 
 # In the following code code the monotonicity is checked for the variables **average** and **threshold**.
-# <br>
-# **<font color='red'>NOTE THAT THIS CODE CURRENTLY RUNS FOR ~10 HOURS EACH</font>**
 
-# +
-start_time = time.time()
+# + tags=[]
+#The average and threshold values are lagged by one row in the lagged_average and lagged_threshold variables for them to be compared
 
-for i in distribution_list:
-    for index, j in enumerate(percentile_list):
-        
-        if index == 0:
-            wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                        (wid_pretax_monotonicity['p'] == j), 'monotonicity_check_avg'] = 'check'
-        
-        if index < 126:
-            avg_value = wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                                    (wid_pretax_monotonicity['p'] == j), 'average'].iloc[0]
-            avg_value_next = wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                                         (wid_pretax_monotonicity['p'] == percentile_list[index+1]), 'average'].iloc[0]
-            if avg_value_next >= avg_value:
-                wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                            (wid_pretax_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_avg'] = 'check'
-            else:
-                wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                            (wid_pretax_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_avg'] = 'error'
+wid_pretax_monotonicity['lagged_average'] =  wid_pretax_monotonicity['average'].shift(1)
+wid_pretax_monotonicity['monotonicity_check_avg'] =  wid_pretax_monotonicity['average'] >= wid_pretax_monotonicity['lagged_average']
+wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True
+wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['average'].isnull()) | (wid_pretax_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan
 
-print("--- %s seconds ---" % (time.time() - start_time)) #Printing the running time
-
-# +
-start_time = time.time()
-
-for i in distribution_list:
-    for index, j in enumerate(percentile_list):
-        
-        if index == 0:
-            wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                        (wid_pretax_monotonicity['p'] == j), 'monotonicity_check_thr'] = 'check'
-        
-        if index < 126:
-            avg_value = wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                                    (wid_pretax_monotonicity['p'] == j), 'threshold'].iloc[0]
-            avg_value_next = wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                                         (wid_pretax_monotonicity['p'] == percentile_list[index+1]), 'threshold'].iloc[0]
-            if avg_value_next >= avg_value:
-                wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                            (wid_pretax_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_thr'] = 'check'
-            else:
-                wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['country_year'] == i) & 
-                                            (wid_pretax_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_thr'] = 'error'
-
-print("--- %s seconds ---" % (time.time() - start_time)) #Printing the running time
+wid_pretax_monotonicity['lagged_threshold'] =  wid_pretax_monotonicity['threshold'].shift(1)
+wid_pretax_monotonicity['monotonicity_check_thr'] =  wid_pretax_monotonicity['threshold'] >= wid_pretax_monotonicity['lagged_threshold']
+wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_thr'] = True
+wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['threshold'].isnull()) | (wid_pretax_monotonicity['lagged_threshold'].isnull()), 'monotonicity_check_thr'] = np.nan
 # -
 
-wid_pretax_monotonicity.monotonicity_check_avg.value_counts(dropna=False, normalize=True)
+# **99.85%** of the values for average and **99.64%** of the values for threshold **pass the test**:
 
-wid_pretax_monotonicity.monotonicity_check_thr.value_counts(dropna=False, normalize=True)
+wid_pretax_monotonicity.monotonicity_check_avg.value_counts(normalize=True)
+
+wid_pretax_monotonicity.monotonicity_check_thr.value_counts(normalize=True)
+
+pretax_avgfalse = wid_pretax_monotonicity[wid_pretax_monotonicity['monotonicity_check_avg']==False].reset_index(drop=True)
+pretax_avgfalse.country.value_counts(dropna=False)
+
+pretax_thrfalse = wid_pretax_monotonicity[wid_pretax_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
+pretax_thrfalse.country.value_counts(dropna=False)
 
 # #### Post-tax national income distribution
 
 # +
 excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
 
-#wid_posttax_nat_monotonicity = wid_posttax_nat_clean[~wid_posttax_nat_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-
-#This is for testing
-#wid_posttax_nat_monotonicity = wid_posttax_nat_monotonicity[wid_posttax_nat_monotonicity['country_year'] == 'CL2016']
-#file = Path('CLfail.csv')
-#wid_posttax_nat_monotonicity = pd.read_csv(file)
+wid_posttax_nat_monotonicity = wid_posttax_nat_clean[~wid_posttax_nat_clean['percentile'].isin(excl_list)].reset_index(drop=True)
 
 distribution_list = list(wid_posttax_nat_monotonicity['country_year'].unique())
 percentile_list = sorted(list(wid_posttax_nat_monotonicity['p'].unique()))
+
+# + tags=[]
+#The average and threshold values are lagged by one row in the lagged_average and lagged_threshold variables for them to be compared
+
+wid_posttax_nat_monotonicity['lagged_average'] =  wid_posttax_nat_monotonicity['average'].shift(1)
+wid_posttax_nat_monotonicity['monotonicity_check_avg'] =  wid_posttax_nat_monotonicity['average'] >= wid_posttax_nat_monotonicity['lagged_average']
+wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True
+wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['average'].isnull()) | (wid_posttax_nat_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan
+
+wid_posttax_nat_monotonicity['lagged_threshold'] =  wid_posttax_nat_monotonicity['threshold'].shift(1)
+wid_posttax_nat_monotonicity['monotonicity_check_thr'] =  wid_posttax_nat_monotonicity['threshold'] >= wid_posttax_nat_monotonicity['lagged_threshold']
+wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_thr'] = True
+wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['threshold'].isnull()) | (wid_posttax_nat_monotonicity['lagged_threshold'].isnull()), 'monotonicity_check_thr'] = np.nan
 # -
 
-# In the following code code the monotonicity is checked for the variables **average** and **threshold**.
-# <br>
-# **<font color='red'>NOTE THAT THIS CODE CURRENTLY RUNS FOR ~10 HOURS EACH</font>**
+# **99.995%** of the values for average and **100%** of the values of threshold **pass the test**:
 
-# +
-start_time = time.time()
+wid_posttax_nat_monotonicity.monotonicity_check_avg.value_counts(normalize=True)
 
-for i in distribution_list:
-    for index, j in enumerate(percentile_list):
-        
-        if index == 0:
-            wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                        (wid_posttax_nat_monotonicity['p'] == j), 'monotonicity_check_avg'] = 'check'
-        
-        if index < 126:
-            avg_value = wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                                    (wid_posttax_nat_monotonicity['p'] == j), 'average'].iloc[0]
-            avg_value_next = wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                                         (wid_posttax_nat_monotonicity['p'] == percentile_list[index+1]), 'average'].iloc[0]
-            if avg_value_next >= avg_value:
-                wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_nat_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_avg'] = 'check'
-            else:
-                wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_nat_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_avg'] = 'error'
+wid_posttax_nat_monotonicity.monotonicity_check_thr.value_counts(normalize=True)
 
-print("--- %s seconds ---" % (time.time() - start_time)) #Printing the running time
+posttax_nat_avgfalse = wid_posttax_nat_monotonicity[wid_posttax_nat_monotonicity['monotonicity_check_avg']==False].reset_index(drop=True)
+posttax_nat_avgfalse.country.value_counts(dropna=False)
 
-# +
-start_time = time.time()
-
-for i in distribution_list:
-    for index, j in enumerate(percentile_list):
-        
-        if index == 0:
-            wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                        (wid_posttax_nat_monotonicity['p'] == j), 'monotonicity_check_thr'] = 'check'
-        
-        if index < 126:
-            avg_value = wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                                    (wid_posttax_nat_monotonicity['p'] == j), 'threshold'].iloc[0]
-            avg_value_next = wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                                         (wid_posttax_nat_monotonicity['p'] == percentile_list[index+1]), 'threshold'].iloc[0]
-            if avg_value_next >= avg_value:
-                wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_nat_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_thr'] = 'check'
-            else:
-                wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_nat_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_thr'] = 'error'
-
-print("--- %s seconds ---" % (time.time() - start_time)) #Printing the running time
-# -
-
-wid_posttax_nat_monotonicity.monotonicity_check_avg.value_counts(dropna=False, normalize=True)
-
-wid_posttax_nat_monotonicity.monotonicity_check_thr.value_counts(dropna=False, normalize=True)
+posttax_nat_thrfalse = wid_posttax_nat_monotonicity[wid_posttax_nat_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
+posttax_nat_thrfalse.country.value_counts(dropna=False)
 
 # #### Post-tax disposable income distribution
 
 # +
 excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
 
-#wid_posttax_dis_monotonicity = wid_posttax_dis_clean[~wid_posttax_dis_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-
-#This is for testing
-#wid_posttax_dis_monotonicity = wid_posttax_dis_monotonicity[wid_posttax_dis_monotonicity['country_year'] == 'CL2016']
-#file = Path('CLfail.csv')
-#wid_posttax_dis_monotonicity = pd.read_csv(file)
+wid_posttax_dis_monotonicity = wid_posttax_dis_clean[~wid_posttax_dis_clean['percentile'].isin(excl_list)].reset_index(drop=True)
 
 distribution_list = list(wid_posttax_dis_monotonicity['country_year'].unique())
 percentile_list = sorted(list(wid_posttax_dis_monotonicity['p'].unique()))
+
+# + tags=[]
+#The average and threshold values are lagged by one row in the lagged_average and lagged_threshold variables for them to be compared
+
+wid_posttax_dis_monotonicity['lagged_average'] =  wid_posttax_dis_monotonicity['average'].shift(1)
+wid_posttax_dis_monotonicity['monotonicity_check_avg'] =  wid_posttax_dis_monotonicity['average'] >= wid_posttax_dis_monotonicity['lagged_average']
+wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True
+wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['average'].isnull()) | (wid_posttax_dis_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan
+
+wid_posttax_dis_monotonicity['lagged_threshold'] =  wid_posttax_dis_monotonicity['threshold'].shift(1)
+wid_posttax_dis_monotonicity['monotonicity_check_thr'] =  wid_posttax_dis_monotonicity['threshold'] >= wid_posttax_dis_monotonicity['lagged_threshold']
+wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_thr'] = True
+wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['threshold'].isnull()) | (wid_posttax_dis_monotonicity['lagged_threshold'].isnull()), 'monotonicity_check_thr'] = np.nan
 # -
 
-# In the following code code the monotonicity is checked for the variables **average** and **threshold**.
-# <br>
-# **<font color='red'>NOTE THAT THIS CODE CURRENTLY RUNS FOR ~10 HOURS EACH</font>**
+# **100%** of the values for average and threshold **pass the test**:
 
-# +
-start_time = time.time()
+wid_posttax_dis_monotonicity.monotonicity_check_avg.value_counts(normalize=True)
 
-for i in distribution_list:
-    for index, j in enumerate(percentile_list):
-        
-        if index == 0:
-            wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                        (wid_posttax_dis_monotonicity['p'] == j), 'monotonicity_check_avg'] = 'check'
-        
-        if index < 126:
-            avg_value = wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                                    (wid_posttax_dis_monotonicity['p'] == j), 'average'].iloc[0]
-            avg_value_next = wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                                         (wid_posttax_dis_monotonicity['p'] == percentile_list[index+1]), 'average'].iloc[0]
-            if avg_value_next >= avg_value:
-                wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_dis_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_avg'] = 'check'
-            else:
-                wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_dis_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_avg'] = 'error'
+wid_posttax_dis_monotonicity.monotonicity_check_thr.value_counts(normalize=True)
 
-print("--- %s seconds ---" % (time.time() - start_time)) #Printing the running time
+posttax_dis_avgfalse = wid_posttax_dis_monotonicity[wid_posttax_dis_monotonicity['monotonicity_check_avg']==False].reset_index(drop=True)
+posttax_dis_avgfalse.country.value_counts(dropna=False)
 
-# +
-start_time = time.time()
-
-for i in distribution_list:
-    for index, j in enumerate(percentile_list):
-        
-        if index == 0:
-            wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                        (wid_posttax_dis_monotonicity['p'] == j), 'monotonicity_check_thr'] = 'check'
-        
-        if index < 126:
-            avg_value = wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                                    (wid_posttax_dis_monotonicity['p'] == j), 'threshold'].iloc[0]
-            avg_value_next = wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                                         (wid_posttax_dis_monotonicity['p'] == percentile_list[index+1]), 'threshold'].iloc[0]
-            if avg_value_next >= avg_value:
-                wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_dis_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_thr'] = 'check'
-            else:
-                wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['country_year'] == i) & 
-                                            (wid_posttax_dis_monotonicity['p'] == percentile_list[index+1]), 'monotonicity_check_thr'] = 'error'
-
-print("--- %s seconds ---" % (time.time() - start_time)) #Printing the running time
-# -
-
-wid_posttax_dis_monotonicity.monotonicity_check_avg.value_counts(dropna=False, normalize=True)
-
-wid_posttax_dis_monotonicity.monotonicity_check_thr.value_counts(dropna=False, normalize=True)
+posttax_dis_thrfalse = wid_posttax_dis_monotonicity[wid_posttax_dis_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
+posttax_dis_thrfalse.country.value_counts(dropna=False)
 
 # ### Comparability of values between periods
 
@@ -429,6 +322,8 @@ wid_posttax_dis_monotonicity.monotonicity_check_thr.value_counts(dropna=False, n
 # - The share of the percentiles p0p1 to p98p99 and p99p99.1 to p99.9p100 should sum 1.
 # - The share of the percentiles p0p1 to p98p99.9 and p99.9p99.91 to p99.99p100 should sum 1.
 # - The share of the percentiles p0p1 to p98p99.99 and p99.99p99.991 to p99.999p100 should sum 1.
+#
+# Consequentially, four different lists of percentiles are generated to apply them to the "clean" datasets:
 
 # +
 file = Path('Percentile names.xlsx')
@@ -445,8 +340,98 @@ thousands = pd.read_excel(file, sheet_name='thousands')
 thousands_list = thousands['pXpY'].to_list()
 # -
 
+# The three following tables show the descriptive statistics for these four different checks. Overall, in the pretax and both post-tax distributions the median sum of the shares is always 1, the minimum value is 0.998600 and the maximum value is 1.001200. This means **the most "extreme" values only differ in 0.1% or 0.2% to 1, which should not be a concern.**
+
+# +
 wid_pretax_percentiles = wid_pretax_clean[wid_pretax_clean['percentile'].isin(percentiles_list)].reset_index(drop=True)
-wid_pretax_percentiles_shares = wid_pretax_percentiles.groupby(['country', 'year', 'country_year']).sum()
-wid_pretax_percentiles_shares[['share']].describe()
+wid_pretax_tenths = wid_pretax_clean[wid_pretax_clean['percentile'].isin(tenths_list)].reset_index(drop=True)
+wid_pretax_hundreds = wid_pretax_clean[wid_pretax_clean['percentile'].isin(hundreds_list)].reset_index(drop=True)
+wid_pretax_thousands = wid_pretax_clean[wid_pretax_clean['percentile'].isin(thousands_list)].reset_index(drop=True)
+
+
+wid_pretax_percentiles_shares = wid_pretax_percentiles.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_pretax_percentiles_shares.rename(columns={"share": "share_percentiles"}, inplace=True)
+
+wid_pretax_tenths_shares = wid_pretax_tenths.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_pretax_tenths_shares.rename(columns={"share": "share_tenths"}, inplace=True)
+
+wid_pretax_hundreds_shares = wid_pretax_hundreds.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_pretax_hundreds_shares.rename(columns={"share": "share_hundreds"}, inplace=True)
+
+wid_pretax_thousands_shares = wid_pretax_thousands.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_pretax_thousands_shares.rename(columns={"share": "share_thousands"}, inplace=True)
+
+
+pretax_shares_check = pd.merge(wid_pretax_percentiles_shares, wid_pretax_tenths_shares[['country_year', 'share_tenths']], on='country_year', validate='one_to_one')
+pretax_shares_check = pd.merge(pretax_shares_check, wid_pretax_hundreds_shares[['country_year', 'share_hundreds']], on='country_year', validate='one_to_one')
+pretax_shares_check = pd.merge(pretax_shares_check, wid_pretax_thousands_shares[['country_year', 'share_thousands']], on='country_year', validate='one_to_one')
+
+
+pretax_shares_check = pretax_shares_check[['country', 'year', 'country_year', 'share_percentiles', 'share_tenths', 'share_hundreds', 'share_thousands']]
+
+pretax_shares_check.describe()
+
+# +
+wid_posttax_nat_percentiles = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(percentiles_list)].reset_index(drop=True)
+wid_posttax_nat_tenths = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(tenths_list)].reset_index(drop=True)
+wid_posttax_nat_hundreds = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(hundreds_list)].reset_index(drop=True)
+wid_posttax_nat_thousands = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(thousands_list)].reset_index(drop=True)
+
+
+
+wid_posttax_nat_percentiles_shares = wid_posttax_nat_percentiles.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_nat_percentiles_shares.rename(columns={"share": "share_percentiles"}, inplace=True)
+
+wid_posttax_nat_tenths_shares = wid_posttax_nat_tenths.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_nat_tenths_shares.rename(columns={"share": "share_tenths"}, inplace=True)
+
+wid_posttax_nat_hundreds_shares = wid_posttax_nat_hundreds.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_nat_hundreds_shares.rename(columns={"share": "share_hundreds"}, inplace=True)
+
+wid_posttax_nat_thousands_shares = wid_posttax_nat_thousands.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_nat_thousands_shares.rename(columns={"share": "share_thousands"}, inplace=True)
+
+
+posttax_nat_shares_check = pd.merge(wid_posttax_nat_percentiles_shares, wid_posttax_nat_tenths_shares[['country_year', 'share_tenths']], on='country_year', validate='one_to_one')
+posttax_nat_shares_check = pd.merge(posttax_nat_shares_check, wid_posttax_nat_hundreds_shares[['country_year', 'share_hundreds']], on='country_year', validate='one_to_one')
+posttax_nat_shares_check = pd.merge(posttax_nat_shares_check, wid_posttax_nat_thousands_shares[['country_year', 'share_thousands']], on='country_year', validate='one_to_one')
+
+
+
+posttax_nat_shares_check = posttax_nat_shares_check[['country', 'year', 'country_year', 'share_percentiles', 'share_tenths', 'share_hundreds', 'share_thousands']]
+
+posttax_nat_shares_check.describe()
+
+# +
+wid_posttax_dis_percentiles = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(percentiles_list)].reset_index(drop=True)
+wid_posttax_dis_tenths = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(tenths_list)].reset_index(drop=True)
+wid_posttax_dis_hundreds = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(hundreds_list)].reset_index(drop=True)
+wid_posttax_dis_thousands = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(thousands_list)].reset_index(drop=True)
+
+
+
+wid_posttax_dis_percentiles_shares = wid_posttax_dis_percentiles.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_dis_percentiles_shares.rename(columns={"share": "share_percentiles"}, inplace=True)
+
+wid_posttax_dis_tenths_shares = wid_posttax_dis_tenths.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_dis_tenths_shares.rename(columns={"share": "share_tenths"}, inplace=True)
+
+wid_posttax_dis_hundreds_shares = wid_posttax_dis_hundreds.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_dis_hundreds_shares.rename(columns={"share": "share_hundreds"}, inplace=True)
+
+wid_posttax_dis_thousands_shares = wid_posttax_dis_thousands.groupby(['country', 'year', 'country_year']).sum().reset_index()
+wid_posttax_dis_thousands_shares.rename(columns={"share": "share_thousands"}, inplace=True)
+
+
+posttax_dis_shares_check = pd.merge(wid_posttax_dis_percentiles_shares, wid_posttax_dis_tenths_shares[['country_year', 'share_tenths']], on='country_year', validate='one_to_one')
+posttax_dis_shares_check = pd.merge(posttax_dis_shares_check, wid_posttax_dis_hundreds_shares[['country_year', 'share_hundreds']], on='country_year', validate='one_to_one')
+posttax_dis_shares_check = pd.merge(posttax_dis_shares_check, wid_posttax_dis_thousands_shares[['country_year', 'share_thousands']], on='country_year', validate='one_to_one')
+
+
+
+posttax_dis_shares_check = posttax_dis_shares_check[['country', 'year', 'country_year', 'share_percentiles', 'share_tenths', 'share_hundreds', 'share_thousands']]
+
+posttax_dis_shares_check.describe()
+# -
 
 
