@@ -231,11 +231,20 @@ wid_pretax_monotonicity.monotonicity_check_avg.value_counts(normalize=True)
 
 wid_pretax_monotonicity.monotonicity_check_thr.value_counts(normalize=True)
 
+# These are the countries showing discontinuities in some of their distributions:
+
 pretax_avgfalse = wid_pretax_monotonicity[wid_pretax_monotonicity['monotonicity_check_avg']==False].reset_index(drop=True)
 pretax_avgfalse.country.value_counts(dropna=False)
 
 pretax_thrfalse = wid_pretax_monotonicity[wid_pretax_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
 pretax_thrfalse.country.value_counts(dropna=False)
+
+# The discontinuities are more concentrated in the subdivisions of the top 1% for the average and is more mixed for threshold:
+
+pretax_avgfalse.percentile.value_counts(dropna=False)
+
+#pd.set_option("display.max_rows", None)
+pretax_thrfalse.percentile.value_counts(dropna=False)
 
 # #### Post-tax national income distribution
 
@@ -273,6 +282,10 @@ posttax_nat_avgfalse.country.value_counts(dropna=False)
 posttax_nat_thrfalse = wid_posttax_nat_monotonicity[wid_posttax_nat_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
 posttax_nat_thrfalse.country.value_counts(dropna=False)
 
+posttax_nat_avgfalse.percentile.value_counts(dropna=False)
+
+posttax_nat_thrfalse.percentile.value_counts(dropna=False)
+
 # #### Post-tax disposable income distribution
 
 # +
@@ -308,6 +321,10 @@ posttax_dis_avgfalse.country.value_counts(dropna=False)
 
 posttax_dis_thrfalse = wid_posttax_dis_monotonicity[wid_posttax_dis_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
 posttax_dis_thrfalse.country.value_counts(dropna=False)
+
+posttax_dis_avgfalse.percentile.value_counts(dropna=False)
+
+posttax_dis_thrfalse.percentile.value_counts(dropna=False)
 
 # ### Comparability of values between periods
 
