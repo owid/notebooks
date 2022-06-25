@@ -82,4 +82,4 @@ setorder(df, location, date)
 fwrite(df, "owid-monkeypox-data.csv")
 
 # Twitter update
-# source("tweet.R")
+source("tweet.R")
