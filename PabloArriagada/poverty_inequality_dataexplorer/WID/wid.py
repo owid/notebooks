@@ -326,11 +326,70 @@ posttax_dis_avgfalse.percentile.value_counts(dropna=False)
 
 posttax_dis_thrfalse.percentile.value_counts(dropna=False)
 
-# ### Comparability of values between periods
-
 # This is important to check the robustness of the **threshold** and **average** data across the years, to see a logical evolution of these numbers and not sudden jumps which might due to errors in the construction or due to the quality of the microdata.
 
 # ### Negative values
+
+# Negative income values, although common in the construction of distributions, usually are bottom coded to 0. In this section, negative values for average and threshold are checked.
+#
+# As expected, negative values occurr only in the first percentiles of the distribution (max p6p7 in post-tax disposable income). All this values are bottom coded to 0 in the *_positive* dataframes
+
+# #### Pretax income
+
+# +
+pretax_negative_avg = wid_pretax_clean[wid_pretax_clean['average'] < 0].reset_index(drop=True)
+pretax_negative_thr = wid_pretax_clean[wid_pretax_clean['threshold'] < 0].reset_index(drop=True)
+
+pretax_positive = wid_pretax_clean.copy()
+pretax_positive.loc[(pretax_positive['average'] < 0), 'average'] = 0
+pretax_positive.loc[(pretax_positive['threshold'] < 0), 'threshold'] = 0
+# -
+
+pretax_negative_thr.percentile.value_counts(dropna=False)
+
+pretax_negative_thr.country.value_counts(dropna=False)
+
+pretax_negative_thr.percentile.value_counts(dropna=False)
+
+pretax_negative_thr.country.value_counts(dropna=False)
+
+# #### Post-tax national income
+
+# +
+posttax_nat_negative_avg = wid_posttax_nat_clean[wid_posttax_nat_clean['average'] < 0].reset_index(drop=True)
+posttax_nat_negative_thr = wid_posttax_nat_clean[wid_posttax_nat_clean['threshold'] < 0].reset_index(drop=True)
+
+posttax_nat_positive = wid_posttax_nat_clean.copy()
+posttax_nat_positive.loc[(posttax_nat_positive['average'] < 0), 'average'] = 0
+posttax_nat_positive.loc[(posttax_nat_positive['threshold'] < 0), 'threshold'] = 0
+# -
+
+posttax_nat_negative_thr.percentile.value_counts(dropna=False)
+
+posttax_nat_negative_thr.country.value_counts(dropna=False)
+
+posttax_nat_negative_thr.percentile.value_counts(dropna=False)
+
+posttax_nat_negative_thr.country.value_counts(dropna=False)
+
+# #### Post-tax disposable income
+
+# +
+posttax_dis_negative_avg = wid_posttax_dis_clean[wid_posttax_dis_clean['average'] < 0].reset_index(drop=True)
+posttax_dis_negative_thr = wid_posttax_dis_clean[wid_posttax_dis_clean['threshold'] < 0].reset_index(drop=True)
+
+posttax_dis_positive = wid_posttax_dis_clean.copy()
+posttax_dis_positive.loc[(posttax_dis_positive['average'] < 0), 'average'] = 0
+posttax_dis_positive.loc[(posttax_dis_positive['threshold'] < 0), 'threshold'] = 0
+# -
+
+posttax_dis_negative_thr.percentile.value_counts(dropna=False)
+
+posttax_dis_negative_thr.country.value_counts(dropna=False)
+
+posttax_dis_negative_thr.percentile.value_counts(dropna=False)
+
+posttax_dis_negative_thr.country.value_counts(dropna=False)
 
 # ### Total sum of shares equalling 1
 
@@ -449,6 +508,9 @@ posttax_dis_shares_check = pd.merge(posttax_dis_shares_check, wid_posttax_dis_th
 posttax_dis_shares_check = posttax_dis_shares_check[['country', 'year', 'country_year', 'share_percentiles', 'share_tenths', 'share_hundreds', 'share_thousands']]
 
 posttax_dis_shares_check.describe()
+# + [markdown] tags=[]
+# ### Comparability of values between periods
 # -
+
 
 
