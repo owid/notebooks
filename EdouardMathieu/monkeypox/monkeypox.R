@@ -6,6 +6,7 @@ library(purrr)
 library(dplyr)
 library(tidyr)
 library(lubridate)
+setwd("~/git/notebooks/EdouardMathieu/monkeypox")
 
 aggregate <- function(df, case_type, date_type) {
   stopifnot(date_type %in% c("confirmation", "entry"))
@@ -38,11 +39,7 @@ aggregate <- function(df, case_type, date_type) {
   setnames(
     df,
     c("N", "cumulative", "rolling_avg"),
-    c(
-      sprintf("daily_%s_by_%s", case_type, date_type),
-      sprintf("total_%s_by_%s", case_type, date_type),
-      sprintf("7day_%s_by_%s", case_type, date_type)
-    )
+    sprintf("%s_%s_by_%s", c("daily", "total", "7day"), case_type, date_type)
   )
   
   return(df)
@@ -81,4 +78,4 @@ setorder(df, location, date)
 fwrite(df, "owid-monkeypox-data.csv")
 
 # Twitter update
-source("tweet.R")
+# source("tweet.R")

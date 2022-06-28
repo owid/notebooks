@@ -1,0 +1,13 @@
+**Libraries to install after installing Miniconda
+
+conda install -c anaconda pandas
+conda install -c anaconda seaborn
+conda install -c conda-forge plotly
+conda install -c anaconda openpyxl
+conda install -c conda-forge python-kaleido
+conda install -c conda-forge notebook
+conda install -c conda-forge nb_conda_kernels
+conda install -c conda-forge jupyterlab
+conda install -c conda-forge jupyter_contrib_nbextensions
+conda install jupytext -c conda-forge
+

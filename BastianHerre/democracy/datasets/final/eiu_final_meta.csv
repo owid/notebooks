@@ -1,0 +1,21 @@
+varname,varlabel
+country_name,Country name
+year,Year
+regime_eiu,Regime (EIU)
+democracy_eiu,Democracy score (EIU)
+elect_freefair_eiu,Free and fair elections (EIU)
+funct_gov_eiu,Functioning government (EIU)
+pol_part_eiu,Political participation (EIU)
+dem_culture_eiu,Democratic culture (EIU)
+civlib_eiu,Civil liberties (EIU)
+number_autreg_eiu,Number of authoritarian regimes (EIU)
+number_hybreg_eiu,Number of hybrid regime (EIU)
+number_flawdem_eiu,Number of flawed democracies (EIU)
+number_fulldem_eiu,Number of full democracies (EIU)
+pop_autreg_eiu,People living in authoritarian regimes (EIU)
+pop_hybreg_eiu,People living in hybrid regimes (EIU)
+pop_flawdem_eiu,People living in flawed democracies (EIU)
+pop_fulldem_eiu,People living in full democracies (EIU)
+pop_missreg_eiu,(sum) regime_eiu5
+popw_democracy_eiu,"Democracy (EIU, population-weighted)"
+region,Region

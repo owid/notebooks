@@ -1,0 +1,189 @@
+varname,varlabel
+country_name,Country name
+year,Year
+regime_row_owid,"Political regime (RoW, OWID)"
+electdem_age_row_owid,"Electoral democracy age (Regimes of the World, OWID)"
+electdem_age_group_row_owid,"Electoral democracy age group (Regimes of the World, OWID)"
+libdem_age_row_owid,"Liberal democracy age (Regimes of the World, OWID)"
+libdem_age_group_row_owid,"Liberal democracy age group (Regimes of the World, OWID)"
+regime_amb_row_owid,"Political regime, including ambiguous categories (RoW, OWID)"
+electmulpar_row_owid,Multiparty elections (RoW)
+electmulpar_high_row_owid,"Multiparty elections (upper bound, RoW)"
+electmulpar_low_row_owid,"Multiparty elections (lower bound, RoW)"
+electmulpar_leg_row_owid,Multiparty elections for legislature (RoW)
+electmulpar_leg_high_row_owid,"Multiparty elections for legislature (upper bound, RoW)"
+electmulpar_leg_low_row_owid,"Multiparty elections for legislature (lower bound, RoW)"
+electmulpar_hoe_row_owid,"Multiparty elections for chief executive (RoW, OWID)"
+electmulpar_hoe_high_row_owid,"Multiparty elections for chief executive (upper bound, RoW, OWID)"
+electmulpar_hoe_low_row_owid,"Multiparty elections for chief executive (lower bound, RoW, OWID)"
+electfreefair_row_owid,Free and fair elections (RoW)
+electfreefair_high_row_owid,"Free and fair elections (upper bound, RoW)"
+electfreefair_low_row_owid,"Free and fair elections (lower bound, RoW)"
+electdem_dich_row_owid,"Electoral democracy (RoW, OWID)"
+electdem_dich_high_row_owid,"Electoral democracy (upper bound, RoW, OWID)"
+electdem_dich_low_row_owid,"Electoral democracy (lower bound, RoW, OWID)"
+accessjust_m_row_owid,Access to justice for men (RoW)
+accessjust_m_high_row_owid,"Access to justice for men (upper bound, RoW)"
+accessjust_m_low_row_owid,"Access to justice for men (lower bound, RoW)"
+accessjust_w_row_owid,Access to justice for women (RoW)
+accessjust_w_high_row_owid,"Access to justice for women (upper bound, RoW)"
+accessjust_w_low_row_owid,"Access to justice for women (lower bound, RoW)"
+transplaws_row_owid,Transparent laws (RoW)
+transplaws_high_row_owid,"Transparent laws (upper bound, RoW)"
+transplaws_low_row_owid,"Transparent laws (lower bound, RoW)"
+lib_dich_row_owid,Liberal political institutions (RoW)
+lib_dich_high_row_owid,"Liberal political institutions (upper bound, RoW)"
+lib_dich_low_row_owid,"Liberal political institutions (lower bound, RoW)"
+electdem_vdem_owid,Electoral democracy (V-Dem)
+electdem_vdem_low_owid,"Electoral democracy (lower bound, V-Dem)"
+electdem_vdem_high_owid,"Electoral democracy (upper bound, V-Dem)"
+libdem_vdem_owid,Liberal democracy (V-Dem)
+libdem_vdem_low_owid,"Liberal democracy (lower bound, V-Dem)"
+libdem_vdem_high_owid,"Liberal democracy (upper bound, V-Dem)"
+participdem_vdem_owid,Participatory democracy (V-Dem)
+participdem_vdem_low_owid,"Participatory democracy (lower bound, V-Dem)"
+participdem_vdem_high_owid,"Participatory democracy (upper bound, V-Dem)"
+delibdem_vdem_owid,Deliberative democracy (V-Dem)
+delibdem_vdem_low_owid,"Deliberative democracy (lower bound, V-Dem)"
+delibdem_vdem_high_owid,"Deliberative democracy (upper bound, V-Dem)"
+egaldem_vdem_owid,Egalitarian democracy (V-Dem)
+egaldem_vdem_low_owid,"Egalitarian democracy (lower bound, V-Dem)"
+egaldem_vdem_high_owid,"Egalitarian democracy (upper bound, V-Dem)"
+freeexpr_vdem_owid,Freedom of expression and alternative sources of information (V-Dem)
+freeexpr_vdem_low_owid,"Freedom of expression and alternative sources of information (lower bound, V-Dem"
+freeexpr_vdem_high_owid,"Freedom of expression and alternative sources of information (upper bound, V-Dem"
+freeassoc_vdem_owid,Freedom of association (V-Dem)
+freeassoc_vdem_low_owid,"Freedom of association (lower bound, V-Dem)"
+freeassoc_vdem_high_owid,"Freedom of association (upper bound, V-Dem)"
+suffr_vdem_owid,Share of adults with suffrage (V-Dem)
+electfreefair_vdem_owid,"Free and fair elections (V-Dem, OWID)"
+electfreefair_vdem_low_owid,"Free and fair elections (lower bound, V-Dem)"
+electfreefair_vdem_high_owid,"Free and fair elections (upper bound, V-Dem)"
+electoff_vdem_owid,Elected officials (V-Dem)
+lib_vdem_owid,Liberal political institutions (V-Dem)
+lib_vdem_low_owid,"Liberal political institutions (lower bound, V-Dem)"
+lib_vdem_high_owid,"Liberal political institutions (upper bound, V-Dem)"
+civlib_vdem_owid,Civil liberties (V-Dem)
+civlib_vdem_low_owid,"Civil liberties (lower bound, V-Dem)"
+civlib_vdem_high_owid,"Civil liberties (upper bound, V-Dem)"
+judicial_constr_vdem_owid,Judicial constraints on the executive (V-Dem)
+judicial_constr_vdem_low_owid,"Judicial constraints on the executive (lower bound, V-Dem)"
+judicial_constr_vdem_high_owid,"Judicial constraints on the executive (upper bound, V-Dem)"
+legis_constr_vdem_owid,Legislative constraints on the executive (V-Dem)
+legis_constr_vdem_low_owid,"Legislative constraints on the executive (lower bound, V-Dem)"
+legis_constr_vdem_high_owid,"Legislative constraints on the executive (upper bound, V-Dem)"
+particip_vdem_owid,Participatory political institutions (V-Dem)
+particip_vdem_low_owid,"Participatory political institutions (lower bound, V-Dem)"
+particip_vdem_high_owid,"Participatory political institutions (upper bound, V-Dem)"
+civsoc_particip_vdem_owid,Civil society participation (V-Dem)
+civsoc_particip_vdem_low_owid,"Civil society participation (lower bound, V-Dem)"
+civsoc_particip_vdem_high_owid,"Civil society participation (upper bound, V-Dem)"
+dirpop_vote_vdem_owid,Extent of direct popular votes (V-Dem)
+locelect_vdem_owid,Elected local governments (V-Dem)
+locelect_vdem_low_owid,"Elected local governments (lower bound, V-Dem)"
+locelect_vdem_high_owid,"Elected local governments (upper bound, V-Dem)"
+regelect_vdem_owid,Elected regional governments (V-Dem)
+regelect_vdem_low_owid,"Elected regional governments (lower bound, V-Dem)"
+regelect_vdem_high_owid,"Elected regional governments (upper bound, V-Dem)"
+delib_vdem_owid,Deliberative political institutions (V-Dem)
+delib_vdem_low_owid,"Deliberative political institutions (lower bound, V-Dem)"
+delib_vdem_high_owid,"Deliberative political institutions (upper bound, V-Dem)"
+justified_polch_vdem_owid,Justified political positions (V-Dem)
+justified_polch_vdem_low_owid,"Justified political positions (lower bound, V-Dem)"
+justified_polch_vdem_high_owid,"Justified political positions (upper bound, V-Dem)"
+justcomgd_polch_vdem_owid,Common good justifications (V-Dem)
+justcomgd_polch_vdem_low_owid,"Common good justifications (lower bound, V-Dem)"
+justcomgd_polch_vdem_high_owid,"Common good justifications (upper bound, V-Dem)"
+counterarg_polch_vdem_owid,Respect for counterarguments (V-Dem)
+counterarg_polch_vdem_low_owid,"Respect for counterarguments (lower bound, V-Dem)"
+counterarg_polch_vdem_high_owid,"Respect for counterarguments (upper bound, V-Dem)"
+elitecons_polch_vdem_owid,Elite consultation (V-Dem)
+elitecons_polch_vdem_low_owid,"Elite consultation  (lower bound, V-Dem)"
+elitecons_polch_vdem_high_owid,"Elite consultation  (upper bound, V-Dem)"
+soccons_polch_vdem_owid,Engaged society (V-Dem)
+soccons_polch_vdem_low_owid,"Engaged society (lower bound, V-Dem)"
+soccons_polch_vdem_high_owid,"Engaged society (upper bound, V-Dem)"
+turnout_vdem_owid,Voter turnout (V-Dem)
+egal_vdem_owid,Egalitarian political institutions (V-Dem)
+egal_vdem_low_owid,"Egalitarian political institutions (lower bound, V-Dem)"
+egal_vdem_high_owid,"Egalitarian political institutions (upper bound, V-Dem)"
+equal_rights_vdem_owid,Equal rights protection (V-Dem)
+equal_rights_vdem_low_owid,"Equal rights protection (lower bound, V-Dem)"
+equal_rights_vdem_high_owid,"Equal rights protection (upper bound, V-Dem)"
+equal_access_vdem_owid,Equal access to power (V-Dem)
+equal_access_vdem_low_owid,"Equal access to power (lower bound, V-Dem)"
+equal_access_vdem_high_owid,"Equal access to power (upper bound, V-Dem)"
+equal_res_vdem_owid,Equal resource distribution (V-Dem)
+equal_res_vdem_low_owid,"Equal resource distribution (lower bound, V-Dem)"
+equal_res_vdem_high_owid,"Equal resource distribution (upper bound, V-Dem)"
+goveffective_vdem_wbgi_owid,"Government effectiveness (World Bank Governance Indicators, V-Dem)"
+regime_redux_row_owid,"Political regime (Regimes of the World, reduced, OWID)"
+regime_imputed_vdem_owid,V-Dem regime information imputed from another country
+regime_imputed_country_vdem_owid,Name of the country from which V-Dem regime information was imputed
+electdem_exp_row_owid,"Experience with electoral democracy (Regimes of the World, OWID)"
+libdem_exp_row_owid,"Experience with liberal democracy (Regimes of the World, OWID)"
+number_closedaut_row_owid,"Number of closed autocracies (RoW, OWID)"
+number_electaut_row_owid,"Number of electoral autocracies (RoW, OWID)"
+number_electdem_row_owid,"Number of electoral democracies (RoW, OWID)"
+number_libdem_row_owid,"Number of liberal democracies (RoW, OWID)"
+number_closedaut_amb_row_owid,"Number of closed autocracies (ambig. RoW, OWID)"
+number_closedaut_h_amb_row_owid,"Number of closed, maybe electoral, autocracies (ambig. RoW, OWID)"
+number_electaut_l_amb_row_owid,"Number of electoral, maybe closed, autocracies (ambig. RoW, OWID)"
+number_electaut_amb_row_owid,"Number of electoral autocracies (ambig. RoW, OWID)"
+number_electaut_h_amb_row_owid,"Number of electoral autocracies that may be electoral democracies (ambig. RoW, O"
+number_electdem_l_amb_row_owid,"Number of electoral democracies that may be electoral autocracies (ambig. RoW, O"
+number_electdem_amb_row_owid,"Number of electoral democracies (ambig. RoW, OWID)"
+number_electdem_h_amb_row_owid,"Number of electoral, maybe liberal, democracies (ambig. RoW, OWID)"
+number_libdem_l_amb_row_owid,"Number of liberal, maybe electoral, democracies (ambig. RoW, OWID)"
+number_libdem_amb_row_owid,"Number of liberal democracies (ambig. RoW, OWID)"
+number_electdem_18_row_owid,"Number of electoral democracies aged 1-18 years (RoW, OWID)"
+number_electdem_30_row_owid,"Number of electoral democracies aged 19-30 years (RoW, OWID)"
+number_electdem_60_row_owid,"Number of electoral democracies aged 31-60 years (RoW, OWID)"
+number_electdem_90_row_owid,"Number of electoral democracies aged 61-90 years (RoW, OWID)"
+number_electdem_91plus_row_owid,"Number of electoral democracies aged 91 years or older (RoW, OWID)"
+number_libdem_18_row_owid,"Number of liberal democracies aged 1-18 years (RoW, OWID)"
+number_libdem_30_row_owid,"Number of liberal democracies aged 19-30 years (RoW, OWID)"
+number_libdem_60_row_owid,"Number of liberal democracies aged 31-60 years (RoW, OWID)"
+number_libdem_90_row_owid,"Number of liberal democracies aged 61-90 years (RoW, OWID)"
+number_libdem_91plus_row_owid,"Number of liberal democracies aged 91 years or older (RoW, OWID)"
+pop_closedaut_row_owid,"People living in closed autocracies (RoW, OWID)"
+pop_electaut_row_owid,"People living in electoral autocracies (RoW, OWID)"
+pop_electdem_row_owid,"People living in electoral democracies (RoW, OWID)"
+pop_libdem_row_owid,"People living in liberal democracies (RoW, OWID)"
+pop_missreg_row_owid,"People living in countries without regime data (RoW, OWID)"
+pop_closedaut_amb_row_owid,"People living in closed autocracies (ambig. RoW, OWID)"
+pop_closedaut_h_amb_row_owid,"People living in closed, maybe electoral, autocracies (ambig. RoW, OWID)"
+pop_electaut_l_amb_row_owid,"People living in electoral, maybe closed, autocracies (ambig. RoW, OWID)"
+pop_electaut_amb_row_owid,"People living in electoral autocracies (ambig. RoW, OWID)"
+pop_electaut_h_amb_row_owid,People living in electoral autocracies that may be electoral democracies (ambig.
+pop_electdem_l_amb_row_owid,People living in electoral democracies that may be electoral autocracies (ambig.
+pop_electdem_amb_row_owid,"People living in electoral democracies (ambig. RoW, OWID)"
+pop_electdem_h_amb_row_owid,"People living in electoral, maybe liberal, democracies (ambig. RoW, OWID)"
+pop_libdem_l_amb_row_owid,"People living in liberal, maybe electoral, democracies (ambig. RoW, OWID)"
+pop_libdem_amb_row_owid,"People living in liberal democracies (ambig. RoW, OWID)"
+pop_electdem_18_row_owid,"People living in electoral democracies aged 1-18 years (RoW, OWID)"
+pop_electdem_30_row_owid,"People living in electoral democracies aged 19-30 years (RoW, OWID)"
+pop_electdem_60_row_owid,"People living in electoral democracies aged 31-60 years (RoW, OWID)"
+pop_electdem_90_row_owid,"People living in electoral democracies aged 61-90 years (RoW, OWID)"
+pop_electdem_91plus_row_owid,"People living in electoral democracies aged 91 years or older (RoW, OWID)"
+pop_libdem_18_row_owid,"People living in liberal democracies aged 1-18 years (RoW, OWID)"
+pop_libdem_30_row_owid,"People living in liberal democracies aged 19-30 years (RoW, OWID)"
+pop_libdem_60_row_owid,"People living in liberal democracies aged 31-60 years (RoW, OWID)"
+pop_libdem_90_row_owid,"People living in liberal democracies aged 61-90 years (RoW, OWID)"
+pop_libdem_91plus_row_owid,"People living in liberal democracies aged 91 years or older (RoW, OWID)"
+popw_electdem_vdem_owid,"Electoral democracy (V-Dem, population-weighted)"
+popw_electdem_l_vdem_owid,"Electoral democracy (lower bound, pop-weighted, V-Dem)"
+popw_electdem_h_vdem_owid,"Electoral democracy (upper bound, pop-weighted, V-Dem)"
+popw_libdem_vdem_owid,"Liberal democracy (V-Dem, population-weighted)"
+popw_libdem_l_vdem_owid,"Liberal democracy (lower bound, pop-weighted, V-Dem)"
+popw_libdem_h_vdem_owid,"Liberal democracy (upper bound, pop-weighted, V-Dem)"
+popw_participdem_vdem_owid,"Participatory democracy (V-Dem, population-weighted)"
+popw_participdem_l_vdem_owid,"Participatory democracy (lower bound, pop-weighted, V-Dem)"
+popw_participdem_h_vdem_owid,"Participatory democracy (upper bound, pop-weighted, V-Dem)"
+popw_delibdem_vdem_owid,"Deliberative democracy (V-Dem, population-weighted)"
+popw_delibdem_l_vdem_owid,"Deliberative democracy (lower bound, pop-weighted, V-Dem)"
+popw_delibdem_h_vdem_owid,"Deliberative democracy (upper bound, pop-weighted, V-Dem)"
+popw_egaldem_vdem_owid,"Egalitarian democracy (V-Dem, population-weighted)"
+popw_egaldem_l_vdem_owid,"Egalitarian democracy (lower bound, pop-weighted, V-Dem)"
+popw_egaldem_h_vdem_owid,"Egalitarian democracy (upper bound, pop-weighted, V-Dem)"
+region,Region

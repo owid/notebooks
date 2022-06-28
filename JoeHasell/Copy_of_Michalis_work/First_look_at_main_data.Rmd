@@ -15,10 +15,18 @@ library(knitr)
 
 Pull in data from Michalis' folder in Github repo
 ```{r}
-df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/MainDataCountriesOnly.csv", row.names = 1, header = T, sep = ";", dec = ",")
+df <- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/MichalisMoatsos/MainDataCountriesOnlyNew.csv", row.names = 1, header = T, sep = ";", dec = ",")
 
 ```
 
+
+```{r}
+head(df)
+```
+
+```{r}
+
+```
 
 * Can you add a $1 a day poverty line please.
 
