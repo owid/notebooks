@@ -39,11 +39,7 @@ aggregate <- function(df, case_type, date_type) {
   setnames(
     df,
     c("N", "cumulative", "rolling_avg"),
-    c(
-      sprintf("daily_%s_by_%s", case_type, date_type),
-      sprintf("total_%s_by_%s", case_type, date_type),
-      sprintf("7day_%s_by_%s", case_type, date_type)
-    )
+    sprintf("%s_%s_by_%s", c("daily", "total", "7day"), case_type, date_type)
   )
   
   return(df)
