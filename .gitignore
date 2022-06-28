@@ -132,6 +132,8 @@ dmypy.json
 
 # Mac folder attributes
 .DS_Store
+
+# Individual exclusions can be added here.
 PabloArriagada/poverty_inequality_dataexplorer/LISSY/XX_steal_lws_data.do
 PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
 PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
