@@ -37,9 +37,9 @@ The Penn World Table allows for cross-country comparisons of real GDP across tim
 
 ## Metrics from the original dataset
 
-
+<!-- #region tags=[] -->
 ### Based on prices that are constant across countries and over time
-
+<!-- #endregion -->
 
 **Expenditure-side real GDP at chained PPPs (2017US$)**
 <br>
@@ -159,7 +159,7 @@ Total factor productivity level, computed with *rgdna*, *rnna*, labor input data
 <br>
 Computed from *rtfpna* and the real domestic absorption (*rdana*), it is useful for comparing the growth of welfare-relevant productivity over time in each country.
 
-<!-- #region jp-MarkdownHeadingCollapsed=true tags=[] jp-MarkdownHeadingCollapsed=true -->
+<!-- #region jp-MarkdownHeadingCollapsed=true tags=[] jp-MarkdownHeadingCollapsed=true jp-MarkdownHeadingCollapsed=true tags=[] -->
 ### Other variables
 <!-- #endregion -->
 
@@ -237,34 +237,39 @@ Price level of *cda* and *cgdpe*, equal to the PPP (ratio of *rdana* to *cda*) d
 Price level of *cgdpo*, equal to the PPP (ratio of *rgdpna* to *cgdpo*) divided by the nominal exchange rate, *xr*
 
 
-**0/1/2/3/4: relative price data for consumption, investment and government is extrapolated (0), benchmark (1), interpolated (2), ICP PPP timeseries: benchmark or interpolated (3) or  ICP PPP timeseries: extrapolated (4)**
+**Type of estimation for the relative price data for consumption, investment and government**
 <br>
 *i_cig*
 <br>
+Extrapolated (0), benchmark (1), interpolated (2), ICP PPP timeseries: benchmark or interpolated (3) or  ICP PPP timeseries: extrapolated (4)
 
 
-**0/1/2: relative price data for exports and imports is extrapolated (0), benchmark (1) or interpolated (2)**
+**Type of estimation for the relative price data for exports and imports**
 <br>
 *i_xm*
 <br>
+Extrapolated (0), benchmark (1) or interpolated (2)
 
 
-**0/1: the exchange rate is market-based (0) or estimated (1)**
+**Type of estimation for the exchange rate**
 <br>
 *i_xr*
 <br>
+Market-based (0) or estimated (1)
 
 
-**0/1: the observation on pl_gdpe or pl_gdpo is not an outlier (0) or an outlier (1)**
+**Is the observation on pl_gdpe or pl_gdpo an outlier?**
 <br>
 *i_outlier*
 <br>
+Not an outlier (0) or an outlier (1)
 
 
-**0/1/2/3: the observation for irr is not an outlier (0), may be biased due to a low capital share (1), hit the lower bound of 1 percent (2), or is an outlier (3)**
+**Is the observation for irr an outlier?**
 <br>
 *i_irr*
 <br>
+It is not an outlier (0), may be biased due to a low capital share (1), hit the lower bound of 1 percent (2), or is an outlier (3)
 
 
 **Correlation between expenditure shares of the country and the US (benchmark observations only)**
@@ -279,82 +284,37 @@ Price level of *cgdpo*, equal to the PPP (ratio of *rgdpna* to *cgdpo*) divided 
 <br>
 
 
-**Share of household consumption at current PPPs**
-<br>
+**Shares at current PPPs:**
+- **Share of household consumption at current PPPs**<br>
 *csh_c*
-<br>
-
-
-**Share of gross capital formation at current PPPs**
-<br>
+- **Share of gross capital formation at current PPPs**<br>
 *csh_i*
-<br>
-
-
-**Share of government consumption at current PPPs**
-<br>
+- **Share of government consumption at current PPPs**<br>
 *csh_g*
-<br>
-
-
-**Share of merchandise exports at current PPPs**
-<br>
+- **Share of merchandise exports at current PPPs**<br>
 *csh_x*
-<br>
-
-
-**Share of merchandise imports at current PPPs**
-<br>
+- **Share of merchandise imports at current PPPs**<br>
 *csh_m*
-<br>
-
-
-**Share of residual trade and GDP statistical discrepancy at current PPPs**
-<br>
+- **Share of residual trade and GDP statistical discrepancy at current PPPs**<br>
 *csh_r*
-<br>
 
 
-**Price level of household consumption,  price level of USA GDPo in 2017=1**
-<br>
+**Additional price levels:**
+
+- **Price level of household consumption,  price level of USA GDPo in 2017=1**<br>
 *pl_c*
-<br>
-
-
-**Price level of capital formation,  price level of USA GDPo in 2017=1**
-<br>
+- **Price level of capital formation,  price level of USA GDPo in 2017=1**<br>
 *pl_i*
-<br>
-
-
-**Price level of government consumption,  price level of USA GDPo in 2017=1**
-<br>
+- **Price level of government consumption,  price level of USA GDPo in 2017=1**<br>
 *pl_g*
-<br>
-
-
-**Price level of exports, price level of USA GDPo in 2017=1**
-<br>
+- **Price level of exports, price level of USA GDPo in 2017=1**<br>
 *pl_x*
-<br>
-
-
-**Price level of imports, price level of USA GDPo in 2017=1**
-<br>
+- **Price level of imports, price level of USA GDPo in 2017=1**<br>
 *pl_m*
-<br>
-
-
-**Price level of the capital stock, price level of USA in 2017=1**
-<br>
+- **Price level of the capital stock, price level of USA in 2017=1**<br>
 *pl_n*
-<br>
-
-
-**Price level of the capital services, price level of USA=1**
-<br>
+- **Price level of the capital services, price level of USA=1**<br>
 *pl_k*
-<br>
 
 
 ## Derived metrics from this dataset
@@ -406,7 +366,7 @@ It is defined as the average of the yearly growth rate of GDP per capita over th
 <br>
 *world_trade*
 <br>
-It is defined as the sum of all world exports and imports divided by the world GDP
+It is defined as the sum of all world exports and imports divided by the world GDP for each year
 
 
 ## Code for dataset transformations

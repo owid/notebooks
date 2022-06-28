@@ -511,6 +511,73 @@ posttax_dis_shares_check.describe()
 # + [markdown] tags=[]
 # ### Comparability of values between periods
 # -
+# This check is to avoid having big jumps or drops between periods for certain percentiles. 
+
+wid_pretax_clean[wid_pretax_clean['percentile']=='p50p51']
+
+# ### Averages between thresholds
+
+# #### Pretax income distribution
+
+# +
+excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
+
+pretax_avg_thr = wid_pretax_clean[~wid_pretax_clean['percentile'].isin(excl_list)].reset_index(drop=True)
+pretax_avg_thr['threshold_next'] = pretax_avg_thr['threshold'].shift(-1)
+pretax_avg_thr.loc[(pretax_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = pretax_avg_thr.loc[(pretax_avg_thr['percentile'] == 'p99.999p100'), 'average']
+
+pretax_avg_thr['avg_thr_check'] = ((pretax_avg_thr['average'] >= pretax_avg_thr['threshold']) & (pretax_avg_thr['average'] <= pretax_avg_thr['threshold_next']))
+pretax_avg_thr.loc[(pretax_avg_thr['threshold'].isnull()) | (pretax_avg_thr['average'].isnull()) | (pretax_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan
+
+pretax_avg_thr_false = pretax_avg_thr[pretax_avg_thr['avg_thr_check'] == False].reset_index(drop=True)
+# -
+
+pretax_avg_thr.avg_thr_check.value_counts(normalize=True)
+
+pretax_avg_thr_false.country_year.value_counts()
+
+# +
+#pretax_avg_thr.to_csv('avgthr.csv')
+# -
+
+# #### Post-tax national income distribution
+
+# +
+excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
+
+posttax_nat_avg_thr = wid_posttax_nat_clean[~wid_posttax_nat_clean['percentile'].isin(excl_list)].reset_index(drop=True)
+posttax_nat_avg_thr['threshold_next'] = posttax_nat_avg_thr['threshold'].shift(-1)
+posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['percentile'] == 'p99.999p100'), 'average']
+
+posttax_nat_avg_thr['avg_thr_check'] = ((posttax_nat_avg_thr['average'] >= posttax_nat_avg_thr['threshold']) & (posttax_nat_avg_thr['average'] <= posttax_nat_avg_thr['threshold_next']))
+posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['threshold'].isnull()) | (posttax_nat_avg_thr['average'].isnull()) | (posttax_nat_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan
+
+posttax_nat_avg_thr_false = posttax_nat_avg_thr[posttax_nat_avg_thr['avg_thr_check'] == False].reset_index(drop=True)
+# -
+
+posttax_nat_avg_thr.avg_thr_check.value_counts(normalize=True)
+
+posttax_nat_avg_thr_false.country_year.value_counts()
+
+# #### Post-national disposable income distribution
+
+# +
+excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
+
+posttax_dis_avg_thr = wid_posttax_dis_clean[~wid_posttax_dis_clean['percentile'].isin(excl_list)].reset_index(drop=True)
+posttax_dis_avg_thr['threshold_next'] = posttax_dis_avg_thr['threshold'].shift(-1)
+posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['percentile'] == 'p99.999p100'), 'average']
+
+posttax_dis_avg_thr['avg_thr_check'] = ((posttax_dis_avg_thr['average'] >= posttax_dis_avg_thr['threshold']) & (posttax_dis_avg_thr['average'] <= posttax_dis_avg_thr['threshold_next']))
+posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['threshold'].isnull()) | (posttax_dis_avg_thr['average'].isnull()) | (posttax_dis_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan
+
+posttax_dis_avg_thr_false = posttax_dis_avg_thr[posttax_dis_avg_thr['avg_thr_check'] == False].reset_index(drop=True)
+# -
+
+posttax_dis_avg_thr.avg_thr_check.value_counts(normalize=True)
+
+posttax_dis_avg_thr_false.country_year.value_counts()
+
 
 
 
