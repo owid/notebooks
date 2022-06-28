@@ -1,0 +1,30 @@
+varname,varlabel
+country_name,Country name
+year,Year
+regime_bti,Political regime (BTI)
+state_basic_bti,Basic state functions (BTI)
+electfreefair_bti,Free and fair elections (BTI)
+effective_power_bti,Effective power to govern (BTI)
+freeassoc_bti,Freedom of association (BTI)
+freeexpr_bti,Freedom of expression (BTI)
+sep_power_bti,Separation of powers (BTI)
+civ_rights_bti,Civil rights (BTI)
+democracy_bti,Democracy score (BTI)
+state_bti,Stateness (BTI)
+political_participation_bti,Political participation (BTI)
+rule_of_law_bti,Rule of law (BTI)
+stability_dem_inst_bti,Stability of democratic institutions (BTI)
+pol_soc_integr_bti,Political and social integration (BTI)
+number_hardaut_bti,Number of hard autocracies (BTI)
+number_modaut_bti,Number of moderate autocracies (BTI)
+number_hdefdem_bti,Number of highly defective democracies (BTI)
+number_defdem_bti,Number of defective democracies (BTI)
+number_consdem_bti,Number of consolidating democracies (BTI)
+pop_hardaut_bti,People living in hard autocracies (BTI)
+pop_modaut_bti,People living in moderate autocracies (BTI)
+pop_hdefdem_bti,People living in highly defective democracies (BTI)
+pop_defdem_bti,People living in defective democracies (BTI)
+pop_consdem_bti,People living in consolidating democracies (BTI)
+pop_missreg_bti,People living in countries without regime data (BTI)
+popw_democracy_bti,"Democracy score (BTI, population-weighted)"
+region,Region

@@ -1,0 +1,24 @@
+varname,varlabel
+country_name,Country/Territory
+year,Edition
+regime_fh,Political regime (Freedom House)
+polrights_fh,Political rights rating (Freedom House)
+civlibs_fh,Civil liberties rating (Freedom House)
+electdem_fh,Electoral democracy (Freedom House)
+electprocess_fh,Electoral process (Freedom House)
+polrights_score_fh,Political rights score (Freedom House)
+civlibs_score_fh,Civil liberties score (Freedom House)
+country_fh,Entity considered a country by Freedom House
+number_notfree_fh,Number of not-free countries (Freedom House)
+number_partlyfree_fh,Number of partly-free countries (Freedom House)
+number_free_fh,Number of free countries (Freedom House)
+number_nonelectdem_fh,Number of not-electoral democracies (Freedom House)
+number_electdem_fh,Number of electoral democracies (Freedom House)
+pop_notfree_fh,People living in not-free countries (Freedom House)
+pop_partlyfree_fh,People living in partly-free countries (Freedom House)
+pop_free_fh,People living in free countries (Freedom House)
+pop_missreg_fh,People living in countries without regime data (Freedom House)
+pop_nonelectdem_fh,People living in not-electoral democracies (Freedom House)
+pop_electdem_fh,People living in not-electoral democracies (Freedom House)
+pop_missdem_fh,People living in countries without democracy data (Freedom House)
+region,Region

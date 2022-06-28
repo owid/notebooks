@@ -1,0 +1,43 @@
+varname,varlabel
+country_name,Country name
+year,Year
+regime_bmr_owid,Political regime (BMR)
+dem_age_bmr_owid,"Democracy age (BMR, OWID)"
+dem_age_group_bmr_owid,"Democracy age group (BMR, OWID)"
+regime_womsuffr_bmr_owid,"Political regime (with women's suffrage, BMR)"
+dem_ws_age_bmr_owid,"Democracy age, including women's suffrage (BMR, OWID)"
+dem_ws_age_group_bmr_owid,"Democracy age group, including women's suffrage (BMR, OWID)"
+regime_imputed_bmr_owid,BMR regime information imputed from another country
+regime_imputed_country_bmr_owid,Name of the country from which BMR regime information was imputed
+dem_exp_bmr_owid,"Experience with democracy (BMR, OWID)"
+dem_ws_exp_bmr_owid,"Experience with democracy, including women's suffrage (BMR, OWID)"
+number_nondem_bmr_owid,Number of nondemocracies (BMR)
+number_dem_bmr_owid,Number of democracies (BMR)
+number_nondem_womsuffr_bmr_owid,"Number of nondemocracies, including women's suffrage (BMR)"
+number_dem_womsuffr_bmr_owid,"Number of democracies, including women's suffrage (BMR)"
+number_dem_18_bmr_owid,Number of democracies aged 1-18 years (BMR)
+number_dem_30_bmr_owid,Number of democracies aged 19-30 years (BMR)
+number_dem_60_bmr_owid,Number of democracies aged 31-60 years (BMR)
+number_dem_90_bmr_owid,Number of democracies aged 61-90 years (BMR)
+number_dem_91plus_bmr_owid,Number of democracies aged 91 years or older (BMR)
+number_dem_ws_18_bmr_owid,Number of democracies (incl. women's suffrage) aged 1-18 years (BMR)
+number_dem_ws_30_bmr_owid,Number of democracies (incl. women's suffrage) aged 19-30 years (BMR)
+number_dem_ws_60_bmr_owid,Number of democracies (incl. women's suffrage) aged 31-60 years (BMR)
+number_dem_ws_90_bmr_owid,Number of democracies (incl. women's suffrage) aged 61-90 years (BMR)
+number_dem_ws_91plus_bmr_owid,Number of democracies (incl. women's suffrage) aged 91 years or older (BMR)
+pop_nondem_bmr_owid,People living in nondemocracies (BMR)
+pop_dem_bmr_owid,People living in of democracies (BMR)
+pop_missreg_bmr_owid,People living in countries without regime data (BMR)
+pop_nondem_womsuffr_bmr_owid,"People living in nondemocracies, including women's suffrage (BMR)"
+pop_dem_womsuffr_bmr_owid,"People living in of democracies, including women's suffrage (BMR)"
+pop_dem_18_bmr_owid,People living in democracies aged 1-18 years (BMR)
+pop_dem_30_bmr_owid,People living in democracies aged 19-30 years (BMR)
+pop_dem_60_bmr_owid,People living in democracies aged 31-60 years (BMR)
+pop_dem_90_bmr_owid,People living in democracies aged 61-90 years (BMR)
+pop_dem_91plus_bmr_owid,People living in democracies aged 91 years or older (BMR)
+pop_dem_ws_18_bmr_owid,People living in democracies (incl. women's suffrage) aged 1-18 years (BMR)
+pop_dem_ws_30_bmr_owid,People living in democracies (incl. women's suffrage) aged 19-30 years (BMR)
+pop_dem_ws_60_bmr_owid,People living in democracies (incl. women's suffrage) aged 31-60 years (BMR)
+pop_dem_ws_90_bmr_owid,People living in democracies (incl. women's suffrage) aged 61-90 years (BMR)
+pop_dem_ws_91plus_bmr_owid,People living in democracies (incl. women's suffrage) aged 91 years or older (BM
+region,Region
