@@ -219,6 +219,11 @@ sort country_name year
 save "democracy/datasets/final/eiu_final.dta", replace
 export delimited "democracy/datasets/final/eiu_final.csv", replace nolabel
 
+describe, replace
+keep name varlab
+rename name varname
+rename varlab varlabel
+export delimited "democracy/datasets/final/eiu_final_meta.csv", replace
 
 
 exit
