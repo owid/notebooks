@@ -1,0 +1,33 @@
+varname,varlabel
+country_name,Country name
+year,Year
+democracy_polity,Democracy (Polity)
+regime_polity,Political regime (Polity)
+dem_age_polity,Democracy age (Polity)
+dem_age_group_polity,Democracy age group (Polity)
+exec_reccomp_polity,Competitiveness of executive recruitment (Polity)
+exec_recopen_polity,Openness of executive recruitment (Polity)
+exec_constr_polity,Constraints on the executive (Polity)
+polpart_reg_polity,Regulation of political participation (Polity)
+polpart_comp_polity,Competitiveness of political participation (Polity)
+democracy_recod_polity,"Democracy (Polity, recoded 0-20)"
+dem_exp_polity,Experience with democracy (Polity)
+number_aut_polity,Number of autocracies (Polity)
+number_ano_polity,Number of anocracies (Polity)
+number_dem_polity,Number of democracies (Polity)
+number_dem_18_polity,Number of democracies aged 1-18 years (Polity)
+number_dem_30_polity,Number of democracies aged 19-30 years (Polity)
+number_dem_60_polity,Number of democracies aged 31-60 years (Polity)
+number_dem_90_polity,Number of democracies aged 61-90 years (Polity)
+number_dem_91plus_polity,Number of democracies aged 91 years or older (Polity)
+pop_aut_polity,People living in autocracies (Polity)
+pop_ano_polity,People living in anocracies (Polity)
+pop_dem_polity,People living in democracies (Polity)
+pop_missreg_polity,People living in countries without regime data (Polity)
+pop_dem_18_polity,People living in democracies aged 1-18 years (Polity)
+pop_dem_30_polity,People living in democracies aged 19-30 years (Polity)
+pop_dem_60_polity,People living in democracies aged 31-60 years (Polity)
+pop_dem_90_polity,People living in democracies aged 61-90 years (Polity)
+pop_dem_91plus_polity,People living in democracies aged 91 years or older (Polity)
+popw_democracy_polity,"Democracy (Polity, population-weighted)"
+region,Region
