@@ -80,29 +80,46 @@ import numpy as np
 #import plotly.io as pio
 
 # %% [markdown]
-# ### Details of how OWID obtained a copy of the data
-# %% [markdown]
-# ### Details of how we initially load the data 
+# ## Details on the the initial loading and cleaning of the data
 
+# %% 
+md("#### Load our stored copy of the original data file (Retrieved on {})".format(datasetRetrieved))
 
 # %%
+#ETL note – This step is a bit like grabbing the data from Walden
 
-#This is the location of the original Excel file
+#Here we have original Excel file in GitHub
 url = 'https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/pwt/data/pwt100.xlsx'
 
-#This is how we load it 
-
+#We load it 
 r = requests.get(url)
-
 tempf = tempfile.TemporaryFile()
 tempf.write(r.content)
 
-pwt10 = pd.read_excel(tempf, sheet_name='Data')
+df_original = pd.read_excel(tempf, sheet_name='Data')
 
+
+# %% [markdown]
+# #### Standardize country names
+
+# %% [markdown]
+# Our World in Data standardizes country names to allow us to compare data across different data sources.
+# %%
+# Pablo: can you add the country harmonization step here
+#ETL note – This step is a bit like grabbing the data from Walden
+
+
+
+df_final = df_original['countrycode', 'country']
+
+# %%
+# You can see a mapping of country names here:
+
+# Pablo: please provide a table of the country name mapping
 
 
 # %%
-pwt10.head()
+df_original.head()
 # %% [markdown]
 # ### Details of how we standardize the names of countries and world regions
 # %% [markdown]
@@ -115,11 +132,12 @@ pwt10.head()
 # *JH comment: See my comment at the top of this doc about the Dataset-level metadata. Maybe we can define the variable-level metadata in a way that's helpful. For instance, below I make a set of ordered arrays that provide the metadata for for each variable. The idea is that this will be passed to the database/garpher admin. But we can also use to e.g. make the title of subsections. In that way the titles and the variable name will always be linked.*
 # %%
 #Initialize empty arrays for variable-level metadata
-variableNames = []
+variableFinalNames = []
 variableDisplayNames = []
 variableUnitLongs = []
 variableUnitShorts = []
 variableDescription = []
+variableNames = []
 # %% [markdown]
 # ### GDP
 # %% [markdown]
@@ -148,12 +166,12 @@ variableNames = np.append(variableNames,["Real GDP (expenditure-side)"])
 variableDisplayNames = np.append(variableDisplayNames,["Real GDP"])
 variableUnitLongs = np.append(variableUnitLongs,["International-$ at 2017 prices"])
 variableUnitShorts = np.append(variableUnitShorts,["$"])
-variableDescription = np.append(variableDescription,["[GIVE VARIABLE DESCRIPTION – THIS WILL GO IN THE SOURCES TAB]"])
+variableDescription = np.append(variableDescription,["[Joe to write a description of this variable]"])
 
 # %%
 # Print display name of current variable. It would be great if we could figure out a way to render this output as a html heading...
 
-md("## This is MD {}".format(variableDisplayNames[len(variableDisplayNames)-1]))
+md("## {}".format(variableDisplayNames[len(variableDisplayNames)-1]))
 
 # %% [markdown]
 # ##### About this variable
@@ -165,21 +183,22 @@ variableDescription[len(variableDescription)-1]
 # %% [markdown]
 # **Original variable name within PWT:** rgdpe
 
-# The original data is given in millions of dollars. We multiply the variable by 1,000,000 to give the figures in dollars.
+# %% [markdown]
+#The original data is given in millions of dollars. We multiply the variable by 1,000,000 to give the figures in dollars.
 
 # %%
-pwt10['rgdpe'] = pwt10['rgdpe']*1000000
+pwt10['rgdpe'] = df_original['rgdpe']*1000000
 # %% [markdown]
 # *“real GDP on
 # the output-side”, or real GDPo
 # , which is intended to measure the production possibilities of an
 # economy.*
-# %%
+# %% [markdown]
 # ### GDP per capita
-# %%
+# %% [markdown]
 # Each GDP variable discussed above is divided by the population figures provided in PWT to produce corresponding series for GDP per capita.
-# %%
-# +
+# %% [markdown]
 # Divide by pop...
-# -
+
+
 # %%
