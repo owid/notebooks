@@ -106,8 +106,8 @@ wid_posttax_dis.describe(include='all')
 
 # #### Pretax income
 
-pretax_count = wid_pretax.groupby(['country', 'year', 'country_year']).nunique()
-pretax_not130 = pretax_count[pretax_count['percentile']!=130].reset_index()
+pretax_count = wid_pretax.groupby(['country', 'year', 'country_year']).nunique() #counts unique values for the variables
+pretax_not130 = pretax_count[pretax_count['percentile']!=130].reset_index() #new dataframe with new indices
 pretax_not130
 
 # In the case of the pretax data there are 851 different distributions that do not have the 130 quantiles. The main stats of this group are in the following table.
@@ -116,16 +116,19 @@ pretax_not130.describe(include='all')
 
 # 21 different countries are in this situation, with a range of years from 1870 to 1979 (median 1944). The amount of percentiles in this group range from 1 to 31 (median 3). The 21 countries are:
 
-pretax_not130.country.value_counts(dropna=False)
+pretax_not130.country.value_counts(dropna=False) #counts the ocurrences of the issue in each country
 
 # The list of country-years without 130 quantiles can be extracted and filtered to the original dataset to see which are the few quantiles presented.
 
 # +
-pretax_not130_list = list(pretax_not130.country_year.unique())
+pretax_not130_list = list(pretax_not130.country_year.unique()) #Gets the list of country-year which do not have 130 quantiles
+
+#Dataframe with only the country-year in the list:
 wid_pretax_not130 = wid_pretax[wid_pretax['country_year'].isin(pretax_not130_list)].reset_index(drop=True)
+#"Clean" dataframe, excluding countries-year with less than 130 quantiles 
 wid_pretax_clean = wid_pretax[~wid_pretax['country_year'].isin(pretax_not130_list)].reset_index(drop=True)
 
-wid_pretax_not130.percentile.value_counts(dropna=False)
+wid_pretax_not130.percentile.value_counts(dropna=False) #counts unique values of quantiles in the country-years with issues
 # -
 
 # **All of them come from the top 1%**, the last percentile or one of its subdivisions.
@@ -138,8 +141,8 @@ wid_pretax_clean.percentile.value_counts(dropna=False)
 
 # For the post-tax national income distribution there are less cases:
 
-posttax_nat_count = wid_posttax_nat.groupby(['country', 'year', 'country_year']).nunique()
-posttax_nat_not130 = posttax_nat_count[posttax_nat_count['percentile']!=130].reset_index()
+posttax_nat_count = wid_posttax_nat.groupby(['country', 'year', 'country_year']).nunique() #counts unique values for the variables
+posttax_nat_not130 = posttax_nat_count[posttax_nat_count['percentile']!=130].reset_index() #new dataframe with new indices
 posttax_nat_not130
 
 # 64 different distributions do not have 130 percentiles.
@@ -151,11 +154,14 @@ posttax_nat_not130.describe(include='all')
 # All of these 64 percentiles are **p99p100, the top 1%**:
 
 # +
-posttax_nat_not130_list = list(posttax_nat_not130.country_year.unique())
+posttax_nat_not130_list = list(posttax_nat_not130.country_year.unique()) #Gets the list of country-year which do not have 130 quantiles
+
+#Dataframe with only the country-year in the list:
 wid_posttax_nat_not130 = wid_posttax_nat[wid_posttax_nat['country_year'].isin(posttax_nat_not130_list)].reset_index(drop=True)
+#"Clean" dataframe, excluding countries-year with less than 130 quantiles
 wid_posttax_nat_clean = wid_posttax_nat[~wid_posttax_nat['country_year'].isin(posttax_nat_not130_list)].reset_index(drop=True)
 
-wid_posttax_nat_not130.percentile.value_counts(dropna=False)
+wid_posttax_nat_not130.percentile.value_counts(dropna=False) #counts unique values of quantiles in the country-years with issues
 
 # + [markdown] tags=[]
 # And filtering out the exceptions, now all the percentiles are represented uniformly in 1469 distributions:
@@ -167,8 +173,8 @@ wid_posttax_nat_clean.percentile.value_counts(dropna=False)
 
 # There are more post-tax disposable income distributions that follow this category:
 
-posttax_dis_count = wid_posttax_dis.groupby(['country', 'year', 'country_year']).nunique()
-posttax_dis_not130 = posttax_dis_count[posttax_dis_count['percentile']!=130].reset_index()
+posttax_dis_count = wid_posttax_dis.groupby(['country', 'year', 'country_year']).nunique() #counts unique values for the variables
+posttax_dis_not130 = posttax_dis_count[posttax_dis_count['percentile']!=130].reset_index() #new dataframe with new indices
 posttax_dis_not130
 
 # In the case of the post-tax disposable data there are 170 different distributions that do not have the 130 quantiles. The main stats of this group are in the following table.
@@ -182,11 +188,14 @@ posttax_dis_not130.country.value_counts(dropna=False)
 # In this case the percentiles are the **top 1%, 0.1% and 0.01%:**
 
 # +
-posttax_dis_not130_list = list(posttax_dis_not130.country_year.unique())
+posttax_dis_not130_list = list(posttax_dis_not130.country_year.unique()) #Gets the list of country-year which do not have 130 quantiles
+
+#Dataframe with only the country-year in the list:
 wid_posttax_dis_not130 = wid_posttax_dis[wid_posttax_dis['country_year'].isin(posttax_dis_not130_list)].reset_index(drop=True)
+#"Clean" dataframe, excluding countries-year with less than 130 quantiles 
 wid_posttax_dis_clean = wid_posttax_dis[~wid_posttax_dis['country_year'].isin(posttax_dis_not130_list)].reset_index(drop=True)
 
-wid_posttax_dis_not130.percentile.value_counts(dropna=False)
+wid_posttax_dis_not130.percentile.value_counts(dropna=False) #counts unique values of quantiles in the country-years with issues
 
 # + [markdown] tags=[]
 # And filtering out the exceptions, now all the percentiles are represented uniformly in 1363 distributions:
@@ -200,25 +209,21 @@ wid_posttax_dis_clean.percentile.value_counts(dropna=False)
 
 # #### Pretax income distribution
 
-# +
+#These three quantiles are excluded to get an entirely continous series
 excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
-
 wid_pretax_monotonicity = wid_pretax_clean[~wid_pretax_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-
-distribution_list = list(wid_pretax_monotonicity['country_year'].unique())
-percentile_list = sorted(list(wid_pretax_monotonicity['p'].unique()))
-# -
 
 # In the following code code the monotonicity is checked for the variables **average** and **threshold**.
 
 # + tags=[]
 #The average and threshold values are lagged by one row in the lagged_average and lagged_threshold variables for them to be compared
 
-wid_pretax_monotonicity['lagged_average'] =  wid_pretax_monotonicity['average'].shift(1)
-wid_pretax_monotonicity['monotonicity_check_avg'] =  wid_pretax_monotonicity['average'] >= wid_pretax_monotonicity['lagged_average']
-wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True
-wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['average'].isnull()) | (wid_pretax_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan
+wid_pretax_monotonicity['lagged_average'] =  wid_pretax_monotonicity['average'].shift(1) #average shifted by 1 row
+wid_pretax_monotonicity['monotonicity_check_avg'] =  wid_pretax_monotonicity['average'] >= wid_pretax_monotonicity['lagged_average'] #True if average is greater than or equal than the previous 
+wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True #The first percentile gets automatically a True value, as it cannot be compared
+wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['average'].isnull()) | (wid_pretax_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan #If values are null the comparison is null
 
+#Same steps for threshold
 wid_pretax_monotonicity['lagged_threshold'] =  wid_pretax_monotonicity['threshold'].shift(1)
 wid_pretax_monotonicity['monotonicity_check_thr'] =  wid_pretax_monotonicity['threshold'] >= wid_pretax_monotonicity['lagged_threshold']
 wid_pretax_monotonicity.loc[(wid_pretax_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_thr'] = True
@@ -233,9 +238,11 @@ wid_pretax_monotonicity.monotonicity_check_thr.value_counts(normalize=True)
 
 # These are the countries showing discontinuities in some of their distributions:
 
+#Dataframe keeping only the False checks (average)
 pretax_avgfalse = wid_pretax_monotonicity[wid_pretax_monotonicity['monotonicity_check_avg']==False].reset_index(drop=True)
 pretax_avgfalse.country.value_counts(dropna=False)
 
+#Dataframe keeping only the False checks (threshold)
 pretax_thrfalse = wid_pretax_monotonicity[wid_pretax_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
 pretax_thrfalse.country.value_counts(dropna=False)
 
@@ -248,22 +255,19 @@ pretax_thrfalse.percentile.value_counts(dropna=False)
 
 # #### Post-tax national income distribution
 
-# +
+#These three quantiles are excluded to get an entirely continous series
 excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
-
 wid_posttax_nat_monotonicity = wid_posttax_nat_clean[~wid_posttax_nat_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-
-distribution_list = list(wid_posttax_nat_monotonicity['country_year'].unique())
-percentile_list = sorted(list(wid_posttax_nat_monotonicity['p'].unique()))
 
 # + tags=[]
 #The average and threshold values are lagged by one row in the lagged_average and lagged_threshold variables for them to be compared
 
-wid_posttax_nat_monotonicity['lagged_average'] =  wid_posttax_nat_monotonicity['average'].shift(1)
-wid_posttax_nat_monotonicity['monotonicity_check_avg'] =  wid_posttax_nat_monotonicity['average'] >= wid_posttax_nat_monotonicity['lagged_average']
-wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True
-wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['average'].isnull()) | (wid_posttax_nat_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan
+wid_posttax_nat_monotonicity['lagged_average'] =  wid_posttax_nat_monotonicity['average'].shift(1) #average shifted by 1 row
+wid_posttax_nat_monotonicity['monotonicity_check_avg'] =  wid_posttax_nat_monotonicity['average'] >= wid_posttax_nat_monotonicity['lagged_average'] #True if average is greater than or equal than the previous 
+wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True #The first percentile gets automatically a True value, as it cannot be compared
+wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['average'].isnull()) | (wid_posttax_nat_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan #If values are null the comparison is null
 
+#Same steps for threshold
 wid_posttax_nat_monotonicity['lagged_threshold'] =  wid_posttax_nat_monotonicity['threshold'].shift(1)
 wid_posttax_nat_monotonicity['monotonicity_check_thr'] =  wid_posttax_nat_monotonicity['threshold'] >= wid_posttax_nat_monotonicity['lagged_threshold']
 wid_posttax_nat_monotonicity.loc[(wid_posttax_nat_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_thr'] = True
@@ -276,9 +280,11 @@ wid_posttax_nat_monotonicity.monotonicity_check_avg.value_counts(normalize=True)
 
 wid_posttax_nat_monotonicity.monotonicity_check_thr.value_counts(normalize=True)
 
+#Dataframe keeping only the False checks (average)
 posttax_nat_avgfalse = wid_posttax_nat_monotonicity[wid_posttax_nat_monotonicity['monotonicity_check_avg']==False].reset_index(drop=True)
 posttax_nat_avgfalse.country.value_counts(dropna=False)
 
+#Dataframe keeping only the False checks (threshold)
 posttax_nat_thrfalse = wid_posttax_nat_monotonicity[wid_posttax_nat_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
 posttax_nat_thrfalse.country.value_counts(dropna=False)
 
@@ -288,22 +294,19 @@ posttax_nat_thrfalse.percentile.value_counts(dropna=False)
 
 # #### Post-tax disposable income distribution
 
-# +
+#These three quantiles are excluded to get an entirely continous series
 excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
-
 wid_posttax_dis_monotonicity = wid_posttax_dis_clean[~wid_posttax_dis_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-
-distribution_list = list(wid_posttax_dis_monotonicity['country_year'].unique())
-percentile_list = sorted(list(wid_posttax_dis_monotonicity['p'].unique()))
 
 # + tags=[]
 #The average and threshold values are lagged by one row in the lagged_average and lagged_threshold variables for them to be compared
 
-wid_posttax_dis_monotonicity['lagged_average'] =  wid_posttax_dis_monotonicity['average'].shift(1)
-wid_posttax_dis_monotonicity['monotonicity_check_avg'] =  wid_posttax_dis_monotonicity['average'] >= wid_posttax_dis_monotonicity['lagged_average']
-wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True
-wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['average'].isnull()) | (wid_posttax_dis_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan
+wid_posttax_dis_monotonicity['lagged_average'] =  wid_posttax_dis_monotonicity['average'].shift(1) #average shifted by 1 row
+wid_posttax_dis_monotonicity['monotonicity_check_avg'] =  wid_posttax_dis_monotonicity['average'] >= wid_posttax_dis_monotonicity['lagged_average'] #True if average is greater than or equal than the previous 
+wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_avg'] = True #The first percentile gets automatically a True value, as it cannot be compared
+wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['average'].isnull()) | (wid_posttax_dis_monotonicity['lagged_average'].isnull()), 'monotonicity_check_avg'] = np.nan #If values are null the comparison is null
 
+#Same steps for threshold
 wid_posttax_dis_monotonicity['lagged_threshold'] =  wid_posttax_dis_monotonicity['threshold'].shift(1)
 wid_posttax_dis_monotonicity['monotonicity_check_thr'] =  wid_posttax_dis_monotonicity['threshold'] >= wid_posttax_dis_monotonicity['lagged_threshold']
 wid_posttax_dis_monotonicity.loc[(wid_posttax_dis_monotonicity['percentile'] == 'p0p1'), 'monotonicity_check_thr'] = True
@@ -316,9 +319,11 @@ wid_posttax_dis_monotonicity.monotonicity_check_avg.value_counts(normalize=True)
 
 wid_posttax_dis_monotonicity.monotonicity_check_thr.value_counts(normalize=True)
 
+#Dataframe keeping only the False checks (average)
 posttax_dis_avgfalse = wid_posttax_dis_monotonicity[wid_posttax_dis_monotonicity['monotonicity_check_avg']==False].reset_index(drop=True)
 posttax_dis_avgfalse.country.value_counts(dropna=False)
 
+#Dataframe keeping only the False checks (threshold)
 posttax_dis_thrfalse = wid_posttax_dis_monotonicity[wid_posttax_dis_monotonicity['monotonicity_check_thr']==False].reset_index(drop=True)
 posttax_dis_thrfalse.country.value_counts(dropna=False)
 
@@ -332,14 +337,15 @@ posttax_dis_thrfalse.percentile.value_counts(dropna=False)
 
 # Negative income values, although common in the construction of distributions, usually are bottom coded to 0. In this section, negative values for average and threshold are checked.
 #
-# As expected, negative values occurr only in the first percentiles of the distribution (max p6p7 in post-tax disposable income). All this values are bottom coded to 0 in the *_positive* dataframes
+# As expected, negative values occur only in the first percentiles of the distribution (max p6p7 in post-tax disposable income). All this values are bottom coded to 0 in the *_positive* dataframes
 
 # #### Pretax income
 
 # +
-pretax_negative_avg = wid_pretax_clean[wid_pretax_clean['average'] < 0].reset_index(drop=True)
-pretax_negative_thr = wid_pretax_clean[wid_pretax_clean['threshold'] < 0].reset_index(drop=True)
+pretax_negative_avg = wid_pretax_clean[wid_pretax_clean['average'] < 0].reset_index(drop=True) #keeps only average < 0
+pretax_negative_thr = wid_pretax_clean[wid_pretax_clean['threshold'] < 0].reset_index(drop=True) #keeps only threshold < 0
 
+#This dataframe changes the negative values of average and threshold to 0
 pretax_positive = wid_pretax_clean.copy()
 pretax_positive.loc[(pretax_positive['average'] < 0), 'average'] = 0
 pretax_positive.loc[(pretax_positive['threshold'] < 0), 'threshold'] = 0
@@ -356,9 +362,10 @@ pretax_negative_thr.country.value_counts(dropna=False)
 # #### Post-tax national income
 
 # +
-posttax_nat_negative_avg = wid_posttax_nat_clean[wid_posttax_nat_clean['average'] < 0].reset_index(drop=True)
-posttax_nat_negative_thr = wid_posttax_nat_clean[wid_posttax_nat_clean['threshold'] < 0].reset_index(drop=True)
+posttax_nat_negative_avg = wid_posttax_nat_clean[wid_posttax_nat_clean['average'] < 0].reset_index(drop=True) #keeps only average < 0
+posttax_nat_negative_thr = wid_posttax_nat_clean[wid_posttax_nat_clean['threshold'] < 0].reset_index(drop=True) #keeps only threshold < 0
 
+#This dataframe changes the negative values of average and threshold to 0
 posttax_nat_positive = wid_posttax_nat_clean.copy()
 posttax_nat_positive.loc[(posttax_nat_positive['average'] < 0), 'average'] = 0
 posttax_nat_positive.loc[(posttax_nat_positive['threshold'] < 0), 'threshold'] = 0
@@ -375,9 +382,10 @@ posttax_nat_negative_thr.country.value_counts(dropna=False)
 # #### Post-tax disposable income
 
 # +
-posttax_dis_negative_avg = wid_posttax_dis_clean[wid_posttax_dis_clean['average'] < 0].reset_index(drop=True)
-posttax_dis_negative_thr = wid_posttax_dis_clean[wid_posttax_dis_clean['threshold'] < 0].reset_index(drop=True)
+posttax_dis_negative_avg = wid_posttax_dis_clean[wid_posttax_dis_clean['average'] < 0].reset_index(drop=True) #keeps only average < 0
+posttax_dis_negative_thr = wid_posttax_dis_clean[wid_posttax_dis_clean['threshold'] < 0].reset_index(drop=True) #keeps only threshold < 0
 
+#This dataframe changes the negative values of average and threshold to 0
 posttax_dis_positive = wid_posttax_dis_clean.copy()
 posttax_dis_positive.loc[(posttax_dis_positive['average'] < 0), 'average'] = 0
 posttax_dis_positive.loc[(posttax_dis_positive['threshold'] < 0), 'threshold'] = 0
@@ -419,12 +427,13 @@ thousands_list = thousands['pXpY'].to_list()
 # The three following tables show the descriptive statistics for these four different checks. Overall, in the pretax and both post-tax distributions the median sum of the shares is always 1, the minimum value is 0.998600 and the maximum value is 1.001200. This means **the most "extreme" values only differ in 0.1% or 0.2% to 1, which should not be a concern.**
 
 # +
+#Generates the four different distributions:
 wid_pretax_percentiles = wid_pretax_clean[wid_pretax_clean['percentile'].isin(percentiles_list)].reset_index(drop=True)
 wid_pretax_tenths = wid_pretax_clean[wid_pretax_clean['percentile'].isin(tenths_list)].reset_index(drop=True)
 wid_pretax_hundreds = wid_pretax_clean[wid_pretax_clean['percentile'].isin(hundreds_list)].reset_index(drop=True)
 wid_pretax_thousands = wid_pretax_clean[wid_pretax_clean['percentile'].isin(thousands_list)].reset_index(drop=True)
 
-
+#Grouping the sum by country and year
 wid_pretax_percentiles_shares = wid_pretax_percentiles.groupby(['country', 'year', 'country_year']).sum().reset_index()
 wid_pretax_percentiles_shares.rename(columns={"share": "share_percentiles"}, inplace=True)
 
@@ -437,24 +446,24 @@ wid_pretax_hundreds_shares.rename(columns={"share": "share_hundreds"}, inplace=T
 wid_pretax_thousands_shares = wid_pretax_thousands.groupby(['country', 'year', 'country_year']).sum().reset_index()
 wid_pretax_thousands_shares.rename(columns={"share": "share_thousands"}, inplace=True)
 
-
+#Merging the results to show the results in one table
 pretax_shares_check = pd.merge(wid_pretax_percentiles_shares, wid_pretax_tenths_shares[['country_year', 'share_tenths']], on='country_year', validate='one_to_one')
 pretax_shares_check = pd.merge(pretax_shares_check, wid_pretax_hundreds_shares[['country_year', 'share_hundreds']], on='country_year', validate='one_to_one')
 pretax_shares_check = pd.merge(pretax_shares_check, wid_pretax_thousands_shares[['country_year', 'share_thousands']], on='country_year', validate='one_to_one')
-
 
 pretax_shares_check = pretax_shares_check[['country', 'year', 'country_year', 'share_percentiles', 'share_tenths', 'share_hundreds', 'share_thousands']]
 
 pretax_shares_check.describe()
 
 # +
+#Generates the four different distributions:
 wid_posttax_nat_percentiles = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(percentiles_list)].reset_index(drop=True)
 wid_posttax_nat_tenths = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(tenths_list)].reset_index(drop=True)
 wid_posttax_nat_hundreds = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(hundreds_list)].reset_index(drop=True)
 wid_posttax_nat_thousands = wid_posttax_nat_clean[wid_posttax_nat_clean['percentile'].isin(thousands_list)].reset_index(drop=True)
 
 
-
+#Grouping the sum by country and year
 wid_posttax_nat_percentiles_shares = wid_posttax_nat_percentiles.groupby(['country', 'year', 'country_year']).sum().reset_index()
 wid_posttax_nat_percentiles_shares.rename(columns={"share": "share_percentiles"}, inplace=True)
 
@@ -467,25 +476,24 @@ wid_posttax_nat_hundreds_shares.rename(columns={"share": "share_hundreds"}, inpl
 wid_posttax_nat_thousands_shares = wid_posttax_nat_thousands.groupby(['country', 'year', 'country_year']).sum().reset_index()
 wid_posttax_nat_thousands_shares.rename(columns={"share": "share_thousands"}, inplace=True)
 
-
+#Merging the results to show the results in one table
 posttax_nat_shares_check = pd.merge(wid_posttax_nat_percentiles_shares, wid_posttax_nat_tenths_shares[['country_year', 'share_tenths']], on='country_year', validate='one_to_one')
 posttax_nat_shares_check = pd.merge(posttax_nat_shares_check, wid_posttax_nat_hundreds_shares[['country_year', 'share_hundreds']], on='country_year', validate='one_to_one')
 posttax_nat_shares_check = pd.merge(posttax_nat_shares_check, wid_posttax_nat_thousands_shares[['country_year', 'share_thousands']], on='country_year', validate='one_to_one')
-
-
 
 posttax_nat_shares_check = posttax_nat_shares_check[['country', 'year', 'country_year', 'share_percentiles', 'share_tenths', 'share_hundreds', 'share_thousands']]
 
 posttax_nat_shares_check.describe()
 
 # +
+#Generates the four different distributions:
 wid_posttax_dis_percentiles = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(percentiles_list)].reset_index(drop=True)
 wid_posttax_dis_tenths = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(tenths_list)].reset_index(drop=True)
 wid_posttax_dis_hundreds = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(hundreds_list)].reset_index(drop=True)
 wid_posttax_dis_thousands = wid_posttax_dis_clean[wid_posttax_dis_clean['percentile'].isin(thousands_list)].reset_index(drop=True)
 
 
-
+#Grouping the sum by country and year
 wid_posttax_dis_percentiles_shares = wid_posttax_dis_percentiles.groupby(['country', 'year', 'country_year']).sum().reset_index()
 wid_posttax_dis_percentiles_shares.rename(columns={"share": "share_percentiles"}, inplace=True)
 
@@ -498,38 +506,34 @@ wid_posttax_dis_hundreds_shares.rename(columns={"share": "share_hundreds"}, inpl
 wid_posttax_dis_thousands_shares = wid_posttax_dis_thousands.groupby(['country', 'year', 'country_year']).sum().reset_index()
 wid_posttax_dis_thousands_shares.rename(columns={"share": "share_thousands"}, inplace=True)
 
-
+#Merging the results to show the results in one table
 posttax_dis_shares_check = pd.merge(wid_posttax_dis_percentiles_shares, wid_posttax_dis_tenths_shares[['country_year', 'share_tenths']], on='country_year', validate='one_to_one')
 posttax_dis_shares_check = pd.merge(posttax_dis_shares_check, wid_posttax_dis_hundreds_shares[['country_year', 'share_hundreds']], on='country_year', validate='one_to_one')
 posttax_dis_shares_check = pd.merge(posttax_dis_shares_check, wid_posttax_dis_thousands_shares[['country_year', 'share_thousands']], on='country_year', validate='one_to_one')
 
-
-
 posttax_dis_shares_check = posttax_dis_shares_check[['country', 'year', 'country_year', 'share_percentiles', 'share_tenths', 'share_hundreds', 'share_thousands']]
 
 posttax_dis_shares_check.describe()
-# + [markdown] tags=[]
-# ### Comparability of values between periods
 # -
-# This check is to avoid having big jumps or drops between periods for certain percentiles. 
-
-wid_pretax_clean[wid_pretax_clean['percentile']=='p50p51']
-
 # ### Averages between thresholds
+
+# The purpose of this check is to analyse if each bracker's average is between the same bracket's threshold and the following threshold. It should always be the case, because the threshold is defined as the lower limit of each percentile.
 
 # #### Pretax income distribution
 
+# Only a **76.7%** of the (non-null) observations follow this requirement:
+
 # +
-excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
+excl_list = ['p99p100', 'p99.9p100', 'p99.99p100'] #these quantiles are excluded to get a continous distribution
 
-pretax_avg_thr = wid_pretax_clean[~wid_pretax_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-pretax_avg_thr['threshold_next'] = pretax_avg_thr['threshold'].shift(-1)
-pretax_avg_thr.loc[(pretax_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = pretax_avg_thr.loc[(pretax_avg_thr['percentile'] == 'p99.999p100'), 'average']
+pretax_avg_thr = wid_pretax_clean[~wid_pretax_clean['percentile'].isin(excl_list)].reset_index(drop=True) #dataframe without the list
+pretax_avg_thr['threshold_next'] = pretax_avg_thr['threshold'].shift(-1) #threshold from the next row is brought
+pretax_avg_thr.loc[(pretax_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = pretax_avg_thr.loc[(pretax_avg_thr['percentile'] == 'p99.999p100'), 'average'] #threshold_next for the last quantile is average (no available value in the next row)
 
-pretax_avg_thr['avg_thr_check'] = ((pretax_avg_thr['average'] >= pretax_avg_thr['threshold']) & (pretax_avg_thr['average'] <= pretax_avg_thr['threshold_next']))
-pretax_avg_thr.loc[(pretax_avg_thr['threshold'].isnull()) | (pretax_avg_thr['average'].isnull()) | (pretax_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan
+pretax_avg_thr['avg_thr_check'] = ((pretax_avg_thr['average'] >= pretax_avg_thr['threshold']) & (pretax_avg_thr['average'] <= pretax_avg_thr['threshold_next'])) #check is true if average is between thresholds
+pretax_avg_thr.loc[(pretax_avg_thr['threshold'].isnull()) | (pretax_avg_thr['average'].isnull()) | (pretax_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan #check is null if one of the values is null
 
-pretax_avg_thr_false = pretax_avg_thr[pretax_avg_thr['avg_thr_check'] == False].reset_index(drop=True)
+pretax_avg_thr_false = pretax_avg_thr[pretax_avg_thr['avg_thr_check'] == False].reset_index(drop=True) #dataframe with all the false checks
 # -
 
 pretax_avg_thr.avg_thr_check.value_counts(normalize=True)
@@ -542,15 +546,17 @@ pretax_avg_thr_false.country_year.value_counts()
 
 # #### Post-tax national income distribution
 
+# The **99.99%** of the (non-null) observations follow this requirement:
+
 # +
-excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
+excl_list = ['p99p100', 'p99.9p100', 'p99.99p100'] #these quantiles are excluded to get a continous distribution
 
-posttax_nat_avg_thr = wid_posttax_nat_clean[~wid_posttax_nat_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-posttax_nat_avg_thr['threshold_next'] = posttax_nat_avg_thr['threshold'].shift(-1)
-posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['percentile'] == 'p99.999p100'), 'average']
+posttax_nat_avg_thr = wid_posttax_nat_clean[~wid_posttax_nat_clean['percentile'].isin(excl_list)].reset_index(drop=True) #dataframe without the list
+posttax_nat_avg_thr['threshold_next'] = posttax_nat_avg_thr['threshold'].shift(-1) #threshold from the next row is brought
+posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['percentile'] == 'p99.999p100'), 'average'] #threshold_next for the last quantile is average (no available value in the next row)
 
-posttax_nat_avg_thr['avg_thr_check'] = ((posttax_nat_avg_thr['average'] >= posttax_nat_avg_thr['threshold']) & (posttax_nat_avg_thr['average'] <= posttax_nat_avg_thr['threshold_next']))
-posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['threshold'].isnull()) | (posttax_nat_avg_thr['average'].isnull()) | (posttax_nat_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan
+posttax_nat_avg_thr['avg_thr_check'] = ((posttax_nat_avg_thr['average'] >= posttax_nat_avg_thr['threshold']) & (posttax_nat_avg_thr['average'] <= posttax_nat_avg_thr['threshold_next'])) #check is true if average is between thresholds
+posttax_nat_avg_thr.loc[(posttax_nat_avg_thr['threshold'].isnull()) | (posttax_nat_avg_thr['average'].isnull()) | (posttax_nat_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan #check is null if one of the values is null
 
 posttax_nat_avg_thr_false = posttax_nat_avg_thr[posttax_nat_avg_thr['avg_thr_check'] == False].reset_index(drop=True)
 # -
@@ -561,15 +567,17 @@ posttax_nat_avg_thr_false.country_year.value_counts()
 
 # #### Post-national disposable income distribution
 
+# The **86.5%** of the (non-null) observations follow this requirement:
+
 # +
-excl_list = ['p99p100', 'p99.9p100', 'p99.99p100']
+excl_list = ['p99p100', 'p99.9p100', 'p99.99p100'] #these quantiles are excluded to get a continous distribution
 
-posttax_dis_avg_thr = wid_posttax_dis_clean[~wid_posttax_dis_clean['percentile'].isin(excl_list)].reset_index(drop=True)
-posttax_dis_avg_thr['threshold_next'] = posttax_dis_avg_thr['threshold'].shift(-1)
-posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['percentile'] == 'p99.999p100'), 'average']
+posttax_dis_avg_thr = wid_posttax_dis_clean[~wid_posttax_dis_clean['percentile'].isin(excl_list)].reset_index(drop=True) #dataframe without the list
+posttax_dis_avg_thr['threshold_next'] = posttax_dis_avg_thr['threshold'].shift(-1) #threshold from the next row is brought
+posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['percentile'] == 'p99.999p100'), 'threshold_next'] = posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['percentile'] == 'p99.999p100'), 'average'] #threshold_next for the last quantile is average (no available value in the next row)
 
-posttax_dis_avg_thr['avg_thr_check'] = ((posttax_dis_avg_thr['average'] >= posttax_dis_avg_thr['threshold']) & (posttax_dis_avg_thr['average'] <= posttax_dis_avg_thr['threshold_next']))
-posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['threshold'].isnull()) | (posttax_dis_avg_thr['average'].isnull()) | (posttax_dis_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan
+posttax_dis_avg_thr['avg_thr_check'] = ((posttax_dis_avg_thr['average'] >= posttax_dis_avg_thr['threshold']) & (posttax_dis_avg_thr['average'] <= posttax_dis_avg_thr['threshold_next'])) #check is true if average is between thresholds
+posttax_dis_avg_thr.loc[(posttax_dis_avg_thr['threshold'].isnull()) | (posttax_dis_avg_thr['average'].isnull()) | (posttax_dis_avg_thr['threshold_next'].isnull()), 'avg_thr_check'] = np.nan #check is null if one of the values is null
 
 posttax_dis_avg_thr_false = posttax_dis_avg_thr[posttax_dis_avg_thr['avg_thr_check'] == False].reset_index(drop=True)
 # -
@@ -577,6 +585,13 @@ posttax_dis_avg_thr_false = posttax_dis_avg_thr[posttax_dis_avg_thr['avg_thr_che
 posttax_dis_avg_thr.avg_thr_check.value_counts(normalize=True)
 
 posttax_dis_avg_thr_false.country_year.value_counts()
+
+# + [markdown] tags=[]
+# ### Comparability of values between periods
+# -
+# This check is to avoid having big jumps or drops between periods for certain percentiles. 
+
+wid_pretax_clean[wid_pretax_clean['percentile']=='p50p51']
 
 
 
