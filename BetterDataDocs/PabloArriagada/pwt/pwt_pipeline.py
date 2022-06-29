@@ -70,14 +70,14 @@ import tempfile
 from pathlib import Path
 
 # Seaborn is a Python data visualization library (based on matplotlib)
-import seaborn as sns
+#import seaborn as sns
 
 # NumPy is a standard package that provides a range of useful mathematical functions 
 import numpy as np
 
 # Plotly is a package for creating interactive charts
-import plotly.express as px
-import plotly.io as pio
+#import plotly.express as px
+#import plotly.io as pio
 
 # %% [markdown]
 # ### Details of how OWID obtained a copy of the data
