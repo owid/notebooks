@@ -45,7 +45,6 @@ import numpy as np
 from pathlib import Path
 import time
 import seaborn as sns
-import time
 
 #keep_default_na and na_values are included because there is a country labeled NA, Namibia, which becomes null without the parameters
 
