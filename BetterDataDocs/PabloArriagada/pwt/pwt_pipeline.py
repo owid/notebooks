@@ -164,6 +164,14 @@ variable_meta['rgdpna_pc']['unitsShort'] = "$"
 variable_meta['rgdpna_pc']['description'] = "[Long description here]"
 
 
+# --- Employment and productivity variables ––––
+
+
+
+# --- Trade openness ––––
+
+
+
 
 # %%
 # -------- Introduction ----------
@@ -202,15 +210,6 @@ md("**Last updated:**  {} <br><br>\
             dataset_meta["description"]))
 
 
-
-
-# %% [markdown]
-# #### **All charts of this dataset on Our World in Data**
-"""
-*JH comment: The idea is that we could have a collapsed 'all charts' block – but where 
-the tag is the dataset. I don't know if that will be possible with. It could just be 
-(automatically generated) list of links.
-"""
 
 
 # %% [markdown]
@@ -406,6 +405,16 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 
+# --- Employment and productivity variables ––––
+
+
+
+# --- Trade openness ––––
+
+
+# --- Other variables  ––––
+
+
 
 # %% [markdown]
 ## Appendix
@@ -417,4 +426,16 @@ and our treatment of it.
 * A list of further documentation discussing various vintages of the dataset can be found at the [Groningen Growth and Development Centre's website](https://www.rug.nl/ggdc/productivity/pwt/pwt-documentation). 
 """
 
+
+
+# %% [markdown]
+# ## **All charts using this dataset on Our World in Data**
+"""
+*JH comment: The idea is that we could have an 'all charts' block – but where 
+the tag is the dataset. I don't know if that will be possible with. It could just be 
+(automatically generated) list of links.
+"""
+
+
 # %%
+
