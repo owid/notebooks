@@ -218,10 +218,10 @@ variable_meta['rgdpna']['description'] = "[Long description here]"
 *This article describes the data in the Penn World Tables version 10.0 
 and documents how Our World in Data have handled and transformed this data 
 in order to make use of it in our publication.*
-#
+<br><br>
 *This article is an unsual, experimental format, which we have designed 
 to make our data work more transparent and reusable.*
-#
+<br><br>
 *To prepare the data for use in our publication we write and then execute
  a computer programme. Within that computer programme we include extensive 
  notes, explanations and visualizations to make any choices concerning the 
@@ -231,7 +231,7 @@ to make our data work more transparent and reusable.*
  is hidden or not shown to improve readability. You can read this 
  article whether or not you are familiar with (python) code in order 
  to understand more about the Penn World Tables and our treatment of the data.*
-#
+<br><br>
 *The full code we use to prepare this data can be found in here GitHub. (provide link)*
 """
 
@@ -313,20 +313,20 @@ df_harmonized = df_original
 
 """
 *JH comment: Joe is drafting here an explanation of the different approaches to prices that define the different GDP variables.*
-#
+<br><br>
 The Penn World Tables provides five different measures of GDP over time.
-#
+<br><br>
 They produce these different series... [explain about prices].
-#
+<br><br>
 * Joe's notes:
 The point it if you want to compare across countries and over time then you can't have everything:*
 > "Diewert (1999) and Van Veelen (2002) have argued that no multilateral measure of real GDP can satisfy all the axioms we might like, so there are tradeoffs involved with any construction of this concept."
-#
+<br><br>
 PWT provide different measures for different purposes, in two different dimensions:
 
  1. Expenditure vs Production*
  2. Constant vs current prices vs NA growth rates
-#
+<br><br>
  * (1) is basically about the terms of trade: only if your terms of trade are especially favourable or especially bad will there be much difference between Expenditure and Output measures.
  * The issue with (2) is this: Becasue price structures change over time, cross-country benchmarks 
   for two periods typically won't be consistent with nationally measured 
@@ -339,9 +339,9 @@ PWT provide different measures for different purposes, in two different dimensio
    over time. `gdpna` applies NA growth rates (I don't yet get why this is different – 
    because pwt are using a different series for inflation than the NA GDP deflator?)
 
-
+<br><br>
 You can read more about prices in our post here. (Joe to write this at some point in the future)
-
+<br><br>
 To calculate GDP per capita in each case, we divide the GDP variables by the 
 population data given in the same dataset.
 
