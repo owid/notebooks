@@ -1,10 +1,172 @@
+# %%
+# ---- Import libraries ------
+# Here we provide details of which libraries and packages we use to prepare the data
+
+# Markdown lets us use variables within markdown chunks.
 from IPython.display import Markdown as md
+
+# This allows us to embed iframes in the output of the code cells.
 from IPython.core.display import display, HTML
 
+# Pandas is a standard package used for data manipulation in python code
+import pandas as pd
 
-# %% [markdown]
-# This is the pipeline for PWT....
+# This package allows us to import the original Excel file via a URL
+import requests
 
+# This package allows us to save a temporary file of the orginal data file
+import tempfile
+
+# Pathlib is a standard package for making it easier to work with file paths
+from pathlib import Path
+
+# Seaborn is a Python data visualization library (based on matplotlib)
+#import seaborn as sns
+
+# NumPy is a standard package that provides a range of useful mathematical functions 
+import numpy as np
+
+# Plotly is a package for creating interactive charts
+#import plotly.express as px
+#import plotly.io as pio
+
+
+
+# %%
+# ------- Dataset metadata ---------
+# Create a 'dictionary' (an array whose elements are named) for the dataset metadata
+# This will end up in e.g. our database, 'Sources' tab etc.
+dataset_meta = {}
+
+# %%
+# Add dataset metadata to dictionary
+dataset_meta['name'] = "Penn World Tables version 10.0"
+dataset_meta['sourceName'] = "Penn World Tables"
+dataset_meta['link'] = "https://www.rug.nl/ggdc/productivity/pwt"
+dataset_meta['description'] = "PWT version 10.0 is a database with information \
+    on relative levels of income, output, input and productivity, covering 183 \
+    countries between 1950 and 2019."
+dataset_meta['dateRetrieved'] = "dd/mm/2022"
+dataset_meta['nextUpdate'] = "Unknown"
+
+
+# %%
+# ------- Variable metadata ---------
+
+# Create a dictionary for the variable metadata
+# This will be a dictionary of dictionaries – one for each variable 
+variable_meta = {}
+
+# ---- GDP variables ------
+
+# GDP (expenditure, multiple price benchmarks)
+variable_meta['rgdpe'] = {}
+
+variable_meta['rgdpe']['name'] = "GDP (expenditure, multiple price benchmarks)"
+variable_meta['rgdpe']['displayName'] = "GDP"
+variable_meta['rgdpe']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpe']['unitsShort'] = "$"
+variable_meta['rgdpe']['description'] = "[Long description here]"
+
+
+# GDP (output, multiple price benchmarks)
+variable_meta['rgdpo'] = {}
+
+variable_meta['rgdpo']['name'] = "GDP (output, multiple price benchmarks)"
+variable_meta['rgdpo']['displayName'] = "GDP"
+variable_meta['rgdpo']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpo']['unitsShort'] = "$"
+variable_meta['rgdpo']['description'] = "[Long description here]"
+
+
+
+# GDP (expenditure, single price benchmark)
+variable_meta['cgdpe'] = {}
+
+variable_meta['cgdpe']['name'] = "GDP (expenditure, single price benchmark)"
+variable_meta['cgdpe']['displayName'] = "GDP"
+variable_meta['cgdpe']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['cgdpe']['unitsShort'] = "$"
+variable_meta['cgdpe']['description'] = "[Long description here]"
+
+
+# GDP (expenditure, single price benchmark)
+variable_meta['cgdpo'] = {}
+
+variable_meta['cgdpo']['name'] = "GDP (output, single price benchmark)"
+variable_meta['cgdpo']['displayName'] = "GDP"
+variable_meta['cgdpo']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['cgdpo']['unitsShort'] = "$"
+variable_meta['cgdpo']['description'] = "[Long description here]"
+
+
+# GDP (using national accounts growth rates)
+variable_meta['rgdpna'] = {}
+
+variable_meta['rgdpna']['name'] = "GDP (using national accounts growth rates)"
+variable_meta['rgdpna']['displayName'] = "GDP"
+variable_meta['rgdpna']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpna']['unitsShort'] = "$"
+variable_meta['rgdpna']['description'] = "[Long description here]"
+
+
+
+# ---- GDP per capita variables ------
+
+# GDP (expenditure, multiple price benchmarks)
+variable_meta['rgdpe_pc'] = {}
+
+variable_meta['rgdpe_pc']['name'] = "GDP per capita (expenditure, multiple price benchmarks)"
+variable_meta['rgdpe_pc']['displayName'] = "GDP per capita"
+variable_meta['rgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpe_pc']['unitsShort'] = "$"
+variable_meta['rgdpe_pc']['description'] = "[Long description here]"
+
+
+# GDP (output, multiple price benchmarks)
+variable_meta['rgdpo_pc'] = {}
+
+variable_meta['rgdpo_pc']['name'] = "GDP per capita (output, multiple price benchmarks)"
+variable_meta['rgdpo_pc']['displayName'] = "GDP per capita"
+variable_meta['rgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpo_pc']['unitsShort'] = "$"
+variable_meta['rgdpo_pc']['description'] = "[Long description here]"
+
+
+
+# GDP (expenditure, single price benchmark)
+variable_meta['cgdpe_pc'] = {}
+
+variable_meta['cgdpe_pc']['name'] = "GDP per capita (expenditure, single price benchmark)"
+variable_meta['cgdpe_pc']['displayName'] = "GDP per capita"
+variable_meta['cgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['cgdpe_pc']['unitsShort'] = "$"
+variable_meta['cgdpe_pc']['description'] = "[Long description here]"
+
+
+# GDP (expenditure, single price benchmark)
+variable_meta['cgdpo_pc'] = {}
+
+variable_meta['cgdpo_pc']['name'] = "GDP per capita (output, single price benchmark)"
+variable_meta['cgdpo_pc']['displayName'] = "GDP per capita"
+variable_meta['cgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['cgdpo_pc']['unitsShort'] = "$"
+variable_meta['cgdpo_pc']['description'] = "[Long description here]"
+
+
+# GDP (using national accounts growth rates)
+variable_meta['rgdpna_pc'] = {}
+
+variable_meta['rgdpna_pc']['name'] = "GDP per capita (using national accounts growth rates)"
+variable_meta['rgdpna_pc']['displayName'] = "GDP per capita"
+variable_meta['rgdpna_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpna_pc']['unitsShort'] = "$"
+variable_meta['rgdpna_pc']['description'] = "[Long description here]"
+
+
+
+# %%
+# -------- Introduction ----------
 
 # %% [markdown]
 """
@@ -31,88 +193,43 @@ to make our data work more transparent and reusable.*
 # ## About this data
 
 # %%
-# Specify dataset metadata - (this will end up in e.g. our database, 'Sources' tab etc.)
-dataset_meta = {
-    "name": "Penn World Tables version 10.0",
-    "sourceName": "Penn World Tables",
-    "link": "https://www.rug.nl/ggdc/productivity/pwt",
-    "description": "PWT version 10.0 is a database with information on relative levels of income, output, input and productivity, covering 183 countries between 1950 and 2019.",
-    "dateRetrieved": "dd/mm/2022",
-    "nextUpdate": "Unknown"
-}
-
-
-# %%
 #Print the metadata as markdown
-md("**Name:**  {} <br><br>\
-    **Source:**  {} <br><br>\
-    **Link:**  {} <br><br>\
-    **Description:**  {} <br><br>\
-    **Last updated:**  {} <br><br>\
-    **Expected data of next update:**  {} "\
-    .format(dataset_meta["name"], 
-            dataset_meta["sourceName"],
-            dataset_meta["link"],
-            dataset_meta["description"],
-            dataset_meta["dateRetrieved"],
-            dataset_meta["nextUpdate"]))
+md("**Last updated:**  {} <br><br>\
+    **Expected data of next update:**  {} <br><br>\
+    {}"\
+    .format(dataset_meta["dateRetrieved"],
+            dataset_meta["nextUpdate"],
+            dataset_meta["description"]))
 
 
 
 
 # %% [markdown]
-# #### **All charts using this data**
+# #### **All charts of this dataset on Our World in Data**
+"""
+*JH comment: The idea is that we could have a collapsed 'all charts' block – but where 
+the tag is the dataset. I don't know if that will be possible with. It could just be 
+(automatically generated) list of links.
+"""
+
 
 # %% [markdown]
-# *JH comment: I don't know whether it would be possible to add some query here to produce an up-to-date list?*
-
-# %% [markdown]
-# ## Details about how we obtained the original data file and the intial steps we take to load and clean it
-
-# %% [markdown]
-# *JH comment: The idea is to give a breakdown of the etl stages, but with plain English description of what is going on. These section will be collapsed by default.*
-#
-# *Note that here I am just loading an Excel file from GitHub that was manually downloaded. But in the future this could refer to the first etl step.*
-
-# ### Details of which libraries and packages we use to prepare the data
-
-# %% [markdown]
-# %%
-
-# Pandas is the standard package used for data manipulation in python code
-import pandas as pd
-
-# This package allows us to import the original Excel file via a URL
-import requests
-
-# This package allows us to save a temporary file of the orginal data file
-import tempfile
-
-# Pathlib is a standard package for making it easier to work with file paths
-from pathlib import Path
-
-# Seaborn is a Python data visualization library (based on matplotlib)
-#import seaborn as sns
-
-# NumPy is a standard package that provides a range of useful mathematical functions 
-import numpy as np
-
-# Plotly is a package for creating interactive charts
-#import plotly.express as px
-#import plotly.io as pio
-
-# %% [markdown]
-# ## Details on the the initial loading and cleaning of the data
-
+# ## Details about how we source and prepare the original data
 # %% 
-md("#### Load our stored copy of the original data file (Retrieved on {})".format(datasetRetrieved))
+md("We downloaded the orginal data from {} on {}."\
+    .format(dataset_meta["link"],
+            dataset_meta["dateRetrieved"]))
+
+
+
 
 # %%
+# ------- Load the data –––––––––
 
-#Here we have original Excel file in GitHub
+#Here we have stored the original Excel file in GitHub
 url = 'https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/pwt/data/pwt100.xlsx'
 
-#We load it 
+#We load it, via a temporary file 
 r = requests.get(url)
 tempf = tempfile.TemporaryFile()
 tempf.write(r.content)
@@ -120,27 +237,31 @@ tempf.write(r.content)
 df_original = pd.read_excel(tempf, sheet_name='Data')
 
 
-# %% [markdown]
-# #### Standardize country names
+# %%
+# ––––––––– Standardize country names ––––––––––
 
 # %% [markdown]
 # Our World in Data standardizes country names to allow us to compare data across different data sources.
 # %%
-# Pablo: can you add the country harmonization step here (df_harmonized is the df with standardized country names)
+# *JH comment: Pablo, can you add the country harmonization step here please (df_harmonized is the df with standardized country names)*
 
 df_harmonized = df_original
 
 
-# %%
-# You can see a mapping of country names here:
-
-# Pablo: please provide a table of the country name mapping
-
-
 # %% [markdown]
-#The resulting data looks like this:
+# Click here to see a table of how we mapped country names.
+
+# *JH comment: Pablo, please provide a table of the country name mapping here*
+
+
 # %%
-df_harmonized.head()
+# Inspect the resulting dataframe.
+#df_harmonized.head()
+
+
+
+# %%
+# ––––– CONSTRUCTION AND DISCUSSION OF INDIVIDUAL VARIABLES –––––––––––
 
 # %% [markdown]
 # ## A summary of each variable
@@ -148,9 +269,8 @@ df_harmonized.head()
 # *JH comment: See [Diana's Google Doc](https://docs.google.com/document/d/1Kg9ZqxXXfDWA7WxfDysB0GjwlQ6kK5x6kNP-m7Sjl-I/edit?pli=1#heading=h.3iglji7a4k32) for a previous attempt at this*
 
 
-
 # %% [markdown]
-# ### GDP
+# ### GDP per capita
 
 
 # %% [markdown]
@@ -186,10 +306,15 @@ PWT provide different measures for different purposes, in two different dimensio
 
 You can read more about prices in our post here. (Joe to write this at some point in the future)
 
+To calculate GDP per capita in each case, we divide the GDP variables by the 
+population data given in the same dataset.
 
 """
+
 # %% 
-# Prepare GDP data
+# –––– Construct absolute GDP variables –––––
+#The original data is given in millions of dollars.
+# We multiply the variable by 1,000,000 to give the figures in dollars.
 df_harmonized['rgdpe'] = df_original['rgdpe']*1000000
 df_harmonized['rgdpo'] = df_original['rgdpo']*1000000
 df_harmonized['cgdpe'] = df_original['cgdpe']*1000000
@@ -197,65 +322,89 @@ df_harmonized['cgdpo'] = df_original['cgdpe']*1000000
 df_harmonized['rgdpna'] = df_original['rgdpna']*1000000
 
 
-# %%
-# Create a dictionary (of dictionaries)
-variable_meta = {}
+# –––– Construct GDP per capita variables –––––
+# GDP per capita is GDP divided by popultion (both are given in millions)
+df_harmonized['rgdpe_pc'] = df_original['rgdpe']/df_original['pop']
+df_harmonized['rgdpo_pc'] = df_original['rgdpo']/df_original['pop']
+df_harmonized['cgdpe_pc'] = df_original['cgdpe']/df_original['pop']
+df_harmonized['cgdpo_pc'] = df_original['cgdpe']/df_original['pop']
+df_harmonized['rgdpna_pc'] = df_original['rgdpna']/df_original['pop']
 
-# Add to dictionary variable metadata - (this will end up in e.g. our database, 'Sources' tab etc.)
-variable_meta['rgdpe'] = {}
+# %% 
+# ––– Print variable metadata as markdown and add iframe –––
 
-variable_meta['rgdpe']['name'] = "Real GDP (expenditure-side)"
-variable_meta['rgdpe']['displayName'] = "Real GDP"
-variable_meta['rgdpe']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpe']['unitsShort'] = "$"
-variable_meta['rgdpe']['description'] = "[Long description here]"
-
-
-# %%
-#The original data is given in millions of dollars. We multiply the variable by 1,000,000 to give the figures in dollars.
-
-
-# %%
-df_harmonized['rgdpe'] = df_original['rgdpe']*1000000
-
+# –– # GDP per capita (expenditure, multiple price benchmarks)
+# %% 
+md("#### {}"\
+    .format(variable_meta['rgdpe_pc']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['rgdpe_pc']['description']))
+    
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
 
-# %%
-# Append metadata for this variable to the arrays
-variableNames = np.append(variableNames,["Real GDP (expenditure-side)"])
-variableDisplayNames = np.append(variableDisplayNames,["Real GDP"])
-variableUnitLongs = np.append(variableUnitLongs,["International-$ at 2017 prices"])
-variableUnitShorts = np.append(variableUnitShorts,["$"])
-variableDescription = np.append(variableDescription,["[Joe to write a description of this variable]"])
-variableNames = ['final_rgdpe']
-# %%
-# Print display name of current variable. It would be great if we could figure out a way to render this output as a html heading...
 
-md("## {}".format(variableDisplayNames[len(variableDisplayNames)-1]))
 
-# %% [markdown]
-# ##### About this variable
+# –– # GDP per capita (output, multiple price benchmarks)
+# %% 
+md("#### {}"\
+    .format(variable_meta['rgdpo_pc']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['rgdpo_pc']['description']))
+    
 
 # %%
-variableDescription[len(variableDescription)-1]
-# %% [markdown]
-# ##### How did we obtain this variable from the original data?
-# %% [markdown]
-# **Original variable name within PWT:** rgdpe
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
 
-# %% [markdown]
-# *“real GDP on
-# the output-side”, or real GDPo
-# , which is intended to measure the production possibilities of an
-# economy.*
-# %% [markdown]
-# ### GDP per capita
-# %% [markdown]
-# Each GDP variable discussed above is divided by the population figures provided in PWT to produce corresponding series for GDP per capita.
-# %% [markdown]
-# Divide by pop...
+
+
+
+# –– # GDP per capita (expenditure, single price benchmark)
+# %% 
+md("#### {}"\
+    .format(variable_meta['cgdpe_pc']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['cgdpe_pc']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+
+# –– # GDP per capita (output, single price benchmark)
+# %% 
+md("#### {}"\
+    .format(variable_meta['cgdpo_pc']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['cgdpo_pc']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+
+
+# –– # GDP per capita (national accounts)
+# %% 
+md("#### {}"\
+    .format(variable_meta['rgdpna_pc']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['rgdpna_pc']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+
 
 
 # %% [markdown]
