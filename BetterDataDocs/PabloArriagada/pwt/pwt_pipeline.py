@@ -29,6 +29,7 @@ import numpy as np
 # Plotly is a package for creating interactive charts
 import plotly.express as px
 import plotly.io as pio
+pio.renderers.default='notebook'
 
 
 
@@ -373,12 +374,18 @@ df_harmonized['rgdpna_pc'] = df_original['rgdpna']/df_original['pop']
 For most countries, the diferences between the different series for GDP are 
 relatively small. For instance here we see GDP per capita according to the five different 
 definitions plotted for United States.
+<br><br>
+Countries where these measures differ significantly tend to be/have... [explain]
+<br><br>
+*JH comment: This would be a good place to put a link to an 'auxiliary notebook' where 
+we look in more detail where the measures differ.*
 """
-
 # %%
-fig = px.line(df_harmonized.query("country == 'United States'"),
+selected_country = 'United States'
+fig = px.line(df_harmonized[df_harmonized['country']== selected_country],
              x='year', 
-             y=['rgdpe_pc','rgdpo_pc','cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'])
+             y=['rgdpe_pc','rgdpo_pc','cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'],
+             title="Comparison of PWT GDP per capita measures, " + selected_country)
 fig.show()
 
 # %% [Markdown]
@@ -535,15 +542,27 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 # %%
 
 
-# --- Employment and productivity variables ––––
+
+
+# %%
+# --- Employment and labour productivity variables ––––
+
+
+# %%
+# --- Components of GDP variables ––––
+
+
+# %%
+# --- Trade variables––––
 
 
 
-# --- Trade openness ––––
+# %%
+# --- Total Factor Productivity variables ––––
 
 
-# --- Other variables  ––––
-
+# %%
+# --- Other variables ––––
 
 
 # %% [markdown]
