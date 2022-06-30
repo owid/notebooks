@@ -57,7 +57,62 @@ dataset_meta['nextUpdate'] = "Unknown"
 # This will be a dictionary of dictionaries – one for each variable 
 variable_meta = {}
 
-# ---- GDP variables ------
+# %%
+# ---- GDP per capita variables ------
+
+# GDP per capita (expenditure, multiple price benchmarks)
+variable_meta['rgdpe_pc'] = {}
+
+variable_meta['rgdpe_pc']['name'] = "GDP per capita (expenditure, multiple price benchmarks)"
+variable_meta['rgdpe_pc']['displayName'] = "GDP per capita"
+variable_meta['rgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpe_pc']['unitsShort'] = "$"
+variable_meta['rgdpe_pc']['description'] = "[Long description here]"
+
+
+# GDP per capita (output, multiple price benchmarks)
+variable_meta['rgdpo_pc'] = {}
+
+variable_meta['rgdpo_pc']['name'] = "GDP per capita (output, multiple price benchmarks)"
+variable_meta['rgdpo_pc']['displayName'] = "GDP per capita"
+variable_meta['rgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpo_pc']['unitsShort'] = "$"
+variable_meta['rgdpo_pc']['description'] = "[Long description here]"
+
+
+
+# GDP per capita (expenditure, single price benchmark)
+variable_meta['cgdpe_pc'] = {}
+
+variable_meta['cgdpe_pc']['name'] = "GDP per capita (expenditure, single price benchmark)"
+variable_meta['cgdpe_pc']['displayName'] = "GDP per capita"
+variable_meta['cgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['cgdpe_pc']['unitsShort'] = "$"
+variable_meta['cgdpe_pc']['description'] = "[Long description here]"
+
+
+# GDP per capita (expenditure, single price benchmark)
+variable_meta['cgdpo_pc'] = {}
+
+variable_meta['cgdpo_pc']['name'] = "GDP per capita (output, single price benchmark)"
+variable_meta['cgdpo_pc']['displayName'] = "GDP per capita"
+variable_meta['cgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['cgdpo_pc']['unitsShort'] = "$"
+variable_meta['cgdpo_pc']['description'] = "[Long description here]"
+
+
+# GDP per capita (using national accounts growth rates)
+variable_meta['rgdpna_pc'] = {}
+
+variable_meta['rgdpna_pc']['name'] = "GDP per capita (using national accounts growth rates)"
+variable_meta['rgdpna_pc']['displayName'] = "GDP per capita"
+variable_meta['rgdpna_pc']['unitsLong'] = "International-$ at 2017 prices"
+variable_meta['rgdpna_pc']['unitsShort'] = "$"
+variable_meta['rgdpna_pc']['description'] = "[Long description here]"
+
+
+# %%
+# ---- Absolute GDP variables ------
 
 # GDP (expenditure, multiple price benchmarks)
 variable_meta['rgdpe'] = {}
@@ -111,65 +166,47 @@ variable_meta['rgdpna']['description'] = "[Long description here]"
 
 
 
-# ---- GDP per capita variables ------
+# %%
+# --- Employment and labour productivity variables ––––
 
-# GDP (expenditure, multiple price benchmarks)
-variable_meta['rgdpe_pc'] = {}
-
-variable_meta['rgdpe_pc']['name'] = "GDP per capita (expenditure, multiple price benchmarks)"
-variable_meta['rgdpe_pc']['displayName'] = "GDP per capita"
-variable_meta['rgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpe_pc']['unitsShort'] = "$"
-variable_meta['rgdpe_pc']['description'] = "[Long description here]"
+# Annual working hours per worker
 
 
-# GDP (output, multiple price benchmarks)
-variable_meta['rgdpo_pc'] = {}
-
-variable_meta['rgdpo_pc']['name'] = "GDP per capita (output, multiple price benchmarks)"
-variable_meta['rgdpo_pc']['displayName'] = "GDP per capita"
-variable_meta['rgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpo_pc']['unitsShort'] = "$"
-variable_meta['rgdpo_pc']['description'] = "[Long description here]"
+# %%
+# --- Components of GDP variables ––––
 
 
+# Labour share
 
-# GDP (expenditure, single price benchmark)
-variable_meta['cgdpe_pc'] = {}
+# JH comment: let's present the following as a stacked area chart
 
-variable_meta['cgdpe_pc']['name'] = "GDP per capita (expenditure, single price benchmark)"
-variable_meta['cgdpe_pc']['displayName'] = "GDP per capita"
-variable_meta['cgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['cgdpe_pc']['unitsShort'] = "$"
-variable_meta['cgdpe_pc']['description'] = "[Long description here]"
+# Share of household consumption
 
+# Share of gross capital formation
 
-# GDP (expenditure, single price benchmark)
-variable_meta['cgdpo_pc'] = {}
+# Share of Government consumption
 
-variable_meta['cgdpo_pc']['name'] = "GDP per capita (output, single price benchmark)"
-variable_meta['cgdpo_pc']['displayName'] = "GDP per capita"
-variable_meta['cgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['cgdpo_pc']['unitsShort'] = "$"
-variable_meta['cgdpo_pc']['description'] = "[Long description here]"
-
-
-# GDP (using national accounts growth rates)
-variable_meta['rgdpna_pc'] = {}
-
-variable_meta['rgdpna_pc']['name'] = "GDP per capita (using national accounts growth rates)"
-variable_meta['rgdpna_pc']['displayName'] = "GDP per capita"
-variable_meta['rgdpna_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpna_pc']['unitsShort'] = "$"
-variable_meta['rgdpna_pc']['description'] = "[Long description here]"
-
-
-# --- Employment and productivity variables ––––
+# Share of residual trade and statistical discrepancy
 
 
 
-# --- Trade openness ––––
+# %%
+# --- Trade variables––––
 
+# Share of exports 
+
+# Share of imports
+
+# Trade openness (ratio of exports plus imports to GDP)
+
+
+
+# %%
+# --- Total Factor Productivity variables ––––
+
+
+# %%
+# --- Other variables ––––
 
 
 
