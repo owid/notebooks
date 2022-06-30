@@ -306,7 +306,7 @@ df_harmonized = df_original
 
 
 # %% [markdown]
-# ### GDP per capita
+# ### GDP and GDP per capita
 
 
 # %% [markdown]
@@ -348,6 +348,7 @@ population data given in the same dataset.
 """
 
 # %% 
+
 # –––– Construct absolute GDP variables –––––
 #The original data is given in millions of dollars.
 # We multiply the variable by 1,000,000 to give the figures in dollars.
@@ -366,9 +367,24 @@ df_harmonized['cgdpe_pc'] = df_original['cgdpe']/df_original['pop']
 df_harmonized['cgdpo_pc'] = df_original['cgdpe']/df_original['pop']
 df_harmonized['rgdpna_pc'] = df_original['rgdpna']/df_original['pop']
 
-# %% 
-# ––– Print variable metadata as markdown and add iframe –––
 
+# %% [markdown]
+"""
+For most countries, the diferences between the different series for GDP are 
+relatively small. For instance here we see GDP per capita according to the five different 
+definitions plotted for United States.
+"""
+
+# %%
+fig = px.line(df_harmonized.query("country == 'United States'"),
+             x='year', 
+             y=['rgdpe_pc','rgdpo_pc','cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'])
+fig.show()
+
+# %% [Markdown]
+# You can read more details for each GDP per capita variable in the collapsed section below.
+
+# %% 
 # –– # GDP per capita (expenditure, multiple price benchmarks)
 # %% 
 md("#### {}"\
@@ -440,6 +456,83 @@ md("{}"\
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
 
 
+# %% [markdown]
+# And the corresponding variables for total GDP are listed here:
+
+
+# %% 
+# –– # GDP (expenditure, multiple price benchmarks)
+# %% 
+md("#### {}"\
+    .format(variable_meta['rgdpe']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['rgdpe']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+
+# –– # GDP (output, multiple price benchmarks)
+# %% 
+md("#### {}"\
+    .format(variable_meta['rgdpo']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['rgdpo']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+
+
+# –– # GDP (expenditure, single price benchmark)
+# %% 
+md("#### {}"\
+    .format(variable_meta['cgdpe']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['cgdpe']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+
+# –– # GDP (output, single price benchmark)
+# %% 
+md("#### {}"\
+    .format(variable_meta['cgdpo']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['cgdpo']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+
+
+# –– # GDP (national accounts)
+# %% 
+md("#### {}"\
+    .format(variable_meta['rgdpna']['name']))
+# %% 
+md("{}"\
+    .format(variable_meta['rgdpna']['description']))
+    
+
+# %%
+display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+
+
+# %%
 
 
 # --- Employment and productivity variables ––––
