@@ -551,6 +551,32 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 # %%
 # --- Components of GDP variables ––––
 
+# %%
+# *JH comment: The components don't sum to 100%. We should understand why that is 
+# the case. Is it not the case that `csh_r` equals net exports plus discrepancy? 
+
+# %%
+
+selected_country = 'United Kingdom'
+
+df_stacked_area = df_harmonized[df_harmonized['country']== selected_country]
+df_stacked_area = df_stacked_area[['year','csh_c', 'csh_i', 'csh_g', 'csh_r']]
+
+df_stacked_area = df_stacked_area.reset_index()
+df_stacked_area = pd.melt(df_stacked_area, id_vars='year', value_vars=['csh_c','csh_i', 'csh_g', 'csh_r'])
+
+
+fig = px.area(df_stacked_area,
+             x='year', 
+             y='value',
+             color="variable",
+             title="Components of GDP, " + selected_country)
+             
+fig.show()
+
+
+
+
 
 # %%
 # --- Trade variables––––
