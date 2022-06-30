@@ -27,8 +27,8 @@ from pathlib import Path
 import numpy as np
 
 # Plotly is a package for creating interactive charts
-#import plotly.express as px
-#import plotly.io as pio
+import plotly.express as px
+import plotly.io as pio
 
 
 
