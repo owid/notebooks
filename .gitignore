@@ -141,3 +141,7 @@ PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
 PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
 PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
 EdouardMathieu/global_terrorism_database/input/globalterrorismdb_0221dist.xlsx
+
+# BetterDataDocs Jupyter notebooks and R Markdown
+BetterDataDocs/**/*.ipynb
+BetterDataDocs/**/*.Rmd
