@@ -133,6 +133,13 @@ dmypy.json
 # Mac folder attributes
 .DS_Store
 
+
+# BetterDataDocs Jupyter notebooks, R Markdown and html
+BetterDataDocs/**/*.ipynb
+BetterDataDocs/**/*.Rmd
+BetterDataDocs/**/*.html
+
+
 # Individual exclusions can be added here.
 PabloArriagada/poverty_inequality_dataexplorer/LISSY/XX_steal_lws_data.do
 PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
@@ -142,6 +149,3 @@ PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
 PabloArriagada/maddison_database_project/Regional definitions for MDP.gdoc
 EdouardMathieu/global_terrorism_database/input/globalterrorismdb_0221dist.xlsx
 
-# BetterDataDocs Jupyter notebooks and R Markdown
-BetterDataDocs/**/*.ipynb
-BetterDataDocs/**/*.Rmd
