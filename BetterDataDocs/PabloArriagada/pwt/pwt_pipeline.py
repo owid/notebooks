@@ -1,3 +1,6 @@
+
+# %% [markdown]
+# # Data document: Penn World Tables
 # %%
 # ---- Import libraries ------
 # Here we provide details of which libraries and packages we use to prepare the data
