@@ -34,6 +34,15 @@ import plotly.express as px
 import plotly.io as pio
 pio.renderers.default='notebook'
 
+import boto3
+
+session = boto3.session.Session()
+client = session.client('s3',
+                        endpoint_url="https://{}.digitaloceanspaces.com".format(ENDPOINT),
+                        aws_access_key_id=KEY_ID,
+                        aws_secret_access_key=SECRET_KEY)
+
+from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
 
 
 # %%
@@ -291,6 +300,12 @@ df_original = pd.read_excel(tempf, sheet_name='Data')
 # *If there's a command to do this we need to ask
 
 df_harmonized = df_original.copy() #Pablo: .copy() is the right command for this, because in the other case they are both related onwards
+
+
+# Create a temp file csv and save to s3 – I
+client.upload_file('harmonized.csv',  # Path to local file
+                   'pwt',  # Name of Space 
+                   'harmonized.csv')  # Name for remote file
 
 
 # %% [markdown]
