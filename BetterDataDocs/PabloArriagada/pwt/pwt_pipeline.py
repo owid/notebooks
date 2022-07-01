@@ -47,6 +47,8 @@ from metadata.dataset_metadata import dataset_meta
 # Variable metadata is defined in another script in variable_metadata.py
 from metadata.variable_metadata import variable_meta
 
+# Function to standardize entities from mapping file
+from scripts.harmonize import standardize_entities
 
 
 # %%
@@ -108,49 +110,14 @@ md("We downloaded the orginal data from {} on {}."\
 
 
 
-
-# %%
-# ------- Load the data –––––––––
-
-#Here we have stored the original Excel file in GitHub
-url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/pwt100-original.xlsx'
-
-#We load it, via a temporary file 
-# *Pablo comment: Maybe this is not needed, because the file can be loaded by using the url variable instead of tempf
-# The file is downloaded once and then it is on the memory as a dataframe
-# Please tell me if you have something else in mind with the library
-r = requests.get(url)
-tempf = tempfile.TemporaryFile()
-tempf.write(r.content)
-
-df_original = pd.read_excel(tempf, sheet_name='Data')
-
-
-# %%
-# ––––––––– Standardize country names ––––––––––
-
-
 # %% [markdown]
 # Our World in Data standardizes country names to allow us to compare data across different data sources.
-# %%
-# *JH comment: Pablo, can you add the country harmonization step here please (df_harmonized is the df with standardized country names)*
-# *Pablo comment: the country harmonization process I know is the one from the web portal, that's why I left it like that in the original notebook
-# https://owid.cloud/admin/standardize
-# *If there's a command to do this we need to ask
+# %% [markdown]
+# See a table of how we mapped country names
 
-df_harmonized = df_original.copy()
+# %% [markdown]
+# You can find the code here.
 
-# I couldn't find a solution for writing to a tempfile csv that worked with the boto3 upload. So
-# I take the roundabout root of creating a temp directory and adding the file to that.
-temp_folder_for_data = tempfile.TemporaryDirectory()
-
-# Write a csv to the temp folder
-df_harmonized.to_csv(f'{temp_folder_for_data.name}/harmonized.csv', index=False)
-# Upload to Digital Ocean – pwt bucket
-client.upload_file(f'{temp_folder_for_data.name}/harmonized.csv',  # Path to local file
-                   'pwt',  # Name of Space 
-                   'harmonized.csv', # Name for remote file
-                   ExtraArgs={'ACL':'public-read'})  # specify file is public
 
 
 # %% [markdown]
