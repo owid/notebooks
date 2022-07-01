@@ -302,7 +302,7 @@ df_original = pd.read_excel(tempf, sheet_name='Data')
 df_harmonized = df_original.copy() #Pablo: .copy() is the right command for this, because in the other case they are both related onwards
 
 
-# Create a temp file csv and save to s3 – I
+# Note finished yet – need to create a temp file –harmonized.csv
 client.upload_file('harmonized.csv',  # Path to local file
                    'pwt',  # Name of Space 
                    'harmonized.csv')  # Name for remote file
