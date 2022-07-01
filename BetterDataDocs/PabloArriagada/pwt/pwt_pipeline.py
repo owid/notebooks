@@ -8,6 +8,9 @@ from IPython.display import Markdown as md
 # This allows us to embed iframes in the output of the code cells.
 from IPython.core.display import display, HTML
 
+#Pablo: I got a warning of the previous import being deprecated. With this I have no warnings:
+from IPython.display import IFrame
+
 # Pandas is a standard package used for data manipulation in python code
 import pandas as pd
 
@@ -49,7 +52,6 @@ dataset_meta['description'] = "PWT version 10.0 is a database with information \
     countries between 1950 and 2019."
 dataset_meta['dateRetrieved'] = "dd/mm/2022"
 dataset_meta['nextUpdate'] = "Unknown"
-
 
 # %%
 # ------- Variable metadata ---------
@@ -215,27 +217,27 @@ variable_meta['rgdpna']['description'] = "[Long description here]"
 # -------- Introduction ----------
 
 # %% [markdown]
-"""
-*This article describes the data in the Penn World Tables version 10.0 
-and documents how Our World in Data have handled and transformed this data 
-in order to make use of it in our publication.*
-<br><br>
-*This article is an unsual, experimental format, which we have designed 
-to make our data work more transparent and reusable.*
-<br><br>
-*To prepare the data for use in our publication we write and then execute
- a computer programme. Within that computer programme we include extensive 
- notes, explanations and visualizations to make any choices concerning the 
- treatment of the data more visible and to explain our reasoning. 
- This article is a web version of that computer programme in which 
- priority is given to the notes and explanations and much of the code 
- is hidden or not shown to improve readability. You can read this 
- article whether or not you are familiar with (python) code in order 
- to understand more about the Penn World Tables and our treatment of the data.*
-<br><br>
-*The full code we use to prepare this data can be found in here GitHub. (provide link)*
-"""
-
+# """
+# *This article describes the data in the Penn World Tables version 10.0 
+# and documents how Our World in Data have handled and transformed this data 
+# in order to make use of it in our publication.*
+# <br><br>
+# *This article is an unsual, experimental format, which we have designed 
+# to make our data work more transparent and reusable.*
+# <br><br>
+# *To prepare the data for use in our publication we write and then execute
+#  a computer programme. Within that computer programme we include extensive 
+#  notes, explanations and visualizations to make any choices concerning the 
+#  treatment of the data more visible and to explain our reasoning. 
+#  This article is a web version of that computer programme in which 
+#  priority is given to the notes and explanations and much of the code 
+#  is hidden or not shown to improve readability. You can read this 
+#  article whether or not you are familiar with (python) code in order 
+#  to understand more about the Penn World Tables and our treatment of the data.*
+# <br><br>
+# *The full code we use to prepare this data can be found in here GitHub. (provide link)*
+# """
+#
 # ## About this data
 
 # %%
@@ -252,7 +254,7 @@ md("**Last updated:**  {} <br><br>\
 
 # %% [markdown]
 # ## Details about how we source and prepare the original data
-# %% 
+# %%
 md("We downloaded the orginal data from {} on {}."\
     .format(dataset_meta["link"],
             dataset_meta["dateRetrieved"]))
@@ -267,6 +269,9 @@ md("We downloaded the orginal data from {} on {}."\
 url = 'https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/pwt/data/pwt100.xlsx'
 
 #We load it, via a temporary file 
+# *Pablo comment: Maybe this is not needed, because the file can be loaded by using the url variable instead of tempf
+# The file is downloaded once and then it is on the memory as a dataframe
+# Please tell me if you have something else in mind with the library
 r = requests.get(url)
 tempf = tempfile.TemporaryFile()
 tempf.write(r.content)
@@ -281,13 +286,16 @@ df_original = pd.read_excel(tempf, sheet_name='Data')
 # Our World in Data standardizes country names to allow us to compare data across different data sources.
 # %%
 # *JH comment: Pablo, can you add the country harmonization step here please (df_harmonized is the df with standardized country names)*
+# *Pablo comment: the country harmonization process I know is the one from the web portal, that's why I left it like that in the original notebook
+# https://owid.cloud/admin/standardize
+# *If there's a command to do this we need to ask
 
-df_harmonized = df_original
+df_harmonized = df_original.copy() #Pablo: .copy() is the right command for this, because in the other case they are both related onwards
 
 
 # %% [markdown]
 # Click here to see a table of how we mapped country names.
-
+#
 # *JH comment: Pablo, please provide a table of the country name mapping here*
 
 
@@ -302,7 +310,7 @@ df_harmonized = df_original
 
 # %% [markdown]
 # ## A summary of each variable
-
+#
 # *JH comment: See [Diana's Google Doc](https://docs.google.com/document/d/1Kg9ZqxXXfDWA7WxfDysB0GjwlQ6kK5x6kNP-m7Sjl-I/edit?pli=1#heading=h.3iglji7a4k32) for a previous attempt at this*
 
 
@@ -311,7 +319,6 @@ df_harmonized = df_original
 
 
 # %% [markdown]
-
 """
 *JH comment: Joe is drafting here an explanation of the different approaches to prices that define the different GDP variables.*
 <br><br>
@@ -329,7 +336,7 @@ PWT provide different measures for different purposes, in two different dimensio
  2. Constant vs current prices vs NA growth rates
 <br><br>
  * (1) is basically about the terms of trade: only if your terms of trade are especially favourable or especially bad will there be much difference between Expenditure and Output measures.
- * The issue with (2) is this: Becasue price structures change over time, cross-country benchmarks 
+ * The issue with (2) is this: Because price structures change over time, cross-country benchmarks 
   for two periods typically won't be consistent with nationally measured 
   inflation in each country. If you want to compare prices across place
  and time, then you need to fudge this somehow. `rgdp(e/o)` is such a fudge:
@@ -345,10 +352,12 @@ You can read more about prices in our post here. (Joe to write this at some poin
 <br><br>
 To calculate GDP per capita in each case, we divide the GDP variables by the 
 population data given in the same dataset.
-
 """
 
-# %% 
+# %%
+#Pablo: Once the df_harmonized dataframe is defined there's no need to use the df_original in these formulas.
+#We just define df_harmonized['xxxx'] = df_harmonized['xxxx']*1000000
+
 
 # –––– Construct absolute GDP variables –––––
 #The original data is given in millions of dollars.
@@ -391,15 +400,15 @@ fig.show()
 # %% [Markdown]
 # You can read more details for each GDP per capita variable in the collapsed section below.
 
-# %% 
+# %%
 # –– # GDP per capita (expenditure, multiple price benchmarks)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['rgdpe_pc']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['rgdpe_pc']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -407,13 +416,17 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP per capita (output, multiple price benchmarks)
-# %% 
+# %%
+#Pablo: this is the recommended function, I have warnings with the other (see also the import in the first cell) 
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
+
+# %%
 md("#### {}"\
     .format(variable_meta['rgdpo_pc']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['rgdpo_pc']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -422,13 +435,13 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP per capita (expenditure, single price benchmark)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['cgdpe_pc']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['cgdpe_pc']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -436,13 +449,13 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP per capita (output, single price benchmark)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['cgdpo_pc']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['cgdpo_pc']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -451,13 +464,13 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP per capita (national accounts)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['rgdpna_pc']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['rgdpna_pc']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -467,15 +480,15 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 # And the corresponding variables for total GDP are listed here:
 
 
-# %% 
+# %%
 # –– # GDP (expenditure, multiple price benchmarks)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['rgdpe']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['rgdpe']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -483,13 +496,13 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP (output, multiple price benchmarks)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['rgdpo']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['rgdpo']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -498,13 +511,13 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP (expenditure, single price benchmark)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['cgdpe']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['cgdpe']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -512,13 +525,13 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP (output, single price benchmark)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['cgdpo']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['cgdpo']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -527,13 +540,13 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 
 
 # –– # GDP (national accounts)
-# %% 
+# %%
 md("#### {}"\
     .format(variable_meta['rgdpna']['name']))
-# %% 
+# %%
 md("{}"\
     .format(variable_meta['rgdpna']['description']))
-    
+
 
 # %%
 display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
@@ -554,6 +567,17 @@ display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capit
 # %%
 # *JH comment: The components don't sum to 100%. We should understand why that is 
 # the case. Is it not the case that `csh_r` equals net exports plus discrepancy? 
+
+# Pablo: They actually do, but it is not possible to show a stable 100% sum in this stacked area chart
+#because of the negative values: they just intersect the other areas.
+#I see csh_r is not net exports plus discrepancy, because actually the sum of all the csh variables
+#(including _x and _m) is 1:
+
+#Here I'm selecting the UK, summing all the csh variables and tabulating the basic stats of the sum
+df_uk = df_harmonized[df_harmonized['country']== "United Kingdom"].reset_index()
+column_names = ['csh_c', 'csh_i', 'csh_g', 'csh_r', 'csh_x', 'csh_m']
+df_uk['sum'] = df_uk[column_names].sum(axis=1)
+df_uk[['sum']].describe()
 
 # %%
 
@@ -592,24 +616,24 @@ fig.show()
 
 
 # %% [markdown]
-## Appendix
-"""
-Here we provide links to further documentation of the Penn World Tables data 
-and our treatment of it. 
+# # Appendix
+# """
+# Here we provide links to further documentation of the Penn World Tables data 
+# and our treatment of it. 
 #
-* A comparison of version 10.0 with a previous release of the data (JH comment: Pablo, at some point let's add this as an 'auxiliary notebook')
-* A list of further documentation discussing various vintages of the dataset can be found at the [Groningen Growth and Development Centre's website](https://www.rug.nl/ggdc/productivity/pwt/pwt-documentation). 
-"""
-
-
+# * A comparison of version 10.0 with a previous release of the data (JH comment: Pablo, at some point let's add this as an 'auxiliary notebook')
+# * A list of further documentation discussing various vintages of the dataset can be found at the [Groningen Growth and Development Centre's website](https://www.rug.nl/ggdc/productivity/pwt/pwt-documentation). 
+# """
+#
+#
 
 # %% [markdown]
 # ## **All charts using this dataset on Our World in Data**
-"""
-*JH comment: The idea is that we could have an 'all charts' block – but where 
-the tag is the dataset. I don't know if that will be possible with. It could just be 
-(automatically generated) list of links.
-"""
+# """
+# *JH comment: The idea is that we could have an 'all charts' block – but where 
+# the tag is the dataset. I don't know if that will be possible with. It could just be 
+# (automatically generated) list of links.
+# """
 
 
 # %%
