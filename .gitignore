@@ -139,6 +139,10 @@ BetterDataDocs/**/*.ipynb
 BetterDataDocs/**/*.Rmd
 BetterDataDocs/**/*.html
 
+# BetterDataDocs Joe's s3 key file
+BetterDataDocs/**/joes_key.py
+
+
 
 # Individual exclusions can be added here.
 PabloArriagada/poverty_inequality_dataexplorer/LISSY/XX_steal_lws_data.do
