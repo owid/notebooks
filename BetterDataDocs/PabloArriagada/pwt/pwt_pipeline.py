@@ -6,6 +6,7 @@
 # Here we provide details of which libraries and packages we use to prepare the data
 
 # Markdown lets us use variables within markdown chunks.
+from operator import index
 from IPython.display import Markdown as md
 
 #Pablo: I got a warning of the previous import being deprecated. With this I have no warnings:
@@ -34,191 +35,28 @@ import plotly.express as px
 import plotly.io as pio
 pio.renderers.default='notebook'
 
+# boto3  allows us to write data to our s3 cloud storage
 import boto3
 
+# Keys for accessing s3
+from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
+
+# Dataset metadata is defined in dataset_metadata.py
+from dataset_metadata import dataset_meta
+
+# Variable metadata is defined in another script in variable_metadata.py
+from variable_metadata import variable_meta
+
+
+
+# %%
+# Set up access for writing files to s3  
 session = boto3.session.Session()
+
 client = session.client('s3',
                         endpoint_url="https://{}.digitaloceanspaces.com".format(ENDPOINT),
                         aws_access_key_id=KEY_ID,
                         aws_secret_access_key=SECRET_KEY)
-
-from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
-
-
-# %%
-# ------- Dataset metadata ---------
-# Create a 'dictionary' (an array whose elements are named) for the dataset metadata
-# This will end up in e.g. our database, 'Sources' tab etc.
-dataset_meta = {}
-
-# %%
-# Add dataset metadata to dictionary
-dataset_meta['name'] = "Penn World Tables version 10.0"
-dataset_meta['sourceName'] = "Penn World Tables"
-dataset_meta['link'] = "https://www.rug.nl/ggdc/productivity/pwt"
-dataset_meta['description'] = "PWT version 10.0 is a database with information \
-    on relative levels of income, output, input and productivity, covering 183 \
-    countries between 1950 and 2019."
-dataset_meta['dateRetrieved'] = "dd/mm/2022"
-dataset_meta['nextUpdate'] = "Unknown"
-
-# %%
-# ------- Variable metadata ---------
-
-# Create a dictionary for the variable metadata
-# This will be a dictionary of dictionaries – one for each variable 
-variable_meta = {}
-
-# %%
-# ---- GDP per capita variables ------
-
-# GDP per capita (expenditure, multiple price benchmarks)
-variable_meta['rgdpe_pc'] = {}
-
-variable_meta['rgdpe_pc']['name'] = "GDP per capita (expenditure, multiple price benchmarks)"
-variable_meta['rgdpe_pc']['displayName'] = "GDP per capita"
-variable_meta['rgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpe_pc']['unitsShort'] = "$"
-variable_meta['rgdpe_pc']['description'] = "[Long description here]"
-
-
-# GDP per capita (output, multiple price benchmarks)
-variable_meta['rgdpo_pc'] = {}
-
-variable_meta['rgdpo_pc']['name'] = "GDP per capita (output, multiple price benchmarks)"
-variable_meta['rgdpo_pc']['displayName'] = "GDP per capita"
-variable_meta['rgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpo_pc']['unitsShort'] = "$"
-variable_meta['rgdpo_pc']['description'] = "[Long description here]"
-
-
-
-# GDP per capita (expenditure, single price benchmark)
-variable_meta['cgdpe_pc'] = {}
-
-variable_meta['cgdpe_pc']['name'] = "GDP per capita (expenditure, single price benchmark)"
-variable_meta['cgdpe_pc']['displayName'] = "GDP per capita"
-variable_meta['cgdpe_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['cgdpe_pc']['unitsShort'] = "$"
-variable_meta['cgdpe_pc']['description'] = "[Long description here]"
-
-
-# GDP per capita (expenditure, single price benchmark)
-variable_meta['cgdpo_pc'] = {}
-
-variable_meta['cgdpo_pc']['name'] = "GDP per capita (output, single price benchmark)"
-variable_meta['cgdpo_pc']['displayName'] = "GDP per capita"
-variable_meta['cgdpo_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['cgdpo_pc']['unitsShort'] = "$"
-variable_meta['cgdpo_pc']['description'] = "[Long description here]"
-
-
-# GDP per capita (using national accounts growth rates)
-variable_meta['rgdpna_pc'] = {}
-
-variable_meta['rgdpna_pc']['name'] = "GDP per capita (using national accounts growth rates)"
-variable_meta['rgdpna_pc']['displayName'] = "GDP per capita"
-variable_meta['rgdpna_pc']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpna_pc']['unitsShort'] = "$"
-variable_meta['rgdpna_pc']['description'] = "[Long description here]"
-
-
-# %%
-# ---- Absolute GDP variables ------
-
-# GDP (expenditure, multiple price benchmarks)
-variable_meta['rgdpe'] = {}
-
-variable_meta['rgdpe']['name'] = "GDP (expenditure, multiple price benchmarks)"
-variable_meta['rgdpe']['displayName'] = "GDP"
-variable_meta['rgdpe']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpe']['unitsShort'] = "$"
-variable_meta['rgdpe']['description'] = "[Long description here]"
-
-
-# GDP (output, multiple price benchmarks)
-variable_meta['rgdpo'] = {}
-
-variable_meta['rgdpo']['name'] = "GDP (output, multiple price benchmarks)"
-variable_meta['rgdpo']['displayName'] = "GDP"
-variable_meta['rgdpo']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpo']['unitsShort'] = "$"
-variable_meta['rgdpo']['description'] = "[Long description here]"
-
-
-
-# GDP (expenditure, single price benchmark)
-variable_meta['cgdpe'] = {}
-
-variable_meta['cgdpe']['name'] = "GDP (expenditure, single price benchmark)"
-variable_meta['cgdpe']['displayName'] = "GDP"
-variable_meta['cgdpe']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['cgdpe']['unitsShort'] = "$"
-variable_meta['cgdpe']['description'] = "[Long description here]"
-
-
-# GDP (expenditure, single price benchmark)
-variable_meta['cgdpo'] = {}
-
-variable_meta['cgdpo']['name'] = "GDP (output, single price benchmark)"
-variable_meta['cgdpo']['displayName'] = "GDP"
-variable_meta['cgdpo']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['cgdpo']['unitsShort'] = "$"
-variable_meta['cgdpo']['description'] = "[Long description here]"
-
-
-# GDP (using national accounts growth rates)
-variable_meta['rgdpna'] = {}
-
-variable_meta['rgdpna']['name'] = "GDP (using national accounts growth rates)"
-variable_meta['rgdpna']['displayName'] = "GDP"
-variable_meta['rgdpna']['unitsLong'] = "International-$ at 2017 prices"
-variable_meta['rgdpna']['unitsShort'] = "$"
-variable_meta['rgdpna']['description'] = "[Long description here]"
-
-
-
-# %%
-# --- Employment and labour productivity variables ––––
-
-# Annual working hours per worker
-
-
-# %%
-# --- Components of GDP variables ––––
-
-
-# Labour share
-
-# JH comment: let's present the following as a stacked area chart
-
-# Share of household consumption
-
-# Share of gross capital formation
-
-# Share of Government consumption
-
-# Share of residual trade and statistical discrepancy
-
-
-
-# %%
-# --- Trade variables––––
-
-# Share of exports 
-
-# Share of imports
-
-# Trade openness (ratio of exports plus imports to GDP)
-
-
-
-# %%
-# --- Total Factor Productivity variables ––––
-
-
-# %%
-# --- Other variables ––––
 
 
 
@@ -291,6 +129,7 @@ df_original = pd.read_excel(tempf, sheet_name='Data')
 # %%
 # ––––––––– Standardize country names ––––––––––
 
+
 # %% [markdown]
 # Our World in Data standardizes country names to allow us to compare data across different data sources.
 # %%
@@ -299,13 +138,19 @@ df_original = pd.read_excel(tempf, sheet_name='Data')
 # https://owid.cloud/admin/standardize
 # *If there's a command to do this we need to ask
 
-df_harmonized = df_original.copy() #Pablo: .copy() is the right command for this, because in the other case they are both related onwards
+df_harmonized = df_original.copy()
 
+# I couldn't find a solution for writing to a tempfile csv that worked with the boto3 upload. So
+# I take the roundabout root of creating a temp directory and adding the file to that.
+temp_folder_for_data = tempfile.TemporaryDirectory()
 
-# Note finished yet – need to create a temp file –harmonized.csv
-client.upload_file('harmonized.csv',  # Path to local file
+# Write a csv to the temp folder
+df_harmonized.to_csv(f'{temp_folder_for_data.name}/harmonized.csv', index=False)
+# Upload to Digital Ocean – pwt bucket
+client.upload_file(f'{temp_folder_for_data.name}/harmonized.csv',  # Path to local file
                    'pwt',  # Name of Space 
-                   'harmonized.csv')  # Name for remote file
+                   'harmonized.csv', # Name for remote file
+                   ExtraArgs={'ACL':'public-read'})  # specify file is public
 
 
 # %% [markdown]
