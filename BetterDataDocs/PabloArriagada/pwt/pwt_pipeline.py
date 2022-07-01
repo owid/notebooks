@@ -266,7 +266,7 @@ md("We downloaded the orginal data from {} on {}."\
 # ------- Load the data –––––––––
 
 #Here we have stored the original Excel file in GitHub
-url = 'https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/pwt/data/pwt100.xlsx'
+url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/pwt100-original.xlsx'
 
 #We load it, via a temporary file 
 # *Pablo comment: Maybe this is not needed, because the file can be loaded by using the url variable instead of tempf
