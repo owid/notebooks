@@ -8,9 +8,6 @@
 # Markdown lets us use variables within markdown chunks.
 from IPython.display import Markdown as md
 
-# This allows us to embed iframes in the output of the code cells.
-from IPython.core.display import display, HTML
-
 #Pablo: I got a warning of the previous import being deprecated. With this I have no warnings:
 from IPython.display import IFrame
 
