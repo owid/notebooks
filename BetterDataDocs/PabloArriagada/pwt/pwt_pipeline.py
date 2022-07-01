@@ -371,11 +371,11 @@ df_harmonized['rgdpna'] = df_original['rgdpna']*1000000
 
 # –––– Construct GDP per capita variables –––––
 # GDP per capita is GDP divided by popultion (both are given in millions)
-df_harmonized['rgdpe_pc'] = df_original['rgdpe']/df_original['pop']
-df_harmonized['rgdpo_pc'] = df_original['rgdpo']/df_original['pop']
-df_harmonized['cgdpe_pc'] = df_original['cgdpe']/df_original['pop']
-df_harmonized['cgdpo_pc'] = df_original['cgdpe']/df_original['pop']
-df_harmonized['rgdpna_pc'] = df_original['rgdpna']/df_original['pop']
+df_harmonized['rgdpe_pc'] = df_harmonized['rgdpe']/df_harmonized['pop']
+df_harmonized['rgdpo_pc'] = df_harmonized['rgdpo']/df_harmonized['pop']
+df_harmonized['cgdpe_pc'] = df_harmonized['cgdpe']/df_harmonized['pop']
+df_harmonized['cgdpo_pc'] = df_harmonized['cgdpe']/df_harmonized['pop']
+df_harmonized['rgdpna_pc'] = df_harmonized['rgdpna']/df_harmonized['pop']
 
 
 # %% [markdown]
@@ -482,7 +482,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
