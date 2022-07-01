@@ -630,24 +630,23 @@ IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', widt
 
 # %% [markdown]
 # ## **All charts using this dataset on Our World in Data**
-# """
-# *JH comment: The idea is that we could have an 'all charts' block – but where 
-# the tag is the dataset. I don't know if that will be possible with. It could just be 
-# (automatically generated) list of links.
-# """
+"""
+*JH comment: The idea is that we could have an 'all charts' block – but where 
+the tag is the dataset. I don't know if that will be possible with. It could just be 
+(automatically generated) list of links.
+"""
 
 
 # %% [markdown]
 # # Appendix
-# """
-# Here we provide links to further documentation of the Penn World Tables data 
-# and our treatment of it. 
+"""
+Here we provide links to further documentation of the Penn World Tables data 
+and our treatment of it. 
 #
-# * A comparison of version 10.0 with a previous release of the data (JH comment: Pablo, at some point let's add this as an 'auxiliary notebook')
-# * A list of further documentation discussing various vintages of the dataset can be found at the [Groningen Growth and Development Centre's website](https://www.rug.nl/ggdc/productivity/pwt/pwt-documentation). 
-# """
-#
-#
+* A comparison of version 10.0 with a previous release of the data (JH comment: Pablo, at some point let's add this as an 'auxiliary notebook')
+* A list of further documentation discussing various vintages of the dataset can be found at the [Groningen Growth and Development Centre's website](https://www.rug.nl/ggdc/productivity/pwt/pwt-documentation). 
+"""
+
 
 
 
