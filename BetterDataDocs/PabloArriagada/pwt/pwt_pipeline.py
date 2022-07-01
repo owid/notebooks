@@ -503,7 +503,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
@@ -518,7 +518,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
@@ -532,7 +532,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
@@ -547,7 +547,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 # %% [markdown]
@@ -566,7 +566,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
@@ -580,7 +580,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
@@ -595,7 +595,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
@@ -609,7 +609,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
@@ -624,7 +624,7 @@ md("{}"\
 
 
 # %%
-display(HTML('<iframe src="https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>'))
+IFrame(src='https://ourworldindata.org/grapher/real-gdp-per-capita-PennWT', width='100%', height='600')
 
 
 
