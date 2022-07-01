@@ -42,10 +42,10 @@ import boto3
 from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
 
 # Dataset metadata is defined in dataset_metadata.py
-from dataset_metadata import dataset_meta
+from metadata.dataset_metadata import dataset_meta
 
 # Variable metadata is defined in another script in variable_metadata.py
-from variable_metadata import variable_meta
+from metadata.variable_metadata import variable_meta
 
 
 
