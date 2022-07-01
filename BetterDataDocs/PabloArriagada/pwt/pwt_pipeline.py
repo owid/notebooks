@@ -1,7 +1,6 @@
 
-# %% [markdown]
-# # Data document: Penn World Tables
 # %%
+# ––––––––– SET UP –––––––––––
 # ---- Import libraries ------
 # Here we provide details of which libraries and packages we use to prepare the data
 
@@ -61,9 +60,30 @@ client = session.client('s3',
                         aws_secret_access_key=SECRET_KEY)
 
 
+# %%
+# Load the 'harmonized' data (i.e with standardized country names)
+# – For the time being, this is stored in Joe's Digital Ocean account.
+
+url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/harmonized.csv'
+
+df = pd.read_csv(url)
+
+
+# –––––––– TEXT BEGINS ––––––––
+
+# %% [markdown]
+# # Data document: Penn World Tables
+
 
 # %%
-# -------- Introduction ----------
+#Print the metadata as markdown
+md("**Last updated:**  {} <br><br>\
+    **Expected data of next update:**  {} <br><br>\
+    {}"\
+    .format(dataset_meta["dateRetrieved"],
+            dataset_meta["nextUpdate"],
+            dataset_meta["description"]))
+
 
 # %% [markdown]
 # """
@@ -87,22 +107,12 @@ client = session.client('s3',
 # *The full code we use to prepare this data can be found in here GitHub. (provide link)*
 # """
 #
-# ## About this data
-
-# %%
-#Print the metadata as markdown
-md("**Last updated:**  {} <br><br>\
-    **Expected data of next update:**  {} <br><br>\
-    {}"\
-    .format(dataset_meta["dateRetrieved"],
-            dataset_meta["nextUpdate"],
-            dataset_meta["description"]))
 
 
 
 
 # %% [markdown]
-# ## Details about how we source and prepare the original data
+# ## Sourcing and initial preparation of the data
 # %%
 md("We downloaded the orginal data from {} on {}."\
     .format(dataset_meta["link"],
@@ -112,33 +122,22 @@ md("We downloaded the orginal data from {} on {}."\
 
 # %% [markdown]
 # Our World in Data standardizes country names to allow us to compare data across different data sources.
-# %% [markdown]
-# See a table of how we mapped country names
-
-# %% [markdown]
-# You can find the code here.
-
-
-
-# %% [markdown]
-# Click here to see a table of how we mapped country names.
 #
-# *JH comment: Pablo, please provide a table of the country name mapping here*
+# * The mapping of country names we applied to the Penn World Tables is [here in GitHub](https://github.com/owid/notebooks/blob/main/BetterDataDocs/PabloArriagada/pwt/country_standardization_mapping.csv).
+# * You can find the code used to implement this step [here in GitHub](https://github.com/owid/notebooks/blob/main/BetterDataDocs/PabloArriagada/pwt/scripts/harmonize.py).
 
 
-# %%
-# Inspect the resulting dataframe.
-#df_harmonized.head()
 
 
 
 # %%
-# ––––– CONSTRUCTION AND DISCUSSION OF INDIVIDUAL VARIABLES –––––––––––
+# ––––– DISCUSSION OF VARIABLES –––––––––––
 
 # %% [markdown]
-# ## A summary of each variable
-#
-# *JH comment: See [Diana's Google Doc](https://docs.google.com/document/d/1Kg9ZqxXXfDWA7WxfDysB0GjwlQ6kK5x6kNP-m7Sjl-I/edit?pli=1#heading=h.3iglji7a4k32) for a previous attempt at this*
+# ## Which data series do we use and how do we prepare them?
+
+# %%
+# JH comment: See [Diana's Google Doc](https://docs.google.com/document/d/1Kg9ZqxXXfDWA7WxfDysB0GjwlQ6kK5x6kNP-m7Sjl-I/edit?pli=1#heading=h.3iglji7a4k32) for a previous attempt at this*
 
 
 # %% [markdown]
@@ -189,20 +188,20 @@ population data given in the same dataset.
 # –––– Construct absolute GDP variables –––––
 #The original data is given in millions of dollars.
 # We multiply the variable by 1,000,000 to give the figures in dollars.
-df_harmonized['rgdpe'] = df_original['rgdpe']*1000000
-df_harmonized['rgdpo'] = df_original['rgdpo']*1000000
-df_harmonized['cgdpe'] = df_original['cgdpe']*1000000
-df_harmonized['cgdpo'] = df_original['cgdpe']*1000000
-df_harmonized['rgdpna'] = df_original['rgdpna']*1000000
+df['rgdpe'] = df['rgdpe']*1000000
+df['rgdpo'] = df['rgdpo']*1000000
+df['cgdpe'] = df['cgdpe']*1000000
+df['cgdpo'] = df['cgdpe']*1000000
+df['rgdpna'] = df['rgdpna']*1000000
 
 
 # –––– Construct GDP per capita variables –––––
 # GDP per capita is GDP divided by popultion (both are given in millions)
-df_harmonized['rgdpe_pc'] = df_harmonized['rgdpe']/df_harmonized['pop']
-df_harmonized['rgdpo_pc'] = df_harmonized['rgdpo']/df_harmonized['pop']
-df_harmonized['cgdpe_pc'] = df_harmonized['cgdpe']/df_harmonized['pop']
-df_harmonized['cgdpo_pc'] = df_harmonized['cgdpe']/df_harmonized['pop']
-df_harmonized['rgdpna_pc'] = df_harmonized['rgdpna']/df_harmonized['pop']
+df['rgdpe_pc'] = df['rgdpe']/df['pop']
+df['rgdpo_pc'] = df['rgdpo']/df['pop']
+df['cgdpe_pc'] = df['cgdpe']/df['pop']
+df['cgdpo_pc'] = df['cgdpe']/df['pop']
+df['rgdpna_pc'] = df['rgdpna']/df['pop']
 
 
 # %% [markdown]
@@ -218,7 +217,7 @@ we look in more detail where the measures differ.*
 """
 # %%
 selected_country = 'United States'
-fig = px.line(df_harmonized[df_harmonized['country']== selected_country],
+fig = px.line(df[df['country']== selected_country],
              x='year', 
              y=['rgdpe_pc','rgdpo_pc','cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'],
              title="Comparison of PWT GDP per capita measures, " + selected_country)
