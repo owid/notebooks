@@ -46,9 +46,6 @@ from metadata.dataset_metadata import dataset_meta
 # Variable metadata is defined in another script in variable_metadata.py
 from metadata.variable_metadata import variable_meta
 
-# Function to standardize entities from mapping file
-from scripts.harmonize import standardize_entities
-
 
 # %%
 # Set up access for writing files to s3  
@@ -283,6 +280,31 @@ fig.show()
 
 # %%
 # --- Other variables ––––
+
+
+
+
+
+# %%
+# –––––––– UPLOAD FINAL DATA –––––––––––––
+
+# %%
+# Select country, year and only those variables with metadata specified
+# in the metadata folder.
+
+id_vars = ['country', 'year']
+
+var_list = list(variable_meta.keys())
+
+var_list = id_vars + var_list 
+
+df_final = df[df.columns.intersection(var_list)]
+
+# %%
+df_final.head()
+
+
+
 
 
 
