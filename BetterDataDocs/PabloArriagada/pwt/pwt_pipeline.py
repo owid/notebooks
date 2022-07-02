@@ -238,29 +238,26 @@ fig.show()
 # --- Components of GDP variables ––––
 
 # %%
-# *JH comment: The components don't sum to 100%. We should understand why that is 
-# the case. Is it not the case that `csh_r` equals net exports plus discrepancy? 
-
-# Pablo: They actually do, but it is not possible to show a stable 100% sum in this stacked area chart
-#because of the negative values: they just intersect the other areas.
-#I see csh_r is not net exports plus discrepancy, because actually the sum of all the csh variables
-#(including _x and _m) is 1:
-
 #Here I'm selecting the UK, summing all the csh variables and tabulating the basic stats of the sum
-df_uk = df_harmonized[df_harmonized['country']== "United Kingdom"].reset_index()
+df_uk = df[df['country']== "United Kingdom"].reset_index()
 column_names = ['csh_c', 'csh_i', 'csh_g', 'csh_r', 'csh_x', 'csh_m']
 df_uk['sum'] = df_uk[column_names].sum(axis=1)
 df_uk[['sum']].describe()
 
 # %%
+# Here I gather net exports and the residual into a single series
+df['csh_nx_and_r'] = df['csh_x'] + df['csh_m'] + df['csh_r']
+
+# And then plot the components of GDP as a stacked area 
+# (note that `csh_nx_and_r` is often negative – i.e. a trade deficit).
 
 selected_country = 'United Kingdom'
 
-df_stacked_area = df_harmonized[df_harmonized['country']== selected_country]
-df_stacked_area = df_stacked_area[['year','csh_c', 'csh_i', 'csh_g', 'csh_r']]
+df_stacked_area = df[df['country']== selected_country]
+df_stacked_area = df_stacked_area[['year','csh_c', 'csh_i', 'csh_g', 'csh_nx_and_r']]
 
 df_stacked_area = df_stacked_area.reset_index()
-df_stacked_area = pd.melt(df_stacked_area, id_vars='year', value_vars=['csh_c','csh_i', 'csh_g', 'csh_r'])
+df_stacked_area = pd.melt(df_stacked_area, id_vars='year', value_vars=['csh_c', 'csh_i', 'csh_g', 'csh_nx_and_r'])
 
 
 fig = px.area(df_stacked_area,
