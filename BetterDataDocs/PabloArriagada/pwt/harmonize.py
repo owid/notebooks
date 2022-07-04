@@ -75,7 +75,6 @@ except:
 # Set up to upload data our database, if correct permissions
 
 # %%
-# Check permissions, bu
 s3access = True
 
 try:
@@ -98,7 +97,6 @@ try:
                         aws_secret_access_key=SECRET_KEY)
 
 except:
-        print("This notebook is not able to write prepared data to our cloud storage. Steps in the code relating to this will not be run.")
         s3access = False
 
 # %% [markdown]
