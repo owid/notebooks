@@ -20,7 +20,6 @@ If you have this open as a notebook, for instance in
 Google Colabs, you can run the code below and also edit it to explore the data.
 
 
-
 """
 # %% [markdown]
 """
@@ -33,10 +32,7 @@ the country names.
 <br>
 * Step 2. Write metadata   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
 * Step 3. Prepare and transform variables   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
-
 """
-
-
 
 # %% [markdown]
 """
@@ -106,9 +102,9 @@ import pandas as pd
 
 
 # %% [markdown]
-## Load data and standardize country names
-
-### Load original data file
+# # Load data and standardize country names
+#
+# ## Load original data file
 
 # %%
 # Load the original raw data file as a pandas dataframe. 
@@ -124,7 +120,7 @@ df_original = pd.read_excel(url, sheet_name='Data')
 df_original.head()
 
 # %% [markdown]
-## Standardize country names
+# # Standardize country names
 
 # %% [markdown]
 # We adjust the country names to align with our standardized set of names. This makes it 
@@ -132,6 +128,9 @@ df_original.head()
 
 # %%
 # Read in mapping table which maps PWT names onto OWID names.
+#Pablo: Is there a "standardization of standardizing countries"? Because using a file like this would also require to
+#go to the tool in https://owid.cloud/admin/standardize in the first place
+
 url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/country_standardization_mapping.csv'
 
 df_mapping = pd.read_csv(url)
@@ -174,11 +173,11 @@ df_harmonized.head()
 
 
 # %% [markdown]
-## Upload prepared data to our database
-
-"""
-This section is for internal purposes, and will not run unless you have the right permissions.
-"""
+# # Upload prepared data to our database
+#
+# """
+# This section is for internal purposes, and will not run unless you have the right permissions.
+# """
 # %%
 if s3access:
     upload_to_s3(df_harmonized, 'pwt', 'harmonized.csv')

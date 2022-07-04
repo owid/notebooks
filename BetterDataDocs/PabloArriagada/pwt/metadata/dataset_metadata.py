@@ -1,7 +1,12 @@
 
+# +
 # Create a 'dictionary' (an array whose elements are named) for the dataset metadata
 # This will end up in e.g. our database, 'Sources' tab etc.
+
+#Pablo: Wouldn't it be better to have both dataset and variables' metadata together? Because this will be a very short script anyway
+
 dataset_meta = {}
+# -
 
 
 # Add dataset metadata to dictionary

@@ -1,3 +1,4 @@
+# %%
 
 # %% [markdown]
 # # Data document: Comparing GDP series within the Penn World Tables
@@ -64,7 +65,7 @@ df_harmonized = df_original.copy()
 df_harmonized['rgdpe_pc'] = df_harmonized['rgdpe']/df_harmonized['pop']
 df_harmonized['rgdpo_pc'] = df_harmonized['rgdpo']/df_harmonized['pop']
 df_harmonized['cgdpe_pc'] = df_harmonized['cgdpe']/df_harmonized['pop']
-df_harmonized['cgdpo_pc'] = df_harmonized['cgdpe']/df_harmonized['pop']
+df_harmonized['cgdpo_pc'] = df_harmonized['cgdpo']/df_harmonized['pop']
 df_harmonized['rgdpna_pc'] = df_harmonized['rgdpna']/df_harmonized['pop']
 
 
@@ -94,6 +95,30 @@ fig.show()
 
 fig = px.histogram(df_harmonized, x="rgdpna_pc_ratio",
 title = 'Ratio of rgdpna to rgdpe')
+fig.show()
+
+# %%
+#Pablo: We can explore using Seaborn's pairplot: plots each variable I choose against the other, and the diagonal is a histogram
+#I can see with this that rgdpe_pc and cgdp_e are the only with almost equal values for each country-year, the other cases are more scattered
+
+import seaborn as sns
+sns.pairplot(df_harmonized, x_vars=['rgdpe_pc','rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'], 
+             y_vars=['rgdpe_pc','rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'], 
+             dropna=True, corner=False, diag_kind='kde', kind='reg',
+             plot_kws={'line_kws':{'color':'#f28e2b'}, 'scatter_kws': {'alpha': 0.5}}
+             )
+#, height=5, aspect=3 ,plot_kws={'line_kws':{'color':'#f28e2b'}, 'scatter_kws': {'alpha': 0.5}}
+
+# %%
+#Pablo: With scatter_matrix in Plotly I can distinguish the countries which deviate from the y=x line
+#For example, Bermuda (also seen as an outlier before)
+
+fig = px.scatter_matrix(df_harmonized,
+    dimensions=['rgdpe_pc','rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'],
+    color="countrycode",
+    title="<b>GDP comparison (interactive)</b><br>Hover to see values, double click in legend to filter country",
+    height=700, hover_data=['country', 'year'], opacity=0.5)
+fig.update_traces(diagonal_visible=False)
 fig.show()
 
 # %%

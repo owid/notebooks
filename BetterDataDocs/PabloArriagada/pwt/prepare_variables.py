@@ -1,4 +1,4 @@
-
+# %%
 
 # %%
 # Pandas is a standard package used for data manipulation in python code
@@ -51,7 +51,7 @@ df = pd.read_csv(url)
 df['rgdpe'] = df['rgdpe']*1000000
 df['rgdpo'] = df['rgdpo']*1000000
 df['cgdpe'] = df['cgdpe']*1000000
-df['cgdpo'] = df['cgdpe']*1000000
+df['cgdpo'] = df['cgdpo']*1000000
 df['rgdpna'] = df['rgdpna']*1000000
 
 
@@ -60,7 +60,7 @@ df['rgdpna'] = df['rgdpna']*1000000
 df['rgdpe_pc'] = df['rgdpe']/df['pop']
 df['rgdpo_pc'] = df['rgdpo']/df['pop']
 df['cgdpe_pc'] = df['cgdpe']/df['pop']
-df['cgdpo_pc'] = df['cgdpe']/df['pop']
+df['cgdpo_pc'] = df['cgdpo']/df['pop']
 df['rgdpna_pc'] = df['rgdpna']/df['pop']
 
 
