@@ -1,11 +1,57 @@
+# %% [markdown]
+"""
+# How does Our World in Data prepare data from the Penn World Tables?
+"""
+# %% [markdown]
+"""
+### About this document
+This script is part of a series documenting how we prepare the data 
+provided in the Penn World Tables for use in our website and charts.
 
-# --------- SET UP -----------
-# Here we provide details of which libraries and packages we use to prepare the data
+<br><br>
+
+We make these scripts available in two formats: as scripts stored 
+[here in GitHub](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit), 
+and as notebooks published in Google Colabs.
+
+<br><br>
+
+If you have this open as a notebook, for instance in 
+Google Colabs, you can run the code below and also edit it to explore the data.
+
+
+
+"""
+# %% [markdown]
+"""
+### Data preparation steps
+
+* **Step 1) Standardize country names**   (Current document) – [View in GitHub](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit)
+<br>
+*In this notebook we document how we load the original raw data file and standardize
+the country names.*
+<br><br>
+* Step 2) Write metadata   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
+* Step 3) Prepare and transform variables   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
+
+"""
+
 
 
 # %%
-# Pandas is a standard package used for data manipulation in python code
-import pandas as pd
+"""
+## Set up
+
+In this section we install and load any modules or packages we need to .
+<br><br>
+This includes . In the code below, we check if you have the right permissions 
+(i.e. if you are part of the OWID team running this code). If you do not, those 
+sections relating will not run. This should not affect your ability to run and 
+edit the code to explore the data.
+
+### Managing write access
+
+"""
 # %%
 # Check write access
 s3access = True
@@ -26,15 +72,8 @@ if s3access:
         # Acess keys to write to  our s3 cloud storage
         from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
 
-        # Acess keys to write to  our s3 cloud storage
-        from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
-
         # boto3  allows us to write data to our s3 cloud storage
         import boto3
-
-
-        # Acess keys to write to  our s3 cloud storage
-        from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
 
         # A function we have written to help upload our data to our s3 cloud storage
         from functions import upload_to_s3
@@ -50,7 +89,11 @@ if s3access:
 
         
 
-   
+# Here we provide details of which libraries and packages we use to prepare the data
+#    
+# %%
+# Pandas is a standard package used for data manipulation in python code
+import pandas as pd
         
 
 
