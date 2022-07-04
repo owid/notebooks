@@ -38,37 +38,47 @@ the country names.*
 
 
 
-# %%
+# %% [markdown]
 """
-## Set up
+## Set up and permissions
 
-In this section we install and load any modules or packages we need to .
+In this section we load any modules or packages we need to run the code.
 <br><br>
-This includes . In the code below, we check if you have the right permissions 
-(i.e. if you are part of the OWID team running this code). If you do not, those 
-sections relating will not run. This should not affect your ability to run and 
-edit the code to explore the data.
-
-### Managing write access
-
+Prior to this, we run a check to see whether you are viewing this in Google Colabs and, if so, 
+install any needed packages.
+<br><br>
+This section also includes code to allow us (the Our World in Data team) to 
+upload data to our database once it's been prepared. The code below first checks whether you have 
+the right permissions to upload to our database, and, if not, sections of the code below related to 
+this will not run. This should not affect your ability 
+to run the rest of the code or add/edit cells to explore the data.
 """
+
+# %% [markdown]
+# Check if in Colabs, and if so install needed packages. 
 # %%
-# Check write access
+# Test if notebook is running on Google Colab, by trying to load a colab-specific package.
+
+try:
+  import google.colab
+  IN_COLAB = True
+except:
+  IN_COLAB = False
+
+# %%
+# Install needed packages
+
+# None to install
+
+
+# %% [markdown]
+# Set up to upload data our database, if correct permissions
+
+# %%
+# Check permissions, bu
 s3access = True
 
 try:
-        # Acess keys to write to  our s3 cloud storage
-        from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
-
-except:
-        print("This notebook is not able to write prepared data to our cloud storage. Steps in the code relating to this will not be run.")
-        s3access = False
-# %%
-# These modules and packages are used to write the transformed data to 
-# our cloud storage (not available in notebook versions.)
-
-if s3access:
-
         # Acess keys to write to  our s3 cloud storage
         from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
 
@@ -87,15 +97,17 @@ if s3access:
                         aws_access_key_id=KEY_ID,
                         aws_secret_access_key=SECRET_KEY)
 
-        
+except:
+        print("This notebook is not able to write prepared data to our cloud storage. Steps in the code relating to this will not be run.")
+        s3access = False
 
-# Here we provide details of which libraries and packages we use to prepare the data
-#    
-# %%
+# %% [markdown]
+# Load packages.
+
+ # %%
 # Pandas is a standard package used for data manipulation in python code
 import pandas as pd
-        
-
+               
 
 
 
