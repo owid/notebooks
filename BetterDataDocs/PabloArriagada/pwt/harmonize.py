@@ -1,40 +1,88 @@
+# %% [markdown]
+"""
+# How does Our World in Data prepare data from the Penn World Tables?
+"""
+# %% [markdown]
+"""
+### About this document
+This script is part of a series documenting how we prepare the data 
+provided in the Penn World Tables for use in our website and charts.
 
-# --------- SET UP -----------
-# Here we provide details of which libraries and packages we use to prepare the data
+<br><br>
 
+We make these scripts available in two formats: as scripts stored 
+[here in GitHub](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit), 
+and as notebooks published in Google Colabs.
+
+<br><br>
+
+If you have this open as a notebook, for instance in 
+Google Colabs, you can run the code below and also edit it to explore the data.
+
+
+
+"""
+# %% [markdown]
+"""
+### Data preparation steps
+
+* **Step 1) Standardize country names**   (Current document) – [View in GitHub](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit)
+<br>
+*In this notebook we document how we load the original raw data file and standardize
+the country names.*
+<br><br>
+* Step 2) Write metadata   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
+* Step 3) Prepare and transform variables   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
+
+"""
+
+
+
+# %% [markdown]
+"""
+## Set up and permissions
+
+In this section we load any modules or packages we need to run the code.
+<br><br>
+Prior to this, we run a check to see whether you are viewing this in Google Colabs and, if so, 
+install any needed packages.
+<br><br>
+This section also includes code to allow us (the Our World in Data team) to 
+upload data to our database once it's been prepared. The code below first checks whether you have 
+the right permissions to upload to our database, and, if not, sections of the code below related to 
+this will not run. This should not affect your ability 
+to run the rest of the code or add/edit cells to explore the data.
+"""
+
+# %% [markdown]
+# Check if in Colabs, and if so install needed packages. 
+# %%
+# Test if notebook is running on Google Colab, by trying to load a colab-specific package.
+
+try:
+  import google.colab
+  IN_COLAB = True
+except:
+  IN_COLAB = False
 
 # %%
-# Pandas is a standard package used for data manipulation in python code
-import pandas as pd
+# Install needed packages
+#if IN_COLAB:
+# None to install
+
+
+# %% [markdown]
+# Set up to upload data our database, if correct permissions
+
 # %%
-# Check write access
 s3access = True
 
 try:
         # Acess keys to write to  our s3 cloud storage
         from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
 
-except:
-        print("This notebook is not able to write prepared data to our cloud storage. Steps in the code relating to this will not be run.")
-        s3access = False
-# %%
-# These modules and packages are used to write the transformed data to 
-# our cloud storage (not available in notebook versions.)
-
-if s3access:
-
-        # Acess keys to write to  our s3 cloud storage
-        from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
-
-        # Acess keys to write to  our s3 cloud storage
-        from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
-
         # boto3  allows us to write data to our s3 cloud storage
         import boto3
-
-
-        # Acess keys to write to  our s3 cloud storage
-        from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
 
         # A function we have written to help upload our data to our s3 cloud storage
         from functions import upload_to_s3
@@ -48,11 +96,16 @@ if s3access:
                         aws_access_key_id=KEY_ID,
                         aws_secret_access_key=SECRET_KEY)
 
-        
+except:
+        s3access = False
 
-   
-        
+# %% [markdown]
+# Load packages.
 
+ # %%
+# Pandas is a standard package used for data manipulation in python code
+import pandas as pd
+               
 
 
 
