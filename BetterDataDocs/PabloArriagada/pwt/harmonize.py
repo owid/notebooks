@@ -67,7 +67,7 @@ except:
 
 # %%
 # Install needed packages
-
+#if IN_COLAB:
 # None to install
 
 
