@@ -15,7 +15,7 @@ from functions import upload_to_s3
 
 
 # Note, we should grab this from the etl instead when it's ready
-from metadata.variable_metadata import variable_meta
+from variable_metadata import variable_meta
 
 
 # %%
