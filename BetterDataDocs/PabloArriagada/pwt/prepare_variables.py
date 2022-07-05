@@ -14,8 +14,12 @@ We make these scripts available in two formats: as scripts stored
 [here in GitHub](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit), 
 and as notebooks published in Google Colabs.
 
-If you have this open as a notebook, for instance in 
-Google Colabs, you can run the code below and also edit it to explore the data.
+
+If you have this open in Google Colabs, you can run the code blocks below
+and see their outputs. 
+Clicking on **'Copy to Drive'** in the menu bar above will open up a new
+copy in your own Google Drive that you can then edit to explore 
+the data and how we have transformed it.
 
 
 """
@@ -24,7 +28,7 @@ Google Colabs, you can run the code below and also edit it to explore the data.
 ### Data preparation steps
 
 * Step 1. Standardize country names   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
-* **Step 2. Prepare and transform variables **   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
+* **Step 2. Prepare and transform variables**   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
 <br>
 In this notebook we document how the data series we show 
 in our charts are derived from the data available in the 
@@ -40,10 +44,11 @@ This section needs to be run in order to load packages used.
 
 If you are viewing this in Colabs, it will also install any packages not pre-installed 
 in this environment.
-<br>
-In addition, we run code to allow us (the Our World in Data team) to 
+
+
+In addition, here we run code to allow us (the Our World in Data team) to 
 upload data to our database once it's been prepared. Unless you are running this with the
-corrent access keys, code blocks relating to data uploads will not run.
+corrent access keys, this code block and subsequent code blocks relating to data uploads will not run.
 """
 
 # %%
