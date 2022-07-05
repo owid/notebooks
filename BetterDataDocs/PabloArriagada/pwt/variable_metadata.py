@@ -239,6 +239,6 @@ variable_meta['csh_r']['description'] = "[Long description here]"
 df_variable_meta = pd.DataFrame.from_dict(variable_meta, orient='index')
 
 # Write to s3
-upload_to_s3(df_variable_meta, 'pwt', 'dataset_meta.csv')
+upload_to_s3(df_variable_meta, 'pwt', 'variable_meta.csv')
 
 # %%
