@@ -39,6 +39,7 @@ def upload_to_s3(df:pd.DataFrame,
     # Write a csv to the temp folder
     df.to_csv(f'{temp_folder_for_data.name}/write.csv', index=False)
     
+    
     # Upload to Digital Ocean – pwt bucket
     client.upload_file(f'{temp_folder_for_data.name}/write.csv',  # Path to local file
                    bucket_name, 
