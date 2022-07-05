@@ -81,10 +81,6 @@ try:
         # A function we have written to help upload our data to our s3 cloud storage
         from functions import upload_to_s3
 
-        # Load variable metadata (– only the subset of variables with 
-        # metadata will be uploaded to s3)
-        from variable_metadata import variable_meta, df_variable_meta
-
         # Set up access for writing files to s3  
         session = boto3.session.Session()
 
@@ -175,8 +171,22 @@ df['rgdpna_pc'] = df['rgdpna']/df['pop']
 # --- Other variables ––––
 
 
+# %% [markdown]
+# # Variable metadata
+"""
+We have written metadata to accompany this data in our database. It is stored in [this Google Sheet](https://docs.google.com/spreadsheets/d/1gbk8lBc4ZTjzE94pG8vgFX1Ta5baIQhpdD158GhPJsc/edit#gid=0).
 
+Here we read in the variable-level metadata from the sheet.
 
+"""
+# %%
+# Specify sheet id and sheet (tab) name for the metadata google sheet 
+sheet_id = '1gbk8lBc4ZTjzE94pG8vgFX1Ta5baIQhpdD158GhPJsc'
+sheet_name = 'variable_metadata'
+
+# Read in variable metadata as dataframe
+url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+df_variable_metadata = pd.read_csv(url)
 
 # %% [markdown]
 # # Upload prepared data to our database
@@ -184,15 +194,17 @@ df['rgdpna_pc'] = df['rgdpna']/df['pop']
 """
 This section is for internal purposes, and will not run unless you have the right permissions.
 """
+
 # %%
+# Keep only id vars (country and year) and vars with metadata
 if s3access:
-   
+    
     # Select country, year and only those variables with metadata specified
     # in the metadata folder.
 
     id_vars = ['country', 'year']
 
-    var_list = list(variable_meta.keys())
+    var_list = df_variable_metadata['code_name'].tolist()
 
     var_list = id_vars + var_list 
 
@@ -202,10 +214,15 @@ else:
     print("No write access")
 
 # %%
-# Replace var names with those defined as 'name' in the variable metadata
+# Replace var names with those defined in the variable metadata ('name')
 if s3access:
-    # Make a dictionary mapping current column names to 'name'
-    varnames_dict = df_variable_meta['name'].to_dict()
+
+    # Make a dictionary of var code_names and names
+    keys_code_names = df_variable_metadata['code_name'].tolist()
+    values_names = df_variable_metadata['name'].tolist()
+        #pair keys and values with zip
+    varnames_dict = dict(zip(keys_code_names, values_names))
+    
 
     # Rename the columns using the dictionary
     # NB:This generates a warning, but produces the right output. I didn't figure out a better way yet.
