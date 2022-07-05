@@ -8,7 +8,7 @@ import pandas as pd
 import boto3
 
 # Keys for accessing s3
-from joes_key import ENDPOINT, KEY_ID, SECRET_KEY 
+from joes_key import KEY_ID, SECRET_KEY 
 
 # A function we have written to help upload our data to our s3 cloud storage
 from functions import upload_to_s3
@@ -23,7 +23,7 @@ from metadata.variable_metadata import variable_meta
 session = boto3.session.Session()
 
 client = session.client('s3',
-                        endpoint_url="https://{}.digitaloceanspaces.com".format(ENDPOINT),
+                        endpoint_url="https://joeh.fra1.digitaloceanspaces.com",
                         aws_access_key_id=KEY_ID,
                         aws_secret_access_key=SECRET_KEY)
 
