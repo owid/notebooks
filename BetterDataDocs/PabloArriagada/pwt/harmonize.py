@@ -37,16 +37,16 @@ the country names.
 """
 ## Set up and permissions
 
-This section needs to be run in order to load packages used.
+This section needs to be run in order to load packages we use.
 
 
-If you are viewing this in Colabs, it will also install any packages not pre-installed 
-in this environment.
+If you are viewing this in Colabs, it will also install any packages that are not pre-installed.
 
 
 In addition, here we run code to allow us (the Our World in Data team) to 
-upload data to our database once it's been prepared. Unless you are running this with the
-corrent access keys, this code block and subsequent code blocks relating to data uploads will not run.
+upload data to our database once it's been prepared. If you are running this in Colabs 
+(or more generally without the correct access permissions) this code block and subsequent 
+code blocks relating to data uploads will not run.
 """
 
 # %%
@@ -70,29 +70,31 @@ except:
 # If the correct access keys are in place, set up a s3 client and session 
 # to be able to upload to our database.
 
-s3access = True
+s3access = False
 
-try:
-        # Acess keys to write to  our s3 cloud storage
-        from joes_key import KEY_ID, SECRET_KEY 
+if not IN_COLAB:
+        try:
+          # Acess keys to write to  our s3 cloud storage
+          from joes_key import KEY_ID, SECRET_KEY 
 
-        # boto3  allows us to write data to our s3 cloud storage
-        import boto3
+          # boto3  allows us to write data to our s3 cloud storage
+          import boto3
 
-        # A function we have written to help upload our data to our s3 cloud storage
-        from functions import upload_to_s3
+          # A function we have written to help upload our data to our s3 cloud storage
+          from functions import upload_to_s3
 
-        # Set up access for writing files to s3  
-        session = boto3.session.Session()
+          # Set up access for writing files to s3  
+          session = boto3.session.Session()
 
-        client = session.client('s3',
+          client = session.client('s3',
                         endpoint_url="https://joeh.fra1.digitaloceanspaces.com",
                         aws_access_key_id=KEY_ID,
                         aws_secret_access_key=SECRET_KEY)
+        
+          s3access = True
 
-except:
-        s3access = False
-        print("No write access")
+        except:
+          print("No write access")
 
 
 # Load packages
