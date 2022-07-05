@@ -91,7 +91,7 @@ try:
 
 except:
         s3access = False
-
+        print("No write access")
 
 
 # Load packages
@@ -174,13 +174,13 @@ df_harmonized.head()
 
 # %% [markdown]
 # # Upload prepared data to our database
-#
-# """
-# This section is for internal purposes, and will not run unless you have the right permissions.
-# """
+"""
+This section is for internal purposes, and will not run unless you have the right permissions.
+"""
 # %%
 if s3access:
     upload_to_s3(df_harmonized, 'pwt', 'harmonized.csv')
-
+else:
+    print("No write access")
 
 # %%

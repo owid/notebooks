@@ -178,9 +178,9 @@ variable_meta['rgdpna']['description'] = "[Long description here]"
 
 
 #Convert dictionary to dataframe
-df = pd.DataFrame.from_dict(variable_meta, orient='index')
+df_variable_meta = pd.DataFrame.from_dict(variable_meta, orient='index')
 
 # Write to s3
-upload_to_s3(df, 'pwt', 'dataset_meta.csv')
+upload_to_s3(df_variable_meta, 'pwt', 'dataset_meta.csv')
 
 # %%
