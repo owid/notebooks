@@ -136,24 +136,82 @@ variable_meta['rgdpna']['description'] = "[Long description here]"
 # --- Employment and labour productivity variables ––––
 
 # Annual working hours per worker
+variable_meta['avh'] = {}
 
+variable_meta['avh']['name'] = "Annual working hours per worker"
+variable_meta['avh']['displayName'] = "Annual working hours"
+variable_meta['avh']['unitsLong'] = "Hours"
+variable_meta['avh']['unitsShort'] = "h"
+variable_meta['avh']['description'] = "[Long description here]"
+
+
+# Number of workers
+variable_meta['emp'] = {}
+
+variable_meta['emp']['name'] = "Number of people in work"
+variable_meta['emp']['displayName'] = "Number of people in work"
+variable_meta['emp']['unitsLong'] = "People in work"
+variable_meta['emp']['unitsShort'] = "h"
+variable_meta['emp']['description'] = "[Long description here]"
+
+#Productivity
+variable_meta['productivity'] = {}
+
+variable_meta['productivity']['name'] = "Productivity: output per hour worked"
+variable_meta['productivity']['displayName'] = "Productivity: output per hour worked"
+variable_meta['productivity']['unitsLong'] = "Constant 2011 international-$ per hour"
+variable_meta['productivity']['unitsShort'] = "$/h"
+variable_meta['productivity']['description'] = "[Long description here]"
 
 
 # --- Components of GDP variables ––––
 
 
 # Labour share
+variable_meta['labsh'] = {}
 
-# JH comment: let's present the following as a stacked area chart
+variable_meta['labsh']['name'] = "Share of labour compensation in GDP"
+variable_meta['labsh']['displayName'] = "Share of labour compensation in GDP"
+variable_meta['labsh']['unitsLong'] = "%"
+variable_meta['labsh']['unitsShort'] = "%"
+variable_meta['labsh']['description'] = "[Long description here – Note that this is a 'NA-based' measure using current national prices.]"
+
 
 # Share of household consumption
+variable_meta['csh_c'] = {}
+
+variable_meta['csh_c']['name'] = "Share of household consumption in GDP"
+variable_meta['csh_c']['displayName'] = "Share of household consumption in GDP"
+variable_meta['csh_c']['unitsLong'] = "%"
+variable_meta['csh_c']['unitsShort'] = "%"
+variable_meta['csh_c']['description'] = "[Long description here]"
 
 # Share of gross capital formation
+variable_meta['csh_i'] = {}
+
+variable_meta['csh_i']['name'] = "Share of gross capital formation in GDP"
+variable_meta['csh_i']['displayName'] = "Share of gross capital formation in GDP"
+variable_meta['csh_i']['unitsLong'] = "%"
+variable_meta['csh_i']['unitsShort'] = "%"
+variable_meta['csh_i']['description'] = "[Long description here]"
 
 # Share of Government consumption
+variable_meta['csh_g'] = {}
+
+variable_meta['csh_g']['name'] = "Share of labour compensation in GDP"
+variable_meta['csh_g']['displayName'] = "Share of labour compensation in GDP"
+variable_meta['csh_g']['unitsLong'] = "%"
+variable_meta['csh_g']['unitsShort'] = "%"
+variable_meta['csh_g']['description'] = "[Long description here]"
 
 # Share of residual trade and statistical discrepancy
+variable_meta['csh_r'] = {}
 
+variable_meta['csh_r']['name'] = "Share of labour compensation in GDP"
+variable_meta['csh_r']['displayName'] = "Share of labour compensation in GDP"
+variable_meta['csh_r']['unitsLong'] = "%"
+variable_meta['csh_r']['unitsShort'] = "%"
+variable_meta['csh_r']['description'] = "[Long description here]"
 
 
 
