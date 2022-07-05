@@ -9,13 +9,10 @@
 This script is part of a series documenting how we prepare the data 
 provided in the Penn World Tables for use in our website and charts.
 
-<br>
 
 We make these scripts available in two formats: as scripts stored 
 [here in GitHub](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit), 
 and as notebooks published in Google Colabs.
-
-<br>
 
 If you have this open as a notebook, for instance in 
 Google Colabs, you can run the code below and also edit it to explore the data.
@@ -26,12 +23,13 @@ Google Colabs, you can run the code below and also edit it to explore the data.
 """
 ### Data preparation steps
 
-* **Step 1. Standardize country names**   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
+* Step 1. Standardize country names   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
+* **Step 2. Write metadata**   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
 <br>
-In this notebook we document how we load the original raw data file and standardize
-the country names.
+In this notebook we document how the data series we show 
+in our charts are derived from the data available in the 
+Penn World Tables.
 <br>
-* Step 2. Write metadata   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
 * Step 3. Prepare and transform variables   ([Open in Colabs](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit) – [View in Github](https://docs.google.com/document/d/1VDWq2JggspDPyFjLg47DsIqNuFXAaE4SO8_CeMLMqVk/edit))
 """
 
@@ -40,7 +38,8 @@ the country names.
 ## Set up and permissions
 
 This section needs to be run in order to load packages used.
-<br>
+
+
 If you are viewing this in Colabs, it will also install any packages not pre-installed 
 in this environment.
 <br>
@@ -82,6 +81,10 @@ try:
         # A function we have written to help upload our data to our s3 cloud storage
         from functions import upload_to_s3
 
+        # Load variable metadata (– only the subset of variables with 
+        # metadata will be uploaded to s3)
+        from variable_metadata import variable_meta, df_variable_meta
+
         # Set up access for writing files to s3  
         session = boto3.session.Session()
 
@@ -92,7 +95,7 @@ try:
 
 except:
         s3access = False
-
+        print("No write access")
 
 
 # Load packages
@@ -175,31 +178,51 @@ df['rgdpna_pc'] = df['rgdpna']/df['pop']
 
 
 
+# %% [markdown]
+# # Upload prepared data to our database
+
+"""
+This section is for internal purposes, and will not run unless you have the right permissions.
+"""
 # %%
-# –––––––– UPLOAD –––––––––––––
+if s3access:
+   
+    # Select country, year and only those variables with metadata specified
+    # in the metadata folder.
+
+    id_vars = ['country', 'year']
+
+    var_list = list(variable_meta.keys())
+
+    var_list = id_vars + var_list 
+
+    df_final = df[df.columns.intersection(var_list)]
+
+else:
+    print("No write access")
 
 # %%
-# Select country, year and only those variables with metadata specified
-# in the metadata folder.
+# Replace var names with those defined as 'name' in the variable metadata
+if s3access:
+    # Make a dictionary mapping current column names to 'name'
+    varnames_dict = df_variable_meta['name'].to_dict()
 
-id_vars = ['country', 'year']
+    # Rename the columns using the dictionary
+    # NB:This generates a warning, but produces the right output. I didn't figure out a better way yet.
+    df_final.rename(columns=varnames_dict, inplace=True)
 
-var_list = list(variable_meta.keys())
-
-var_list = id_vars + var_list 
-
-df_final = df[df.columns.intersection(var_list)]
-
-
-# TODO: replace names as defined in the variable metadata
-
+else:
+    print("No write access")
+# %%
+#The final data looks like this
+#df_final.head()
 
 # %%
-df_final.head()
+# Write data as csv to s3
+if s3access:    
+    upload_to_s3(df_final, 'pwt', 'final.csv')
 
-
-# %%
-upload_to_s3(df_final, 'pwt', 'final.csv')
-
+else:
+    print("No write access")
 
 # %%
