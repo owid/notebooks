@@ -208,8 +208,11 @@ df['productivity'] = df['rgdpo']/(df['avh']*df['emp'])
 
 # %% [markdown]
 # ## Exports and imports as share of GDP
-# JH comment:  This strikes me as a much simpler way to calulate this variable ('Ratio of exports and imports to GDP (%) (PWT 9.1 (2019))' in the old data). These shares are Shares in cgdpo. Let's compare them to the those calculated from the NA data. 
-
+"""
+JH comment:  This strikes me as a much simpler way to calulate this variable ('Ratio of exports and imports to GDP (%) (PWT 9.1 (2019))' in the old data).
+ 
+These shares (csh_x, csh_m) are shares in cgdpo from the main data file. I wonder – are they the same as shares calculated using the National Accounts data? I can't understand why they would be different, but maybe there is some difference to do with the prices that I'm not understanding. It'd be good to compare them and see.
+"""
 # %%
 # Sum exports as share of GDP and imports as share of GDP 
 df['x_m_share'] = df['csh_x'] + df['csh_m']
