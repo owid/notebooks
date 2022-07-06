@@ -104,6 +104,7 @@ if not IN_COLAB:
 
 # Pandas is a standard package used for data manipulation in python code
 import pandas as pd
+from pkg_resources import IResourceManager
                
 
 
@@ -128,21 +129,63 @@ df.head()
 # # Prepapre variables for Our World in Data
 
 # %% [markdown]
-# ## Absolute GDP variables
-# The original data is given in millions of dollars.<br>
-# We multiply the variable by 1,000,000 to give the figures in dollars.
-# %%
+# # Adjusting units
+"""
+A range of variables are provided in millions. Here we multiple by 1,000,000 to express 
+these in individual units.
+"""
+# %% 
+#Multiplying by 1 million to get $ instead of millions of $
+
 df['rgdpe'] = df['rgdpe']*1000000
 df['rgdpo'] = df['rgdpo']*1000000
 df['cgdpe'] = df['cgdpe']*1000000
 df['cgdpo'] = df['cgdpo']*1000000
 df['rgdpna'] = df['rgdpna']*1000000
 
+df['ccon'] = df['ccon']*1000000
+df['cda'] = df['cda']*1000000
+df['cn'] = df['cn']*1000000
+df['rconna'] = df['rconna']*1000000
+df['rdana'] = df['rdana']*1000000
+df['rnna'] = df['rnna']*1000000
+
+
+#Multiplying by 1 million to get "people" instead of "millions of people"
+df['pop'] = df['pop']*1000000
+df['emp'] = df['emp']*1000000
+
+
+# %% [markdown]
+"""
+A range of variables are provided as shares (0-1), which we multiply by 100 to express as a percentage.
+"""
+
+df['labsh'] = df['labsh']*1000000
+df['irr'] = df['irr']*1000000
+
+df['delta'] = df['delta']*1000000
+df['csh_c'] = df['csh_c']*1000000
+df['csh_i'] = df['csh_i']*1000000
+df['csh_g'] = df['csh_g']*1000000
+df['csh_x'] = df['csh_x']*1000000
+df['csh_m'] = df['csh_m']*1000000
+df['csh_r'] = df['csh_r']*1000000
+df['irr'] = df['irr']*1000000
+df['irr'] = df['irr']*1000000
+
+
+
+
+
+
+
+
 # %% [markdown]
 # ## GDP per capita variables
 # Penn World Tables do not directly provide GDP per capita. We calculate
-# these by dividing GDP by the population figures they provide (both
-# given in millions).
+# these by dividing GDP by the population figures they provide (both now multiplied
+# by 1,000,000).
 # %%
 df['rgdpe_pc'] = df['rgdpe']/df['pop']
 df['rgdpo_pc'] = df['rgdpo']/df['pop']
@@ -151,30 +194,22 @@ df['cgdpo_pc'] = df['cgdpo']/df['pop']
 df['rgdpna_pc'] = df['rgdpna']/df['pop']
 
 
+# %% [markdown]
+## Labour productivity
+"""
+We derive a measure of productivity – defined as output per hour worked.
 
+For this we use GDP measured in terms of output and using multiple price benchmarks 
+(see *LINK* for a discussion of the different GDP variables available in Penn World Tables).
 
-# %%
-# --- Employment and labour productivity variables ––––
-
-
-# %%
-# --- Components of GDP variables ––––
-
-
-
-
-
-# %%
-# --- Trade variables––––
-
-
+We divide this GDP variable by the total hours worked – calculated by multiplying the number of 
+workers by the annual number of hours of work per worker.
+"""
 
 # %%
-# --- Total Factor Productivity variables ––––
+#Productivity = (rgdpo) / (avh*emp) – NB, both rgdpo and emp have been multiplied by 1,000,000 above.
+df['productivity'] = df['rgdpo']/(df['avh']*df['emp'])
 
-
-# %%
-# --- Other variables ––––
 
 
 # %% [markdown]
