@@ -12,7 +12,7 @@ import tempfile
 import boto3
 
 # Acess keys to write to  our s3 cloud storage
-from joes_key import KEY_ID, SECRET_KEY 
+from access_key import KEY_ID, SECRET_KEY 
 
 
 # Set up access for writing files to s3  
