@@ -548,22 +548,27 @@ pwt10_owid.columns
 # OWID's v9.1 consists in every variable kept from the original dataset but `currency_unit` and the newly created variables, so this code removes the auxiliar variables used to create others and the ones that came from the national accounts file:
 
 pwt10_owid.drop(['exp_usd', 'gdp_usd', 'gdppc_o_yearbefore', 'imp_usd', 'gdppc_o_growth_count', 'v_gdp', 'v_m', 'v_x', 
-                 'world_exports', 'world_gdp', 'world_imports', 'xr2'], axis = 1)
+                 'world_exports', 'world_gdp', 'world_imports', 'xr2'], axis = 1, inplace=True)
 
 # There are two more variables in v10.0 compared to v9.1, because both `countrycode` and `currency_unit` are kept for reference.
 
-# The file is saved to use the [Country Standardizer Tool](https://owid.cloud/admin/standardize) from OWID.
+# The country names are formatted following the [Country Standardizer Tool](https://owid.cloud/admin/standardize) from OWID. The tool provides with a new variable called `Our World In Data Name`, which is OWID's standardisation applied.
 
-file = Path('data/pwt10_owid_beforestd.csv')
-pwt10_owid.to_csv(file, index=False)
+file = Path('data/country_standardization_mapping.csv')
+std_mapping = pd.read_csv(file)
+pwt10_owid = pd.merge(pwt10_owid, std_mapping, left_on='country', right_on='Original Name', how='left')
+pwt10_owid.drop(['Original Name'], axis = 1, inplace=True)
+pwt10_owid.loc[(pwt10_owid['country'] == 'World'), 'Our World In Data Name'] = 'World' #"World" is not available in the dictionary
 
-# The tool provides with a new variable called `Our World In Data Name`, which is OWID's standardisation applied.
-
-pwt10_path = Path('data/pwt10_owid_country_standardized.csv')
-pwt10_owid = pd.read_csv(pwt10_path)
-pwt10_owid
-
+# +
 pwt10_owid = pwt10_owid.rename(columns={'Our World In Data Name': 'entity'}) #To keep variable name from v9.1
+
+#Moving 'entity' to the first column
+first_column = pwt10_owid.pop('entity')
+pwt10_owid.insert(0, 'entity', first_column)
+
+pwt10_owid.drop(['countrycode', 'country', 'currency_unit'], axis = 1, inplace=True) #Removing old country identifiers
+# -
 
 file = Path('data/pwt10_owid.csv')
 pwt10_owid.to_csv(file, index=False)
@@ -916,7 +921,3 @@ pwt9_10 = pd.concat([pwt9, pwt10], ignore_index=True)
 # - hc
 # - xr (with outlier)
 # - statcap
-
-
-
-

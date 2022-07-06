@@ -613,29 +613,30 @@ OWID's v9.1 consists in every variable kept from the original dataset but `curre
 
 ```python
 pwt10_owid.drop(['exp_usd', 'gdp_usd', 'gdppc_o_yearbefore', 'imp_usd', 'gdppc_o_growth_count', 'v_gdp', 'v_m', 'v_x', 
-                 'world_exports', 'world_gdp', 'world_imports', 'xr2'], axis = 1)
+                 'world_exports', 'world_gdp', 'world_imports', 'xr2'], axis = 1, inplace=True)
 ```
 
 There are two more variables in v10.0 compared to v9.1, because both `countrycode` and `currency_unit` are kept for reference.
 
 
-The file is saved to use the [Country Standardizer Tool](https://owid.cloud/admin/standardize) from OWID.
+The country names are formatted following the [Country Standardizer Tool](https://owid.cloud/admin/standardize) from OWID. The tool provides with a new variable called `Our World In Data Name`, which is OWID's standardisation applied.
 
 ```python
-file = Path('data/pwt10_owid_beforestd.csv')
-pwt10_owid.to_csv(file, index=False)
-```
-
-The tool provides with a new variable called `Our World In Data Name`, which is OWID's standardisation applied.
-
-```python
-pwt10_path = Path('data/pwt10_owid_country_standardized.csv')
-pwt10_owid = pd.read_csv(pwt10_path)
-pwt10_owid
+file = Path('data/country_standardization_mapping.csv')
+std_mapping = pd.read_csv(file)
+pwt10_owid = pd.merge(pwt10_owid, std_mapping, left_on='country', right_on='Original Name', how='left')
+pwt10_owid.drop(['Original Name'], axis = 1, inplace=True)
+pwt10_owid.loc[(pwt10_owid['country'] == 'World'), 'Our World In Data Name'] = 'World' #"World" is not available in the dictionary
 ```
 
 ```python
 pwt10_owid = pwt10_owid.rename(columns={'Our World In Data Name': 'entity'}) #To keep variable name from v9.1
+
+#Moving 'entity' to the first column
+first_column = pwt10_owid.pop('entity')
+pwt10_owid.insert(0, 'entity', first_column)
+
+pwt10_owid.drop(['countrycode', 'country', 'currency_unit'], axis = 1, inplace=True) #Removing old country identifiers
 ```
 
 ```python
@@ -1036,11 +1037,3 @@ It is clear that most variables change and not only for the most recent years, b
 - hc
 - xr (with outlier)
 - statcap
-
-```python
-
-```
-
-```python
-
-```
