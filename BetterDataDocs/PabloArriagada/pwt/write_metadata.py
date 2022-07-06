@@ -7,7 +7,7 @@
 import pandas as pd
 
 # Acess keys to write to  our s3 cloud storage
-from joes_key import KEY_ID, SECRET_KEY 
+from access_key import KEY_ID, SECRET_KEY 
 
 # boto3  allows us to write data to our s3 cloud storage
 import boto3
