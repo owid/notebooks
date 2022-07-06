@@ -161,22 +161,16 @@ df['emp'] = df['emp']*1000000
 A range of variables are provided as shares (0-1), which we multiply by 100 to express as a percentage.
 """
 
-df['labsh'] = df['labsh']*1000000
-df['irr'] = df['irr']*1000000
+df['labsh'] = df['labsh']*100
+df['irr'] = df['irr']*100
 
-df['delta'] = df['delta']*1000000
-df['csh_c'] = df['csh_c']*1000000
-df['csh_i'] = df['csh_i']*1000000
-df['csh_g'] = df['csh_g']*1000000
-df['csh_x'] = df['csh_x']*1000000
-df['csh_m'] = df['csh_m']*1000000
-df['csh_r'] = df['csh_r']*1000000
-df['irr'] = df['irr']*1000000
-df['irr'] = df['irr']*1000000
-
-
-
-
+df['delta'] = df['delta']*100
+df['csh_c'] = df['csh_c']*100
+df['csh_i'] = df['csh_i']*100
+df['csh_g'] = df['csh_g']*100
+df['csh_x'] = df['csh_x']*100
+df['csh_m'] = df['csh_m']*100
+df['csh_r'] = df['csh_r']*100
 
 
 
