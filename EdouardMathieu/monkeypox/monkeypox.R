@@ -47,10 +47,12 @@ aggregate <- function(df, case_type, date_type) {
 
 df <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
 setDT(df)
-df <- df[!is.na(Status) & !is.na(Country)]
-stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error", "suspected")))
 
+df <- df[!is.na(Status) & !is.na(Country)]
+
+stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error", "suspected")))
 df <- df[!Status %in% c("discarded", "omit_error")]
+
 df <- df[, c("Status", "Country", "Date_entry", "Date_confirmation")]
 setnames(df, c("Status", "Country"), c("status", "location"))
 
@@ -75,7 +77,5 @@ df <- reduce(dataframes, full_join, by = c("location", "date"))
 df[, date := date(date)]
 df <- df[date < today()]
 setorder(df, location, date)
-fwrite(df, "owid-monkeypox-data.csv")
 
-# Twitter update
-# source("tweet.R")
+fwrite(df, "owid-monkeypox-data.csv")
