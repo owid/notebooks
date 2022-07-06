@@ -140,7 +140,7 @@ BetterDataDocs/**/*.Rmd
 BetterDataDocs/**/*.html
 
 # BetterDataDocs Joe's s3 key file
-BetterDataDocs/access_key.py
+BetterDataDocs/**/access_key.py
 
 
 
