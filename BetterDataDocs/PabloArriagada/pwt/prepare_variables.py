@@ -104,7 +104,7 @@ if not IN_COLAB:
 
 # Pandas is a standard package used for data manipulation in python code
 import pandas as pd
-from pkg_resources import IResourceManager
+#from pkg_resources import IResourceManager
                
 
 
@@ -129,7 +129,7 @@ df.head()
 # # Prepapre variables for Our World in Data
 
 # %% [markdown]
-# # Adjusting units
+# ## Adjusting units
 """
 A range of variables are provided in millions. Here we multiple by 1,000,000 to express 
 these in individual units.
@@ -189,7 +189,7 @@ df['rgdpna_pc'] = df['rgdpna']/df['pop']
 
 
 # %% [markdown]
-## Labour productivity
+# ## Labour productivity
 """
 We derive a measure of productivity – defined as output per hour worked.
 
@@ -203,6 +203,20 @@ workers by the annual number of hours of work per worker.
 # %%
 #Productivity = (rgdpo) / (avh*emp) – NB, both rgdpo and emp have been multiplied by 1,000,000 above.
 df['productivity'] = df['rgdpo']/(df['avh']*df['emp'])
+
+
+
+# %% [markdown]
+# ## Exports and imports as share of GDP
+# JH comment:  This strikes me as a much simpler way to calulate this variable ('Ratio of exports and imports to GDP (%) (PWT 9.1 (2019))' in the old data). These shares are Shares in cgdpo. Let's compare them to the those calculated from the NA data. 
+
+# %%
+# Sum exports as share of GDP and imports as share of GDP 
+df['x_m_share'] = df['csh_x'] + df['csh_m']
+
+
+# JH comment: The World value for this is just the GDP-weighted average across countries. But we should look into coverage – the composition will be changing. Or should we insist on a complete panel? (We should take a look at coverage in general).
+
 
 
 
