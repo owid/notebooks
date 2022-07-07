@@ -52,3 +52,13 @@ df = pd.read_excel(url, sheet_name='Data')
 # %% [markdown]
 # Here we save it as a csv to our s3 storage.
 upload_to_s3(df, 'pwt', 'raw_dataframe_national_accounts.csv')
+
+
+# %%
+countries = df[['country', 'countrycode']]
+
+countries = countries.drop_duplicates()
+# %%
+upload_to_s3(df, 'pwt', 'countrylist.csv')
+
+# %%
