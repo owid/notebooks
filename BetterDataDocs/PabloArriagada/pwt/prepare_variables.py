@@ -21,7 +21,6 @@ and see their outputs.
 Clicking on **'Copy to Drive'** in the menu bar above will open up a new
 copy in your own Google Drive that you can then edit to explore 
 the data and how we have transformed it.
-
 """
 # %% [markdown]
 """
@@ -222,15 +221,14 @@ df['x_m_share'] = df['csh_x'] - df['csh_m']
 df_world = df.copy()
 df_world['trade_x_gdp'] = df_world['x_m_share'] * df_world['cgdpo'] #Pablo: Should I use cgdpo?
 df_world = df_world.groupby(['year']).sum()
+df_world.reset_index(inplace=True)
 
-df_world['x_m_share'] = 
+df_world['x_m_share'] = df_world['trade_x_gdp'] / df_world['cgdpo']
+df_world.drop(['trade_x_gdp'], axis = 1, inplace=True)
 
-
-# %%
-df[['csh_x','csh_m']].describe()
-
-# %%
-df_world
+df_world['entity'] = 'World'
+df_world = df_world[['entity', 'year', 'x_m_share']]
+df = pd.concat([df,df_world], ignore_index=True)
 
 # %% [markdown]
 # # Variable metadata
