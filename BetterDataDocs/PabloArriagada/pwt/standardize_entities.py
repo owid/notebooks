@@ -28,9 +28,11 @@ import pandas as pd
 
 # %% 
 def standardize_and_save(raw_csv_url,
-                        entity_mapping_url, # NB column names must be 'Original Name' and 'Our World In Data Name'
-                        entity_name_in_raw,
-                        resulting_entity_name,
+                        entity_mapping_url,
+                        mapping_varname_raw,
+                        mapping_vaname_owid,
+                        data_varname_old,
+                        data_varname_new,
                         s3_space_to_save_in,
                         as_filename):
     
@@ -43,13 +45,13 @@ def standardize_and_save(raw_csv_url,
 
     # Merge in mapping to raw
     df_harmonized = pd.merge(df_raw,df_mapping,
-      left_on=entity_name_in_raw,right_on='Original Name', how='left')
+      left_on=data_varname_old,right_on=mapping_varname_raw, how='left')
     
     # Drop the old entity names column, and the matching column from the mapping file
-    df_harmonized = df_harmonized.drop(columns=[entity_name_in_raw, 'Original Name'])
+    df_harmonized = df_harmonized.drop(columns=[data_varname_old, mapping_varname_raw])
     
     # Rename the new entity column
-    df_harmonized = df_harmonized.rename(columns={'Our World In Data Name': resulting_entity_name})
+    df_harmonized = df_harmonized.rename(columns={mapping_vaname_owid:data_varname_new})
 
     # Move the entity column to front:
 
@@ -57,7 +59,7 @@ def standardize_and_save(raw_csv_url,
     cols = list(df_harmonized)
     
     # move the country column to the first in the list of columns
-    cols.insert(0, cols.pop(cols.index(resulting_entity_name)))
+    cols.insert(0, cols.pop(cols.index(data_varname_new)))
     
     # reorder the columns of the dataframe according to the list
     df_harmonized = df_harmonized.loc[:, cols]
