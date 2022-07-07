@@ -26,6 +26,7 @@ import pandas as pd
                
 
 # %%
+# PREP MAIN DATA FILE
 # Load the original raw data file as a pandas dataframe. 
 # (For the time being, this is in Joe's own Digital Ocean account).
 
@@ -34,12 +35,20 @@ url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/pwt100-original.xlsx'
 df = pd.read_excel(url, sheet_name='Data')
 
 # %% [markdown]
-# Here is the first few rows of the data:
+# Here we save it as a csv to our s3 storage.
+upload_to_s3(df, 'pwt', 'raw_dataframe.csv')
+
+
+
 # %%
-df.head()
+# PREP NATIONAL ACCOUNTS DATA FILE
+# Load the original raw data file as a pandas dataframe. 
+# (For the time being, this is in Joe's own Digital Ocean account).
 
+url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/pwt100-na-data-original.xlsx'
 
+df = pd.read_excel(url, sheet_name='Data')
 
 # %% [markdown]
 # Here we save it as a csv to our s3 storage.
-upload_to_s3(df, 'pwt', 'raw_dataframe.csv')
+upload_to_s3(df, 'pwt', 'raw_dataframe_national_accounts.csv')
