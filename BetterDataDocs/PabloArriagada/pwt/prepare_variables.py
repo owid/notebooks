@@ -112,10 +112,10 @@ import pandas as pd
 # # Load data
 
 # %%
-# Loading the 'harmonized' data (i.e with standardized country names)
+# Loading the 'standardized' data (i.e with standardized country names)
 # – For the time being, this is stored in Joe's Digital Ocean account.
 
-url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/harmonized.csv'
+url = 'https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized.csv'
 
 df = pd.read_csv(url)
 
@@ -254,7 +254,7 @@ if s3access:
     # Select country, year and only those variables with metadata specified
     # in the metadata folder.
 
-    id_vars = ['country', 'year']
+    id_vars = ['entity', 'year']
 
     var_list = df_variable_metadata['code_name'].tolist()
 
