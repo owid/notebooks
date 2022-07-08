@@ -8,7 +8,7 @@ library(tidyr)
 library(lubridate)
 setwd("~/git/notebooks/EdouardMathieu/monkeypox")
 
-aggregate <- function(df, case_type, date_type) {
+aggregate <- function(df, case_type, date_type, pop) {
   stopifnot(date_type %in% c("confirmation", "entry"))
   stopifnot(case_type %in% c("all", "confirmed"))
   
@@ -36,10 +36,19 @@ aggregate <- function(df, case_type, date_type) {
   # Add cumulative version
   df[, cumulative := cumsum(N), location]
   
+  # Add per-capita metrics
+  df <- merge(df, pop, by = "location", all.x = TRUE)
+  stopifnot(all(!is.na(df$population)))
+  df[, N_pm := round(N * 1000000 / population, 3)]
+  df[, cumulative_pm := round(cumulative * 1000000 / population, 3)]
+  df[, rolling_avg_pm := round(rolling_avg * 1000000 / population, 3)]
+  df[, population := NULL]
+  
   setnames(
     df,
-    c("N", "cumulative", "rolling_avg"),
-    sprintf("%s_%s_by_%s", c("daily", "total", "7day"), case_type, date_type)
+    c("N", "cumulative", "rolling_avg", "N_pm", "cumulative_pm", "rolling_avg_pm"),
+    c(sprintf("%s_%s_by_%s", c("daily", "total", "7day"), case_type, date_type),
+      sprintf("%s_%s_by_%s_per_million", c("daily", "total", "7day"), case_type, date_type))
   )
   
   return(df)
@@ -66,10 +75,18 @@ df[, location := NULL]
 setnames(df, "new", "location")
 setcolorder(df, "location")
 
+# Population data
+pop <- fread(
+  "https://github.com/owid/covid-19-data/raw/master/scripts/input/un/population_latest.csv",
+  select = c("entity", "population"),
+  col.names = c("location", "population"),
+  showProgress = FALSE
+)
+
 dataframes <- list(
-  aggregate(df, "confirmed", "confirmation"),
-  aggregate(df, "confirmed", "entry"),
-  aggregate(df, "all", "entry")
+  aggregate(df, "confirmed", "confirmation", pop),
+  aggregate(df, "confirmed", "entry", pop),
+  aggregate(df, "all", "entry", pop)
 )
 
 df <- reduce(dataframes, full_join, by = c("location", "date"))
