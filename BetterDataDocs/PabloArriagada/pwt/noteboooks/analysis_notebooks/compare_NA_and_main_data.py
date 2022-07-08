@@ -37,13 +37,13 @@ df_na.head()
 
 # %%
 # Exports are (mostly) positive
-fig = px.histogram(df_main, x="csh_x", marginal="box")
+fig = px.histogram(df_main, x="csh_x", marginal="box", hover_data=df_main[['entity', 'year']])
 fig.show()
 
 
 # %%
 # And imports are (mostly) negative
-fig = px.histogram(df_main, x="csh_m", marginal="box")
+fig = px.histogram(df_main, x="csh_m", marginal="box", hover_data=df_main[['entity', 'year']])
 fig.show()
 
 # %%
@@ -64,7 +64,7 @@ df_main['x_m_share'] = (abs(df_main['csh_x']) + abs(df_main['csh_m'])) * 100
 # There is a very wide range of values for trade openness.
 # %%
 #Histogram of trade openness observations.
-fig = px.histogram(df_main, x="x_m_share", marginal="box")
+fig = px.histogram(df_main, x="x_m_share", marginal="box",hover_data=df_main[['entity', 'year']])
 fig.show()
 
 # %% [markdown]
@@ -123,15 +123,15 @@ df_main = pd.concat([df_main,df_main_world], ignore_index=True)
 
 
 # %%
-# Exports are (mostly) positive
+# Exports distribution for NA
 df_na['v_x_sh'] = df_na['v_x']/df_na['v_gdp'] 
-fig = px.histogram(df_na, x="v_x", marginal="box")
+fig = px.histogram(df_na, x="v_x", marginal="box", hover_data=df_na[['entity', 'year']])
 fig.show()
 
 
 # %%
-# And imports are (mostly) negative
-fig = px.histogram(df_na, x="v_m", marginal="box")
+# Imports distribution for NA
+fig = px.histogram(df_na, x="v_m", marginal="box", hover_data=df_na[['entity', 'year']])
 fig.show()
 
 # %%

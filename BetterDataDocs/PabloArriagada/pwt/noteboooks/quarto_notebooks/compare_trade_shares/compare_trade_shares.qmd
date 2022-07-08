@@ -103,6 +103,16 @@ Here we plot the global aggregate calculated in both ways. In the `Complete` cov
 ## JH comment
 Pablo, I'm not sure why there is a gap in the `Incomplete` series between 1998 and 2004. Perhaps I have the calculation wrong. Could you please check to see what's going on.
 
+Pablo: It is because of the how = 'all' instruction instead of 'any' in the dropna operation. I see you try to remove the countries with null data, but it seems it removes the entire year: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+
+I would change it to 'any'. See, Bermuda is causing trouble again. It doesn't have `cgdpo` for 1999, 2000, 2001 and 2003 (there is a point for 2002, 0.42):
+```{python}
+world_trade_openness_main_alt = df_main.dropna(subset=['trade_openness', 'cgdpo'], how = 'all')
+world_trade_openness_main_alt2 = df_main.dropna(subset=['trade_openness', 'cgdpo'], how = 'any')
+df_diff = pd.concat([world_trade_openness_main_alt,world_trade_openness_main_alt2]).drop_duplicates(keep=False)
+df_diff[['entity', 'year', 'trade_openness', 'cgdpo']]
+
+
 :::
 
 ```{python}
@@ -167,21 +177,21 @@ We calculate exports and imports as shares of GDP – for both the current and c
 #| code-fold: true
 #| code-summary: "Calculate shares and plot"
 
-#Current price shares
-df_na['import_share_current_prices'] = df_na['v_x']/df_na['v_gdp'] 
-df_na['export_share_current_prices'] = df_na['v_m']/df_na['v_gdp'] 
+     #Current price shares
+     df_na['import_share_current_prices'] = df_na['v_x']/df_na['v_gdp'] 
+     df_na['export_share_current_prices'] = df_na['v_m']/df_na['v_gdp'] 
 
-#Constant price shares
-df_na['import_share_constant_prices'] = df_na['q_x']/df_na['q_gdp'] 
-df_na['export_share_constant_prices'] = df_na['q_m']/df_na['q_gdp'] 
+     #Constant price shares
+     df_na['import_share_constant_prices'] = df_na['q_x']/df_na['q_gdp'] 
+     df_na['export_share_constant_prices'] = df_na['q_m']/df_na['q_gdp'] 
 
-# Reshape for plot
-df_plot = df_na[['year','entity','import_share_current_prices', 'export_share_current_prices', 'import_share_constant_prices', 'export_share_constant_prices']]
+     # Reshape for plot
+     df_plot = df_na[['year','entity','import_share_current_prices', 'export_share_current_prices', 'import_share_constant_prices', 'export_share_constant_prices']]
 
-df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
+     df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
 
-fig = px.box(df_plot, x = 'measure', y="value")
-fig.show()
+     fig = px.box(df_plot, x = 'measure', y="value")
+     fig.show()
 
 ```
 
