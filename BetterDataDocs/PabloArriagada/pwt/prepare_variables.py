@@ -1,3 +1,4 @@
+# %%
 
 # %% [markdown]
 """
@@ -20,8 +21,6 @@ and see their outputs.
 Clicking on **'Copy to Drive'** in the menu bar above will open up a new
 copy in your own Google Drive that you can then edit to explore 
 the data and how we have transformed it.
-
-
 """
 # %% [markdown]
 """
@@ -130,11 +129,11 @@ df.head()
 
 # %% [markdown]
 # ## Adjusting units
-"""
-A range of variables are provided in millions. Here we multiple by 1,000,000 to express 
-these in individual units.
-"""
-# %% 
+# """
+# A range of variables are provided in millions. Here we multiple by 1,000,000 to express 
+# these in individual units.
+# """
+# %%
 #Multiplying by 1 million to get $ instead of millions of $
 
 df['rgdpe'] = df['rgdpe']*1000000
@@ -157,10 +156,11 @@ df['emp'] = df['emp']*1000000
 
 
 # %% [markdown]
-"""
-A range of variables are provided as shares (0-1), which we multiply by 100 to express as a percentage.
-"""
+# """
+# A range of variables are provided as shares (0-1), which we multiply by 100 to express as a percentage.
+# """
 
+# %%
 df['labsh'] = df['labsh']*100
 df['irr'] = df['irr']*100
 
@@ -171,9 +171,6 @@ df['csh_g'] = df['csh_g']*100
 df['csh_x'] = df['csh_x']*100
 df['csh_m'] = df['csh_m']*100
 df['csh_r'] = df['csh_r']*100
-
-
-
 
 # %% [markdown]
 # ## GDP per capita variables
@@ -190,15 +187,15 @@ df['rgdpna_pc'] = df['rgdpna']/df['pop']
 
 # %% [markdown]
 # ## Labour productivity
-"""
-We derive a measure of productivity – defined as output per hour worked.
-
-For this we use GDP measured in terms of output and using multiple price benchmarks 
-(see *LINK* for a discussion of the different GDP variables available in Penn World Tables).
-
-We divide this GDP variable by the total hours worked – calculated by multiplying the number of 
-workers by the annual number of hours of work per worker.
-"""
+# """
+# We derive a measure of productivity – defined as output per hour worked.
+#
+# For this we use GDP measured in terms of output and using multiple price benchmarks 
+# (see *LINK* for a discussion of the different GDP variables available in Penn World Tables).
+#
+# We divide this GDP variable by the total hours worked – calculated by multiplying the number of 
+# workers by the annual number of hours of work per worker.
+# """
 
 # %%
 #Productivity = (rgdpo) / (avh*emp) – NB, both rgdpo and emp have been multiplied by 1,000,000 above.
@@ -208,29 +205,39 @@ df['productivity'] = df['rgdpo']/(df['avh']*df['emp'])
 
 # %% [markdown]
 # ## Exports and imports as share of GDP
-"""
-JH comment:  This strikes me as a much simpler way to calulate this variable ('Ratio of exports and imports to GDP (%) (PWT 9.1 (2019))' in the old data).
- 
-These shares (csh_x, csh_m) are shares in cgdpo from the main data file. I wonder – are they the same as shares calculated using the National Accounts data? I can't understand why they would be different, but maybe there is some difference to do with the prices that I'm not understanding. It'd be good to compare them and see.
-"""
+# """
+# JH comment:  This strikes me as a much simpler way to calulate this variable ('Ratio of exports and imports to GDP (%) (PWT 9.1 (2019))' in the old data).
+#  
+# These shares (csh_x, csh_m) are shares in cgdpo from the main data file. I wonder – are they the same as shares calculated using the National Accounts data? I can't understand why they would be different, but maybe there is some difference to do with the prices that I'm not understanding. It'd be good to compare them and see.
+# """
 # %%
 # Sum exports as share of GDP and imports as share of GDP 
-df['x_m_share'] = df['csh_x'] + df['csh_m']
+df['x_m_share'] = df['csh_x'] - df['csh_m']
+#Pablo: at least to keep the logic of the ratio variable it should be exports **minus** the imports
+#Because the import shares are (mostly) negative. See statistics in next cell
 
 
 # JH comment: The World value for this is just the GDP-weighted average across countries. But we should look into coverage – the composition will be changing. Or should we insist on a complete panel? (We should take a look at coverage in general).
+df_world = df.copy()
+df_world['trade_x_gdp'] = df_world['x_m_share'] * df_world['cgdpo'] #Pablo: Should I use cgdpo?
+df_world = df_world.groupby(['year']).sum()
+df_world.reset_index(inplace=True)
 
+df_world['x_m_share'] = df_world['trade_x_gdp'] / df_world['cgdpo']
+df_world.drop(['trade_x_gdp'], axis = 1, inplace=True)
 
-
+df_world['entity'] = 'World'
+df_world = df_world[['entity', 'year', 'x_m_share']]
+df = pd.concat([df,df_world], ignore_index=True)
 
 # %% [markdown]
 # # Variable metadata
-"""
-We have written metadata to accompany this data in our database. It is stored in [this Google Sheet](https://docs.google.com/spreadsheets/d/1gbk8lBc4ZTjzE94pG8vgFX1Ta5baIQhpdD158GhPJsc/edit#gid=0).
-
-Here we read in the variable-level metadata from the sheet.
-
-"""
+# """
+# We have written metadata to accompany this data in our database. It is stored in [this Google Sheet](https://docs.google.com/spreadsheets/d/1gbk8lBc4ZTjzE94pG8vgFX1Ta5baIQhpdD158GhPJsc/edit#gid=0).
+#
+# Here we read in the variable-level metadata from the sheet.
+#
+# """
 # %%
 # Specify sheet id and sheet (tab) name for the metadata google sheet 
 sheet_id = '1gbk8lBc4ZTjzE94pG8vgFX1Ta5baIQhpdD158GhPJsc'
@@ -242,10 +249,10 @@ df_variable_metadata = pd.read_csv(url)
 
 # %% [markdown]
 # # Upload prepared data to our database
-
-"""
-This section is for internal purposes, and will not run unless you have the right permissions.
-"""
+#
+# """
+# This section is for internal purposes, and will not run unless you have the right permissions.
+# """
 
 # %%
 # Keep only id vars (country and year) and vars with metadata
