@@ -8,6 +8,7 @@ import plotly.io as pio
 
 #pio.renderers.default = "jupyterlab+png+colab+notebook_connected+vscode"
 #JH comment: When running this in VC Code, this line creates problems for me. There seems to be a dependency missing.
+#Pablo: As long as it runs for the both of us without the code it's fine
 
 # %%
 #Main data file
@@ -29,7 +30,7 @@ df_na.head()
 
 
 # %% [markdown]
-## Trade shares using the main data file
+# # Trade shares using the main data file
 # The variable `x_m_share` is the trade ratio estimated with `csh_x` (share of exports) and `csh_m` (share of imports) in `cgdpo`
 # Note that exports are expressed as positive numbers, and imports as negative numbers.
 # But there are four observations for Bermuda where this is reversed. We are not sure how to interpret that.
@@ -50,6 +51,7 @@ fig.show()
 df_main[(df_main['csh_x']<0) | (df_main['csh_m']>0)]
 
 
+
 # %%
 # Sum exports as share of GDP and imports as share of GDP (using absolute values)
 df_main['x_m_share'] = (abs(df_main['csh_x']) + abs(df_main['csh_m'])) * 100
@@ -67,14 +69,28 @@ fig.show()
 
 # %% [markdown]
 # Here we show the time series for countries with any values that exceed 500%.
-#<br>
+# <br>
 # We see that ther very large values we saw in the histogram come from 
 # spikes seen in a handful of offshore financial centres. The largest spike is seen 
 # in Bermuda for the years where the sign on the imports and export values were 
 # reversed. (See discussion above).
+#
+# Pablo: I am not able to see this following bit of code as actual code, it runs as markdown in Jupyter
+#
+# threshold = 1
+# high_value_countries = df_main.loc[df_main['x_m_share'] > 500, 'entity'].drop_duplicates()
+# high_value_countries.values.tolist()
+# print(high_value_countries)
+#
+# plot_data = df_main[df_main['entity'].isin(high_value_countries)]
+# fig = px.line(plot_data, x = 'year', y='x_m_share', 
+#     title = "Countries with large trade flows",
+#     color = 'entity')
+# fig.show()
 
-threshold = 1
-high_value_countries = df_main.loc[df_main['x_m_share'] > 500, 'entity'].drop_duplicates()
+# %%
+threshold = 500
+high_value_countries = df_main.loc[df_main['x_m_share'] > threshold, 'entity'].drop_duplicates()
 high_value_countries.values.tolist()
 print(high_value_countries)
 
@@ -88,8 +104,10 @@ fig.show()
 # Here we calculate the same measure of trade openness for the world in 
 # aggregate and add it as a new 'entity' to the dataset.
 
+
+# %%
 df_main_world = df_main.copy()
-df_main_world['trade_x_gdp'] = df_main_world['x_m_share'] * df_main_world['cgdpo'] #Pablo: Should I use cgdpo? JH: Yes – that's clear from the legend in the original xls file.
+df_main_world['trade_x_gdp'] = df_main_world['x_m_share'] * df_main_world['cgdpo']
 df_main_world = df_main_world.groupby(['year']).sum()
 df_main_world.reset_index(inplace=True)
 
@@ -100,9 +118,8 @@ df_main_world['entity'] = 'World'
 df_main_world = df_main_world[['entity', 'year', 'x_m_share']]
 df_main = pd.concat([df_main,df_main_world], ignore_index=True)
 
-
 # %% [markdown]
-## Trade shares using the national accounts data file
+# # Trade shares using the national accounts data file
 
 
 # %%
@@ -118,14 +135,11 @@ fig = px.histogram(df_na, x="v_m")
 fig.show()
 
 # %%
-# Show observations with either negative exports or positive imports.
-df_main[(df_main['csh_x']<0) | (df_main['csh_m']>0)]
+# Show observations with either negative exports or positive imports: None
+df_na[(df_na['v_x']<0) | (df_na['v_m']<0)]
 
 
 
-# %%
-# Sum exports as share of GDP and imports as share of GDP (using absolute values)
-df_main['x_m_share'] = (abs(df_main['csh_x']) + abs(df_main['csh_m'])) * 100
 # %% [markdown]
 # The variable 'ratio' is the trade ratio estimated with `v_x` (value of exports) `v_m` (value of imports) and `v_gdp`, the GDP taken from the National Accounts dataset from PWT.
 
@@ -162,7 +176,7 @@ df_merge[['x_m_share', 'ratio']].describe()
 #Reshape for line plot
 df_long = df_merge[['year','entity','x_m_share', 'ratio']]
 df_long = df_long.melt(id_vars=['year','entity'], var_name='measure')
-df_long.head()
+df_long
 # %%
 
 select_entities = ['United Kingdom', "United States", "China", "South Africa"]
