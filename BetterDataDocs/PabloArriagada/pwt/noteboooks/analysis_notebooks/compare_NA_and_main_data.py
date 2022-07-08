@@ -50,7 +50,6 @@ fig.show()
 df_main[(df_main['csh_x']<0) | (df_main['csh_m']>0)]
 
 
-
 # %%
 # Sum exports as share of GDP and imports as share of GDP (using absolute values)
 df_main['x_m_share'] = (abs(df_main['csh_x']) + abs(df_main['csh_m'])) * 100
