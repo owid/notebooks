@@ -7,6 +7,7 @@ import plotly.express as px
 import plotly.io as pio
 
 #pio.renderers.default = "jupyterlab+png+colab+notebook_connected+vscode"
+#JH comment: When running this in VC Code, this line creates problems for me. There seems to be a dependency missing.
 
 # %%
 #Main data file
@@ -157,6 +158,24 @@ df_merge = pd.merge(df_main, df_na[['entity', 'year', 'ratio']], on=['entity','y
 
 # %%
 df_merge[['x_m_share', 'ratio']].describe()
+
+# %%
+#Reshape for line plot
+df_long = df_merge[['year','entity','x_m_share', 'ratio']]
+df_long = df_long.melt(id_vars=['year','entity'], var_name='measure')
+df_long.head()
+# %%
+
+select_entities = ['United Kingdom', "United States", "China", "South Africa"]
+
+plot_data = df_long[df_long['entity'].isin(select_entities)]
+
+fig = px.line(plot_data, x = 'year', y='value', 
+    title = "Compare measures of trade openness",
+    color = 'measure',
+    facet_col='entity',
+    facet_col_wrap=2)
+fig.show()
 
 # %% [markdown]
 # A division between both measures is done to compare their magnitudes.
