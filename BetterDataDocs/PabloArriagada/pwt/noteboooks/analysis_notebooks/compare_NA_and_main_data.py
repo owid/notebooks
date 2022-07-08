@@ -103,6 +103,29 @@ df_main = pd.concat([df_main,df_main_world], ignore_index=True)
 
 # %% [markdown]
 ## Trade shares using the national accounts data file
+
+
+# %%
+# Exports are (mostly) positive
+df_na['v_x_sh'] = df_na['v_x']/df_na['v_gdp'] 
+fig = px.histogram(df_na, x="v_x")
+fig.show()
+
+
+# %%
+# And imports are (mostly) negative
+fig = px.histogram(df_na, x="v_m")
+fig.show()
+
+# %%
+# Show observations with either negative exports or positive imports.
+df_main[(df_main['csh_x']<0) | (df_main['csh_m']>0)]
+
+
+
+# %%
+# Sum exports as share of GDP and imports as share of GDP (using absolute values)
+df_main['x_m_share'] = (abs(df_main['csh_x']) + abs(df_main['csh_m'])) * 100
 # %% [markdown]
 # The variable 'ratio' is the trade ratio estimated with `v_x` (value of exports) `v_m` (value of imports) and `v_gdp`, the GDP taken from the National Accounts dataset from PWT.
 
