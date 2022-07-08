@@ -72,9 +72,6 @@ df_plot = df_main[['year','entity','csh_x', 'csh_m']]
 df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
 
 fig = px.box(df_plot, x = 'measure', y="value", range_y=[-7, 7])
-# fig = px.histogram(df_plot, x="value",
-#                 facet_col = 'measure',
-#                 range_x=[-5, 5])
 fig.show()
 ```
 
@@ -164,13 +161,50 @@ The National Accounts data file provides us with the value of exports and import
 
 The file also provides us with GDP (again measured in local currencies at both current and constant prices).
 
-We calculate exports and imports as shares of GDP. (Compare constant and current prices – should be the same.)
+We calculate exports and imports as shares of GDP – for both the current and constant price data.
 
 ```{python}
 #| code-fold: true
-#| code-summary: "Calculate shares"
+#| code-summary: "Calculate shares and plot"
 
-df_na['v_x_sh'] = df_na['v_x']/df_na['v_gdp'] 
-df_na['v_m_sh'] = df_na['v_m']/df_na['v_gdp'] 
+#Current price shares
+df_na['import_share_current_prices'] = df_na['v_x']/df_na['v_gdp'] 
+df_na['export_share_current_prices'] = df_na['v_m']/df_na['v_gdp'] 
+
+#Constant price shares
+df_na['import_share_constant_prices'] = df_na['q_x']/df_na['q_gdp'] 
+df_na['export_share_constant_prices'] = df_na['q_m']/df_na['q_gdp'] 
+
+# Reshape for plot
+df_plot = df_na[['year','entity','import_share_current_prices', 'export_share_current_prices', 'import_share_constant_prices', 'export_share_constant_prices']]
+
+df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
+
+fig = px.box(df_plot, x = 'measure', y="value")
+fig.show()
 
 ```
+
+We see that the shares calculated according to the current and constant price data are similar, but not identical. Here we plot the ratio of the current to constant price shares for both imports and exports. Whilst the ratio is generally close to one, there is a large range.
+
+
+```{python}
+#| code-fold: true
+#| code-summary: "Compare constant and current prices plot"
+
+#Calculate ratio of current to constant price shares
+df_na['import_ratio'] = df_na['import_share_current_prices']/df_na['import_share_constant_prices'] 
+df_na['export_ratio'] = df_na['export_share_current_prices']/df_na['export_share_constant_prices'] 
+
+# Reshape for plot
+df_plot = df_na[['year','entity','import_ratio', 'export_ratio']]
+
+df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
+
+fig = px.box(df_plot, x = 'measure', y="value", range_y=[-0.1,10])
+fig.show()
+
+```
+
+
+Again we can calculate a global aggregate. But we have to convert currencies....
