@@ -173,48 +173,78 @@ The file also provides us with GDP (again measured in local currencies at both c
 
 We calculate exports and imports as shares of GDP – for both the current and constant price data.
 
+We see that the shares calculated according to the current and constant price data are different.
+
 ```{python}
 #| code-fold: true
 #| code-summary: "Calculate shares and plot"
 
+
+     df_imports = df_na[['year', 'entity']]
+     df_exports = df_na[['year', 'entity']]
+
      #Current price shares
-     df_na['import_share_current_prices'] = df_na['v_x']/df_na['v_gdp'] 
-     df_na['export_share_current_prices'] = df_na['v_m']/df_na['v_gdp'] 
+     df_imports['Current prices'] = df_na['v_x']/df_na['v_gdp'] 
+     df_exports['Current prices'] = df_na['v_m']/df_na['v_gdp'] 
 
      #Constant price shares
-     df_na['import_share_constant_prices'] = df_na['q_x']/df_na['q_gdp'] 
-     df_na['export_share_constant_prices'] = df_na['q_m']/df_na['q_gdp'] 
+     df_imports['Constant prices'] = df_na['q_x']/df_na['q_gdp'] 
+     df_exports['Constant prices'] = df_na['q_m']/df_na['q_gdp'] 
 
-     # Reshape for plot
-     df_plot = df_na[['year','entity','import_share_current_prices', 'export_share_current_prices', 'import_share_constant_prices', 'export_share_constant_prices']]
 
-     df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
+     df_imports['measure'] = "Imports/GDP"
+     df_exports['measure'] = "Exports/GDP"
 
-     fig = px.box(df_plot, x = 'measure', y="value")
+     df_plot = pd.concat([df_imports,df_exports])
+
+
+
+     fig = px.scatter(df_plot, x = 'Current prices', y="Constant prices", color = 'entity', facet_col = 'measure')
      fig.show()
+     #fig = px.box(df_plot, x = 'measure', y="value")
+     #fig.show()
 
 ```
 
-We see that the shares calculated according to the current and constant price data are similar, but not identical. Here we plot the ratio of the current to constant price shares for both imports and exports. Whilst the ratio is generally close to one, there is a large range.
+The national accounts data file give a breakdown of GDP into other components. To try to understand what's going on with the price adjustments, I sum these up for the current and constand price data.
+
+```{python}
+#| code-fold: true
+#| code-summary: "Check components of current price GDP sum to one"
+
+df_na['composition_check_current'] = (df_na['v_c'] + 
+                                    df_na['v_i'] +
+                                    df_na['v_g'] +
+                                    df_na['v_x'] -
+                                    df_na['v_m'])/df_na['v_gdp']
+
+df_na['composition_check_current'].describe()                                    
+
+```
 
 
 ```{python}
 #| code-fold: true
-#| code-summary: "Compare constant and current prices plot"
+#| code-summary: "Check components of constant price GDP sum to one"
 
-#Calculate ratio of current to constant price shares
-df_na['import_ratio'] = df_na['import_share_current_prices']/df_na['import_share_constant_prices'] 
-df_na['export_ratio'] = df_na['export_share_current_prices']/df_na['export_share_constant_prices'] 
+df_na['composition_check_constant'] = (df_na['q_c'] + 
+                                    df_na['q_i'] +
+                                    df_na['q_g'] +
+                                    df_na['q_x'] -
+                                    df_na['q_m'])/df_na['q_gdp']
 
-# Reshape for plot
-df_plot = df_na[['year','entity','import_ratio', 'export_ratio']]
-
-df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
-
-fig = px.box(df_plot, x = 'measure', y="value", range_y=[-0.1,10])
-fig.show()
-
+df_na['composition_check_constant'].describe()                                    
 ```
 
+
+
+```{python}
+#| code-fold: true
+#| code-summary: "Browse observations with total sum<.5"
+
+df_na.loc[df_na['composition_check_constant']<.5]
+
+
+```
 
 Again we can calculate a global aggregate. But we have to convert currencies....
