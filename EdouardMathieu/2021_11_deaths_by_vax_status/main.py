@@ -305,15 +305,15 @@ def process_che(source: str):
 
     # Age standardization based on single-year population estimates by the United Nations
     age_pyramid = {
-        "00-09": 892899,
-        "10-19": 841842,
-        "20-29": 1027126,
-        "30-39": 1220774,
-        "40-49": 1163760,
-        "50-59": 1323318,
-        "60-69": 1006299,
-        "70-79": 765354,
-        "80+": 474122,
+        "00-09": 878021,
+        "10-19": 851711,
+        "20-29": 1025207,
+        "30-39": 1243830,
+        "40-49": 1201683,
+        "50-59": 1300832,
+        "60-69": 983365,
+        "70-79": 741352,
+        "80+": 463613,
     }
     df["age_group_standard"] = df.Entity.replace(age_pyramid)
     df["age_group_proportion"] = df.age_group_standard / sum(age_pyramid.values())
