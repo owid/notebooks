@@ -55,10 +55,3 @@ upload_to_s3(df, 'pwt', 'raw_dataframe_national_accounts.csv')
 
 
 # %%
-countries = df[['country', 'countrycode']]
-
-countries = countries.drop_duplicates()
-# %%
-upload_to_s3(df, 'pwt', 'countrylist.csv')
-
-# %%

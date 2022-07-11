@@ -113,7 +113,8 @@ df_diff = pd.concat([world_trade_openness_main_alt,world_trade_openness_main_alt
 df_diff[['entity', 'year', 'trade_openness', 'cgdpo']]
 
 
-:::
+```
+
 
 ```{python}
 
@@ -180,29 +181,27 @@ We see that the shares calculated according to the current and constant price da
 #| code-summary: "Calculate shares and plot"
 
 
-     df_imports = df_na[['year', 'entity']]
-     df_exports = df_na[['year', 'entity']]
+df_imports = df_na[['year', 'entity']]
+df_exports = df_na[['year', 'entity']]
 
-     #Current price shares
-     df_imports['Current prices'] = df_na['v_x']/df_na['v_gdp'] 
-     df_exports['Current prices'] = df_na['v_m']/df_na['v_gdp'] 
+#Current price shares
+df_imports['Current prices'] = df_na['v_x']/df_na['v_gdp'] 
+df_exports['Current prices'] = df_na['v_m']/df_na['v_gdp'] 
 
-     #Constant price shares
-     df_imports['Constant prices'] = df_na['q_x']/df_na['q_gdp'] 
-     df_exports['Constant prices'] = df_na['q_m']/df_na['q_gdp'] 
-
-
-     df_imports['measure'] = "Imports/GDP"
-     df_exports['measure'] = "Exports/GDP"
-
-     df_plot = pd.concat([df_imports,df_exports])
+#Constant price shares
+df_imports['Constant prices'] = df_na['q_x']/df_na['q_gdp'] 
+df_exports['Constant prices'] = df_na['q_m']/df_na['q_gdp'] 
 
 
+df_imports['measure'] = "Imports/GDP"
+df_exports['measure'] = "Exports/GDP"
 
-     fig = px.scatter(df_plot, x = 'Current prices', y="Constant prices", color = 'entity', facet_col = 'measure')
-     fig.show()
-     #fig = px.box(df_plot, x = 'measure', y="value")
-     #fig.show()
+df_plot = pd.concat([df_imports,df_exports])
+
+
+
+fig = px.scatter(df_plot, x = 'Current prices', y="Constant prices", color = 'entity', facet_col = 'measure')
+fig.show()
 
 ```
 
@@ -247,4 +246,112 @@ df_na.loc[df_na['composition_check_constant']<.5]
 
 ```
 
-Again we can calculate a global aggregate. But we have to convert currencies....
+### Notes on entities in the National Accounts data file
+
+
+**Note 1**: There are some former states included in the national accounts data, though without any GDP or trade data (the table below shows that 100% of the observations for the measures indicated are 'NaN' (no data)).
+
+```{python}
+#| code-fold: true
+#| code-summary: "Check data for former entities"
+former_states = ['USSR', 'Yugoslavia', 'Czechoslovakia']
+
+# Shows each value as a share of total observations. The 1 indicates all values for these variables are NaN.
+df_na[df_na['entity'].isin(former_states)][['v_x', 'v_m', 'v_gdp']].value_counts(dropna=False, normalize=True)
+
+
+```
+
+We drop these former entities from the data.
+```{python}
+#| code-fold: true
+#| code-summary: "Drop former entities"
+df_na = df_na[~df_na['entity'].isin(former_states)]
+
+
+```
+
+**Note 2**: The national accounts data only provides 3-letter ISO country codes for identifying entities. There was one code – `CH2` – that does not appear to be a part of the ISO system and could not be mapped to a country name.
+
+But upon inspection it seems to be a second series for China in which the nominal data (and population) is the same, but the constant price data is different (i.e. it has been adjusted for inflation using a different set of prices). Youu can see the two entities plotted below for three variables – current price GDP, constant price GDP and population. You can toggle the entities using the legend in the chart to see that for current price GDP and population the series are the same.
+
+```{python}
+#| code-fold: true
+#| code-summary: "Plots to compare the two China series"
+china_entities = ['China', 'China (alternative inflation series)']
+
+# Reshape for faceted plot
+df_plot = df_na[df_na['entity'].isin(china_entities)][['entity', 'year', 'v_gdp','q_gdp','pop']]
+
+df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
+
+# Faceted line plot comparing the two China entities for different variables
+fig = px.line(df_plot, x = 'year', y='value', 
+    title = "Compare two China entities in the PWT national accounts data file",
+    color = 'entity',
+    facet_col='measure')
+fig.show()
+
+
+```
+
+In computing the global aggregate for the current price data, we drop one of the two China series so as to not overly weight China in the calculation.
+
+```{python}
+#| code-fold: true
+#| code-summary: "Drop former entities"
+df_na = df_na[~df_na['entity'].isin(former_states)]
+
+
+```
+
+
+### Global aggregate trade openness with the national accounts data
+
+As the national accounts data are given in local currencies, to calculate a global aggregate we need to use a common currency. The national accounts file provides exchange rates (national currency/USD) for this purpose.
+
+For the current price data we calculate a weighted average of the country data using current GDP converted to current USD as the weights.
+
+```{python}
+
+df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp']
+df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
+
+# Weighted average with incomplete coverage
+world_trade_openness_na = df_na.dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all').groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+
+world_trade_openness_na.columns = ['year', 'World trade openness']
+
+
+```
+
+
+
+
+## Compare global aggregates
+
+
+
+Here we plot the two series. For the period from 2005, where coverage is complete, the two series are equal (You can see this by toggling each series on and off by clicking on them in the legend).
+
+```{python}
+#| code-fold: true
+#| code-summary: "Plot different global aggregates together"
+
+#Reshape and stack together to plot
+world_trade_openness_na['source'] = 'National Accounts – current prices'
+
+
+#Taking the 'incomplete' coverage series calculated above from the main data file
+world_trade_openness_main_alt['source'] = "Main data – international-$ (single benchmark)"
+
+# Stack together
+df_plot= pd.concat([world_trade_openness_na,world_trade_openness_main_alt])
+
+fig = px.line(df_plot, x = 'year', y='World trade openness', 
+     title = "World trade openness – two series from PWT",
+     color = 'source')
+fig.show()
+
+```
+
