@@ -248,3 +248,7 @@ df_na.loc[df_na['composition_check_constant']<.5]
 ```
 
 Again we can calculate a global aggregate. But we have to convert currencies....
+
+
+
+## Compare global aggregates
