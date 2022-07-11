@@ -287,19 +287,19 @@ def process_che(source: str):
     df = df.drop(columns="Week")
 
     df = df[-df.Entity.isin(["all", "Unbekannt"])]
-    df["Entity"] = df.Entity.replace(
-        {
-            "0 - 9": "00-09",
-            "10 - 19": "10-19",
-            "20 - 29": "20-29",
-            "30 - 39": "30-39",
-            "40 - 49": "40-49",
-            "50 - 59": "50-59",
-            "60 - 69": "60-69",
-            "70 - 79": "70-79",
-            "80+": "80+",
-        }
-    )
+    age_dict = {
+        "0 - 9": "00-09",
+        "10 - 19": "10-19",
+        "20 - 29": "20-29",
+        "30 - 39": "30-39",
+        "40 - 49": "40-49",
+        "50 - 59": "50-59",
+        "60 - 69": "60-69",
+        "70 - 79": "70-79",
+        "80+": "80+",
+    }
+    df = df[df.Entity.isin(age_dict.keys())]
+    df["Entity"] = df.Entity.replace(age_dict)
 
     df["rate"] = 100000 * df.entries / df["pop"]
 
