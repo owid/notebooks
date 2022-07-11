@@ -1,0 +1,34 @@
+Series Name,metric
+Cost of an energy sufficient diet,cost_energy_sufficient_diet
+Cost of a nutrient adequate diet,cost_nutrient_sufficient_diet
+Cost of a healthy diet,cost_healthy_diet
+Cost of a healthy diet relative to the cost of sufficient energy from starchy staples,
+Cost of fruits,cost_fruits
+Cost of vegetables,cost_veg
+Cost of starchy staples,cost_staples
+Cost of animal-source foods,cost_animal_food
+"Cost of legumes, nuts and seeds",cost_legumes
+Cost of oils and fats,cost_oils
+Cost share for fruits in a least-cost healthy diet,cost_fruits_share
+Cost share for vegetables in a least-cost healthy diet,cost_veg_share
+Cost share for starchy staples in a least-cost healthy diet,cost_staples_share
+Cost share for animal-sourced foods in a least-cost healthy diet,cost_animal_food_share
+"Cost share for legumes, nuts and seeds in a least-cost healthy diet",cost_legumes_share
+Cost share for oils and fats in a least-cost healthy diet,cost_oils_share
+Cost of fruits relative to the starchy staples in a least-cost healthy diet,
+Cost of vegetables relative to the starchy staples in a least-cost healthy diet,
+Cost of animal-sourced foods relative to the starchy staples in a least-cost healthy diet,
+"Cost of legumes, nuts and seeds relative to the starchy staples in a least-cost healthy diet",
+Cost of oils and fats relative to the starchy staples in a least-cost healthy diet,
+Affordability of an energy sufficient diet: ratio of cost to the $0.99 food poverty line,
+Affordability of a nutrient adequate diet: ratio of cost to the $0.99 food poverty line,
+Affordability of a healthy diet: ratio of cost to the $0.99 food poverty line,
+Affordability of an energy sufficient diet: ratio of cost to food expenditures,cost_energy_sufficient_relative_expenditure
+Affordability of a nutrient adequate diet: ratio of cost to food expenditures,cost_nutrient_sufficient_relative_expenditure
+Affordability of a healthy diet: ratio of cost to food expenditures,cost_healthy_relative_expenditure
+Percent of the population who cannot afford sufficient calories at 52% of income,energy_sufficient_unaffordable_share
+Percent of the population who cannot afford nutrient adequacy at 52% of income,nutrition_sufficient_unaffordable_share
+Percent cannot afford healthy diet,healthy_unaffordable_share
+Millions of people who cannot afford sufficient calories at 52% of income,energy_sufficient_unaffordable_number
+Millions of people who cannot afford nutrient adequacy at 52% of income,nutrition_sufficient_unaffordable_number
+Millions of people who cannot afford a healthy diet at 52% of income,healthy_unaffordable_number
