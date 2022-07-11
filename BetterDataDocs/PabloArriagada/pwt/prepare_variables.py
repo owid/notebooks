@@ -204,31 +204,31 @@ df['productivity'] = df['rgdpo']/(df['avh']*df['emp'])
 
 
 # %% [markdown]
-# ## Exports and imports as share of GDP
+# ## Trade opennes
 # """
-# JH comment:  This strikes me as a much simpler way to calulate this variable ('Ratio of exports and imports to GDP (%) (PWT 9.1 (2019))' in the old data).
-#  
-# These shares (csh_x, csh_m) are shares in cgdpo from the main data file. I wonder – are they the same as shares calculated using the National Accounts data? I can't understand why they would be different, but maybe there is some difference to do with the prices that I'm not understanding. It'd be good to compare them and see.
 # """
+
+# Read in National Accounts data
+#National accounts data file – after country names have been standardized
+url = "https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized_national_accounts.csv"
+
+df_na = pd.read_csv(url)
 # %%
-# Sum exports as share of GDP and imports as share of GDP 
-df['x_m_share'] = df['csh_x'] - df['csh_m']
-#Pablo: at least to keep the logic of the ratio variable it should be exports **minus** the imports
-#Because the import shares are (mostly) negative. See statistics in next cell
+#Trade openness in individual countries
+df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp']
+
+# The World value for this is just the GDP-weighted average across countries.
+
+df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
+
+# Weighted average (dropping alt China series and NaNs)
+world_trade_openness_na = df_na[df_na['entity']!='China (alternative inflation series)']\
+     .dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all')\
+     .groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
 
 
-# JH comment: The World value for this is just the GDP-weighted average across countries. But we should look into coverage – the composition will be changing. Or should we insist on a complete panel? (We should take a look at coverage in general).
-df_world = df.copy()
-df_world['trade_x_gdp'] = df_world['x_m_share'] * df_world['cgdpo'] #Pablo: Should I use cgdpo?
-df_world = df_world.groupby(['year']).sum()
-df_world.reset_index(inplace=True)
+# JH comment: please add the world openness as an entity and then merge this into main data, keeping all country-year observations of both datasets.
 
-df_world['x_m_share'] = df_world['trade_x_gdp'] / df_world['cgdpo']
-df_world.drop(['trade_x_gdp'], axis = 1, inplace=True)
-
-df_world['entity'] = 'World'
-df_world = df_world[['entity', 'year', 'x_m_share']]
-df = pd.concat([df,df_world], ignore_index=True)
 
 # %% [markdown]
 # # Variable metadata
