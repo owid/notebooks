@@ -137,7 +137,6 @@ dmypy.json
 # BetterDataDocs Jupyter notebooks, R Markdown and html
 BetterDataDocs/**/*.ipynb
 BetterDataDocs/**/*.Rmd
-BetterDataDocs/**/*.html
 
 # BetterDataDocs Joe's s3 key file
 BetterDataDocs/**/access_key.py
