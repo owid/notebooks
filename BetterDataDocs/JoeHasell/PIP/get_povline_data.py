@@ -29,7 +29,7 @@ for p in pov_lines_cents:
     df = df[['country_name', 'reporting_year', 'reporting_level','welfare_type']]
 
     # Write to .CSV
-    df.to_csv(f'API_requests/{p}.csv')
+    df.to_csv(f'API_output_poverty/{p}.csv')
 
     # Drop from memory
     del df
