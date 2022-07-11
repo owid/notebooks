@@ -113,7 +113,8 @@ df_diff = pd.concat([world_trade_openness_main_alt,world_trade_openness_main_alt
 df_diff[['entity', 'year', 'trade_openness', 'cgdpo']]
 
 
-:::
+```
+
 
 ```{python}
 
@@ -247,8 +248,92 @@ df_na.loc[df_na['composition_check_constant']<.5]
 
 ```
 
-Again we can calculate a global aggregate. But we have to convert currencies....
+Again we can calculate a global aggregate. As the figures are given in local currencies, we need to first convert to a common currency. The national accounts file provides exchange rates (national currency/USD) for this purpose.
+
+For the current price data we calculate a weighted average of the country data using current GDP converted to current USD as the weights.
+
+**Note 1**: There are some former states included in the national accounts data – but they are not included with any GDP or trade data, so will be dropped in the calculation of the global aggreate below.
+
+```{python}
+#| code-fold: true
+#| code-summary: "Check data for former entities"
+former_states = ['USSR', 'Yugoslavia', 'Czechoslovakia']
+
+# Shows each value as a share of total observations. The 1 indicates all values for these variables are NaN.
+df_na[df_na['entity'].isin(former_states)][['v_x', 'v_m', 'v_gdp']].value_counts(dropna=False, normalize=True)
+
+```
+
+**Note 2**: The national accounts data only provides 3-letter ISO country codes for identifying entities. There was one code – `CH2` – that does not appear to be a part of the ISO system and could not be mapped to a country name. But upon inspection it seems to be a second series for China in which the nominal data (and population) is the same, but the constant price data is different (i.e. it has been adjusted for inflation using a different set of prices).
+
+```{python}
+#| code-fold: true
+#| code-summary: "Compare the two China series"
+china_entities = ['China', 'China (alternative inflation series)']
+
+# Reshape for faceted plot
+df_plot = df_na[df_na['entity'].isin(china_entities)][['entity', 'year', 'v_gdp','q_gdp','pop']]
+
+df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
+
+# Faceted line plot comparing the two China entities for different variables
+fig = px.line(df_plot, x = 'year', y='value', 
+    title = "Compare two China entities in the PWT national accounts data file",
+    color = 'entity',
+    facet_col='measure')
+fig.show()
+
+
+```
+
+
+
+```{python}
+
+df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp']
+df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
+
+
+# Weighted average with complete coverage
+world_trade_openness_na = df_na.groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+
+world_trade_openness_na.columns = ['year', 'World trade openness']
+
+world_trade_openness_na['coverage'] = "Complete"
+
+
+# Weighted average with incomplete coverage
+world_trade_openness_na_alt = df_na.dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all').groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+
+world_trade_openness_na_alt.columns = ['year', 'World trade openness']
+
+world_trade_openness_na_alt['coverage'] = "Incomplete"
+
+
+
+```
+
+
+
+Here we plot the two series. For the period from 2005, where coverage is complete, the two series are equal (You can see this by toggling each series on and off by clicking on them in the legend).
+
+```{python}
+#| code-fold: true
+#| code-summary: "Plot complete and incomplete coverage data"
+# Stack together
+df_plot= pd.concat([world_trade_openness_na,world_trade_openness_na_alt])
+
+
+
+fig = px.line(df_plot, x = 'year', y='World trade openness', 
+     title = "World trade openness (main PWT data",
+     color = 'coverage')
+fig.show()
+
+```
 
 
 
 ## Compare global aggregates
+
+
