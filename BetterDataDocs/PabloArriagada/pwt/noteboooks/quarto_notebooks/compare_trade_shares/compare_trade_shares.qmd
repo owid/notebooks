@@ -248,11 +248,10 @@ df_na.loc[df_na['composition_check_constant']<.5]
 
 ```
 
-Again we can calculate a global aggregate. As the figures are given in local currencies, we need to first convert to a common currency. The national accounts file provides exchange rates (national currency/USD) for this purpose.
+### Notes on entities in the National Accounts data file
 
-For the current price data we calculate a weighted average of the country data using current GDP converted to current USD as the weights.
 
-**Note 1**: There are some former states included in the national accounts data – but they are not included with any GDP or trade data, so will be dropped in the calculation of the global aggreate below.
+**Note 1**: There are some former states included in the national accounts data, though without any GDP or trade data (the table below shows that 100% of the observations for the measures indicated are 'NaN' (no data)).
 
 ```{python}
 #| code-fold: true
@@ -262,13 +261,25 @@ former_states = ['USSR', 'Yugoslavia', 'Czechoslovakia']
 # Shows each value as a share of total observations. The 1 indicates all values for these variables are NaN.
 df_na[df_na['entity'].isin(former_states)][['v_x', 'v_m', 'v_gdp']].value_counts(dropna=False, normalize=True)
 
+
 ```
 
-**Note 2**: The national accounts data only provides 3-letter ISO country codes for identifying entities. There was one code – `CH2` – that does not appear to be a part of the ISO system and could not be mapped to a country name. But upon inspection it seems to be a second series for China in which the nominal data (and population) is the same, but the constant price data is different (i.e. it has been adjusted for inflation using a different set of prices).
+We drop these former entities from the data.
+```{python}
+#| code-fold: true
+#| code-summary: "Drop former entities"
+df_na = df_na[~df_na['entity'].isin(former_states)]
+
+
+```
+
+**Note 2**: The national accounts data only provides 3-letter ISO country codes for identifying entities. There was one code – `CH2` – that does not appear to be a part of the ISO system and could not be mapped to a country name.
+
+But upon inspection it seems to be a second series for China in which the nominal data (and population) is the same, but the constant price data is different (i.e. it has been adjusted for inflation using a different set of prices). Youu can see the two entities plotted below for three variables – current price GDP, constant price GDP and population. You can toggle the entities using the legend in the chart to see that for current price GDP and population the series are the same.
 
 ```{python}
 #| code-fold: true
-#| code-summary: "Compare the two China series"
+#| code-summary: "Plots to compare the two China series"
 china_entities = ['China', 'China (alternative inflation series)']
 
 # Reshape for faceted plot
@@ -287,6 +298,12 @@ fig.show()
 ```
 
 
+
+
+
+Again we can calculate a global aggregate. As the figures are given in local currencies, we need to first convert to a common currency. The national accounts file provides exchange rates (national currency/USD) for this purpose.
+
+For the current price data we calculate a weighted average of the country data using current GDP converted to current USD as the weights.
 
 ```{python}
 
