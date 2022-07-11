@@ -82,7 +82,7 @@ In calculating a global aggregate series for trade openness, we drop the second 
 
 :::
 
-#### Trade openness at the country level
+#### Trade openness – individual countries
 
 To calulate trade openness for individul countries, we divde the sum of imports and exports (both of which are given as positive values in the data) by GDP – all measured in current prices (without any adjustment for inflation).
 
@@ -134,7 +134,7 @@ There are two trade variables within the main data: "Share of merchandise export
 
 
 
-#### Trade openness at the country level
+#### Trade openness – individual countries
 
 To calculate trade openness we can simply sum the import and export shares.
 
@@ -223,8 +223,12 @@ The National Accounts data also has much higher coverage than the main data file
 
 
 ### Comparing trade shares in the National Accounts and main data files
+**JH comment**: Not quite sure what's not working in the following plot.
 
 ```{python}
+#| code-fold: true
+#| code-summary: "Calculate shares and plot"
+
 # Prep trade shares from National Accounts data
 df_exports_na = df_na[['year', 'entity']]
 df_imports_na = df_na[['year', 'entity']]
@@ -253,11 +257,16 @@ df_plot = pd.concat([df_imports,df_exports])
 
 # Facet scatter to compar
 
-fig = px.scatter(df_plot, x = 'National Accounts – current price', y="Main data", color = 'entity', facet_col = 'measure')
+fig = px.scatter(df_plot, \
+     x = 'National Accounts – current price',
+     y="Main data", 
+     color = 'entity', 
+     facet_col = 'measure')
 fig.show()
 
 
 ```
+
 
 
 ### Country coverage
@@ -297,7 +306,11 @@ df_plot = pd.concat([df_imports,df_exports])
 
 
 
-fig = px.scatter(df_plot, x = 'Current prices', y="Constant prices", color = 'entity', facet_col = 'measure')
+fig = px.scatter(df_plot, 
+               x = 'Current prices', 
+               y="Constant prices", 
+               color = 'entity', 
+               facet_col = 'measure')
 fig.show()
 
 ```
