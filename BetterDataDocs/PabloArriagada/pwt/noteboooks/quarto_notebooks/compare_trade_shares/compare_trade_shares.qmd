@@ -181,29 +181,27 @@ We see that the shares calculated according to the current and constant price da
 #| code-summary: "Calculate shares and plot"
 
 
-     df_imports = df_na[['year', 'entity']]
-     df_exports = df_na[['year', 'entity']]
+df_imports = df_na[['year', 'entity']]
+df_exports = df_na[['year', 'entity']]
 
-     #Current price shares
-     df_imports['Current prices'] = df_na['v_x']/df_na['v_gdp'] 
-     df_exports['Current prices'] = df_na['v_m']/df_na['v_gdp'] 
+#Current price shares
+df_imports['Current prices'] = df_na['v_x']/df_na['v_gdp'] 
+df_exports['Current prices'] = df_na['v_m']/df_na['v_gdp'] 
 
-     #Constant price shares
-     df_imports['Constant prices'] = df_na['q_x']/df_na['q_gdp'] 
-     df_exports['Constant prices'] = df_na['q_m']/df_na['q_gdp'] 
-
-
-     df_imports['measure'] = "Imports/GDP"
-     df_exports['measure'] = "Exports/GDP"
-
-     df_plot = pd.concat([df_imports,df_exports])
+#Constant price shares
+df_imports['Constant prices'] = df_na['q_x']/df_na['q_gdp'] 
+df_exports['Constant prices'] = df_na['q_m']/df_na['q_gdp'] 
 
 
+df_imports['measure'] = "Imports/GDP"
+df_exports['measure'] = "Exports/GDP"
 
-     fig = px.scatter(df_plot, x = 'Current prices', y="Constant prices", color = 'entity', facet_col = 'measure')
-     fig.show()
-     #fig = px.box(df_plot, x = 'measure', y="value")
-     #fig.show()
+df_plot = pd.concat([df_imports,df_exports])
+
+
+
+fig = px.scatter(df_plot, x = 'Current prices', y="Constant prices", color = 'entity', facet_col = 'measure')
+fig.show()
 
 ```
 
@@ -297,11 +295,20 @@ fig.show()
 
 ```
 
+In computing the global aggregate for the current price data, we drop one of the two China series so as to not overly weight China in the calculation.
+
+```{python}
+#| code-fold: true
+#| code-summary: "Drop former entities"
+df_na = df_na[~df_na['entity'].isin(former_states)]
 
 
+```
 
 
-Again we can calculate a global aggregate. As the figures are given in local currencies, we need to first convert to a common currency. The national accounts file provides exchange rates (national currency/USD) for this purpose.
+### Global aggregate trade openness with the national accounts data
+
+As the national accounts data are given in local currencies, to calculate a global aggregate we need to use a common currency. The national accounts file provides exchange rates (national currency/USD) for this purpose.
 
 For the current price data we calculate a weighted average of the country data using current GDP converted to current USD as the weights.
 
@@ -310,25 +317,18 @@ For the current price data we calculate a weighted average of the country data u
 df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp']
 df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
 
-
-# Weighted average with complete coverage
-world_trade_openness_na = df_na.groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+# Weighted average with incomplete coverage
+world_trade_openness_na = df_na.dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all').groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
 
 world_trade_openness_na.columns = ['year', 'World trade openness']
 
-world_trade_openness_na['coverage'] = "Complete"
-
-
-# Weighted average with incomplete coverage
-world_trade_openness_na_alt = df_na.dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all').groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
-
-world_trade_openness_na_alt.columns = ['year', 'World trade openness']
-
-world_trade_openness_na_alt['coverage'] = "Incomplete"
-
-
 
 ```
+
+
+
+
+## Compare global aggregates
 
 
 
@@ -336,21 +336,22 @@ Here we plot the two series. For the period from 2005, where coverage is complet
 
 ```{python}
 #| code-fold: true
-#| code-summary: "Plot complete and incomplete coverage data"
+#| code-summary: "Plot different global aggregates together"
+
+#Reshape and stack together to plot
+world_trade_openness_na['source'] = 'National Accounts – current prices'
+
+
+#Taking the 'incomplete' coverage series calculated above from the main data file
+world_trade_openness_main_alt['source'] = "Main data – international-$ (single benchmark)"
+
 # Stack together
-df_plot= pd.concat([world_trade_openness_na,world_trade_openness_na_alt])
-
-
+df_plot= pd.concat([world_trade_openness_na,world_trade_openness_main_alt])
 
 fig = px.line(df_plot, x = 'year', y='World trade openness', 
-     title = "World trade openness (main PWT data",
-     color = 'coverage')
+     title = "World trade openness – two series from PWT",
+     color = 'source')
 fig.show()
 
 ```
-
-
-
-## Compare global aggregates
-
 
