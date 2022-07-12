@@ -8,7 +8,8 @@ import gc
 #%%
 #%%
 #specify as cents, not dolars
-pov_lines_cents = range(1,100, 1)
+#pov_lines_cents = range(1,100, 1)
+pov_lines_cents = range(95,100, 1)
 
 dollar = 0
 
@@ -26,10 +27,10 @@ for p in pov_lines_cents:
     request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&povline={pov_line}&fill_gaps=true&welfare_type=all&reporting_level=all&format=csv'
     df = pd.read_csv(request_url)
 
-    df = df[['country_name', 'reporting_year', 'reporting_level','welfare_type']]
+    df = df[['country_name', 'reporting_year', 'reporting_level','welfare_type', 'poverty_line']]
 
     # Write to .CSV
-    df.to_csv(f'API_output_poverty/{p}.csv')
+    df.to_csv(f'API_output_poverty/filled_data/{p}.csv')
 
     # Drop from memory
     del df
