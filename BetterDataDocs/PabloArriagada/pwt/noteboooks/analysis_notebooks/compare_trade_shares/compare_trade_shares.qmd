@@ -1,5 +1,4 @@
 ---
-title: OWID Data document – Calculating a measure of trade openness from the Penn World Tables
 format: html
 toc: true
 jupyter:
@@ -18,6 +17,7 @@ jupyter:
 
 # OWID Data document – Calculating a measure of trade openness from the Penn World Tables
 
+:::{.callout-note collapse="false"}
 ### About OWID Data documents
 
 OWID data documents combine computer code and text to explain and document the data we and how we prepare it from the original sources.
@@ -28,24 +28,16 @@ We make these documents available in different formats:
 - Open a runnable version in [Google Colabs](https://colab.research.google.com/drive/19ubTKaA_b_6gjaSvpuhhwwek1BvK3xYq)
 
 
-If you have this open in Google Colabs, you can run the code blocks below and see their outputs. Clicking on **'Copy to Drive'** in the menu bar above will open up a new copy in your own Google Drive that you can then _edit_ the code to explore the data further.
+If you have this open in _Google Colabs_, you can run the code blocks below and see their outputs. Clicking on **'Copy to Drive'** in the menu bar above will open up a new copy in your own Google Drive that you can then _edit_ the code to explore the data further.
 
-## Trade data in the Penn World Tables
+:::
 
+## Calculating a measure of trade openness from the Penn World Tables
 
-Penn World Tables 10.0 (_PWT_) includes two data files:
+Data for trade openness – defined as imports plus exports as a share of GDP – is not available directly within the _PWT_. Below we show how we calculate this metric, both for individual countries and as a global aggregate.
 
-- the main data file contains series that have applied various price adjustments in order to make series that are comparable across countries. The data is expressed in _international-$_, calculated in various ways.
-- a separate 'National Accounts' data file which provides data in _local currencies_ (alongside market exchange rates that allow you to convert to USD).
+In the Appendix below, we take a detailed look at alternative ways of calculating this metric with the available data in the _PWT_ and explain our reasoning for choosing the method we do.
 
-
-Both files contain series relating to trade data.
-
-We would like to produce a series for trade openness – measured as imports plus exports as a share of GDP. As well as presenting country-level data on this variable – shown in [this chart](https://ourworldindata.org/grapher/trade-openness) – we also produce a global aggregate measure of trade openness – as shown in our [Globalization over 5 centuries](https://ourworldindata.org/grapher/globalization-over-5-centuries-km) chart.
-
-At first glance, this measure seems possible to calculate from either of the two data files in _PWT_. However, as we show in this notebook, doing so yields different results.
-
-In this notebook we compare the two approaches and explain why we have decided to use the National Accounts data in our charts of trade openness.
 
 ```{python}
 #| code-fold: true
@@ -70,29 +62,16 @@ url = "https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized_nation
 df_na = pd.read_csv(url)
 ```
 
-The National Accounts data file provides us with the value of exports and imports expressed in local currencies – in both current prices (i.e. not adjusted for inflation) and constant 2017 prices (i.e adjusted for inflation in each country).
 
+Penn World Tables 10.0 (_PWT_) includes two data files:
+
+- The main data file contains series that have applied various price adjustments to available National Accounts data in order to make series that are comparable across countries and over time. The data is expressed in _international-$_, calculated in different ways.
+- A separate 'National Accounts' data file provides National Accounts data expressed in local currencies in both _current_ prices (i.e. without any adjustment for inflation over time) and _constant_ prices (adjusting for inflation within the country).
+
+We use the latter 'National Accounts' data file to calucate our measure of trade openness.
 The file also provides us with GDP (again measured in local currencies at both current and constant prices).
 
 We calculate exports and imports as shares of GDP using the current price data – that is, everything measured in local currencies in nominal terms, without adjusting for inflation.
-
-
-#### A note on constant price trade data in the national accounts
-
-In addition to the current price data, we calculated trade shares using the constant price data, expecting to find the same figures. In fact they were quite different, implying that the numerator (the trade flows) are mutiplied by a diferent number to the denominator (GDP) when the figures are adjusted for inflation.
-
-We present a comparison of these series with further discussion in the Appendix below.
-
-
-
-#### A note on the entities in the National Accounts data file
-
-The National Accounts data file includes observations for some former states (USSR, Yugoslavia, Czechoslovakia), although no GDP or trade data is available for these former states in the file.
-
-It also includes _two_ series for China: the current price data (and population) is the same across the two series, but the constant price data is different (i.e. the second entry applies a different price index series to adjust the nominal data for inflation). See note in Appendix below for furhter discussion.
-
-In calculating a global aggregate series for trade openness, we drop the second China series (so as to not overly weight China in the calculation). The former states are dropped in the calculation in an case since they have no GDP or trade data.
-
 
 
 #### Trade openness – individual countries
@@ -105,13 +84,11 @@ df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp']
 
 #### Trade openness – global aggregate
 
-To produce a global aggregate, we take the weighted average across countries, using for weights the same measure of GDP as used to calculate the trade shares.
+To produce a global aggregate, we take the weighted average across countries, using for weights the same measure of GDP as used to calculate the trade shares. (Note that the calculation is equivalent to dividing aggregate trade flows by aggregate GDP.)
 
 However, as the national accounts data are given in local currencies we first convert the latter to a common currency (USD). The national accounts file provides exchange rates (national currency/USD) for this purpose.
 
-(Note that the calculation is equivalent to dividing aggregate trade flows by aggregate GDP – both converted to USD).
-
-The average is calculated across all countries with available data in each year, and hence which countries are included in the average changes over time. In the Appendix below we discuss coverage across countries.
+We also drop an alternative set of series included in the _PWT_ National Accounts data for China. (The alternative series only relates to the inflation-adjusted data, which we are not using here – so in dropping the alternative series we are simply removing duplicate observations.)
 
 ```{python}
 df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
@@ -124,7 +101,26 @@ world_trade_openness_na = df_na[df_na['entity']!='China (alternative inflation s
 world_trade_openness_na.columns = ['year', 'World trade openness']
 ```
 
-## Trade data in the main PWT data file
+##### A note on countries and coverage in the National Accounts data file
+
+The average is calculated across all countries with available data in each year, and hence which countries are included in the average changes over time.
+
+The plot below shows which countries have the data available to be included in the world aggrgeation in each year.
+
+**JH comment**: Pablo could you please add the coverage chart so we can see the coverage of which countries are included in the NA aggregation above in any given year.
+
+
+
+You see that the National Accounts data file includes observations for some former states (USSR, Yugoslavia, Czechoslovakia), although no GDP or trade data is available for these former states in the file (and hence they are not included in the world aggregation above).
+
+It also includes _two_ series for China, one of which we drop in the calculation of the global aggregate so as to not overly weight China. We discuss the two China series further in the Appendix below.
+
+## Appendix
+
+
+### Comparison to trade data available in the main PWT data file
+
+The main _PWT_ data file also contains series relating to trade that allow us to compute, what on the surface, is the same measure. However, as we show in this section, doing so yields different results.
 
 ```{python}
 #| code-fold: true
@@ -144,23 +140,41 @@ There are two trade variables within the main data: "Share of merchandise export
 
 To calculate trade openness we can simply sum the import and export shares.
 
-#### Note on the sign of the import and export share variables
-In the boxplots below we see that, in general, exports are positive numbers and imports are negative numbers – such that exports plus imports give you net exports as a share of GDP). 
+In general, as we see in the boxplots below, export shares are positive numbers and import shares are negative numbers.
 
-However there are a few cases – a handful of years for Bermuda – where the reverse holds (see Appendix). It's not clear how these observations with a reversed sign should be interpreted. In any case, we take the absolute value of the import and export shares in calculating the trade openness metric below.
+```{python}
+#| code-fold: true
+#| code-summary: Make boxplot of import and export shares
+df_plot = df_main[['year','entity','csh_x', 'csh_m']]
+df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
+
+fig = px.box(df_plot, x = 'measure', y="value", range_y=[-7, 7])
+fig.show()
+```
+
+However there are a few cases – a handful of years for Bermuda – where the reverse holds (see table below). It's not clear how these observations with a reversed sign should be interpreted.
+
+```{python}
+#| code-fold: true
+#| code-summary: Show country years with reversed signs on the trade variables
+# Show observations with either negative exports or positive imports.
+df_main[(df_main['csh_x']<0) | (df_main['csh_m']>0)][['entity','year', 'csh_x', 'csh_m']]
+```
+
+
+For the purposes of this comparison exercise we simply take the absolute value of both export and import shares.
 
 ```{python}
 # Calculate trade openness – use absolute values
 df_main['trade_openness'] = (abs(df_main['csh_x']) + abs(df_main['csh_m']))
 ```
 
+
 #### Trade openness – global aggregate
 
 To calculate a global aggregate, we can take the weighted average of our country-level trade openness data, where for weights we use the same GDP measure used in the calculation of the trade shares.
 
-#### Note – What is the denominator of the trade share variables in the main PWT data file?
-
-As documented in the the original data file, these import/export shares are _shares in `CGDPo`_. `CGDPo` is one of the GDP series available in _PWT_. It is GDP measured in terms of output, using a single benchmark year to adjust for differences in the cost living across countries (as opposed to multiple benchmarks). See our further discussion of the difference between the GDP variables in _PWT_ **here**. (PROVIDE LINK WHEN DONE).
+As documented in the the original data file, these import/export shares are _shares in `CGDPo`_. `CGDPo` is one of the GDP series available in main _PWT_ file. It is GDP measured in terms of output, using a single benchmark year to adjust for differences in the cost living across countries.
 
 ```{python}
 # Weighted average, dropping NaNs
@@ -169,10 +183,10 @@ world_trade_openness_main = df_main.dropna(subset=['trade_openness', 'cgdpo'], h
 world_trade_openness_main.columns = ['year', 'World trade openness']
 ```
 
-## Compare National Accounts and Main data
+#### Comparing trade openness calculated from the National Accounts and main data files
 
 
-Here we plot the two global aggregate trade openness series.
+Here we plot the two global aggregate trade openness series, as calculated from the National Accounts data file (using current prices) and from the main data file.
 
 We see that the two sets of data yield quite different series – although the trends are similar.
 
@@ -196,29 +210,9 @@ fig = px.line(df_plot, x = 'year', y='World trade openness',
 fig.show()
 ```
 
-**Why are the series different?**
+As we see in the plot below, the underlying trade shares for individual countries are also different. The fact that that many observations fall far from the 45-degree line shows that there are large differences between the two sets of data.
 
-First, as we discuss in the Appendix, country coverage is different between the two files. Coverage is considerably better for the National Accounts data. However even for the recent period where coverage is complete in both files, the series are different.
-
-Second, the trade shares for individual countries are different in the different datasets (see Appendix). This implies that, in adjusting the National Accounts data to arrive at the tade series in the main data, the numerators (the trade flows) are being mutiplied by a diferent number than the denominators (GDP).
-
-**Why do we use the National Accounts data in our charts**
-
-The series for trade openess we use in our charts is calculated from the current price data available in the _PWT_ National Accounts data file. i.e. from series in which no adjustment has been made for inflation or for price differences across countries.
-
-When coming to this question our assumption was that such adjustments would not affect the trade shares – as we expected both the numerator (the trade flows) and the denominator (GDP) to be adjusted by the same factor. As we discuss in the Appendix, this is not the case: the trade shares presented in the main data file – which make adjustments for inflation and for cross-country price differences – are different to those we calculate from the National Accounts data.
-
-We don't fully understand the price adjustments and why they should affect the trade shares. To avoid this issue, for our measure of trade openness we use the current price data from the Natonal Accounts file, which does not apply any price adjustments.
-
-
-## Appendix
-
-
-### Comparing trade shares in the National Accounts and main data files
-
-Here we plot the trade shares data available from the main file and the National Accounts files against each other. The fact that that many observations fall far from the 45-degree line shows that there are large differences between the two sets of data.
-
-(Note the range of the plot has been restricted to make this clearer.)
+(Note the range of the plot has been restricted to make this comparison clearer.)
 
 ```{python}
 #| code-fold: true
@@ -272,18 +266,24 @@ fig = px.scatter(df_plot,
 fig.show()
 ```
 
-### Country coverage
 
-**JH comment**: Pablo could you please add coverage pngs so we can see the coverage of which countries are included in the NA aggregation in any given year.
+
+**Why do we use the National Accounts data in our charts**
+
+The series for trade openess we use in our charts is calculated from the current price data available in the _PWT_ National Accounts data file. i.e. from series in which no adjustment has been made for inflation or for price differences across countries.
+
+When coming to this question our assumption was that such adjustments would not affect the trade shares – as we expected both the numerator (the trade flows) and the denominator (GDP) to be adjusted by the same factor. As we show above, this is not the case: the trade shares presented in the main data file – which make adjustments for inflation and for cross-country price differences – are different to those we calculate from the National Accounts data.
+
+We don't fully understand the price adjustments and why they should affect the trade shares. To avoid this issue, for our measure of trade openness we use the current price data from the Natonal Accounts file, which does not apply any price adjustments.
+
 
 
 ### Comparing constant and current price trade data in the National Accounts data file.
 
-Within the National Accounts data, there are series for both current and constand price data. 
+In addition to the current price data we use for our measure of trade openness, the National Accounts data file also includes constant price data (i.e. adjusted for inflation within countries).
 
-Trade shares calculated according to the current and constant price data are different.
+As you see from the plot below, trade shares calculated according to the current and constant price data are different.
 
-This implies that the numerator (the trade flows) are being mutiplied by a diferent number than the denominator (GDP) when the figures are adjusted for inflation.
 
 ```{python}
 #| code-fold: true
@@ -321,7 +321,7 @@ fig.show()
 
 The national accounts data file give a breakdown of GDP into other components. To try to understand what's going on with the price adjustments, I sum these up for the current and constand price data.
 
-Note that the components of GDP do not always sum to one even in the current price data. But this is even more true of the constant price data. This again shows that the numerators are being multiplied by a different factor to the denominator, GDP, when adjusting for inflation.
+Note that the components of GDP do not always sum to one even in the current price data. But this is even more true of the constant price data. This again is an indication that the numerators are being multiplied by a different factor to the denominator, GDP, when adjusting for inflation.
 
 ```{python}
 #| code-fold: true
@@ -349,6 +349,8 @@ df_na['composition_check_constant'] = (df_na['q_c'] +
 df_na['composition_check_constant'].describe()                                    
 ```
 
+We don't fully understand the price adjustments and why they should affect the trade shares. To avoid these issues, we use the current price data from the Natonal Accounts file for our measure of trade openness which does not apply any price adjustments.
+
 ### Comparison of two series for China available in the National Accounts data
 
 Countries are identified in the national accounts data file only according to ISO 3 codes.
@@ -375,24 +377,3 @@ fig = px.line(df_plot, x = 'year', y='value',
 fig.show()
 ```
 
-### The sign of trade shares in the main data file
-In general, in the main data file the export shares are given as positive numbers and the import shares are given as negative numbers.
-
-```{python}
-#| code-fold: true
-#| code-summary: Make boxplot of import and export shares
-df_plot = df_main[['year','entity','csh_x', 'csh_m']]
-df_plot = df_plot.melt(id_vars=['year','entity'], var_name='measure')
-
-fig = px.box(df_plot, x = 'measure', y="value", range_y=[-7, 7])
-fig.show()
-```
-
-There are a few years for Bermuda where the signs are reversed. It is not clear how these values should be interpreted.
-
-```{python}
-#| code-fold: true
-#| code-summary: Show country years with reversed signs on the trade variables
-# Show observations with either negative exports or positive imports.
-df_main[(df_main['csh_x']<0) | (df_main['csh_m']>0)][['entity','year', 'csh_x', 'csh_m']]
-```
