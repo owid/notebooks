@@ -1,5 +1,3 @@
-# %%
-
 # %% [markdown]
 """
 # How does Our World in Data prepare data from the Penn World Tables?
@@ -104,7 +102,8 @@ if not IN_COLAB:
 # Pandas is a standard package used for data manipulation in python code
 import pandas as pd
 #from pkg_resources import IResourceManager
-               
+
+import numpy as np
 
 
 # %% [markdown]
@@ -204,31 +203,48 @@ df['productivity'] = df['rgdpo']/(df['avh']*df['emp'])
 
 
 # %% [markdown]
-# ## Exports and imports as share of GDP
+# ## Trade openness
 # """
-# JH comment:  This strikes me as a much simpler way to calulate this variable ('Ratio of exports and imports to GDP (%) (PWT 9.1 (2019))' in the old data).
-#  
-# These shares (csh_x, csh_m) are shares in cgdpo from the main data file. I wonder – are they the same as shares calculated using the National Accounts data? I can't understand why they would be different, but maybe there is some difference to do with the prices that I'm not understanding. It'd be good to compare them and see.
 # """
+#
+# Read in National Accounts data
+# National accounts data file – after country names have been standardized
 # %%
-# Sum exports as share of GDP and imports as share of GDP 
-df['x_m_share'] = df['csh_x'] - df['csh_m']
-#Pablo: at least to keep the logic of the ratio variable it should be exports **minus** the imports
-#Because the import shares are (mostly) negative. See statistics in next cell
+url = "https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized_national_accounts.csv"
 
+df_na = pd.read_csv(url)
 
-# JH comment: The World value for this is just the GDP-weighted average across countries. But we should look into coverage – the composition will be changing. Or should we insist on a complete panel? (We should take a look at coverage in general).
-df_world = df.copy()
-df_world['trade_x_gdp'] = df_world['x_m_share'] * df_world['cgdpo'] #Pablo: Should I use cgdpo?
-df_world = df_world.groupby(['year']).sum()
-df_world.reset_index(inplace=True)
+#Trade openness in individual countries
+df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp'] * 100
 
-df_world['x_m_share'] = df_world['trade_x_gdp'] / df_world['cgdpo']
-df_world.drop(['trade_x_gdp'], axis = 1, inplace=True)
+# The World value for this is just the GDP-weighted average across countries.
 
-df_world['entity'] = 'World'
-df_world = df_world[['entity', 'year', 'x_m_share']]
-df = pd.concat([df,df_world], ignore_index=True)
+df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
+
+# Weighted average (dropping alt China and extinct countries with no data)
+
+excluded_countries = ['China (alternative inflation series)',
+                     'Czechoslovakia',
+                     'Netherlands Antilles',
+                     'USSR',
+                     'Yugoslavia']
+
+world_trade_openness_na = df_na[~df_na['entity'].isin(excluded_countries)]\
+                                 .dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all')\
+                                 .groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+
+world_trade_openness_na.rename(columns = {0:'trade_openness'}, inplace = True)
+world_trade_openness_na['entity'] = 'World'
+
+#Cleaning df_na from the excluded countries and countries-years with no trade_openness value
+df_na = df_na[~df_na['entity'].isin(excluded_countries)].dropna(subset=['trade_openness'], how = 'all').reset_index()
+
+#Concatenate the world data with the rest of entities in the NA dataframe
+df_na = pd.concat([df_na, world_trade_openness_na], ignore_index=True)
+
+#Merging both df and df_na (only with trade openness) with a outer join, to get all the non matched countries-years:
+df = pd.merge(df, df_na[['entity', 'year', 'trade_openness']], how='outer', on=['entity', 'year'], sort=True)
+
 
 # %% [markdown]
 # # Variable metadata
