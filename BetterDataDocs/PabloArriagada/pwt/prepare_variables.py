@@ -1,5 +1,3 @@
-# %%
-
 # %% [markdown]
 """
 # How does Our World in Data prepare data from the Penn World Tables?
@@ -104,7 +102,8 @@ if not IN_COLAB:
 # Pandas is a standard package used for data manipulation in python code
 import pandas as pd
 #from pkg_resources import IResourceManager
-               
+
+import numpy as np
 
 
 # %% [markdown]
@@ -204,30 +203,47 @@ df['productivity'] = df['rgdpo']/(df['avh']*df['emp'])
 
 
 # %% [markdown]
-# ## Trade opennes
+# ## Trade openness
 # """
 # """
-
+#
 # Read in National Accounts data
-#National accounts data file – after country names have been standardized
+# National accounts data file – after country names have been standardized
+# %%
 url = "https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized_national_accounts.csv"
 
 df_na = pd.read_csv(url)
-# %%
+
 #Trade openness in individual countries
-df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp']
+df_na['trade_openness'] = (df_na['v_x'] + df_na['v_m'])/df_na['v_gdp'] * 100
 
 # The World value for this is just the GDP-weighted average across countries.
 
 df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
 
-# Weighted average (dropping alt China series and NaNs)
-world_trade_openness_na = df_na[df_na['entity']!='China (alternative inflation series)']\
-     .dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all')\
-     .groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+# Weighted average (dropping alt China and extinct countries with no data)
 
+excluded_countries = ['China (alternative inflation series)',
+                     'Czechoslovakia',
+                     'Netherlands Antilles',
+                     'USSR',
+                     'Yugoslavia']
 
-# JH comment: please add the world openness as an entity and then merge this into main data, keeping all country-year observations of both datasets.
+world_trade_openness_na = df_na[~df_na['entity'].isin(excluded_countries)]\
+                                 .dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all')\
+                                 .groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+
+world_trade_openness_na.rename(columns = {0:'trade_openness'}, inplace = True)
+world_trade_openness_na['entity'] = 'World'
+
+#Cleaning df_na from the excluded countries and countries-years with no trade_openness value
+df_na = df_na[~df_na['entity'].isin(excluded_countries)].dropna(subset=['trade_openness'], how = 'all').reset_index()
+
+#Concatenate the world data with the rest of entities in the NA dataframe
+df_na = pd.concat([df_na, world_trade_openness_na], ignore_index=True)
+
+#Merging both df and df_na (only with trade openness) with a outer join, to get all the non matched countries-years:
+df = pd.merge(df, df_na[['entity', 'year', 'trade_openness']], how='outer', on=['entity', 'year'], sort=True)
 
 
 # %% [markdown]

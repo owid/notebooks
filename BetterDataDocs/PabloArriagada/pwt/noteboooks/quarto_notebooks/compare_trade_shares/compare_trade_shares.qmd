@@ -267,7 +267,64 @@ fig.show()
 
 ```
 
+```{python}
+#Pablo: This is my version of the previous code. Please delete the other if I understood correctly
+#The graph is shown and there are no slice warnings
 
+#| code-fold: true
+#| code-summary: "Calculate shares and plot"
+
+# Prep trade shares from National Accounts data
+df_exports_na = df_na[['year', 'entity', 'v_x', 'v_gdp']].copy()
+df_imports_na = df_na[['year', 'entity', 'v_m', 'v_gdp']].copy()
+
+#Current price shares
+df_exports_na['National Accounts – current price'] = df_exports_na['v_x']/df_exports_na['v_gdp'] * 100
+df_imports_na['National Accounts – current price'] = df_imports_na['v_m']/df_imports_na['v_gdp'] * 100
+
+df_exports_na.drop(columns=['v_x', 'v_gdp'], inplace=True)
+df_imports_na.drop(columns=['v_m', 'v_gdp'], inplace=True)
+
+#Prep trade shares from main data
+df_exports_main = df_main[['year', 'entity', 'csh_x']].copy()
+df_imports_main = df_main[['year', 'entity', 'csh_m']].copy()
+
+df_exports_main['csh_x'] = df_exports_main['csh_x'] * 100
+df_imports_main['csh_m'] = -df_imports_main['csh_m'] * 100
+
+df_exports_main.rename(columns={"csh_x": "Main data"}, inplace=True)
+df_imports_main.rename(columns={"csh_m": "Main data"}, inplace=True)
+
+# Reshape for plot
+#Pablo: I think the main problem was here: a merge was needed instead of a concat
+
+df_imports = pd.merge(df_imports_na, df_imports_main, on=['year', 'entity'], validate='one_to_one')
+#df_imports = pd.concat([df_imports_na,df_imports_main])
+df_imports['measure'] = 'imports'
+
+df_exports = pd.merge(df_exports_na, df_exports_main, on=['year', 'entity'], validate='one_to_one')
+#df_exports = pd.concat([df_exports_na,df_exports_main])
+df_exports['measure'] = 'exports'
+
+
+
+df_plot = pd.concat([df_imports,df_exports])
+
+
+# Facet scatter to compare 
+
+fig = px.scatter(df_plot,
+                 x = 'National Accounts – current price',
+                 y = 'Main data',
+                 log_x = False,
+                 log_y = True, #False will show the weird Bermuda values and not too much detail
+                 color = 'entity',
+                 facet_col = 'measure',
+                 opacity=0.5)
+fig.show()
+
+
+```
 
 ### Country coverage
 
@@ -287,16 +344,16 @@ This implies that the numerator (the trade flows) are being mutiplied by a difer
 #| code-summary: "Calculate shares and plot"
 
 
-df_imports = df_na[['year', 'entity']]
-df_exports = df_na[['year', 'entity']]
+df_imports = df_na[['year', 'entity', 'v_m', 'v_gdp', 'q_m', 'q_gdp']].copy()
+df_exports = df_na[['year', 'entity', 'v_x', 'v_gdp', 'q_x', 'q_gdp']].copy()
 
 #Current price shares
-df_imports['Current prices'] = df_na['v_m']/df_na['v_gdp'] 
-df_exports['Current prices'] = df_na['v_x']/df_na['v_gdp'] 
+df_imports['Current prices'] = df_imports['v_m']/df_imports['v_gdp'] * 100
+df_exports['Current prices'] = df_exports['v_x']/df_exports['v_gdp'] * 100
 
 #Constant price shares
-df_imports['Constant prices'] = df_na['q_m']/df_na['q_gdp'] 
-df_exports['Constant prices'] = df_na['q_x']/df_na['q_gdp'] 
+df_imports['Constant prices'] = df_imports['q_m']/df_imports['q_gdp'] * 100
+df_exports['Constant prices'] = df_exports['q_x']/df_exports['q_gdp'] * 100
 
 
 df_imports['measure'] = "Imports/GDP"
@@ -306,11 +363,13 @@ df_plot = pd.concat([df_imports,df_exports])
 
 
 
-fig = px.scatter(df_plot, 
-               x = 'Current prices', 
-               y="Constant prices", 
-               color = 'entity', 
-               facet_col = 'measure')
+fig = px.scatter(df_plot,
+                 x = 'Current prices',
+                 y = "Constant prices",
+                 color = 'entity',
+                 facet_col = 'measure',
+                 opacity = 0.5
+                )
 fig.show()
 
 ```

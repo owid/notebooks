@@ -9,14 +9,18 @@ import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 import numpy as np
+from IPython.display import Image
 
 pio.renderers.default = "jupyterlab+png+colab+notebook_connected+vscode"
 
 # %%
 #Main data file
 url = "https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized.csv"
-
 df = pd.read_csv(url)
+
+#National Accounts file
+url = "https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized_national_accounts.csv"
+df_na = pd.read_csv(url)
 
 # %% [markdown]
 # Penn World Table only defines countries with their current name. There is no Soviet Union, Yugoslavia, Czechoslovakia or East Germany and consequentially the time range of each country's data is affected.
@@ -58,15 +62,107 @@ fig.show()
 # How is this availability shown by country? In this graph the countries are in ascending order of the number of observations available. For instance, the entities with the lowest number of years available (for `rgdpe`) are Curaçao and Sint Maarten (Dutch part), incorporated in 2005. They are followed by the countries included from 1990 onwards, mostly former Soviet republics, the nations that formed Yugoslavia, Czechia and Slovakia. The countries incorporated from 1970 onwards are more varied, including Caribbean countries as Antigua and Barbuda or Bahamas and several Asian countries, like Saudi Arabia, Iraq, Laos or Mongolia. The 1960 batch is mostly from Africa (Botswana, Cameroon, Mozambique, Senegal...). The countries that cover the entire timeframe of PWT are most of the advanced economies of Europe and North America, several South American countries and Australia and New Zealand.
 # <br><br>*Pablo: For now I couldn't generate a plot in Plotly to correctly display this, so I used Tableau, which took no time for me. See [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT.png) if the picture is not displayed correctly or [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT) to see the interactive version (which wasn't possible to embed here)*
 
-# %% [markdown]
-# ![CountriesinPWT.png](attachment:CountriesinPWT.png)
+# %%
+Image(url="CountriesinPWT.png", width=1100, height=2000)
 
 # %% [markdown]
 # Please note that the range is mostly continous after each country is included, but there are exceptions, like in `cgdpo` in the case of Bermuda, unavailable for 1999, 2000, 2001 and 2003.
 # See [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT.png?Variable=cgdpo) if the picture is not displayed correctly or [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT?Variable=cgdpo) to see the interactive version.
 
+# %%
+Image(url="CountriesinPWT_cgdpo.png", width=1100, height=2000)
+
 # %% [markdown]
-# ![CountriesinPWT_cgdpo.png](attachment:CountriesinPWT_cgdpo.png)
+# What about the National Accounts data? This is where we are taking the `trade_openness` variable from. If we count how many times the `v_x`, `v_m`, `v_gdp` and `xr2` variables are included by each country-year (the variables needed to construct `trade_openness`) we have this availability by entity. See [here](https://public.tableau.com/views/PWT/CountriesinPWTNA.png) if the picture is not displayed correctly or [here](https://public.tableau.com/views/PWT/CountriesinPWTNA) to see the interactive version:
+
+# %%
+Image(url="CountriesinPWTNA.png", width=1100, height=2000)
+
+# %% [markdown]
+# In the `NA` dataset there are more entities included than the official PWT table, like Czechoslovakia and the Soviet Union. A full list of the differences can be observed here:
+
+# %%
+list_country = list(df['entity'].unique())
+list_country_na = list(df_na['entity'].unique())
+
+pwt_vs_na = list(set(list_country).difference(list_country_na))
+pwt_vs_na.sort()
+na_vs_pwt = list(set(list_country_na).difference(list_country))
+na_vs_pwt.sort()
+
+# %% [markdown]
+# There is not any country available in the PWT file but not in the NA file:
+
+# %%
+pwt_vs_na
+
+# %% [markdown]
+# But the national accounts file contains multiple country not in PWT:
+
+# %%
+na_vs_pwt
+
+# %% [markdown]
+# From this list and the previous graphs I can check which countries require to be included for constructing the `trade_openness` variable:
+
+# %% [markdown]
+# | Country | All 4 variables<br>available in NA | Should we keep it<br>for calculations? |
+# | --- | --- | --- |
+# | Afghanistan | From 1970 | Yes |
+# | Andorra | From 1970 | Yes |
+# | China (alternative inflation series) | From 1952 | **NO** |
+# | Cook Islands | From 1970 | Yes |
+# | Cuba | From 1970 | Yes |
+# | Czechoslovakia | **NO** | **NO** |
+# | Eritrea | From 1990 | Yes |
+# | French Polynesia | From 1970 | Yes |
+# | Greenland | From 1970 | Yes |
+# | Kiribati | From 1970 | Yes |
+# | Kosovo | From 1990 | Yes |
+# | Libya | From 1970 | Yes |
+# | Liechtenstein | From 1970 | Yes |
+# | Marshall Islands | From 1970 | Yes |
+# | Micronesia (country) | From 1970 | Yes |
+# | Monaco | From 1970 | Yes |
+# | Nauru | From 1970 | Yes |
+# | Netherlands Antilles | **NO** | **NO** |
+# | New Caledonia | From 1970 | Yes |
+# | North Korea | From 1970 | Yes |
+# | Palau | From 1970 | Yes |
+# | Papua New Guinea | From 1960 | Yes |
+# | Puerto Rico | From 1950 | Yes |
+# | Samoa | From 1970 | Yes |
+# | San Marino | From 1970 | Yes |
+# | Solomon Islands | From 1970 | Yes |
+# | Somalia | From 1970 | Yes |
+# | South Sudan | From 2008 | Yes |
+# | Timor | From 1990 | Yes |
+# | Tonga | From 1970 | Yes |
+# | Tuvalu | From 1970 | Yes |
+# | USSR | **NO** | **NO** |
+# | Vanuatu | From 1970 | Yes |
+# | Yugoslavia | **NO** | **NO** |
+
+# %% [markdown]
+# There's an alternative China series that needs to be excluded, together with Czechoslovakia, Netherlands Antilles, the USSR and Yugoslavia. The remaining countries will allow for a greater coverage of the `trade_openness` series.
+
+# %% [markdown]
+# Does the NA file cover more years than the final PWT file? For the countries common to both files we can see this is not true: the minimum year with non-null `rgdpe` data (for the main file) or non-null `v_x`, `v_m`, `v_gdp` and `xr2` data (for the NA file) is always the same for each country.
+
+# %%
+df_clean = df.dropna(subset=['rgdpe']).reset_index(drop=True)
+df_na_clean = df_na.dropna(subset=['v_x', 'v_m', 'v_gdp', 'xr2']).reset_index(drop=True)
+
+df_clean = df_clean[['entity', 'year']].groupby(by=["entity"]).min().reset_index()
+df_na_clean = df_na_clean[['entity', 'year']].groupby(by=["entity"]).min().reset_index()
+
+#left join to compare only common countries
+df_clean_merge = pd.merge(df_clean, df_na_clean, how='left', on='entity', suffixes=(None, '_na'), validate='one_to_one') 
+df_clean_merge['equal_min_year'] = df_clean_merge['year'] == df_clean_merge['year_na']
+
+# %%
+#Filtering only the countries with different minimum years
+df_clean_merge[df_clean_merge['equal_min_year']==False]
 
 # %% [markdown]
 # PWT also includes data quality variables which are not necessarily applied uniformly between countries. See for example `i_cig`, the variable referring to the quality of the relative price data for consumption, investment and government. Each point in the scatter plot is one country-year: some quality categories are evenly distributed (as *ICP PPP timeseries...*, the vintages for the PPP), but some others are assigned differently (double-click in *Benchmark*).
