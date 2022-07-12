@@ -8,7 +8,8 @@ import gc
 #%%
 #%%
 #specify as cents, not dolars
-pov_lines_cents = range(1,100, 1)
+#pov_lines_cents = range(1,100, 1)
+pov_lines_cents = range(95,100, 1)
 
 dollar = 0
 
