@@ -208,9 +208,7 @@ The series for trade openess we use in our charts is calculated from the current
 
 When coming to this question our assumption was that such adjustments would not affect the trade shares – as we expected both the numerator (the trade flows) and the denominator (GDP) to be adjusted by the same factor. As we discuss in the Appendix, this is not the case: the trade shares presented in the main data file – which make adjustments for inflation and for cross-country price differences – are different to those we calculate from the National Accounts data.
 
-Since we don't fully understand the price adjustments and why they should affect the trade shares, for our measure of trade opennes we use the current price data from the Natonal Accounts file, which does not apply any price adjustments.
-
-The National Accounts data also has much higher coverage than the main data file, which is especially important when calculting the global aggregate.
+We don't fully understand the price adjustments and why they should affect the trade shares. To avoid this issue, for our measure of trade openness we use the current price data from the Natonal Accounts file, which does not apply any price adjustments.
 
 
 ## Appendix
@@ -276,7 +274,7 @@ fig.show()
 
 ### Country coverage
 
-**JH comment**: Pablo could you please add coverage pngs so we can a) see the coverage of which countries are included in the NA aggregation in any given year and b) see that the coverage in main data file is generally worse than the NA file.
+**JH comment**: Pablo could you please add coverage pngs so we can see the coverage of which countries are included in the NA aggregation in any given year.
 
 
 ### Comparing constant and current price trade data in the National Accounts data file.
