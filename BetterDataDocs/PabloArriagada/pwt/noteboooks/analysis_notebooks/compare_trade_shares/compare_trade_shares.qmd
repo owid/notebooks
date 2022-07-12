@@ -88,7 +88,7 @@ To produce a global aggregate, we take the weighted average across countries, us
 
 However, as the national accounts data are given in local currencies we first convert the latter to a common currency (USD). The national accounts file provides exchange rates (national currency/USD) for this purpose.
 
-We also drop an alternative set of series included in the _PWT_ National Accounts data for China. (The alternative series only relates to the inflation-adjusted data, which we are not using here – so in dropping the alternative series we are simply removing duplicate observations.)
+We also drop an duplicate set of data included in the _PWT_ National Accounts data for China (discussed further in the Appendix below).
 
 ```{python}
 df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
