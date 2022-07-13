@@ -117,7 +117,7 @@ world_trade_openness_na.rename(columns = {0:'trade_openness'}, inplace = True)
 
 The average is calculated across all countries with available data in each year, and hence which countries are included in the average changes over time.
 
-The plot below shows which countries have the data available to be included in the world aggregation in each year.
+The plot below shows the availability of the variables needed to generate `trade_openness` (`v_x`, `v_m`, `v_gdp` and `xr2`). When the plot is blue these four variables are included in each country-year.
 
 ```{python}
 Image(url="https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/CountriesinPWTNA.png",
@@ -129,7 +129,7 @@ You see that the National Accounts data file includes observations for some form
 
 It also includes _two_ series for China, one of which we drop in the calculation of the global aggregate so as to not overly weight China. We discuss the two China series further in the Appendix below.
 
-There are also additional countries not available in the original PWT dataset, as Afghanistan or Cuba, so in the final calculation this countries are included with their `trade_openness` variable. More information on this can be found in the country coverage notebook available [here]().
+There are also additional countries not available in the original PWT dataset, as Afghanistan or Cuba, so in the final calculation these countries are included with their `trade_openness` variable. More information on this can be found in the country coverage notebook available [here]().
 
 ## Appendix
 
