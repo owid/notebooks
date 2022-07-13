@@ -15,4 +15,11 @@ df<- df %>%
 
 head(df)
 
+df <- 
+    df %>%
+    group_by(entity, year) %>%
+    mutate(lag.headcount = dplyr::lag(headcount, n = 1, default = NA))
+
+head(df)
+
 

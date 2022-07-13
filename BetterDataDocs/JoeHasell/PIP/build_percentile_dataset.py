@@ -11,13 +11,17 @@ all_files = Path('API_output/percentiles/filled_data').glob('*.csv')
 df = pd.concat((pd.read_csv(f) for f in all_files))
 
 #%%
-
-# Write to .CSV
-df.to_csv('API_output/percentiles/all_percentiles.csv', index=False)
-#%%
-
 # Cleaning - see notebook for discussion
 
 # Drop headcount=0 observations
 # Drop El Salvador and Sierra Leone (negative poverty lines)
+df = df[~df['entity'].isin(['El Salvador', 'Sierra Leone'])]
+
+df = df[df['headcount']!=0]
+
+#%%
+# Write to .CSV
+df.to_csv('API_output/percentiles/all_percentiles.csv', index=False)
+#%%
+
 
