@@ -44,7 +44,7 @@ for p in percentiles:
     df_filled['requested_p'] = p
 
     # Write to .CSV
-    df_filled.to_csv(f'API_output/percentiles/filled_data/P{p}.csv')
+    df_filled.to_csv(f'API_output/percentiles/filled_data/P{p}.csv', index=False)
 
 
     # Drop from memory
