@@ -13,13 +13,23 @@ df<- df %>%
      group_by(entity, year) %>% 
      arrange(headcount)
 
-head(df)
+
 
 df <- 
     df %>%
     group_by(entity, year) %>%
-    mutate(lag.headcount = dplyr::lag(headcount, n = 1, default = NA))
+    mutate(lag.poverty_line = dplyr::lag(poverty_line, n = 1, default = NA))
 
 head(df)
+
+# Reorder to inspect the lag
+
+df<- df %>%
+     arrange(entity, year, headcount)
+
+head(df)
+
+df %>%
+filter(lag.poverty_line>poverty_line)
 
 

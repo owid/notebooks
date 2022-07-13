@@ -21,7 +21,7 @@ for p in percentiles:
     df_filled = df_filled.rename(columns={'country_name':'entity', 
                         'reporting_year':'year'})
 
-    df_filled = df_filled[['entity', 'year', 'poverty_line','headcount']]
+    df_filled = df_filled[['entity', 'year', 'reporting_level', 'welfare_type' 'poverty_line','headcount']]
 
     df_filled['requested_p'] = p
 
