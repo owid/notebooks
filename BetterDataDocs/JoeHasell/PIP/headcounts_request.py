@@ -3,19 +3,18 @@ import pandas as pd
 import math
 import gc
 
+from API_query_lists import povlines_cents_full
 
 
 #%%
 #%%
 #specify as cents, not dolars
-#pov_lines_cents = range(1,100, 1)
-pov_lines_cents = range(95,100, 1)
 
 dollar = 0
 
 print(f"Downloading files for ${dollar}-{dollar+.1} a day")
 #%%
-for p in pov_lines_cents:
+for p in povlines_cents_full:
     pov_line = p/100
 
 

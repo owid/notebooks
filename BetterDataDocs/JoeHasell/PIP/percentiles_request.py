@@ -3,9 +3,7 @@
 import pandas as pd
 import gc
 
-#%%
-#percentiles = [10,20,30,40,50,60,70,80,90]
-percentiles = range(1,100, 1)
+from API_query_lists import percentiles
 
 #%%
 
