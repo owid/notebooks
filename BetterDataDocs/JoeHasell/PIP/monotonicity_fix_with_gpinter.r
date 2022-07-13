@@ -119,7 +119,7 @@ for(yr in year_list){
 
     # loop on each country
     for(ent in entity_list){
-      print(paste0("Country is: ", ent))
+      #print(paste0("Country is: ", ent))
 
         selected_year_country_df<- selected_year_df %>%
           filter(entity_level == ent)
@@ -152,7 +152,7 @@ gpinter_results_all<- gpinter_results_all %>%
 
 gpinter_results_all
 
-write.csv("clean_percentiles_filled.csv")
+write.csv(gpinter_results_all, "clean_data/percentiles_filled.csv")
 
 
 
