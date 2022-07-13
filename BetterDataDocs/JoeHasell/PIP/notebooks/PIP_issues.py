@@ -24,3 +24,7 @@ df = pd.read_csv(request_url)
 
 df[(df['country_name']=='El Salvador') & (df['request_year']==1981)]
 
+
+#%%
+# Monotonicity issues.
+# In the percentile data (at percentile resolution) it's only Ghana and Guyana.
