@@ -10,14 +10,14 @@ head(df)
 # Another cell
 
 df<- df %>%
-     group_by(entity, year) %>% 
+     group_by(entity, year, reporting_level, welfare_type) %>% 
      arrange(headcount)
 
 
 
 df <- 
     df %>%
-    group_by(entity, year) %>%
+    group_by(entity, year, reporting_level, welfare_type) %>%
     mutate(lag.poverty_line = dplyr::lag(poverty_line, n = 1, default = NA))
 
 head(df)
@@ -25,11 +25,17 @@ head(df)
 # Reorder to inspect the lag
 
 df<- df %>%
-     arrange(entity, year, headcount)
+     arrange(entity, year, reporting_level, welfare_type, headcount)
 
 head(df)
 
 df %>%
 filter(lag.poverty_line>poverty_line)
+
+df %>%
+filter(lag.poverty_line>poverty_line) %>%
+ungroup() %>%
+select(entity) %>%
+unique()
 
 
