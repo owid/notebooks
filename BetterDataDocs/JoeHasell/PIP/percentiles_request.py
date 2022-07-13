@@ -25,7 +25,7 @@ for p in percentiles:
     # df_survey = df_survey[['entity', 'year', 'threshold','headcount']]
 
     # # Write to .CSV
-    # df_survey.to_csv(f'API_output_percentiles/survey_data/P{p}.csv')
+    # df_survey.to_csv(f'API_output/percentiles/survey_data/P{p}.csv')
 
 
 
@@ -43,7 +43,7 @@ for p in percentiles:
 
 
     # Write to .CSV
-    df_filled.to_csv(f'API_output_percentiles/filled_data/P{p}.csv')
+    df_filled.to_csv(f'API_output/percentiles/filled_data/P{p}.csv')
 
 
     # Drop from memory
