@@ -5,7 +5,7 @@ library(tidyverse)
 url = "https://joeh.fra1.digitaloceanspaces.com/PIP/percentiles_filled.csv"
 
 
-df<- read.csv('API_output/percentiles/all_percentiles.csv')
+df<- read.csv(url)
 
 
 
@@ -36,4 +36,3 @@ output <- data.frame(p, q, average_in_bracket)
 return(output)
 
 }
-# -
