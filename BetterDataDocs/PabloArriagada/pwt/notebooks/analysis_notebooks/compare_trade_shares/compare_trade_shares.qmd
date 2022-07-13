@@ -24,8 +24,8 @@ OWID data documents combine computer code and text to explain and document the d
 
 We make these documents available in different formats:
 
-- A [read-only version](https://htmlpreview.github.io/?https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/noteboooks/analysis_notebooks/compare_trade_shares/compare_trade_shares.html) online
-- A script in [GitHub](https://github.com/owid/notebooks/blob/main/BetterDataDocs/PabloArriagada/pwt/noteboooks/analysis_notebooks/compare_trade_shares/compare_trade_shares.qmd)
+- A [read-only version](https://htmlpreview.github.io/?https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/compare_trade_shares/compare_trade_shares.html) online
+- A script in [GitHub](https://github.com/owid/notebooks/blob/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/compare_trade_shares/compare_trade_shares.qmd)
 - A runnable version in [Google Colabs](https://colab.research.google.com/drive/1e0wmNlZI_8Sw5b0ocLePNMTpbcqLNHDY#scrollTo=Xf_VyXxPjMAL)
 
 
@@ -47,7 +47,13 @@ In the Appendix below, we take a detailed look at alternative ways of calculatin
 #Load packages
 import pandas as pd
 import plotly.express as px
+import plotly.io as pio
 import numpy as np
+from IPython.display import Image
+
+pio.renderers.default = "jupyterlab+png+colab+notebook_connected+vscode"
+
+
 ```
 
 ## Trade data in the National Accounts data file
@@ -88,32 +94,42 @@ To produce a global aggregate, we take the weighted average across countries, us
 
 However, as the national accounts data are given in local currencies we first convert the latter to a common currency (USD). The national accounts file provides exchange rates (national currency/USD) for this purpose.
 
-We also drop an duplicate set of data included in the _PWT_ National Accounts data for China (discussed further in the Appendix below).
+We also drop an duplicate set of data included in the _PWT_ National Accounts data for China (discussed further in the Appendix below) and former states with no data.
 
 ```{python}
 df_na['v_gdp_usd'] = df_na['v_gdp']/df_na['xr2'] 
 
-# Weighted average (dropping alt China series and NaNs)
-world_trade_openness_na = df_na[df_na['entity']!='China (alternative inflation series)']\
-     .dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all')\
-     .groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+# Weighted average (dropping alt China and extinct countries with no data)
+excluded_countries = ['China (alternative inflation series)',
+                     'Czechoslovakia',
+                     'Netherlands Antilles',
+                     'USSR',
+                     'Yugoslavia']
 
-world_trade_openness_na.columns = ['year', 'World trade openness']
+world_trade_openness_na = df_na[~df_na['entity'].isin(excluded_countries)]\
+                                 .dropna(subset=['trade_openness', 'v_gdp_usd'], how = 'all')\
+                                 .groupby("year").apply(lambda x: np.average(x['trade_openness'], weights=x['v_gdp_usd'])).reset_index()
+
+world_trade_openness_na.rename(columns = {0:'trade_openness'}, inplace = True)
 ```
 
 ##### A note on countries and coverage in the National Accounts data file
 
 The average is calculated across all countries with available data in each year, and hence which countries are included in the average changes over time.
 
-The plot below shows which countries have the data available to be included in the world aggrgeation in each year.
+The plot below shows the availability of the variables needed to generate `trade_openness` (`v_x`, `v_m`, `v_gdp` and `xr2`). When the plot is blue these four variables are included in each country-year.
 
-**JH comment**: Pablo could you please add the coverage chart so we can see the coverage of which countries are included in the NA aggregation above in any given year.
-
+```{python}
+Image(url="https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/CountriesinPWTNA.png",
+      width=1100, height=2000)
+```
 
 
 You see that the National Accounts data file includes observations for some former states (USSR, Yugoslavia, Czechoslovakia), although no GDP or trade data is available for these former states in the file (and hence they are not included in the world aggregation above).
 
 It also includes _two_ series for China, one of which we drop in the calculation of the global aggregate so as to not overly weight China. We discuss the two China series further in the Appendix below.
+
+There are also additional countries not available in the original PWT dataset, as Afghanistan or Cuba, so in the final calculation these countries are included with their `trade_openness` variable. More information on this can be found in the country coverage notebook available [here]().
 
 ## Appendix
 

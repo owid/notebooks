@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Comparing PWT's main dataset vs National Accounts dataset 
+# # OWID Data document – Comparing main and National Accounts datasets from Penn World Table 
 
 # %%
 import pandas as pd
@@ -26,8 +26,6 @@ url = "https://joeh.fra1.digitaloceanspaces.com/pwt/entities_standardized_nation
 df_na = pd.read_csv(url)
 # %%
 df_na.head()
-
-
 
 # %% [markdown]
 # # Trade shares using the main data file
@@ -74,19 +72,6 @@ fig.show()
 # spikes seen in a handful of offshore financial centres. The largest spike is seen 
 # in Bermuda for the years where the sign on the imports and export values were 
 # reversed. (See discussion above).
-#
-# Pablo: I am not able to see this following bit of code as actual code, it runs as markdown in Jupyter
-#
-# threshold = 1
-# high_value_countries = df_main.loc[df_main['x_m_share'] > 500, 'entity'].drop_duplicates()
-# high_value_countries.values.tolist()
-# print(high_value_countries)
-#
-# plot_data = df_main[df_main['entity'].isin(high_value_countries)]
-# fig = px.line(plot_data, x = 'year', y='x_m_share', 
-#     title = "Countries with large trade flows",
-#     color = 'entity')
-# fig.show()
 
 # %%
 threshold = 500
