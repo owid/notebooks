@@ -1,8 +1,29 @@
 # %% [markdown]
-# # Checking data availability for countries
+# # OWID Data Document<br>Checking data availability for countries in Penn World Table
 
 # %% [markdown]
-# This notebook is to analyse in detail the availability of data for each country in Penn World Table 10.0, as not all countries cover the entire 1950-2019 range.
+# ### About OWID Data documents
+#
+# OWID data documents combine computer code and text to explain and document the data we and how we prepare it from the original sources.
+#
+# We make these documents available in different formats:
+#
+# - A [read-only version](https://htmlpreview.github.io/?https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/compare_trade_shares/compare_trade_shares.html) online
+# - A script in [GitHub](https://github.com/owid/notebooks/blob/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/compare_trade_shares/compare_trade_shares.qmd)
+# - A runnable version in [Google Colab](https://colab.research.google.com/drive/1e0wmNlZI_8Sw5b0ocLePNMTpbcqLNHDY#scrollTo=Xf_VyXxPjMAL)
+#
+#
+#
+# If you have this open in _Google Colab_, you can run the code blocks below and see their outputs. Clicking on **'Copy to Drive'** in the menu bar above will open up a new copy in your own Google Drive that you can then _edit_ the code to explore the data further.
+
+# %% [markdown]
+# ## Coverage by year
+
+# %% [markdown]
+# This notebook is to analyse in detail the availability of data for each country in Penn World Table 10.0, as not all countries cover the entire 1950-2019 range of the dataset.
+
+# %% [markdown]
+# First, the necessary libraries are imported.
 
 # %%
 import pandas as pd
@@ -28,14 +49,6 @@ df_na = pd.read_csv(url)
 # %%
 df.entity.unique()
 
-# %%
-#Generating percapita measures
-df['rgdpe_pc'] = df['rgdpe']/df['pop']
-df['rgdpo_pc'] = df['rgdpo']/df['pop']
-df['cgdpe_pc'] = df['cgdpe']/df['pop']
-df['cgdpo_pc'] = df['cgdpo']/df['pop']
-df['rgdpna_pc'] = df['rgdpna']/df['pop']
-
 # %% [markdown]
 # The original file is grouped by year, the number of observations per year are counted and the dataframe is transformed to a long structure, to be able to plot more easily.
 
@@ -59,24 +72,33 @@ fig = px.line(df_all_year, x="year", y="value", color="variable", height=600,
 fig.show()
 
 # %% [markdown]
+# ## Coverage by country and year
+
+# %% [markdown]
 # How is this availability shown by country? In this graph the countries are in ascending order of the number of observations available. For instance, the entities with the lowest number of years available (for `rgdpe`) are Curaçao and Sint Maarten (Dutch part), incorporated in 2005. They are followed by the countries included from 1990 onwards, mostly former Soviet republics, the nations that formed Yugoslavia, Czechia and Slovakia. The countries incorporated from 1970 onwards are more varied, including Caribbean countries as Antigua and Barbuda or Bahamas and several Asian countries, like Saudi Arabia, Iraq, Laos or Mongolia. The 1960 batch is mostly from Africa (Botswana, Cameroon, Mozambique, Senegal...). The countries that cover the entire timeframe of PWT are most of the advanced economies of Europe and North America, several South American countries and Australia and New Zealand.
 # <br><br>*Pablo: For now I couldn't generate a plot in Plotly to correctly display this, so I used Tableau, which took no time for me. See [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT.png) if the picture is not displayed correctly or [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT) to see the interactive version (which wasn't possible to embed here)*
 
 # %%
-Image(url="CountriesinPWT.png", width=1100, height=2000)
+Image(url="https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/CountriesinPWT.png",
+      width=1100, height=2000)
 
 # %% [markdown]
 # Please note that the range is mostly continous after each country is included, but there are exceptions, like in `cgdpo` in the case of Bermuda, unavailable for 1999, 2000, 2001 and 2003.
 # See [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT.png?Variable=cgdpo) if the picture is not displayed correctly or [here](https://public.tableau.com/app/profile/parriagadap/viz/PWT/CountriesinPWT?Variable=cgdpo) to see the interactive version.
 
 # %%
-Image(url="CountriesinPWT_cgdpo.png", width=1100, height=2000)
+Image(url="https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/CountriesinPWT_cgdpo.png",
+      width=1100, height=2000)
 
 # %% [markdown]
 # What about the National Accounts data? This is where we are taking the `trade_openness` variable from. If we count how many times the `v_x`, `v_m`, `v_gdp` and `xr2` variables are included by each country-year (the variables needed to construct `trade_openness`) we have this availability by entity. See [here](https://public.tableau.com/views/PWT/CountriesinPWTNA.png) if the picture is not displayed correctly or [here](https://public.tableau.com/views/PWT/CountriesinPWTNA) to see the interactive version:
 
 # %%
-Image(url="CountriesinPWTNA.png", width=1100, height=2000)
+Image(url="https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/PabloArriagada/pwt/notebooks/analysis_notebooks/CountriesinPWTNA.png",
+      width=1100, height=2000)
+
+# %% [markdown]
+# ## Country consistency between both datasets
 
 # %% [markdown]
 # In the `NA` dataset there are more entities included than the official PWT table, like Czechoslovakia and the Soviet Union. A full list of the differences can be observed here:
@@ -147,6 +169,9 @@ na_vs_pwt
 # There's an alternative China series that needs to be excluded, together with Czechoslovakia, Netherlands Antilles, the USSR and Yugoslavia. The remaining countries will allow for a greater coverage of the `trade_openness` series.
 
 # %% [markdown]
+# ## Year consistency between both datasets 
+
+# %% [markdown]
 # Does the NA file cover more years than the final PWT file? For the countries common to both files we can see this is not true: the minimum year with non-null `rgdpe` data (for the main file) or non-null `v_x`, `v_m`, `v_gdp` and `xr2` data (for the NA file) is always the same for each country.
 
 # %%
@@ -165,7 +190,18 @@ df_clean_merge['equal_min_year'] = df_clean_merge['year'] == df_clean_merge['yea
 df_clean_merge[df_clean_merge['equal_min_year']==False]
 
 # %% [markdown]
+# ## Data quality variables
+
+# %% [markdown]
 # PWT also includes data quality variables which are not necessarily applied uniformly between countries. See for example `i_cig`, the variable referring to the quality of the relative price data for consumption, investment and government. Each point in the scatter plot is one country-year: some quality categories are evenly distributed (as *ICP PPP timeseries...*, the vintages for the PPP), but some others are assigned differently (double-click in *Benchmark*).
+
+# %%
+#Generating percapita measures to see them plotted
+df['rgdpe_pc'] = df['rgdpe']/df['pop']
+df['rgdpo_pc'] = df['rgdpo']/df['pop']
+df['cgdpe_pc'] = df['cgdpe']/df['pop']
+df['cgdpo_pc'] = df['cgdpo']/df['pop']
+df['rgdpna_pc'] = df['rgdpna']/df['pop']
 
 # %%
 df['i_cig'] = df['i_cig'].astype(str)
