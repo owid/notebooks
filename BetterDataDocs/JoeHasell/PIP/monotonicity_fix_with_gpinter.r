@@ -29,13 +29,16 @@ df<- df %>%
 
 head(df)
 
-df %>%
-filter(lag.poverty_line>poverty_line)
+# Browse rows where monotonicity is broken (Only Ghana and Guyana)
 
 df %>%
-filter(lag.poverty_line>poverty_line) %>%
-ungroup() %>%
-select(entity) %>%
-unique()
+filter(lag.poverty_line>=poverty_line)
+
+#
+
+# Drop non monotonic rows
+
+df<- df %>%
+     filter(lag.poverty_line<poverty_line)
 
 
