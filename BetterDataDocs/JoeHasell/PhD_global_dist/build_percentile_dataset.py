@@ -5,7 +5,7 @@ from pathlib import Path
 
 #%%
 # Make a list of all csv files in the relevant folder using pathlib
-all_files = Path('API_output/percentiles/filled_data').glob('*.csv')
+all_files = Path('data/PIP_percentiles_raw').glob('*.csv')
 
 # Read in and concat (append together) all the files
 df = pd.concat((pd.read_csv(f) for f in all_files))
@@ -28,7 +28,7 @@ df = df.drop_duplicates(subset=['entity', 'year', 'reporting_level', 'welfare_ty
 
 #%%
 # Write to .CSV
-df.to_csv('API_output/percentiles/all_percentiles.csv', index=False)
+df.to_csv('data/PIP_percentiles_raw_aggregated.csv', index=False)
 #%%
 
 
