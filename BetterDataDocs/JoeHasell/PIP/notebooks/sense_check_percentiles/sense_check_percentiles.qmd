@@ -71,7 +71,7 @@ Let's look at those observations where the returned percentile is so distant fro
 #| code-summary: 'Scatter of requested percentile and returned percentile'
 df_check = df.copy()
 
-df_check['diff'] = abs(df_check['requested_p']-df_check['headcount'])*100
+df_check['diff'] = abs(df_check['requested_p']-df_check['headcount']*100)
 
 df_check = df_check[df_check['diff']>0.5]
 
@@ -87,18 +87,7 @@ fig.show()
 ```
 
 
-For instance let's take a look at what was returned by requesting the 10th percentile...
-```{python}
-#| code-fold: true
-#| code-summary: 'Describe p10 results'
-
-df[df['requested_p']==10].describe()
-
-
-```
-
-
-There are many results that return with `headcount`=0 and `poverty_line`=0.
+We also see that there are many results that return with `headcount`=0 and `poverty_line`=0.
 
 ```{python}
 #| code-fold: true
@@ -109,87 +98,43 @@ df[df['headcount']==0]
 
 ```
 
-
-Suriname returns zeros:
-```{python}
-#| code-fold: true
-#| code-summary: 'Look at headcount=0 results for p10 requests'
-df[(df['requested_p']==10) & (df['headcount']==0)]
-
-```
-
-And Sierra Leone returns much higher percentiles than p10 (and also some negative incomes).
-```{python}
-#| code-fold: true
-#| code-summary: 'Look at headcount>0.101 results for p10 requests'
-df[(df['requested_p']==10) & (df['headcount']>0.101)]
-
-```
-
-
+And there are also some results that return negative poverty_lines (see min).
 
 ```{python}
 #| code-fold: true
-#| code-summary: 'Look at headcount<0.099 results for p10 requests'
-df[(df['requested_p']==10) & (df['headcount']<0.095)]
+#| code-summary: 'With El Salvador and Sierra Leone'
 
-```
-
-
-Dropping El Salvador and Sierra Leone (for negative poverty lines) and any headcount=0 observations.
-
-```{python}
-#| code-fold: true
-#| code-summary: 'Drop Suriname and Sierra Leone and describe p10 results'
-
-df[~df['entity'].isin(['El Salvador', 'Sierra Leone'])].describe()
-
+df['threshold'].describe()
 
 
 ```
 
-
-
-```{python}
-#| code-fold: true
-#| code-summary: 'Drop headcount=0 and describe p10 results'
-
-df[df['headcount']!=0].describe()
-
-
-```
-
+These are all in El Salvador and Sierra Leone.
 
 ```{python}
 #| code-fold: true
-#| code-summary: 'check how far away from intended percentil'
+#| code-summary: 'Without El Salvador and Sierra Leone'
 
-df_check = df[df['headcount']!=0].copy()
+df[~df['entity'].isin(['El Salvador', 'Sierra Leone'])]['threshold'].describe()
 
-
-
-```
-
-```{python}
-#| code-fold: true
-#| code-summary: ''
-
-
-df_check['diff'].describe()
-
-```
-
-The negative poverty lines come from two countries: Sierra Leone and El Salvador
-```{python}
-#| code-fold: true
-#| code-summary: ''
-
-
-df[df['threshold']<0]['entity'].drop_duplicates().tolist
 
 ```
 
 
 
 ### Monotonicity
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Without El Salvador and Sierra Leone'
+df_check = df.copy()
+
+df_check = df_check[~df_check['entity'].isin(['El Salvador', 'Sierra Leone'])]
+
+df_check = df_check[df_check['headcount']!=0]
+
+check_mono = df_check.sort_values('headcount',ascending=True).groupby(['entity','year'])['threshold'].is_monotonic_increasing.reset_index()
+
+check_mono[check_mono['threshold']==False]
+```
 
