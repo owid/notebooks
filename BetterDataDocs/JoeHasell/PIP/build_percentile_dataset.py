@@ -25,6 +25,7 @@ cols = [i for i in df.columns if i not in ['requested_p']]
 
 df = df.drop_duplicates(subset=['entity', 'year', 'reporting_level', 'welfare_type', 'poverty_line','headcount'], keep='first')
 
+
 #%%
 # Write to .CSV
 df.to_csv('API_output/percentiles/all_percentiles.csv', index=False)
