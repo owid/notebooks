@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 library(gpinter)
 library(tidyverse)
@@ -51,20 +52,8 @@ filter(is.na(poverty_line))
 
 # +
 gpinter_align_percentiles<- function(distribution){
-
-p <- c(seq(1,99,1))/100
-
-q<- fitted_quantile(distribution, p)
-
-output <- data.frame(p, q)
-
-return(output)
-
-}
-
-# +
-gpinter_deciles<- function(distribution){
-
+# This includes some outputs that are helpful to Joe for other work, but are not relevant to OWID's immediate needs.
+    # Later I drop the less relevant columns.
 #choose the lower bracket thresholds, begin from 0 
 p <- c(seq(0,90,10))/100
 
@@ -75,20 +64,21 @@ average_in_bracket<- bracket_average(distribution, p, p_1)
 
 q<- fitted_quantile(distribution, p)
 
-#average_above<- top_average(distribution, p)
+average_above<- top_average(distribution, p)
 
-#share_above<- top_share(distribution, p)
+share_above<- top_share(distribution, p)
 
 # size of bracket (share of population)
-#share_of_pop<- p_1 - p
+share_of_pop<- p_1 - p
 
-#output <- data.frame(p, q, average_in_bracket, average_above, share_above, share_of_pop)
-output <- data.frame(p, q, average_in_bracket)
+output <- data.frame(p, q, average_in_bracket, average_above, share_above, share_of_pop)
 
 return(output)
 
 }
 # -
+
+
 
 # Combine entity name and reporting level to get unique rows
 
@@ -100,10 +90,18 @@ df<- df %>%
 gpinter_results_all<- data.frame(entity = character(),
                          year = numeric(),
                          p = numeric(),
-                         q = numeric())
+                         q = numeric(),
+                         average_in_bracket = numeric(),
+                         average_above = numeric(), 
+                         share_above = numeric(), 
+                         share_of_pop = numeric())
 
 #Select year
 year_list = unique(df$year)
+
+# +
+# For testing – since it takes a while to run on all years
+#year_list = c(1981,2015)
 
 # +
 
@@ -148,13 +146,16 @@ for(yr in year_list){
 # Split entity and reporting level
 gpinter_results_all<- gpinter_results_all %>%
     separate(entity_level, c("entity", "reporting_level"), sep = '\\*')
+# +
+# Inspect result
+#gpinter_results_all
 # -
 
-gpinter_results_all
 
 write.csv(gpinter_results_all, "clean_data/percentiles_filled.csv")
 
-
+gpinter_results_all_just_percentiles<- gpinter_results_all %>%
+ select(
 
 
 
