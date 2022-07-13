@@ -106,7 +106,7 @@ year_list = unique(df$year)
 # +
 
 for(yr in year_list){
-  print(paste0("Year is: ", yr))
+  print(paste0("Aligning percentiles for year: ", yr))
 
     selected_year_df<- df %>%
       filter(year == yr)
@@ -152,11 +152,10 @@ gpinter_results_all<- gpinter_results_all %>%
 # -
 
 
-write.csv(gpinter_results_all, "clean_data/percentiles_filled.csv")
+write.csv(gpinter_results_all, "clean_data/percentile_data_for_joes_phd.csv")
 
 gpinter_results_all_just_percentiles<- gpinter_results_all %>%
- select(
+ select(entity, year, reporting_level, p, q) %>%
+ filter(p>0)
 
-
-
-
+write.csv(gpinter_results_all_just_percentiles, "clean_data/percentiles_filled.csv")
