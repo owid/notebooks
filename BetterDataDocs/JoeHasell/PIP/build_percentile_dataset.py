@@ -1,25 +1,16 @@
 #%%
 import pandas as pd
+from pathlib import Path
 
-from API_query_lists import percentiles
 
 #%%
-#Make an empty dataframe into which the data for each percentil will be appended
-df = pd.DataFrame(columns=['entity', 'year', 'threshold', 'headcount'])
-#%%
+# Make a list of all csv files in the relevant folder using pathlib
+all_files = Path('API_output/percentiles/filled_data').glob('*.csv')
 
-for p in percentiles:
+# Read in and concat (append together) all the files
+df = pd.concat((pd.read_csv(f) for f in all_files))
+# %%
 
-    print(f"Reading P{p}")
-    #Read in the csv as dataframe
-    p_file = f'API_output/percentiles/filled_data/P{p}.csv'
-    df_p = pd.read_csv(p_file)
-
-    #Append to running dataframe
-    df = pd.concat(df, df_p)
-
-    # Write to .CSV
-    df.to_csv(f'API_output/percentiles/all_percentiles.csv')
-
-
+# Write to .CSV
+df.to_csv(f'API_output/percentiles/all_percentiles.csv')
 #%%
