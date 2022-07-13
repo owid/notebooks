@@ -26,7 +26,7 @@ for p in percentiles:
     df_filled['requested_p'] = p
 
     # Write to .CSV
-    df_filled.to_csv(f'data/PIP_percentiles/P{p}.csv', index=False)
+    df_filled.to_csv(f'data/PIP_percentiles_raw/P{p}.csv', index=False)
 
 
     # Drop from memory
