@@ -14,3 +14,7 @@ df = pd.concat((pd.read_csv(f) for f in all_files))
 # Write to .CSV
 df.to_csv(f'API_output/percentiles/all_percentiles.csv', index=False)
 #%%
+
+# Cleaning - see notebook for discussion
+
+# Drop headcount=0 observations
