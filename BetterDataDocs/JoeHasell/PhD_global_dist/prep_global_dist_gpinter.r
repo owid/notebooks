@@ -127,7 +127,7 @@ gpinter_results_all<- data.frame(entity = character(),
 year_list = unique(df$year)
 
 # For testing – since it takes a while to run on all years
-year_list = c(1981,2015)
+#year_list = c(1981,2015)
 
 
 
