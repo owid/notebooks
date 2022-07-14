@@ -7,12 +7,24 @@ library(dineq)
 
 
 
-df<- read.csv('data/clean_percentiles.csv')
+df<- read.csv('https://joeh.fra1.digitaloceanspaces.com/phd_global_dist/percentiles_from_PIP.csv')
 
 head(df)
 
 
 head(df %>% filter(p==0.99), n=20)
+
+# Merge in standard variables from any API response
+
+df_standard<- read.csv('https://joeh.fra1.digitaloceanspaces.com/PIP/example_response_filled.csv')
+
+df_standard<- df_standard %>%
+select(entity, reporting_year, welfare_type, reporting_level, reporting_pop, reporting_gdp, mean) %>%
+rename(year = reporting_year)
+
+df<- left_join(df, df_standard)
+
+head(df)
 
 # ### Select only national entities, unless only sub-national available
 
@@ -48,11 +60,18 @@ df %>%
 
 # ### Check coverage
 
-country_list<- unique(df$entity)
+# Select year range
+year_list<- seq(1981, 2019)
 
-df %>%
-group_by(year) %>%
-ungroup()
+# Filter for these years and count number of years per entity 
+df %>% filter(year %in% year_list) %>%
+    select(entity, year) %>%
+    unique() %>%
+    count(entity) %>%
+    filter(n<length(year_list))
+
+
+
 
 # ### MLD decomposition
 
@@ -189,17 +208,139 @@ df_wid<- read.csv('data/clean_wid_percentiles.csv')
 
 head(df_wid)
 
+summary(df_wid %>% filter(p==0.99))
+
 df_wid<- df_wid %>%
-  select(entity, year, p, average) %>%
- rename(wid_average = average)
+  select(entity, year, p, average, share) %>%
+ rename(wid_average = average,
+       wid_share_above = share)
 
 #Merge in to PIP data
 df_pip_wid<- left_join(df, df_wid)
 
-df_pip_wid %>%
-filter(is.na(wid_average)) %>%
- select(entity, year) %>%
- unique() %>%
- filter(year == 2017)
+head(df_pip_wid)
+
+# A model to predict WID top 1% share where missing
+
+# +
+lm_top_1_pretax<- lm(wid_share_above ~ share_above + welfare_type + as.factor(year), data = df_pip_wid %>% filter(p==0.99))
+
+modelSummary <- summary(lm_top_1_pretax)
+
+modelCoeffs <- modelSummary$coefficients  # model coefficients
+
+intercept<- modelCoeffs["(Intercept)", "Estimate"] 
+b_share_above<- modelCoeffs["share_above", "Estimate"] 
+
+
+# +
+df_predicted_shares<- df_pip_wid %>%
+        filter(p==0.99) 
+
+df_predicted_shares<- df_predicted_shares %>%
+        mutate(predicted_shares = predict(lm_top_1_pretax, newdata = df_predicted_shares))
+
+# Merge predictions into main data
+df_predicted_shares<- df_predicted_shares %>%
+    select(entity, year, p, predicted_shares)
+
+df_pip_wid<- left_join(df_pip_wid, df_predicted_shares)
+
+df_pip_wid<- df_pip_wid %>%
+    mutate(wid_shares_inc_predicted = if_else(is.na(wid_share_above),
+                                              predicted_shares,
+                                              wid_share_above))
+
+# +
+# Predict
+df_pip_wid<- df_pip_wid %>%
+    mutate(lm_predicted_wid_topshare = as.numeric(NA))  %>%
+    mutate(lm_predicted_wid_topshare = if_else(p==0.99,
+                                               (intercept + b_share_above * share_above),
+                                               as.numeric(NA)))
+
+df_pip_wid <- df_pip_wid %>%
+    mutate(wid_topshare_plus_predict = if_else(is.na(wid_share_above),
+                                               lm_predicted_wid_topshare,
+                                               wid_share_above))
+# -
+
+df_pip_wid %>% filter(p==0.99)
+
+# +
+# Adjust top average
+
+df_pip_wid<- df_pip_wid %>%
+  mutate(average_in_bracket = if_else(p==0.99,
+                                         adjusted_averages(0.99,average_above,share_above, wid_topshare_plus_predict, mean),
+                                         average_in_bracket))
+# -
+
+# MLD decomp results
+mld_decomp_alt_wid_topshares<- run_mld_decomp(df_pip_wid)
+mld_decomp_alt_wid_topshares
+
+mld_decomp_baseline
+
+
+
+# ## Plots
+
+# +
+# compare mld decomp of different scenarios
+mld_decomp_baseline<- mld_decomp_baseline %>%
+mutate(scenario = "Survey data")
+
+mld_decomp_alt_wid_topshares<- mld_decomp_alt_wid_topshares %>%
+mutate(scenario = "Top 1% scaled up to \n WID pretax shares")
+
+mld_decomp_alt_avg_to_gdp<- mld_decomp_alt_avg_to_gdp %>%
+mutate(scenario = "All incomes scaled to GDP")
+
+compare_mld<- bind_rows(mld_decomp_baseline, mld_decomp_alt_wid_topshares, mld_decomp_alt_avg_to_gdp)
+
+compare_mld$scenario <- factor(compare_mld$scenario,      # Reordering group factor levels
+                         levels = c("Survey data", 
+                                    "Top 1% scaled up to \n WID pretax shares",
+                                   "All incomes scaled to GDP"))
+
+
+
+
+# +
+compare_mld_area<- compare_mld %>%
+    select(year, mld_within, mld_between, scenario) %>%
+    pivot_longer(cols = c('mld_within', 'mld_between'),
+                 names_to = "measure",
+                 values_to = "value")
+
+plot<- ggplot(compare_mld_area, aes(x = year, y=value, fill = measure)) +
+        geom_area() +
+facet_wrap(~scenario) +
+        ggtitle("Decomposition of global inequality (MLD) within and between countries")
+
+plot
+
+ggsave('graphics/total_mld_breakdown.png')
+
+
+# +
+# compare mld decomp of different scenarios
+compare_mld_area<- compare_mld %>%
+    select(year, within_share, between_share, scenario) %>%
+    pivot_longer(cols = c('within_share', 'between_share'),
+                 names_to = "measure",
+                 values_to = "value")
+
+plot<- ggplot(compare_mld_area, aes(x = year, y=value, fill = measure)) +
+        geom_area() +
+facet_wrap(~scenario) +
+        ggtitle("Share of global inequality (MLD) found within and between countries")
+
+plot
+
+ggsave('graphics/within_between_shares_of_total.png')
+
+# -
 
 
