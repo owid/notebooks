@@ -1,5 +1,7 @@
 #%%
 import pandas as pd
+
+from standardize_entities import standardize_entities_func
 #%%
 file = 'https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/poverty_inequality_dataexplorer/WID/wid_pretax_992j_dist.csv'
 df = pd.read_csv(file, keep_default_na=False,
@@ -33,7 +35,46 @@ keep_percentiles = ['p0p1', 'p1p2', 'p2p3', 'p3p4', 'p4p5', 'p5p6', 'p6p7', 'p7p
 df = df[df['percentile'].isin(keep_percentiles)]
 
 # %%
-url = 'https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Povcal_data_work/Global_distribution/gpinter/data/WID/original/WID%20regions_country_standardized.csv'
+url = 'https://raw.githubusercontent.com/owid/notebooks/main/JoeHasell/Povcal_data_work/Global_distribution/gpinter/data/WID/original/WID_regions_country_standardized.csv'
 
 df_mapping = pd.read_csv(url)
+
+df_mapping = df_mapping[['WID code', 'Our World In Data Name']]
+# %%
+
+
+mapping_varname_raw = 'WID code'
+mapping_vaname_owid = 'Our World In Data Name'
+data_varname_old = 'country'
+data_varname_new = 'entity'
+
+# %%
+
+# Merge in mapping to raw
+df_harmonized = pd.merge(df,df_mapping,
+      left_on=data_varname_old,right_on=mapping_varname_raw, how='left')
+# %%
+   
+# Drop the old entity names column, and the matching column from the mapping file
+df_harmonized = df_harmonized.drop(columns=[data_varname_old, mapping_varname_raw])
+# %%
+    
+# Rename the new entity column
+df_harmonized = df_harmonized.rename(columns={mapping_vaname_owid:data_varname_new})
+# %%
+
+# Move the entity column to front:
+
+# get a list of columns
+cols = list(df_harmonized)
+    
+# move the country column to the first in the list of columns
+cols.insert(0, cols.pop(cols.index(data_varname_new)))
+    
+# reorder the columns of the dataframe according to the list
+df_harmonized = df_harmonized.loc[:, cols]
+
+
+# %%
+df_harmonized.to_csv("data/clean_wid_percentiles.csv", index=False)
 # %%
