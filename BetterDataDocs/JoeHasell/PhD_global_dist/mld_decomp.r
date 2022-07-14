@@ -183,4 +183,23 @@ df_alt_avg_to_gdp<- df %>%
 mld_decomp_alt_avg_to_gdp<- run_mld_decomp(df_alt_avg_to_gdp)
 mld_decomp_alt_avg_to_gdp
 
+# ### Merge in WID data for pre tax national income
+
+df_wid<- read.csv('data/clean_wid_percentiles.csv')
+
+head(df_wid)
+
+df_wid<- df_wid %>%
+  select(entity, year, p, average) %>%
+ rename(wid_average = average)
+
+#Merge in to PIP data
+df_pip_wid<- left_join(df, df_wid)
+
+df_pip_wid %>%
+filter(is.na(wid_average)) %>%
+ select(entity, year) %>%
+ unique() %>%
+ filter(year == 2017)
+
 
