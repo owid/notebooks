@@ -194,7 +194,7 @@ gpinter_results_all<- left_join(gpinter_results_all, df_standard_additional_vars
 
 head(gpinter_results_all)
 
-write.csv(gpinter_results_all, "clean_percentiles.csv")
+write.csv(gpinter_results_all, "data/clean_percentiles.csv")
 
 
 
