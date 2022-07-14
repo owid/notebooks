@@ -12,6 +12,8 @@ df<- read.csv('data/clean_percentiles.csv')
 head(df)
 
 
+head(df %>% filter(p==0.99), n=20)
+
 # ### Select only national entities, unless only sub-national available
 
 # Check if only subnational estimates are available for some countries
@@ -49,7 +51,7 @@ df %>%
 country_list<- unique(df$entity)
 
 df %>%
-groupby(year) %>%
+group_by(year) %>%
 ungroup()
 
 # ### MLD decomposition
@@ -63,6 +65,8 @@ year_list = as.numeric(unique(df$year))
 
 # +
 #
+run_mld_decomp<- function(df_input){
+    
 mld_decomp<- data.frame(
               year = numeric(),
               mld_total = numeric(),
@@ -73,7 +77,7 @@ mld_decomp<- data.frame(
 # run mld decomposition, year by year
 for(y in year_list){
   
-  df_this_year<- df %>%
+  df_this_year<- df_input %>%
     filter(year == y)
   
  mld_results<- mld_decomp(df_this_year$average_in_bracket,
@@ -97,9 +101,14 @@ mld_decomp<- mld_decomp %>%
   mutate(within_share = mld_within/mld_total,
          between_share = mld_between/mld_total,
          )
+    
+return(mld_decomp)
+    
+}
 # -
 
-mld_decomp
+mld_decomp_baseline<- run_mld_decomp(df)
+mld_decomp_baseline
 
 # ### Alternative scenarios
 
@@ -147,7 +156,31 @@ check<- adjusted_averages(0.9, 30, 10, 20, 10)
 check
 # -
 
+adjusted_averages(0.99, 24.50341, 0.03376764, 0.2, 7.256477)
+
 head(df)
 
-# df_alt_20<- df %>%
-#   mutate(alt_average_in_bracket = if_else()
+df_alt_20<- df %>%
+  mutate(average_in_bracket = if_else(p==0.99,
+                                         adjusted_averages(0.99,average_above,share_above, .20, mean),
+                                         average_in_bracket))
+
+head(df_alt_20 %>% filter(p ==0.99))
+
+mld_decomp_alt_20<- run_mld_decomp(df_alt_20)
+mld_decomp_alt_20
+
+# ### Scale all incomes to GDP per cap
+
+# +
+# Ratio of GDP per cap to mean
+
+df_alt_avg_to_gdp<- df %>%
+  mutate(ratio_gdp_mean = (reporting_gdp/365)/mean) %>%
+  mutate(average_in_bracket = average_in_bracket * ratio_gdp_mean)
+# -
+
+mld_decomp_alt_avg_to_gdp<- run_mld_decomp(df_alt_avg_to_gdp)
+mld_decomp_alt_avg_to_gdp
+
+
