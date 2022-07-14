@@ -86,3 +86,16 @@ standardize_and_save(raw_csv_url ='clean_data/percentile_data_for_joes_phd.csv',
                       data_varname_new = 'entity',
                       s3_space_to_save_in = 'phd_global_dist',
                       as_filename = 'percentiles_from_PIP.csv')
+
+
+
+# Standardize example API output 
+standardize_and_save(raw_csv_url ='API_output/example_response_filled.csv',
+                      entity_mapping_url ='country_mapping.csv',
+                      mapping_varname_raw ='Original Name',
+                      mapping_vaname_owid = 'Our World In Data Name',
+                      data_varname_old = 'country_name',
+                      data_varname_new = 'entity',
+                      s3_space_to_save_in = 'PIP',
+                      as_filename = 'example_response_filled.csv')
+
