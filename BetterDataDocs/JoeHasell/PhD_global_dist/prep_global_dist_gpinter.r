@@ -23,7 +23,7 @@ df_standard_means <- df_standard %>%
  rename(year = reporting_year,
         entity = country_name) %>%
  select(entity, year, reporting_level, welfare_type, mean)
-        
+
 
 df<- left_join(df, df_standard_means)
 
@@ -82,7 +82,7 @@ gpinter_align_percentiles<- function(distribution){
 # This includes some outputs that are helpful to Joe for other work, but are not relevant to OWID's immediate needs.
     # Later I drop the less relevant columns.
 #choose the lower bracket thresholds, begin from 0 
-p <- c(seq(0,90,10))/100
+p <- c(seq(0,99,1))/100
 
 # This calculates the upper brakect thresholds (up to 1)
 p_1<- c(tail(p, length(p)-1),1)
@@ -127,7 +127,7 @@ gpinter_results_all<- data.frame(entity = character(),
 year_list = unique(df$year)
 
 # For testing – since it takes a while to run on all years
-#year_list = c(1981,2015)
+# year_list = c(1981,2015)
 
 
 
@@ -188,7 +188,7 @@ df_standard_additional_vars <- df_standard %>%
  rename(year = reporting_year,
         entity = country_name) %>%
  select(entity, year, reporting_level, welfare_type, mean, reporting_pop, reporting_gdp)
-        
+
 
 gpinter_results_all<- left_join(gpinter_results_all, df_standard_additional_vars)
 
