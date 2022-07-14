@@ -30,5 +30,3 @@ df = df.drop_duplicates(subset=['entity', 'year', 'reporting_level', 'welfare_ty
 # Write to .CSV
 df.to_csv('API_output/percentiles/all_percentiles.csv', index=False)
 #%%
-
-
