@@ -314,6 +314,11 @@ compare_mld_area<- compare_mld %>%
                  names_to = "measure",
                  values_to = "value")
 
+compare_mld_area$measure <- factor(compare_mld_area$measure,      # Reordering group factor levels
+                         levels = c("mld_between", 
+                                    "mld_within"))
+
+
 plot<- ggplot(compare_mld_area, aes(x = year, y=value, fill = measure)) +
         geom_area() +
 facet_wrap(~scenario) +
@@ -328,9 +333,13 @@ ggsave('graphics/total_mld_breakdown.png')
 # compare mld decomp of different scenarios
 compare_mld_area<- compare_mld %>%
     select(year, within_share, between_share, scenario) %>%
-    pivot_longer(cols = c('within_share', 'between_share'),
+    pivot_longer(cols = c('between_share', 'within_share'),
                  names_to = "measure",
                  values_to = "value")
+
+compare_mld_area$measure <- factor(compare_mld_area$measure,      # Reordering group factor levels
+                         levels = c("between_share", 
+                                    "within_share"))
 
 plot<- ggplot(compare_mld_area, aes(x = year, y=value, fill = measure)) +
         geom_area() +
