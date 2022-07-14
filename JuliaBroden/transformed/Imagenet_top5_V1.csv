@@ -1,0 +1,18 @@
+Entity,Year,Top5_accuracy,Method,Source
+Without extra training data,2012,0.846,AlexNet,ImageNet Classification with Deep Convolutional Neural Networks
+Without extra training data,2013,0.868,OverFeat - 7 accurate models,GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism
+Without extra training data,2014,0.92,VGG-19,EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks
+Without extra training data,2015,0.944,Inception V3,EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks
+Without extra training data,2016,0.963,"Inception ResNet V2 + multi-crop, multi-scale",Squeeze-and-Excitation Networks
+Without extra training data,2017,0.962,"NASNET-A(6)",Learning Transferable Architectures for Scalable Image Recognition
+Without extra training data,2018,0.972,ResNeXt-101 32x16d,Exploring the Limits of Weakly Supervised Pretraining
+Without extra training data,2019,0.973,AdvProp (EfficientNet-B8),Adversarial Examples Improve Image Recognition
+Without extra training data,2020,0.976,FixEfficientNet-B8,Fixing the train-test resolution discrepancy: FixEfficientNet
+Without extra training data,2021,0.979,NFNet-F6 w/ SAM,High-Performance Large-Scale Image Recognition Without Normalization
+With extra training data,2012,0.846,AlexNet - 7CNNs + ImageNet 2011 pretrain,Self-training with Noisy Student improves ImageNet classification
+With extra training data,2015,0.9395,ResNet-101,Deep Residual Learning for Image Recognition
+With extra training data,2017,0.947,JFT-300M Finetuning,EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks
+With extra training data,2018,0.976,ResNeXt-101 32x48d,Xception: Deep Learning with Depthwise Separable Convolutions
+With extra training data,2019,0.9846,BiT-L (ResNet),Big Transfer (BiT): General Visual Representation Learning
+With extra training data,2020,0.987,NoisyStudent (EfficientNet-L2),Self-training with Noisy Student improves ImageNet classification
+With extra training data,2021,0.9902,Florence-CoSwim-H,Florence: A New Foundation Model for Computer Vision
