@@ -5,11 +5,37 @@ library(tidyverse)
 
 # Read in percentiles from OWID's semi-prepared data
 
-df<- read.csv('API_output/percentiles/all_percentiles.csv')
+df<- read.csv('data/PIP_percentiles_raw_aggregated.csv')
 
 head(df)
 
-# Another cell
+# Read in the standard return forom the PIP API
+
+df_standard<- read.csv('data/example_response_filled.csv')
+
+head(df_standard)
+
+# Merge average inc/cons
+
+
+
+df_standard_means <- df_standard %>%
+ rename(year = reporting_year,
+        entity = country_name) %>%
+ select(entity, year, reporting_level, welfare_type, mean)
+        
+
+df<- left_join(df, df_standard_means)
+
+head(df)
+
+#
+
+
+
+
+
+
 
 df<- df %>%
      group_by(entity, year, reporting_level, welfare_type) %>% 
@@ -100,9 +126,12 @@ gpinter_results_all<- data.frame(entity = character(),
 #Select year
 year_list = unique(df$year)
 
-# +
 # For testing – since it takes a while to run on all years
-#year_list = c(1981,2015)
+year_list = c(1981,2015)
+
+
+
+
 
 # +
 
@@ -125,10 +154,11 @@ for(yr in year_list){
     
         p<- selected_year_country_df$headcount
         q<- selected_year_country_df$poverty_line
+        avg<- as.numeric(unique(selected_year_country_df$mean))
 
+                 
         # Original distribution
-        #original_distribution <- thresholds_fit(p, q, average = average_inc)
-        original_distribution <- thresholds_fit(p, q)
+        original_distribution <- thresholds_fit(p, q, average = avg)
     
         # Make a dataframe with the aligned percentiles for this country
         gpinter_results_entity<- gpinter_align_percentiles(original_distribution) %>%
@@ -147,16 +177,27 @@ for(yr in year_list){
 # Split entity and reporting level
 gpinter_results_all<- gpinter_results_all %>%
     separate(entity_level, c("entity", "reporting_level"), sep = '\\*')
-# +
-# Inspect result
-#gpinter_results_all
 # -
+# Inspect result
+gpinter_results_all
 
 
-write.csv(gpinter_results_all, "clean_data/percentile_data_for_joes_phd.csv")
+# Merge in additional vars from standard file
 
-gpinter_results_all_just_percentiles<- gpinter_results_all %>%
- select(entity, year, reporting_level, p, q) %>%
- filter(p>0)
+df_standard_additional_vars <- df_standard %>%
+ rename(year = reporting_year,
+        entity = country_name) %>%
+ select(entity, year, reporting_level, welfare_type, mean, reporting_pop, reporting_gdp)
+        
 
-write.csv(gpinter_results_all_just_percentiles, "clean_data/percentiles_filled.csv")
+gpinter_results_all<- left_join(gpinter_results_all, df_standard_additional_vars)
+
+head(gpinter_results_all)
+
+write.csv(gpinter_results_all, "clean_percentiles.csv")
+
+
+
+
+
+
