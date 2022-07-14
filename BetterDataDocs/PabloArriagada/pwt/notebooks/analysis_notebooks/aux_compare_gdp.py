@@ -21,7 +21,7 @@
 # %% [markdown]
 # Starting from version 8, the Penn World Table includes five different GDP measures.
 #
-# There are two based on prices that are constant across countries and over time:
+# There are two based on prices that are constant across countries and over time, where multiple ICP benchmarks are applied:
 #
 # - **rgdpe**: Expenditure-side real GDP at chained PPPs (in mil. 2017USD), to compare living standards between countries and across years.
 # - **rgdpo**: Output-side real GDP at chained PPPs (in mil. 2017USD), to compare productive capacity between countries and across years.
@@ -78,9 +78,12 @@ df[['rgdpe_pc', 'rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc']].describe()
 # ## Expenditure-side vs. output-side
 
 # %% [markdown]
-# If these concepts are linked with macroeconomic theory, it seems weird to assign two different values to expenditure and output side GDP, because both sides in the GDP equation are equal. But this is due mainly to a distinction: only the output-side GDP includes prices of imports and exports, and that is why is connected with productive capacity. Let's see the differences between `rgdpe` and `rgdpo` and also between `cgdpe` and `cgdpo`
+# If these concepts are linked with macroeconomic theory, it seems weird to assign two different values to expenditure and output side GDP, because both sides in the GDP equation are equal. But this is due mainly to a distinction: only the output-side GDP includes prices of imports and exports, and that is why is connected with productive capacity. In fact, the output-side estimations have been more recently developed by PWT, due to the difficulty of constructing relative prices of imports and exports. Let's see the differences between `rgdpe` and `rgdpo` and also between `cgdpe` and `cgdpo`
 #
 # *This could be useful: https://documents1.worldbank.org/curated/en/346251468142506072/pdf/wps4166.pdf*
+
+# %% [markdown]
+# If we divide the output-side by the expenditure-side GDP values for each country and year we can see that most of the ratios are very close to 1, but there are some very large differences, concentrated in Bermuda, Kuwait, Turks and Caicos Islands and Malta. 
 
 # %%
 # Calculate ratios to `rgdpe_pc`
@@ -96,10 +99,13 @@ fig = px.histogram(df, x="cgdp_ratio",
 title = '<b>Ratio of cgdpo to cgdpe</b>', marginal="box", hover_data=['entity', 'year'])
 fig.show()
 
+# %% [markdown]
+# The outliers are seen more clearly on this plot:
+
 # %%
 fig = px.scatter(df, x="year", y="rgdp_ratio", 
                  hover_data=['entity', 'year', 'rgdpe_pc', 'rgdpo_pc'], opacity=0.5, color='entity', 
-                 title="<b>Ratio of rgdpo to rgdpe</b>",
+                 title="<b>Ratio of rgdpo to rgdpe vs. year</b>",
                  log_x=True,
                  log_y=True,
                  height=600,
@@ -110,7 +116,79 @@ fig.show()
 
 fig = px.scatter(df, x="year", y="cgdp_ratio", 
                  hover_data=['entity', 'year', 'cgdpe_pc', 'cgdpo_pc'], opacity=0.5, color='entity', 
-                 title="<b>Ratio of cgdpo to cgdpe</b>",
+                 title="<b>Ratio of cgdpo to cgdpe vs. year</b>",
+                 log_x=True,
+                 log_y=True,
+                 height=600,
+                )
+
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+# %% [markdown]
+# ## Current vs. chained PPPs
+
+# %% [markdown]
+# Purchasing power parities (PPPs) are the rates of currency conversion that equalise the purchasing power of different currencies by eliminating the differences in price levels between countries. They are estimated with the prices of a large set of commodities and for a large number of countries, and associated outputs (quantities), all referring to some benchmark year. This works much better than market exchange rates, which are biased towards traded goods across countries.
+#
+# Both real GDPs in current and chained PPPs (`cgdpe`/`cgdpo` and `rgdpe`/`rgdpo`, respectively) allow for international comparisons between countries, but as chained PPPs use the multiple ICP's PPP benchmarks through the years (and interpolations between them), countries can be compared across time, unlike current PPPs (using only one benchmark). By construction, in the year 2017 the values of `cgdpe` and `rgdpe` and also the values of `cgdpo` and `rgdpo` coincide, as seen in the following plot hovering the data for that year.
+#
+# When comparing output-side and expenditure-side GDPs for current and chained PPPs we can see that for some countries the values are actually similar: the rgdpe values ranges between 0.9 and 1.25 times the cgdpe. Although in the output-side measures there are (very) large outliers (Bermuda has ratios between 7 and 21, Turks and Caicos Islands range around 3) or ratios between 1.5 and 2.5, most of the data also ranges between 0.9 and 1.25. 
+
+# %%
+df['output_side_ratio'] = df['rgdpo_pc']/df['cgdpo_pc']
+df['expenditure_side_ratio'] = df['rgdpe_pc']/df['cgdpe_pc']
+
+
+fig = px.histogram(df, x="output_side_ratio",
+title = '<b>Ratio of rgdpo to cgdpo</b>', marginal="box", hover_data=['entity', 'year'])
+fig.show()
+
+fig = px.histogram(df, x="expenditure_side_ratio",
+title = '<b>Ratio of rgdpe to cgdpe</b>', marginal="box", hover_data=['entity', 'year'])
+fig.show()
+
+# %%
+fig = px.scatter(df, x="year", y="output_side_ratio", 
+                 hover_data=['entity', 'year', 'rgdpo_pc', 'cgdpo_pc'], opacity=0.5, color='entity', 
+                 title="<b>Ratio of rgdpo to cgdpo vs. year</b>",
+                 log_x=True,
+                 log_y=True,
+                 height=600,
+                )
+
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+fig = px.scatter(df, x="year", y="expenditure_side_ratio", 
+                 hover_data=['entity', 'year', 'rgdpe_pc', 'cgdpe_pc'], opacity=0.5, color='entity', 
+                 title="<b>Ratio of rgdpe to cgdpe vs. year</b>",
+                 log_x=True,
+                 log_y=True,
+                 height=600,
+                )
+
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+# %% [markdown]
+# ## National accounts-based GDP
+
+# %% [markdown]
+# The GDP variable `rgdpna` is a real GDP based in the growth of rate of national accounts data and then converted to the last (2017) ICP PPP benchmark. By construction, the 2017 `rgdpna` value equals the `cgdpo` 2017 value but the values differ more than the other cases.
+
+# %%
+df['rgdpna_cgdpo_ratio'] = df['rgdpna_pc']/df['cgdpo_pc']
+
+
+fig = px.histogram(df, x="rgdpna_cgdpo_ratio",
+title = '<b>Ratio of rgdpna to cgdpo</b>', marginal="box", hover_data=['entity', 'year'])
+fig.show()
+
+# %%
+fig = px.scatter(df, x="year", y="rgdpna_cgdpo_ratio", 
+                 hover_data=['entity', 'year', 'rgdpna_pc', 'cgdpo_pc'], opacity=0.5, color='entity', 
+                 title="<b>Ratio of rgdpna to cgdpo vs. year</b>",
                  log_x=True,
                  log_y=True,
                  height=600,
@@ -122,17 +200,17 @@ fig.show()
 # %% [markdown]
 # ## Real GDP vs. Current price GDP vs. National accounts-based GDP
 
-# %%
-#Pablo: We can explore using Seaborn's pairplot: plots each variable I choose against the other, and the diagonal is a histogram
-#I can see with this that rgdpe_pc and cgdp_e are the only with almost equal values for each country-year, the other cases are more scattered
+# %% [markdown]
+# These plot matrices show the differences between all the four (per capita) variables: their correlations and their actual values.
 
-import seaborn as sns
-sns.pairplot(df, x_vars=['rgdpe_pc','rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'], 
-             y_vars=['rgdpe_pc','rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc'], 
-             dropna=True, corner=False, diag_kind='kde', kind='reg',
-             plot_kws={'line_kws':{'color':'#f28e2b'}, 'scatter_kws': {'alpha': 0.5}}
-             )
-#, height=5, aspect=3 ,plot_kws={'line_kws':{'color':'#f28e2b'}, 'scatter_kws': {'alpha': 0.5}}
+# %%
+df[['rgdpe_pc','rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc']].corr()
+
+# %%
+fig = px.imshow(df[['rgdpe_pc','rgdpo_pc', 'cgdpe_pc', 'cgdpo_pc', 'rgdpna_pc']].corr(),
+                color_continuous_scale="Purples",
+               text_auto='.2f')
+fig.show()
 
 # %%
 #Pablo: With scatter_matrix in Plotly I can distinguish the countries which deviate from the y=x line
@@ -145,5 +223,7 @@ fig = px.scatter_matrix(df,
     height=600, hover_data=['entity', 'year'], opacity=0.5)
 fig.update_traces(diagonal_visible=False)
 fig.show()
+
+# %%
 
 # %%
