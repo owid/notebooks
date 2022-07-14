@@ -8,8 +8,10 @@ sheet_url <- "https://docs.google.com/spreadsheets/d/1D_7XVaE4BK0DrEFRg0aLaQSYdG
 
 df <- read_sheet(sheet_url, sheet = 3)
 
-df <- df %>% 
-  rename(Entity = `Number of AI Patent Filings`) %>%
+df$Entity <- "World"
+
+df <- df %>%
+  rename(Number_patent_filings = `Number of AI Patent Filings`) %>%
   mutate(Entity = str_to_sentence(Entity)) %>%
   relocate(Entity, Year)
 
