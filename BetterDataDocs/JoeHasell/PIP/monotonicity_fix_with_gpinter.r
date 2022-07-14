@@ -55,7 +55,7 @@ gpinter_align_percentiles<- function(distribution){
 # This includes some outputs that are helpful to Joe for other work, but are not relevant to OWID's immediate needs.
     # Later I drop the less relevant columns.
 #choose the lower bracket thresholds, begin from 0 
-p <- c(seq(0,90,10))/100
+p <- c(seq(0,99,1))/100
 
 # This calculates the upper brakect thresholds (up to 1)
 p_1<- c(tail(p, length(p)-1),1)
