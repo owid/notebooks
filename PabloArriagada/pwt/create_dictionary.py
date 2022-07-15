@@ -15,7 +15,7 @@ match
 var_dict = pd.Series(match.new_var_id.values,index=match.old_var_id).to_dict()
 var_dict
 
-with open('variable_replacements.json', 'w') as fp:
+with open('variable_replacements_staging.json', 'w') as fp:
     json.dump(var_dict, fp, indent=4)
 
 # +
@@ -43,5 +43,5 @@ match['old_var_id'] = match['old_var_id'].astype(str)
 var_dict = pd.Series(match.new_var_id.values,index=match.old_var_id).to_dict()
 var_dict
 
-with open('variable_replacements.json', 'w') as fp:
+with open('variable_replacements_live.json', 'w') as fp:
     json.dump(var_dict, fp, indent=4)
