@@ -22,8 +22,9 @@ write_csv(df, "Imagenet_top1_V1.csv")
 df2 <- read_sheet(sheet_url)
 
 df2 <- df2 %>% 
-  rename(c(Entity = `Method`, Top1_accuracy = `Top-1 Accuracy`)) %>%
+  select(-'Source') %>%
+  rename(c(Entity = `Method`, Top1_accuracy = `Top-1 Accuracy`, Imagenet_extra_training_data = `Type`)) %>%
   mutate(Entity = str_to_sentence(Entity)) %>%
-  relocate(Entity, Year, Top1_accuracy, Type)
+  relocate(Entity, Year, Top1_accuracy, Imagenet_extra_training_data)
 
 write_csv(df2, "Imagenet_top1_V2.csv")
