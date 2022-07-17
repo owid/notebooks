@@ -27,4 +27,16 @@ df[(df['country_name']=='El Salvador') & (df['request_year']==1981)]
 
 #%%
 # Monotonicity issues.
-# In the percentile data (at percentile resolution) it's only Ghana and Guyana.
+
+# In the filled percentile data (at percentile resolution) it's only Ghana and Guyana.
+
+# In the survey percentile data:
+#Ghana 1987 – headcount= .10
+#Guyana 1992 – headcoutn - .20
+# India 1977 national and rural – headcount - ~.18
+
+# Odd issue with India 1977: the National distribution seems to be (exactly) equal to the Rural distribution.
+df_survey %>% filter(country_name=="India", reporting_year ==1977, requested_p<20, requested_p>15) %>% arrange(reporting_level, headcount)
+
+
+# Sierra Leone in general (filled data) – lots of negative values and lots of monotonicity issues.
