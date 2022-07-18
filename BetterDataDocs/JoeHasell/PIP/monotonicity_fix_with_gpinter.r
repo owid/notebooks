@@ -286,84 +286,45 @@ for(is_filled in c('true', 'false')){
 # -
 
 
+# +
+df_test<- df_survey
 
+yr<- 1981
 
-# ### OLDER CODE – DELETE ONCE ABOVE IS WORKING
+selected_year_df<- df %>%
+          filter(reporting_year == yr)
 
-# # Combine country_name name and reporting level to get unique rows
-
-# df<- df %>%
-#     mutate(country_name_level = paste0(country_name, "*", reporting_level))
-
-# # Make an empty dataframe to append the Gpinter results for each country
-
-# gpinter_results_all<- data.frame(country_name = character(),
-#                          reporting_year = numeric(),
-#                          p = numeric(),
-#                          q = numeric(),
-#                          average_in_bracket = numeric(),
-#                          average_above = numeric(), 
-#                          share_above = numeric(), 
-#                          share_of_pop = numeric())
-
-# #Select reporting_year
-# reporting_year_list = unique(df$reporting_year)
+            id_list<- unique(selected_year_df$id)
 
 
 
-# # +
+        # loop on each id (~=country)
+            for(ent in id_list){
+                #print(paste0("Country is: ", ent))
 
-# for(yr in reporting_year_list){
-#   print(paste0("Aligning percentiles for reporting_year: ", yr))
+                selected_year_id_df<- selected_year_df %>%
+                  filter(id == ent)
+    
+                p<- selected_year_id_df$headcount
+                q<- selected_year_id_df$poverty_line
 
-#     selected_reporting_year_df<- df %>%
-#       filter(reporting_year == yr)
-
-#     country_name_list<- unique(selected_reporting_year_df$country_name_level)
-
-
-
-#     # loop on each country
-#     for(ent in country_name_list){
-#       #print(paste0("Country is: ", ent))
-
-#         selected_reporting_year_country_df<- selected_reporting_year_df %>%
-#           filter(country_name_level == ent)
-
-#         p<- selected_reporting_year_country_df$headcount
-#         q<- selected_reporting_year_country_df$poverty_line
-
-#         # Original distribution
-#         #original_distribution <- thresholds_fit(p, q, average = average_inc)
-#         original_distribution <- thresholds_fit(p, q)
-
-#         # Make a dataframe with the aligned percentiles for this country
-#         gpinter_results_country_name<- gpinter_align_percentiles(original_distribution) %>%
-#               mutate(country_name_level = ent,
-#               reporting_year = yr)
+                # Original distribution
+                #original_distribution <- thresholds_fit(p, q, average = average_inc)
+                original_distribution <- thresholds_fit(p, q)
+    
+                # Make a dataframe with the aligned percentiles for this country
+                gpinter_results_id<- gpinter_align_percentiles(original_distribution) %>%
+                    mutate(id = ent,
+                    reporting_year = yr)
+    
+    
+                # Add to running lists
+                gpinter_results_all<- rbind(gpinter_results_all,
+                                gpinter_results_id)
+              }
 
 
-#         # Add to running lists
-#         gpinter_results_all<- rbind(gpinter_results_all,
-#                                 gpinter_results_country_name)
-#     }
+
+# -
 
 
-# }
-
-# # Split country_name and reporting level
-# gpinter_results_all<- gpinter_results_all %>%
-#     separate(country_name_level, c("country_name", "reporting_level"), sep = '\\*')
-# # +
-# # Inspect result
-# #gpinter_results_all
-# # -
-
-
-# write.csv(gpinter_results_all, "clean_data/percentile_data_for_joes_phd.csv")
-
-# gpinter_results_all_just_percentiles<- gpinter_results_all %>%
-#  select(country_name, reporting_year, reporting_level, p, q) %>%
-#  filter(p>0)
-
-# write.csv(gpinter_results_all_just_percentiles, "clean_data/percentiles_filled.csv")
