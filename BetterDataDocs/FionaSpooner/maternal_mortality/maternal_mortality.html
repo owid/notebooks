@@ -2500,7 +2500,19 @@ vertical-align: -.125em;
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  
+  <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#downloading-the-gapminder-data" id="toc-downloading-the-gapminder-data" class="nav-link active" data-scroll-target="#downloading-the-gapminder-data">Downloading the GapMinder data</a></li>
+  <li><a href="#cleaning-the-gapminder-data" id="toc-cleaning-the-gapminder-data" class="nav-link" data-scroll-target="#cleaning-the-gapminder-data">Cleaning the GapMinder data</a></li>
+  <li><a href="#finding-the-mid-point-of-each-year-range" id="toc-finding-the-mid-point-of-each-year-range" class="nav-link" data-scroll-target="#finding-the-mid-point-of-each-year-range">Finding the mid-point of each year range</a></li>
+  <li><a href="#reading-in-the-who-data" id="toc-reading-in-the-who-data" class="nav-link" data-scroll-target="#reading-in-the-who-data">Reading in the WHO data</a></li>
+  <li><a href="#cleaning-the-who-data" id="toc-cleaning-the-who-data" class="nav-link" data-scroll-target="#cleaning-the-who-data">Cleaning the WHO data</a></li>
+  <li><a href="#merging-the-who-data-with-the-gapminder-data" id="toc-merging-the-who-data-with-the-gapminder-data" class="nav-link" data-scroll-target="#merging-the-who-data-with-the-gapminder-data">Merging the WHO data with the GapMinder data</a></li>
+  <li><a href="#cleaning-geographic-entities" id="toc-cleaning-geographic-entities" class="nav-link" data-scroll-target="#cleaning-geographic-entities">Cleaning geographic entities</a></li>
+  </ul>
+</nav>
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -2520,136 +2532,155 @@ vertical-align: -.125em;
 
 </header>
 
+<p>The definition of maternal mortality is:</p>
+<blockquote class="blockquote">
+<p>“A death of a woman while pregnant or within 42 days of termination of pregnancy, irrespective of the duration and site of pregnancy, from any cause related or aggravated by the pregnancy or its management, but not from accidental or incidental causes.”</p>
+</blockquote>
+<p>The definition of maternal mortality ratio is:</p>
+<blockquote class="blockquote">
+<p>“The number of maternal deaths during a given time period per 100,000 live births during the same time period.”</p>
+</blockquote>
+<p>In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine two existing datasets:</p>
+<ul>
+<li>GapMinder (1751-2008)</li>
+<li>World Health Organization (2000-2017)</li>
+</ul>
+<p>We make the assumption that their methods are comparable and that the data can be combined without transformation.</p>
+<p>In years where there is an overlap in both time-series we use the data from the WHO.</p>
+<section id="downloading-the-gapminder-data" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-the-gapminder-data">Downloading the GapMinder data</h2>
+<p>Firstly we download the data from GapMinder and save it locally. Then we read in the GapMinder data, clean up the column names and take a look at the data.</p>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(<span class="st">&quot;https://www.gapminder.org/documentation/documentation/gapdata010.xls&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">&quot;data/input/&quot;</span>).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/gapminder.xls&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>output.write(r.content)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>output.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(<span class="st">&quot;https://www.gapminder.org/documentation/documentation/gapdata010.xls&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">&quot;data/input/&quot;</span>).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/gapminder.xls&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>output.write(r.content)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>output.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">&quot;data/input/gapminder.xls&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df.drop(df.index[<span class="dv">0</span>:<span class="dv">16</span>]).reset_index()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;Country&quot;</span>].<span class="bu">str</span>.strip()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d[<span class="op">~</span>pd.isna(df_d[<span class="st">&quot;MMR&quot;</span>])]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">&quot;data/input/gapminder.xls&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df.drop(df.index[<span class="dv">0</span>:<span class="dv">16</span>]).reset_index()</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;Country&quot;</span>].<span class="bu">str</span>.strip()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d[<span class="op">~</span>pd.isna(df_d[<span class="st">&quot;MMR&quot;</span>])]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_d.loc[:<span class="dv">2</span>, <span class="st">&quot;year&quot;</span>] <span class="op">=</span> [<span class="st">&quot;1875&quot;</span>, <span class="st">&quot;1885&quot;</span>, <span class="st">&quot;1895&quot;</span>]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1772</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">487</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1872</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1775</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">629</span>),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1875</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">77</span>),</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sweden&quot;</span>)</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">39</span>),</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;United States&quot;</span>)</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="fl">1766.28</span>),</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(df_d[(df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1990</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sri Lanka&quot;</span>)].index)</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1950</span>)</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;MMR&quot;</span>] <span class="op">==</span> <span class="dv">90</span>)</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    ].index</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Duplicates after get_mid_year()</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;year&quot;</span>].isin([<span class="st">&quot;1989-02&quot;</span>, <span class="st">&quot;1899-03&quot;</span>])) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    ].index</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell" data-execution_count="5">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]][df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="36">
-
-<div>
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Country</th>
-      <th>year</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+</section>
+<section id="cleaning-the-gapminder-data" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-the-gapminder-data">Cleaning the GapMinder data</h2>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>There are some issues with the GapMinder data - we will manually clean them here.</p>
 </div>
+</div>
+<ul>
+<li><p>The first three rows in the ‘year’ column seem to be wrong as it seems as if each row covers 110 years, but in <a href="https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#">another source</a> they cover only 10 years.</p></li>
+<li><p>I will replace them manually here with the middle of each decade, as is used in the other data from the same source.</p></li>
+<li><p>There are cases where the year for Finland has been entered incorrectly three times, there are two 1772s, 1775s &amp; 1967s, the second of each should be 1872, 1875 and 1957 respectively.</p></li>
+<li><p>There are also two errors for New Zealand, and one error for both Sweden and the US.</p></li>
+<li><p>Sri Lanka’s maternal mortality rate seems to drop to zero in 1990, we will drop this value.</p></li>
+</ul>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mid_year(year: <span class="bu">str</span>):</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">&quot;-&quot;</span> <span class="kw">in</span> <span class="bu">str</span>(year):</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">0</span>]</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        year_end <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        year_end_len <span class="op">=</span> <span class="bu">len</span>(year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>])</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        year_end_pref <span class="op">=</span> <span class="dv">4</span> <span class="op">-</span> year_end_len</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> year_end_pref <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            year_pref <span class="op">=</span> year_begin[<span class="dv">0</span>:year_end_pref]</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            year_end <span class="op">=</span> year_pref <span class="op">+</span> year_end</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> <span class="bu">int</span>(year)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        year_out <span class="op">=</span> <span class="bu">int</span>(year)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.Series([year_begin, year_out])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_d.loc[:<span class="dv">2</span>, <span class="st">&quot;year&quot;</span>] <span class="op">=</span> [<span class="st">&quot;1875&quot;</span>, <span class="st">&quot;1885&quot;</span>, <span class="st">&quot;1895&quot;</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1772</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">487</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1872</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1775</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">629</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1875</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">77</span>),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sweden&quot;</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">39</span>),</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;United States&quot;</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="fl">1766.28</span>),</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(df_d[(df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1990</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sri Lanka&quot;</span>)].index)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1950</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;MMR&quot;</span>] <span class="op">==</span> <span class="dv">90</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    ].index</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Duplicates after get_mid_year()</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;year&quot;</span>].isin([<span class="st">&quot;1989-02&quot;</span>, <span class="st">&quot;1899-03&quot;</span>])) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    ].index</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span>(df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]][df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)].shape[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</section>
+<section id="finding-the-mid-point-of-each-year-range" class="level2">
+<h2 class="anchored" data-anchor-id="finding-the-mid-point-of-each-year-range">Finding the mid-point of each year range</h2>
+<p>For some rows a range of years is given for a particular maternal mortality rate. We want to find the mid-point of that range. We use this function to find the mid-value of years given.</p>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mid_year(year: <span class="bu">str</span>):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">&quot;-&quot;</span> <span class="kw">in</span> <span class="bu">str</span>(year):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">0</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        year_end <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        year_end_len <span class="op">=</span> <span class="bu">len</span>(year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>])</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        year_end_pref <span class="op">=</span> <span class="dv">4</span> <span class="op">-</span> year_end_len</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> year_end_pref <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            year_pref <span class="op">=</span> year_begin[<span class="dv">0</span>:year_end_pref]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            year_end <span class="op">=</span> year_pref <span class="op">+</span> year_end</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> <span class="bu">int</span>(year)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        year_out <span class="op">=</span> <span class="bu">int</span>(year)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.Series([year_begin, year_out])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<p>Let’s check the mid-year estimates have worked as expected. There is one case where the mid-year estimate is not the mid-point of the range of years. Let’s fix this manually.</p>
 <div class="cell" data-execution_count="7">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_years <span class="op">=</span> df_d[<span class="st">&quot;year&quot;</span>].<span class="bu">apply</span>(get_mid_year)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">=</span> df_years[<span class="dv">0</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;mid_year&quot;</span>] <span class="op">=</span> df_years[<span class="dv">1</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df_d[df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">&gt;</span> df_d[<span class="st">&quot;mid_year&quot;</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_years <span class="op">=</span> df_d[<span class="st">&quot;year&quot;</span>].<span class="bu">apply</span>(get_mid_year)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">=</span> df_years[<span class="dv">0</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;mid_year&quot;</span>] <span class="op">=</span> df_years[<span class="dv">1</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>df_d[df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">&gt;</span> df_d[<span class="st">&quot;mid_year&quot;</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="38">
+<div class="cell-output cell-output-display" data-execution_count="7">
 
 <div>
 
@@ -2702,211 +2733,139 @@ vertical-align: -.125em;
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="st">&quot;1897-01&quot;</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>), <span class="st">&quot;mid_year&quot;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1899</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="st">&quot;1897-01&quot;</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>), <span class="st">&quot;mid_year&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1899</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span>(df_d[df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)].shape[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<p>Rename the columns and keep only the columns we are interested in.</p>
 <div class="cell" data-execution_count="9">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_d[df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.copy(deep<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;mid_year&quot;</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df_gap <span class="op">=</span> df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;MMR&quot;</span>]]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;gapminder&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>df_gap.rename(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{<span class="st">&quot;Country&quot;</span>: <span class="st">&quot;entity&quot;</span>, <span class="st">&quot;MMR&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>}, inplace<span class="op">=</span><span class="va">True</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="40">
-
-<div>
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>index</th>
-      <th>Country</th>
-      <th>year</th>
-      <th>MMR</th>
-      <th>Live Births</th>
-      <th>Maternal deaths</th>
-      <th>Women reproductive age (15-49)</th>
-      <th>MM-rate</th>
-      <th>Unnamed: 7</th>
-      <th>Skilled attendance %</th>
-      <th>Source MMR, maternal death and Live birth</th>
-      <th>Comment</th>
-      <th>Source women reproductive age</th>
-      <th>Comments</th>
-      <th>year_begin</th>
-      <th>mid_year</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
 </div>
-</div>
-</div>
+<p>Standardise the country names.</p>
 <div class="cell" data-execution_count="10">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.copy(deep<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;mid_year&quot;</span>]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df_gap <span class="op">=</span> df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;MMR&quot;</span>]]</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;gapminder&quot;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>df_gap.rename(</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{<span class="st">&quot;Country&quot;</span>: <span class="st">&quot;entity&quot;</span>, <span class="st">&quot;MMR&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>}, inplace<span class="op">=</span><span class="va">True</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stand_countries <span class="op">=</span> pd.read_csv(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/countries_to_standardise_country_standardized.csv&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>stan_dict <span class="op">=</span> stand_countries.set_index(<span class="st">&quot;Country&quot;</span>).squeeze().to_dict()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> df_gap[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="11">
+</section>
+<section id="reading-in-the-who-data" class="level2">
+<h2 class="anchored" data-anchor-id="reading-in-the-who-data">Reading in the WHO data</h2>
+<p>Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.</p>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>stand_countries <span class="op">=</span> pd.read_csv(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/countries_to_standardise_country_standardized.csv&quot;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>stan_dict <span class="op">=</span> stand_countries.set_index(<span class="st">&quot;Country&quot;</span>).squeeze().to_dict()</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> df_gap[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>r_who <span class="op">=</span> requests.get(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv&quot;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>output.write(r_who.content)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>output.close()</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;r&quot;</span>) <span class="im">as</span> zip_ref:</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">&quot;data/input/who_mmr&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>r_who <span class="op">=</span> requests.get(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>output.write(r_who.content)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>output.close()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;r&quot;</span>) <span class="im">as</span> zip_ref:</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">&quot;data/input/who_mmr&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>who <span class="op">=</span> pd.read_csv(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/who_mmr/API_SH.STA.MMRT_DS2_en_csv_v2_4252399.csv&quot;</span>, skiprows<span class="op">=</span><span class="dv">4</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>who <span class="op">=</span> pd.read_csv(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/who_mmr/API_SH.STA.MMRT_DS2_en_csv_v2_4252399.csv&quot;</span>, skiprows<span class="op">=</span><span class="dv">4</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</section>
+<section id="cleaning-the-who-data" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-the-who-data">Cleaning the WHO data</h2>
+<p>Pivot and clean the WHO data and standardise the country names.</p>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1960</span>, <span class="dv">2022</span>))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> [<span class="bu">str</span>(<span class="bu">int</span>) <span class="cf">for</span> <span class="bu">int</span> <span class="kw">in</span> year_cols]</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># year_cols.insert(0,&#39;Country Name&#39;)</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>who_df <span class="op">=</span> pd.melt(who, id_vars<span class="op">=</span>[<span class="st">&quot;Country Name&quot;</span>], value_vars<span class="op">=</span>year_cols)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>who_df.rename(</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Country Name&quot;</span>: <span class="st">&quot;entity&quot;</span>,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;variable&quot;</span>: <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;value&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>,</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;who&quot;</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> who_df[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1960</span>, <span class="dv">2022</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> [<span class="bu">str</span>(<span class="bu">int</span>) <span class="cf">for</span> <span class="bu">int</span> <span class="kw">in</span> year_cols]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># year_cols.insert(0,&#39;Country Name&#39;)</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>who_df <span class="op">=</span> pd.melt(who, id_vars<span class="op">=</span>[<span class="st">&quot;Country Name&quot;</span>], value_vars<span class="op">=</span>year_cols)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>who_df.rename(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Country Name&quot;</span>: <span class="st">&quot;entity&quot;</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;variable&quot;</span>: <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;value&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;who&quot;</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> who_df[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell" data-execution_count="15">
+</section>
+<section id="merging-the-who-data-with-the-gapminder-data" class="level2">
+<h2 class="anchored" data-anchor-id="merging-the-who-data-with-the-gapminder-data">Merging the WHO data with the GapMinder data</h2>
+<p>Combine the two datasets. For years where there is data from both datasets we preferentially keep data from the WHO.</p>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df_gap.append(who_df)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for duplicates</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df[df[[<span class="st">&quot;entity&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)]</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([df_gap, who_df], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;year&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;year&#39;</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Arranging by source so the WHO data is last</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.sort_values(by<span class="op">=</span>[<span class="st">&#39;source&#39;</span>])</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop_duplicates(subset <span class="op">=</span>[<span class="st">&#39;entity&#39;</span>,<span class="st">&#39;year&#39;</span>],keep <span class="op">=</span> <span class="st">&#39;last&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="46">
-
-<div>
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>entity</th>
-      <th>year</th>
-      <th>maternal_mortality_rate</th>
-      <th>source</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Australia</td>
-      <td>1875</td>
-      <td>643</td>
-      <td>gapminder</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Australia</td>
-      <td>1885</td>
-      <td>592</td>
-      <td>gapminder</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Australia</td>
-      <td>1895</td>
-      <td>560</td>
-      <td>gapminder</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Australia</td>
-      <td>1903</td>
-      <td>609</td>
-      <td>gapminder</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Australia</td>
-      <td>1906</td>
-      <td>538</td>
-      <td>gapminder</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-</div>
+</section>
+<section id="cleaning-geographic-entities" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-geographic-entities">Cleaning geographic entities</h2>
+<p>We don’t want to include all of the available regions in the data as it is difficult for us to define them clearly, so we drop out a selection here.</p>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>entities_to_drop <span class="op">=</span> [</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Eastern and Southern&quot;</span>,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Western and Central&quot;</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Arab World&quot;</span>,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Early-demographic dividend&quot;</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (excluding high income)&quot;</span>,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Euro area&quot;</span>,</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (excluding high income)&quot;</span>,</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Fragile and conflict affected situations&quot;</span>,</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Heavily indebted poor countries (HIPC)&quot;</span>,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IBRD only&quot;</span>,</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA &amp; IBRD total&quot;</span>,</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA blend&quot;</span>,</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA only&quot;</span>,</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA total&quot;</span>,</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Late-demographic dividend&quot;</span>,</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; Caribbean (excluding high income)&quot;</span>,</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; the Caribbean (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Least developed countries: UN classification&quot;</span>,</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (excluding high income)&quot;</span>,</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Not classified&quot;</span>,</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Other small states&quot;</span>,</span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pacific island small states&quot;</span>,</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Post-demographic dividend&quot;</span>,</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pre-demographic dividend&quot;</span>,</span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Small states&quot;</span>,</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;South Asia (IDA &amp; IBRD)&quot;</span>,</span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (excluding high income)&quot;</span>,</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[<span class="op">~</span>df[<span class="st">&quot;entity&quot;</span>].isin(entities_to_drop)]</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[[<span class="st">&quot;entity&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;maternal_mortality_rate&quot;</span>]]</span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&quot;data/output/maternal_mortality_rate.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>entities_to_drop <span class="op">=</span> [</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Eastern and Southern&quot;</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Western and Central&quot;</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Arab World&quot;</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Early-demographic dividend&quot;</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (excluding high income)&quot;</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Euro area&quot;</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (excluding high income)&quot;</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Fragile and conflict affected situations&quot;</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Heavily indebted poor countries (HIPC)&quot;</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IBRD only&quot;</span>,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA &amp; IBRD total&quot;</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA blend&quot;</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA only&quot;</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA total&quot;</span>,</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Late-demographic dividend&quot;</span>,</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; Caribbean (excluding high income)&quot;</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; the Caribbean (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Least developed countries: UN classification&quot;</span>,</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (excluding high income)&quot;</span>,</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Not classified&quot;</span>,</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Other small states&quot;</span>,</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pacific island small states&quot;</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Post-demographic dividend&quot;</span>,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pre-demographic dividend&quot;</span>,</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Small states&quot;</span>,</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;South Asia (IDA &amp; IBRD)&quot;</span>,</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (excluding high income)&quot;</span>,</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[<span class="op">~</span>df[<span class="st">&quot;entity&quot;</span>].isin(entities_to_drop)]</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[[<span class="st">&quot;entity&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;maternal_mortality_rate&quot;</span>]]</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&quot;data/output/maternal_mortality_rate.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <!-- -->
 
+</section>
 
 </main>
 <!-- /main column -->
@@ -3040,256 +2999,312 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
-<div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;Maternal Mortality Ratio&quot;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 0.9em</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: hover</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 2</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">    self-contained: true</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co">    smooth-scroll: true</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co">    anchor-sections: true</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="an">comments:</span></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co">  hypothesis: true</span></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> python3</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(<span class="st">&quot;https://www.gapminder.org/documentation/documentation/gapdata010.xls&quot;</span>)</span>
-<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">&quot;data/input/&quot;</span>).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/gapminder.xls&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
-<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>output.write(r.content)</span>
-<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>output.close()</span>
-<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">&quot;data/input/gapminder.xls&quot;</span>)</span>
-<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df.drop(df.index[<span class="dv">0</span>:<span class="dv">16</span>]).reset_index()</span>
-<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;Country&quot;</span>].<span class="bu">str</span>.strip()</span>
-<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d[<span class="op">~</span>pd.isna(df_d[<span class="st">&quot;MMR&quot;</span>])]</span>
-<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>df_d.loc[:<span class="dv">2</span>, <span class="st">&quot;year&quot;</span>] <span class="op">=</span> [<span class="st">&quot;1875&quot;</span>, <span class="st">&quot;1885&quot;</span>, <span class="st">&quot;1895&quot;</span>]</span>
-<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1772</span>)</span>
-<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
-<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">487</span>),</span>
-<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1872</span></span>
-<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1775</span>)</span>
-<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
-<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">629</span>),</span>
-<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1875</span></span>
-<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
-<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
-<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">77</span>),</span>
-<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
-<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
-<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sweden&quot;</span>)</span>
-<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">39</span>),</span>
-<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
-<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
-<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;United States&quot;</span>)</span>
-<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="fl">1766.28</span>),</span>
-<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
-<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(df_d[(df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1990</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sri Lanka&quot;</span>)].index)</span>
-<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
-<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
-<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
-<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1950</span>)</span>
-<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;MMR&quot;</span>] <span class="op">==</span> <span class="dv">90</span>)</span>
-<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a>    ].index</span>
-<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Duplicates after get_mid_year()</span></span>
-<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
-<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
-<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;year&quot;</span>].isin([<span class="st">&quot;1989-02&quot;</span>, <span class="st">&quot;1899-03&quot;</span>])) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
-<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>    ].index</span>
-<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a>df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]][df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)]</span>
-<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mid_year(year: <span class="bu">str</span>):</span>
-<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">&quot;-&quot;</span> <span class="kw">in</span> <span class="bu">str</span>(year):</span>
-<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">0</span>]</span>
-<span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a>        year_end <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>]</span>
-<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a>        year_end_len <span class="op">=</span> <span class="bu">len</span>(year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>])</span>
-<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a>        year_end_pref <span class="op">=</span> <span class="dv">4</span> <span class="op">-</span> year_end_len</span>
-<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> year_end_pref <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a>            year_pref <span class="op">=</span> year_begin[<span class="dv">0</span>:year_end_pref]</span>
-<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a>            year_end <span class="op">=</span> year_pref <span class="op">+</span> year_end</span>
-<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
-<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
-<span id="cb17-132"><a href="#cb17-132" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb17-133"><a href="#cb17-133" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> <span class="bu">int</span>(year)</span>
-<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a>        year_out <span class="op">=</span> <span class="bu">int</span>(year)</span>
-<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.Series([year_begin, year_out])</span>
-<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a>df_years <span class="op">=</span> df_d[<span class="st">&quot;year&quot;</span>].<span class="bu">apply</span>(get_mid_year)</span>
-<span id="cb17-143"><a href="#cb17-143" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">=</span> df_years[<span class="dv">0</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb17-144"><a href="#cb17-144" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;mid_year&quot;</span>] <span class="op">=</span> df_years[<span class="dv">1</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb17-145"><a href="#cb17-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-146"><a href="#cb17-146" aria-hidden="true" tabindex="-1"></a>df_d[df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">&gt;</span> df_d[<span class="st">&quot;mid_year&quot;</span>]]</span>
-<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
-<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="st">&quot;1897-01&quot;</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>), <span class="st">&quot;mid_year&quot;</span></span>
-<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1899</span></span>
-<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a>df_d[df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)]</span>
-<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-166"><a href="#cb17-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-167"><a href="#cb17-167" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.copy(deep<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb17-168"><a href="#cb17-168" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;mid_year&quot;</span>]</span>
-<span id="cb17-169"><a href="#cb17-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-170"><a href="#cb17-170" aria-hidden="true" tabindex="-1"></a>df_gap <span class="op">=</span> df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;MMR&quot;</span>]]</span>
-<span id="cb17-171"><a href="#cb17-171" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;gapminder&quot;</span></span>
-<span id="cb17-172"><a href="#cb17-172" aria-hidden="true" tabindex="-1"></a>df_gap.rename(</span>
-<span id="cb17-173"><a href="#cb17-173" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{<span class="st">&quot;Country&quot;</span>: <span class="st">&quot;entity&quot;</span>, <span class="st">&quot;MMR&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>}, inplace<span class="op">=</span><span class="va">True</span></span>
-<span id="cb17-174"><a href="#cb17-174" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-175"><a href="#cb17-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-181"><a href="#cb17-181" aria-hidden="true" tabindex="-1"></a>stand_countries <span class="op">=</span> pd.read_csv(</span>
-<span id="cb17-182"><a href="#cb17-182" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/countries_to_standardise_country_standardized.csv&quot;</span></span>
-<span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-184"><a href="#cb17-184" aria-hidden="true" tabindex="-1"></a>stan_dict <span class="op">=</span> stand_countries.set_index(<span class="st">&quot;Country&quot;</span>).squeeze().to_dict()</span>
-<span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> df_gap[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span>
-<span id="cb17-186"><a href="#cb17-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-188"><a href="#cb17-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-191"><a href="#cb17-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-192"><a href="#cb17-192" aria-hidden="true" tabindex="-1"></a>r_who <span class="op">=</span> requests.get(</span>
-<span id="cb17-193"><a href="#cb17-193" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv&quot;</span></span>
-<span id="cb17-194"><a href="#cb17-194" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-195"><a href="#cb17-195" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
-<span id="cb17-196"><a href="#cb17-196" aria-hidden="true" tabindex="-1"></a>output.write(r_who.content)</span>
-<span id="cb17-197"><a href="#cb17-197" aria-hidden="true" tabindex="-1"></a>output.close()</span>
-<span id="cb17-198"><a href="#cb17-198" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;r&quot;</span>) <span class="im">as</span> zip_ref:</span>
-<span id="cb17-199"><a href="#cb17-199" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">&quot;data/input/who_mmr&quot;</span>)</span>
-<span id="cb17-200"><a href="#cb17-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-201"><a href="#cb17-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-204"><a href="#cb17-204" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-205"><a href="#cb17-205" aria-hidden="true" tabindex="-1"></a>who <span class="op">=</span> pd.read_csv(</span>
-<span id="cb17-206"><a href="#cb17-206" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/who_mmr/API_SH.STA.MMRT_DS2_en_csv_v2_4252399.csv&quot;</span>, skiprows<span class="op">=</span><span class="dv">4</span></span>
-<span id="cb17-207"><a href="#cb17-207" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-208"><a href="#cb17-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-209"><a href="#cb17-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-212"><a href="#cb17-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-213"><a href="#cb17-213" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1960</span>, <span class="dv">2022</span>))</span>
-<span id="cb17-214"><a href="#cb17-214" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> [<span class="bu">str</span>(<span class="bu">int</span>) <span class="cf">for</span> <span class="bu">int</span> <span class="kw">in</span> year_cols]</span>
-<span id="cb17-215"><a href="#cb17-215" aria-hidden="true" tabindex="-1"></a><span class="co"># year_cols.insert(0,&#39;Country Name&#39;)</span></span>
-<span id="cb17-216"><a href="#cb17-216" aria-hidden="true" tabindex="-1"></a>who_df <span class="op">=</span> pd.melt(who, id_vars<span class="op">=</span>[<span class="st">&quot;Country Name&quot;</span>], value_vars<span class="op">=</span>year_cols)</span>
-<span id="cb17-217"><a href="#cb17-217" aria-hidden="true" tabindex="-1"></a>who_df.rename(</span>
-<span id="cb17-218"><a href="#cb17-218" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{</span>
-<span id="cb17-219"><a href="#cb17-219" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Country Name&quot;</span>: <span class="st">&quot;entity&quot;</span>,</span>
-<span id="cb17-220"><a href="#cb17-220" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;variable&quot;</span>: <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb17-221"><a href="#cb17-221" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;value&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>,</span>
-<span id="cb17-222"><a href="#cb17-222" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb17-223"><a href="#cb17-223" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb17-224"><a href="#cb17-224" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-225"><a href="#cb17-225" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;who&quot;</span></span>
-<span id="cb17-226"><a href="#cb17-226" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> who_df[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span>
-<span id="cb17-227"><a href="#cb17-227" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-228"><a href="#cb17-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-229"><a href="#cb17-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-232"><a href="#cb17-232" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-233"><a href="#cb17-233" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df_gap.append(who_df)</span>
-<span id="cb17-234"><a href="#cb17-234" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for duplicates</span></span>
-<span id="cb17-235"><a href="#cb17-235" aria-hidden="true" tabindex="-1"></a>df[df[[<span class="st">&quot;entity&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)]</span>
-<span id="cb17-236"><a href="#cb17-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-237"><a href="#cb17-237" aria-hidden="true" tabindex="-1"></a>df.head()</span>
-<span id="cb17-238"><a href="#cb17-238" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-239"><a href="#cb17-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-242"><a href="#cb17-242" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-243"><a href="#cb17-243" aria-hidden="true" tabindex="-1"></a>entities_to_drop <span class="op">=</span> [</span>
-<span id="cb17-244"><a href="#cb17-244" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Eastern and Southern&quot;</span>,</span>
-<span id="cb17-245"><a href="#cb17-245" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Western and Central&quot;</span>,</span>
-<span id="cb17-246"><a href="#cb17-246" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Arab World&quot;</span>,</span>
-<span id="cb17-247"><a href="#cb17-247" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Early-demographic dividend&quot;</span>,</span>
-<span id="cb17-248"><a href="#cb17-248" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (excluding high income)&quot;</span>,</span>
-<span id="cb17-249"><a href="#cb17-249" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb17-250"><a href="#cb17-250" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Euro area&quot;</span>,</span>
-<span id="cb17-251"><a href="#cb17-251" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (excluding high income)&quot;</span>,</span>
-<span id="cb17-252"><a href="#cb17-252" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb17-253"><a href="#cb17-253" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Fragile and conflict affected situations&quot;</span>,</span>
-<span id="cb17-254"><a href="#cb17-254" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Heavily indebted poor countries (HIPC)&quot;</span>,</span>
-<span id="cb17-255"><a href="#cb17-255" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IBRD only&quot;</span>,</span>
-<span id="cb17-256"><a href="#cb17-256" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA &amp; IBRD total&quot;</span>,</span>
-<span id="cb17-257"><a href="#cb17-257" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA blend&quot;</span>,</span>
-<span id="cb17-258"><a href="#cb17-258" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA only&quot;</span>,</span>
-<span id="cb17-259"><a href="#cb17-259" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA total&quot;</span>,</span>
-<span id="cb17-260"><a href="#cb17-260" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Late-demographic dividend&quot;</span>,</span>
-<span id="cb17-261"><a href="#cb17-261" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; Caribbean (excluding high income)&quot;</span>,</span>
-<span id="cb17-262"><a href="#cb17-262" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; the Caribbean (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb17-263"><a href="#cb17-263" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Least developed countries: UN classification&quot;</span>,</span>
-<span id="cb17-264"><a href="#cb17-264" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (excluding high income)&quot;</span>,</span>
-<span id="cb17-265"><a href="#cb17-265" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb17-266"><a href="#cb17-266" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Not classified&quot;</span>,</span>
-<span id="cb17-267"><a href="#cb17-267" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Other small states&quot;</span>,</span>
-<span id="cb17-268"><a href="#cb17-268" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pacific island small states&quot;</span>,</span>
-<span id="cb17-269"><a href="#cb17-269" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Post-demographic dividend&quot;</span>,</span>
-<span id="cb17-270"><a href="#cb17-270" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pre-demographic dividend&quot;</span>,</span>
-<span id="cb17-271"><a href="#cb17-271" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Small states&quot;</span>,</span>
-<span id="cb17-272"><a href="#cb17-272" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;South Asia (IDA &amp; IBRD)&quot;</span>,</span>
-<span id="cb17-273"><a href="#cb17-273" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (excluding high income)&quot;</span>,</span>
-<span id="cb17-274"><a href="#cb17-274" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
-<span id="cb17-275"><a href="#cb17-275" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb17-276"><a href="#cb17-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-277"><a href="#cb17-277" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[<span class="op">~</span>df[<span class="st">&quot;entity&quot;</span>].isin(entities_to_drop)]</span>
-<span id="cb17-278"><a href="#cb17-278" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span>
-<span id="cb17-279"><a href="#cb17-279" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[[<span class="st">&quot;entity&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;maternal_mortality_rate&quot;</span>]]</span>
-<span id="cb17-280"><a href="#cb17-280" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&quot;data/output/maternal_mortality_rate.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb17-281"><a href="#cb17-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-282"><a href="#cb17-282" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;Maternal Mortality Ratio&quot;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 0.9em</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: hover</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 2</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">    self-contained: true</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">    smooth-scroll: true</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">    anchor-sections: true</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="an">comments:</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">  hypothesis: true</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> python3</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>The definition of maternal mortality is: </span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; &quot;A death of a woman while pregnant or within 42 days of termination of pregnancy, irrespective of the duration and site of pregnancy, from any cause related or aggravated by the pregnancy or its management, but not from accidental or incidental causes.&quot;</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>The definition of maternal mortality ratio is:</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; &quot;The number of maternal deaths during a given time period per 100,000 live births during the same time period.&quot;</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine two existing datasets:</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>GapMinder (1751-2008)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>World Health Organization (2000-2017)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>We make the assumption that their methods are comparable and that the data can be combined without transformation.</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>In years where there is an overlap in both time-series we use the data from the WHO.</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="fu">## Downloading the GapMinder data</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false </span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>Firstly we download the data from GapMinder and save it locally. Then we read in the GapMinder data, clean up the column names and take a look at the data. </span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(<span class="st">&quot;https://www.gapminder.org/documentation/documentation/gapdata010.xls&quot;</span>)</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">&quot;data/input/&quot;</span>).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/gapminder.xls&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>output.write(r.content)</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>output.close()</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">&quot;data/input/gapminder.xls&quot;</span>)</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df.drop(df.index[<span class="dv">0</span>:<span class="dv">16</span>]).reset_index()</span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;Country&quot;</span>].<span class="bu">str</span>.strip()</span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d[<span class="op">~</span>pd.isna(df_d[<span class="st">&quot;MMR&quot;</span>])]</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cleaning the GapMinder data</span></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>:::{.callout-important}</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>There are some issues with the GapMinder data - we will manually clean them here. </span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>The first three rows in the &#39;year&#39; column seem to be wrong as it seems as if each row covers 110 years, but in <span class="co">[</span><span class="ot">another source</span><span class="co">](https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#)</span> they cover only 10 years.</span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>I will replace them manually here with the middle of each decade, as is used in the other data from the same source.</span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>There are cases where the year for Finland has been entered incorrectly three times, there are two 1772s, 1775s &amp; 1967s, the second of each should be 1872, 1875 and 1957 respectively.</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>There are also two errors for New Zealand, and one error for both Sweden and the US.</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Sri Lanka&#39;s maternal mortality rate seems to drop to zero in 1990, we will drop this value.</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>df_d.loc[:<span class="dv">2</span>, <span class="st">&quot;year&quot;</span>] <span class="op">=</span> [<span class="st">&quot;1875&quot;</span>, <span class="st">&quot;1885&quot;</span>, <span class="st">&quot;1895&quot;</span>]</span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1772</span>)</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">487</span>),</span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1872</span></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1775</span>)</span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">629</span>),</span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1875</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Finland&quot;</span>)</span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">77</span>),</span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sweden&quot;</span>)</span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="dv">39</span>),</span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1967</span>)</span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;United States&quot;</span>)</span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (df_d[<span class="st">&quot;Maternal deaths&quot;</span>] <span class="op">==</span> <span class="fl">1766.28</span>),</span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1957</span></span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(df_d[(df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1990</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;Sri Lanka&quot;</span>)].index)</span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="dv">1950</span>)</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (df_d[<span class="st">&quot;MMR&quot;</span>] <span class="op">==</span> <span class="dv">90</span>)</span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>    ].index</span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a><span class="co"># Duplicates after get_mid_year()</span></span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.drop(</span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>    df_d[</span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>        (df_d[<span class="st">&quot;year&quot;</span>].isin([<span class="st">&quot;1989-02&quot;</span>, <span class="st">&quot;1899-03&quot;</span>])) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>)</span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a>    ].index</span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span>(df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]][df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)].shape[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">0</span>)</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a><span class="fu">## Finding the mid-point of each year range</span></span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a>For some rows a range of years is given for a particular maternal mortality rate. We want to find the mid-point of that range. We use this function to find the mid-value of years given.</span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mid_year(year: <span class="bu">str</span>):</span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">&quot;-&quot;</span> <span class="kw">in</span> <span class="bu">str</span>(year):</span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">0</span>]</span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a>        year_end <span class="op">=</span> year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>]</span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>        year_end_len <span class="op">=</span> <span class="bu">len</span>(year.split(<span class="st">&quot;-&quot;</span>)[<span class="dv">1</span>])</span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a>        year_end_pref <span class="op">=</span> <span class="dv">4</span> <span class="op">-</span> year_end_len</span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> year_end_pref <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a>            year_pref <span class="op">=</span> year_begin[<span class="dv">0</span>:year_end_pref]</span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a>            year_end <span class="op">=</span> year_pref <span class="op">+</span> year_end</span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a>            year_out <span class="op">=</span> <span class="bu">int</span>(np.mean([<span class="bu">int</span>(year_begin), <span class="bu">int</span>(year_end)]))</span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a>        year_begin <span class="op">=</span> <span class="bu">int</span>(year)</span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a>        year_out <span class="op">=</span> <span class="bu">int</span>(year)</span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.Series([year_begin, year_out])</span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a>Let&#39;s check the mid-year estimates have worked as expected. There is one case where the mid-year estimate is not the mid-point of the range of years. Let&#39;s fix this manually.</span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>df_years <span class="op">=</span> df_d[<span class="st">&quot;year&quot;</span>].<span class="bu">apply</span>(get_mid_year)</span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">=</span> df_years[<span class="dv">0</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;mid_year&quot;</span>] <span class="op">=</span> df_years[<span class="dv">1</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a>df_d[df_d[<span class="st">&quot;year_begin&quot;</span>] <span class="op">&gt;</span> df_d[<span class="st">&quot;mid_year&quot;</span>]]</span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>df_d.loc[</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>    (df_d[<span class="st">&quot;year&quot;</span>] <span class="op">==</span> <span class="st">&quot;1897-01&quot;</span>) <span class="op">&amp;</span> (df_d[<span class="st">&quot;Country&quot;</span>] <span class="op">==</span> <span class="st">&quot;New Zealand&quot;</span>), <span class="st">&quot;mid_year&quot;</span></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>] <span class="op">=</span> <span class="dv">1899</span></span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span>(df_d[df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>]].duplicated(keep<span class="op">=</span><span class="va">False</span>)].shape[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">0</span>)</span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>Rename the columns and keep only the columns we are interested in.</span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a>df_d <span class="op">=</span> df_d.copy(deep<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>df_d[<span class="st">&quot;year&quot;</span>] <span class="op">=</span> df_d[<span class="st">&quot;mid_year&quot;</span>]</span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a>df_gap <span class="op">=</span> df_d[[<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;MMR&quot;</span>]]</span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;gapminder&quot;</span></span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a>df_gap.rename(</span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{<span class="st">&quot;Country&quot;</span>: <span class="st">&quot;entity&quot;</span>, <span class="st">&quot;MMR&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>}, inplace<span class="op">=</span><span class="va">True</span></span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a> Standardise the country names.</span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a>stand_countries <span class="op">=</span> pd.read_csv(</span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/countries_to_standardise_country_standardized.csv&quot;</span></span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a>stan_dict <span class="op">=</span> stand_countries.set_index(<span class="st">&quot;Country&quot;</span>).squeeze().to_dict()</span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a>df_gap[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> df_gap[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reading in the WHO data</span></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a>Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.</span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a>r_who <span class="op">=</span> requests.get(</span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv&quot;</span></span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> <span class="bu">open</span>(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;wb&quot;</span>)</span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a>output.write(r_who.content)</span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a>output.close()</span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">&quot;data/input/who_mmr.zip&quot;</span>, <span class="st">&quot;r&quot;</span>) <span class="im">as</span> zip_ref:</span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">&quot;data/input/who_mmr&quot;</span>)</span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a>who <span class="op">=</span> pd.read_csv(</span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/input/who_mmr/API_SH.STA.MMRT_DS2_en_csv_v2_4252399.csv&quot;</span>, skiprows<span class="op">=</span><span class="dv">4</span></span>
+<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cleaning the WHO data</span></span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a>Pivot and clean the WHO data and standardise the country names.</span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1960</span>, <span class="dv">2022</span>))</span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> [<span class="bu">str</span>(<span class="bu">int</span>) <span class="cf">for</span> <span class="bu">int</span> <span class="kw">in</span> year_cols]</span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a><span class="co"># year_cols.insert(0,&#39;Country Name&#39;)</span></span>
+<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a>who_df <span class="op">=</span> pd.melt(who, id_vars<span class="op">=</span>[<span class="st">&quot;Country Name&quot;</span>], value_vars<span class="op">=</span>year_cols)</span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a>who_df.rename(</span>
+<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>{</span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Country Name&quot;</span>: <span class="st">&quot;entity&quot;</span>,</span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;variable&quot;</span>: <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;value&quot;</span>: <span class="st">&quot;maternal_mortality_rate&quot;</span>,</span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;source&quot;</span>] <span class="op">=</span> <span class="st">&quot;who&quot;</span></span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a>who_df[<span class="st">&quot;entity&quot;</span>] <span class="op">=</span> who_df[<span class="st">&quot;entity&quot;</span>].<span class="bu">map</span>(stan_dict)</span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a><span class="fu">## Merging the WHO data with the GapMinder data</span></span>
+<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a>Combine the two datasets. For years where there is data from both datasets we preferentially keep data from the WHO. </span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([df_gap, who_df], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;year&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;year&#39;</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span>
+<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a><span class="co"># Arranging by source so the WHO data is last</span></span>
+<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.sort_values(by<span class="op">=</span>[<span class="st">&#39;source&#39;</span>])</span>
+<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop_duplicates(subset <span class="op">=</span>[<span class="st">&#39;entity&#39;</span>,<span class="st">&#39;year&#39;</span>],keep <span class="op">=</span> <span class="st">&#39;last&#39;</span>)</span>
+<span id="cb15-289"><a href="#cb15-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-290"><a href="#cb15-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cleaning geographic entities</span></span>
+<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a>We don&#39;t want to include all of the available regions in the data as it is difficult for us to define them clearly, so we drop out a selection here. </span>
+<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a>entities_to_drop <span class="op">=</span> [</span>
+<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Eastern and Southern&quot;</span>,</span>
+<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Africa Western and Central&quot;</span>,</span>
+<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Arab World&quot;</span>,</span>
+<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Early-demographic dividend&quot;</span>,</span>
+<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (excluding high income)&quot;</span>,</span>
+<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;East Asia &amp; Pacific (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Euro area&quot;</span>,</span>
+<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (excluding high income)&quot;</span>,</span>
+<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Europe &amp; Central Asia (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Fragile and conflict affected situations&quot;</span>,</span>
+<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Heavily indebted poor countries (HIPC)&quot;</span>,</span>
+<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IBRD only&quot;</span>,</span>
+<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA &amp; IBRD total&quot;</span>,</span>
+<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA blend&quot;</span>,</span>
+<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA only&quot;</span>,</span>
+<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IDA total&quot;</span>,</span>
+<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Late-demographic dividend&quot;</span>,</span>
+<span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; Caribbean (excluding high income)&quot;</span>,</span>
+<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Latin America &amp; the Caribbean (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Least developed countries: UN classification&quot;</span>,</span>
+<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (excluding high income)&quot;</span>,</span>
+<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Middle East &amp; North Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Not classified&quot;</span>,</span>
+<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Other small states&quot;</span>,</span>
+<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pacific island small states&quot;</span>,</span>
+<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Post-demographic dividend&quot;</span>,</span>
+<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Pre-demographic dividend&quot;</span>,</span>
+<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Small states&quot;</span>,</span>
+<span id="cb15-326"><a href="#cb15-326" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;South Asia (IDA &amp; IBRD)&quot;</span>,</span>
+<span id="cb15-327"><a href="#cb15-327" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (excluding high income)&quot;</span>,</span>
+<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Sub-Saharan Africa (IDA &amp; IBRD countries)&quot;</span>,</span>
+<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[<span class="op">~</span>df[<span class="st">&quot;entity&quot;</span>].isin(entities_to_drop)]</span>
+<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span>
+<span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[[<span class="st">&quot;entity&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;maternal_mortality_rate&quot;</span>]]</span>
+<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">&quot;data/output/maternal_mortality_rate.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
