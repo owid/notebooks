@@ -4,6 +4,8 @@
 
 # > "A death of a woman while pregnant or within 42 days of termination of pregnancy, irrespective of the duration and site of pregnancy, from any cause related or aggravated by the pregnancy or its management, but not from accidental or incidental causes."
 
+#
+#
 # The definition of maternal mortality ratio is:
 # > "The number of maternal deaths during a given time period per 100,000 live births during the same time period."
 
@@ -13,6 +15,8 @@
 # * GapMinder (1751-2008)
 # * World Health Organization (2000-2017)
 
+
+#
 # We make the assumption that their methods are comparable and that the data can be combined without transformation.
 
 # In years where there is an overlap in both time-series we use the data from the WHO.
@@ -115,6 +119,8 @@ df_d = df_d.drop(
         (df_d["year"].isin(["1989-02", "1899-03"])) & (df_d["Country"] == "New Zealand")
     ].index
 )
+#%%
+# Check that there are no duplicates in the data.
 
 
 #%%

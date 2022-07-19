@@ -136,8 +136,13 @@ df_d = df_d.drop(
 )
 ```
 
+Check that there are no duplicates in the data.
+
 ```{python}
-assert(df_d[["Country", "year"]][df_d[["Country", "year"]].duplicated(keep=False)].shape[0] == 0)
+assert (
+    df_d[df_d.duplicated(subset = [["Country", "year"]],keep=False)].shape[0]
+    == 0
+)
 ```
 
 
@@ -221,13 +226,11 @@ output.write(r_who.content)
 output.close()
 with zipfile.ZipFile("data/input/who_mmr.zip", "r") as zip_ref:
     zip_ref.extractall("data/input/who_mmr")
-```
-
-```{python}
 who = pd.read_csv(
     "data/input/who_mmr/API_SH.STA.MMRT_DS2_en_csv_v2_4252399.csv", skiprows=4
 )
 ```
+
 
 ## Cleaning the WHO data
 Pivot and clean the WHO data and standardise the country names.
