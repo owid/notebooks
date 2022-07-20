@@ -37,6 +37,15 @@ We make the assumption that their methods are comparable and that the data can b
 
 In years where there is an overlap in both time-series we use the data from the WHO.
 
+This document will go through the steps required to create the data for this chart:
+
+
+```{=html}
+<iframe src="https://ourworldindata.org/grapher/maternal-mortality" style="width: 100%; height: 600px; border: 0px none;"></iframe>
+
+```
+
+
 ## Downloading the GapMinder data
 ```{python}
 #| echo: false 
@@ -140,7 +149,7 @@ Check that there are no duplicates in the data.
 
 ```{python}
 assert (
-    df_d[df_d.duplicated(subset = [["Country", "year"]],keep=False)].shape[0]
+    df_d[df_d.duplicated(subset = ["Country", "year"],keep=False)].shape[0]
     == 0
 )
 ```
