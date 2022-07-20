@@ -54,6 +54,7 @@ import pandas as pd
 import requests
 from pathlib import Path
 import zipfile
+import matplotlib.pyplot as plt
 ```
 
 
@@ -126,7 +127,8 @@ df_d.loc[
     "year",
 ] = 1957
 
-df_d = df_d.drop(df_d[(df_d["year"] == 1990) & (df_d["Country"] == "Sri Lanka")].index)
+# Drop any rows where MMR is zero or '...' (Ireland, Denmark and Sri Lanka)
+df_d = df_d.drop(df_d[(df_d["MMR"] == 0) | (df_d["MMR"] == '...')].index)
 
 df_d = df_d.drop(
     df_d[
@@ -211,7 +213,7 @@ df_gap.rename(
 )
 ```
  
- Standardise the country names.
+ Standardise the country names and drop rows with NA values.
 
 ```{python}
 stand_countries = pd.read_csv(
@@ -219,7 +221,7 @@ stand_countries = pd.read_csv(
 )
 stan_dict = stand_countries.set_index("Country").squeeze().to_dict()
 df_gap["entity"] = df_gap["entity"].map(stan_dict)
-
+df_gap = df_gap.dropna()
 ```
 
 ## Reading in the WHO data
@@ -242,12 +244,13 @@ who = pd.read_csv(
 
 
 ## Cleaning the WHO data
-Pivot and clean the WHO data and standardise the country names.
+Pivot and clean the WHO data, standardise the country names and drop values with NA values.
 
 ```{python}
+
 year_cols = list(range(1960, 2022))
 year_cols = [str(int) for int in year_cols]
-# year_cols.insert(0,'Country Name')
+
 who_df = pd.melt(who, id_vars=["Country Name"], value_vars=year_cols)
 who_df.rename(
     columns={
@@ -259,6 +262,7 @@ who_df.rename(
 )
 who_df["source"] = "who"
 who_df["entity"] = who_df["entity"].map(stan_dict)
+who_df = who_df.dropna()
 ```
 
 ## Merging the WHO data with the GapMinder data
@@ -267,12 +271,55 @@ Combine the two datasets. For years where there is data from both datasets we pr
 ```{python}
 df = pd.concat([df_gap, who_df], ignore_index=True)
 df['year'] = df['year'].astype(int)
-df = df.dropna()
-# Arranging by source so the WHO data is last
-df = df.sort_values(by=['source'])
-df = df.drop_duplicates(subset =['entity','year'],keep = 'last')
+```
+
+Get the first years data from WHO and the last years data from GapMinder - to compare the values when the source changes. 
+
+```{python}
+df_gap.sort_values(by = ['entity', 'year'], inplace=True)
+df_gap_gr = df_gap.groupby('entity')
+who_df.sort_values(by = ['entity', 'year'], inplace=True)
+who_df_gr = who_df.groupby('entity')
+
+first_last_df = (pd.concat([who_df_gr.head(1), df_gap_gr.tail(1)])
+   .drop_duplicates()
+   .reset_index(drop=True)
+   .dropna())
+```
+We want to look at countries which feature in both datasets.
+```{python}
+df_c= first_last_df.entity.value_counts()
+first_last_df = first_last_df[first_last_df.entity.isin(df_c.index[df_c.gt(1)])].sort_values(by = ['entity', 'year'],ascending = [True, False])
+```
+
+```{python}
+
+df_dup = df[(df.entity.isin(first_last_df.entity)) & (df.year >= 1985)]
 
 ```
+
+Plotting time-series of the data from 1985 onwards. GapMinder is shown in orange and WHO is shown in blue.
+
+```{python}
+plt.figure(figsize=(10,8),facecolor='white')
+
+# plot numbering starts at 1, not 0
+plot_number = 1
+for countryname, selection in df_dup.groupby("entity"):
+    # Inside of an image that's a 15x13 grid, put this
+    # graph in the in the plot_number slot.
+    ax = plt.subplot(5, 3, plot_number)
+    selection_gap = selection[selection["source"] == "gapminder"]
+    selection_who = selection[selection["source"] == "who"]
+    selection_who.plot(x='year', y='maternal_mortality_rate', ax=ax, label=countryname, legend=False)
+    selection_gap.plot(x='year', y='maternal_mortality_rate', ax=ax, label=countryname, legend=False)
+    ax.set_title(countryname)
+    # Go to the next plot for the next loop
+    plot_number = plot_number + 1
+plt.tight_layout()
+```
+
+
 
 ## Cleaning geographic entities
 We don't want to include all of the available regions in the data as it is difficult for us to define them clearly, so we drop out a selection here. 

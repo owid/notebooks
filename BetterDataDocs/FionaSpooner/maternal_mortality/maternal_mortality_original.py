@@ -1,3 +1,20 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: 'Python 3.10.4 (''venv'': venv)'
+#     language: python
+#     name: python3
+# ---
+
+# %%
 #%%[markdown]
 
 # The definition of maternal mortality is:
@@ -23,19 +40,20 @@
 
 # ## Downloading the GapMinder data
 
-#%%
+# %%
 import numpy as np
 import pandas as pd
 import requests
 from pathlib import Path
 import zipfile
+import matplotlib.pyplot as plt
 
 #%%[markdown]
 
 # Firstly we download the data from GapMinder and save it locally. Then we read in the GapMinder data, clean up the column names and take a look at the data.
 
 
-#%%
+# %%
 
 r = requests.get("https://www.gapminder.org/documentation/documentation/gapdata010.xls")
 
@@ -45,7 +63,7 @@ output.write(r.content)
 output.close()
 
 
-#%%
+# %%
 df = pd.read_excel("data/input/gapminder.xls")
 df_d = df.drop(df.index[0:16]).reset_index()
 df_d["Country"] = df_d["Country"].str.strip()
@@ -103,7 +121,8 @@ df_d.loc[
     "year",
 ] = 1957
 
-df_d = df_d.drop(df_d[(df_d["year"] == 1990) & (df_d["Country"] == "Sri Lanka")].index)
+# Drop any rows where MMR is zero or '...' (Ireland, Denmark and Sri Lanka)
+df_d = df_d.drop(df_d[(df_d["MMR"] == 0) | (df_d["MMR"] == '...')].index)
 
 df_d = df_d.drop(
     df_d[
@@ -119,13 +138,13 @@ df_d = df_d.drop(
         (df_d["year"].isin(["1989-02", "1899-03"])) & (df_d["Country"] == "New Zealand")
     ].index
 )
-#%%
+# %%
 # Check that there are no duplicates in the data.
 
 
-#%%
+# %%
 assert (
-    df_d[["Country", "year"]][df_d[["Country", "year"]].duplicated(keep=False)].shape[0]
+    df_d[df_d.duplicated(subset = ["Country", "year"],keep=False)].shape[0]
     == 0
 )
 
@@ -135,7 +154,7 @@ assert (
 # For some rows a range of years is given for a particular maternal mortality rate. We want to find the mid-point of that range. We use this function to find the mid-value of years given.
 
 
-#%%
+# %%
 def get_mid_year(year: str):
     if "-" in str(year):
         year_begin = year.split("-")[0]
@@ -160,7 +179,7 @@ def get_mid_year(year: str):
 # Let's check the mid-year estimates have worked as expected. There is one case where the mid-year estimate is not the mid-point of the range of years. Let's fix this manually.
 
 
-#%%
+# %%
 
 df_years = df_d["year"].apply(get_mid_year)
 df_d["year_begin"] = df_years[0].astype(int)
@@ -169,7 +188,7 @@ df_d["mid_year"] = df_years[1].astype(int)
 df_d[df_d["year_begin"] > df_d["mid_year"]]
 
 
-#%%
+# %%
 df_d.loc[
     (df_d["year"] == "1897-01") & (df_d["Country"] == "New Zealand"), "mid_year"
 ] = 1899
@@ -192,20 +211,20 @@ df_gap.rename(
 
 #%%[markdown]
 # Standardise the country names.
-#%%
+# %%
 stand_countries = pd.read_csv(
     "data/input/countries_to_standardise_country_standardized.csv"
 )
 stan_dict = stand_countries.set_index("Country").squeeze().to_dict()
 df_gap["entity"] = df_gap["entity"].map(stan_dict)
-
+df_gap = df_gap.dropna()
 #%%[markdown]
 
 # ## Reading in the WHO data
 
 # Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.
 
-#%%
+# %%
 r_who = requests.get(
     "https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv"
 )
@@ -221,7 +240,7 @@ who = pd.read_csv(
 #%%[markdown]
 ## Cleaning the WHO data
 # Pivot and clean the WHO data and standardise the country names.
-#%%
+# %%
 year_cols = list(range(1960, 2022))
 year_cols = [str(int) for int in year_cols]
 
@@ -236,24 +255,73 @@ who_df.rename(
 )
 who_df["source"] = "who"
 who_df["entity"] = who_df["entity"].map(stan_dict)
+who_df = who_df.dropna()
 
 #%%[markdown]
 # ## Merging the WHO data with the GapMinder data
 
 # Combine the two datasets. For years where there is data from both datasets we preferentially keep data from the WHO.
 
-#%%
+# %%
 df = pd.concat([df_gap, who_df], ignore_index=True)
 df["year"] = df["year"].astype(int)
-df = df.dropna()
-# Arranging by source so the WHO data is last
-df = df.sort_values(by=["source"])
-df = df.drop_duplicates(subset=["entity", "year"], keep="last")
+
+
+# %% [markdown]
+# Get the first years data from WHO and the last years data from GapMinder - to compare the values when the source changes. 
+
+# %%
+df_gap.sort_values(by = ['entity', 'year'], inplace=True)
+df_gap_gr = df_gap.groupby('entity')
+who_df.sort_values(by = ['entity', 'year'], inplace=True)
+who_df_gr = who_df.groupby('entity')
+
+first_last_df = (pd.concat([who_df_gr.head(1), df_gap_gr.tail(1)])
+   .drop_duplicates()
+   .reset_index(drop=True)
+   .dropna())
+
+# %% [markdown]
+# We want to look at countries which feature in both datasets.
+
+# %%
+df_c= first_last_df.entity.value_counts()
+first_last_df = first_last_df[first_last_df.entity.isin(df_c.index[df_c.gt(1)])].sort_values(by = ['entity', 'year'],ascending = [True, False])
+
+# %% [markdown]
+# WHO values are consistently higher than the GapMinder values when you compare the trends for countries with overlapping or near overlapping time-series
+
+# %%
+df_dup = df[(df.entity.isin(first_last_df.entity)) & (df.year >= 1985)]
+
+
+# %% [markdown]
+# Plotting time-series of the data from 1985 onwards. GapMinder is shown in orange and WHO is shown in blue.
+
+# %%
+plt.figure(figsize=(10,8),facecolor='white')
+
+# plot numbering starts at 1, not 0
+plot_number = 1
+for countryname, selection in df_dup.groupby("entity"):
+    # Inside of an image that's a 15x13 grid, put this
+    # graph in the in the plot_number slot.
+    ax = plt.subplot(5, 3, plot_number)
+    selection_gap = selection[selection["source"] == "gapminder"]
+    selection_who = selection[selection["source"] == "who"]
+    selection_who.plot(x='year', y='maternal_mortality_rate', ax=ax, label=countryname, legend=False)
+    selection_gap.plot(x='year', y='maternal_mortality_rate', ax=ax, label=countryname, legend=False)
+    ax.set_title(countryname)
+    # Go to the next plot for the next loop
+    plot_number = plot_number + 1
+plt.tight_layout()
+
+# %%
 
 #%%[markdown]
 # ## Cleaning geographic entities
 # We don't want to include all of the available regions in the data as it is difficult for us to define them clearly, so we drop out a selection here.
-#%%
+# %%
 entities_to_drop = [
     "Africa Eastern and Southern",
     "Africa Western and Central",
