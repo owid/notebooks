@@ -178,9 +178,9 @@ df_survey<- drop_non_mono(df=df_survey,
 # +
 
 skip_list<- c(
-    "1989*Sierra Leone*consumption*national*filled=false",
-    "1995*Ecuador*income*urban*filled=false",
-    "1989*El Salvador*income*national*filled=false"
+    "1989*Sierra Leone*national*consumption*filled=false",
+    "1995*Ecuador*urban*income*filled=false",
+    "1989*El Salvador*national*income*filled=false"
     )
 
 
