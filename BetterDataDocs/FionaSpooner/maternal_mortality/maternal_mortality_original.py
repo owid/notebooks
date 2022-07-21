@@ -29,7 +29,7 @@
 
 # In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine two existing datasets:
 
-# * GapMinder (1751-2008)
+# * Gapminder (1751-2008)
 # * World Health Organization (2000-2017)
 
 
@@ -38,7 +38,7 @@
 
 # In years where there is an overlap in both time-series we use the data from the WHO.
 
-# ## Downloading the GapMinder data
+# ## Downloading the Gapminder data
 
 # %%
 import numpy as np
@@ -50,7 +50,7 @@ import matplotlib.pyplot as plt
 
 #%%[markdown]
 
-# Firstly we download the data from GapMinder and save it locally. Then we read in the GapMinder data, clean up the column names and take a look at the data.
+# Firstly we download the data from Gapminder and save it locally. Then we read in the Gapminder data, clean up the column names and take a look at the data.
 
 
 # %%
@@ -70,10 +70,10 @@ df_d["Country"] = df_d["Country"].str.strip()
 df_d = df_d[~pd.isna(df_d["MMR"])]
 
 #%%[markdown]
-## Cleaning the GapMinder data
+## Cleaning the Gapminder data
 
 
-# There are some issues with the GapMinder data - we will manually clean them here.
+# There are some issues with the Gapminder data - we will manually clean them here.
 
 
 # * The first three rows in the 'year' column seem to be wrong as it seems as if each row covers 110 years, but in [another source](https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#) they cover only 10 years.
@@ -258,7 +258,7 @@ who_df["entity"] = who_df["entity"].map(stan_dict)
 who_df = who_df.dropna()
 
 #%%[markdown]
-# ## Merging the WHO data with the GapMinder data
+# ## Merging the WHO data with the Gapminder data
 
 # Combine the two datasets. For years where there is data from both datasets we preferentially keep data from the WHO.
 
@@ -268,7 +268,7 @@ df["year"] = df["year"].astype(int)
 
 
 # %% [markdown]
-# Get the first years data from WHO and the last years data from GapMinder - to compare the values when the source changes. 
+# Get the first years data from WHO and the last years data from Gapminder - to compare the values when the source changes. 
 
 # %%
 df_gap.sort_values(by = ['entity', 'year'], inplace=True)
@@ -289,14 +289,14 @@ df_c= first_last_df.entity.value_counts()
 first_last_df = first_last_df[first_last_df.entity.isin(df_c.index[df_c.gt(1)])].sort_values(by = ['entity', 'year'],ascending = [True, False])
 
 # %% [markdown]
-# WHO values are consistently higher than the GapMinder values when you compare the trends for countries with overlapping or near overlapping time-series
+# WHO values are consistently higher than the Gapminder values when you compare the trends for countries with overlapping or near overlapping time-series
 
 # %%
 df_dup = df[(df.entity.isin(first_last_df.entity)) & (df.year >= 1985)]
 
 
 # %% [markdown]
-# Plotting time-series of the data from 1985 onwards. GapMinder is shown in orange and WHO is shown in blue.
+# Plotting time-series of the data from 1985 onwards. Gapminder is shown in orange and WHO is shown in blue.
 
 # %%
 plt.figure(figsize=(10,8),facecolor='white')
