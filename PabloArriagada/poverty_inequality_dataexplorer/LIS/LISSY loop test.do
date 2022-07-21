@@ -3,7 +3,8 @@ subject : loop test
 
 
 
-lissydata, lis from(1980) to(2020)
+*lissydata, lis from(1980) to(2020)
+lissydata, lis from(1980) to(2020) iso2(cl uk)
 local ccyy "${selected}"
 
 foreach c in `ccyy' {
@@ -37,5 +38,9 @@ foreach c in `ccyy' {
 	qui generate pwt=hwgt*nhhmem
 
 	_pctile ey [aw=pwt], nq(100)
-	dis r(r1)
+	
+	forvalues j = 1/100 {
+		generate p`j' = r(r`j')
+		dis p`j'
+	}
 }
