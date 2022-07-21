@@ -45,6 +45,7 @@ qui gen p10 = .
 qui gen p5 = .
 qui gen max = .
 qui gen min = .
+qui gen N = .
 qui gen sumw = .
 qui gen sd = .
 qui gen Var = .
@@ -84,16 +85,17 @@ foreach c in `countries' {
 	qui replace p5 = r(p5) if country_year == "`c'"
 	qui replace max = r(max) if country_year == "`c'"
 	qui replace min = r(min) if country_year == "`c'"
+	qui replace N = r(N) if country_year == "`c'"
 	qui replace sumw = r(sumw) if country_year == "`c'"
 	qui replace sd = r(sd) if country_year == "`c'"
 	qui replace Var = r(Var) if country_year == "`c'"
 	qui replace mean = r(mean) if country_year == "`c'"
 
 }
-collapse (min) gini wgini w2 w1 whalf ede2 ede1 edehalf a2 a1 ahalf ge2 ge1 ge0 gem1 p75p50 p25p50 p10p50 p90p50 p75p25 p90p10 p95 p90 p75 p50 p25 p10 p5 max min sumw sd Var mean, by(country_year)
+collapse (min) gini wgini w2 w1 whalf ede2 ede1 edehalf a2 a1 ahalf ge2 ge1 ge0 gem1 p75p50 p25p50 p10p50 p90p50 p75p25 p90p10 p95 p90 p75 p50 p25 p10 p5 max min N sumw sd Var mean, by(country_year)
 
 
-*qui ineqdec0 average [aw = weight] if country_year=="CL2016", welfare
+qui ineqdec0 average [aw = weight] if country_year=="CL2016", welfare
 *qui replace gini = r(gini) if country_year == "CL2016"
 
 export delimited using "ineqvariables.csv", replace
