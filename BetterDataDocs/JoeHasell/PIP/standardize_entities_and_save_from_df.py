@@ -1,4 +1,6 @@
 # %%
+# ACCESS TO STORAGE ----
+
 # Acess keys to write to  our s3 cloud storage
 from access_key import KEY_ID, SECRET_KEY 
 
@@ -25,7 +27,7 @@ import pandas as pd
 
 
 # %% 
-def standardize_and_save(raw_csv_url,
+def standardize_and_save(orig_df,
                         entity_mapping_url,
                         mapping_varname_raw,
                         mapping_vaname_owid,
@@ -33,16 +35,13 @@ def standardize_and_save(raw_csv_url,
                         data_varname_new,
                         s3_space_to_save_in,
                         as_filename):
-    
-    # Read in raw dataframe
-    df_raw = pd.read_csv(raw_csv_url)
 
 
     # Read in mapping table which maps PWT names onto OWID names.
     df_mapping = pd.read_csv(entity_mapping_url)
 
     # Merge in mapping to raw
-    df_harmonized = pd.merge(df_raw,df_mapping,
+    df_harmonized = pd.merge(orig_df,df_mapping,
       left_on=data_varname_old,right_on=mapping_varname_raw, how='left')
     
     # Drop the old entity names column, and the matching column from the mapping file
@@ -66,36 +65,4 @@ def standardize_and_save(raw_csv_url,
     # Upload prepared data to our database
     upload_to_s3(df_harmonized, s3_space_to_save_in, as_filename)
 
-
-# Standardize percentile data for OWID 
-standardize_and_save(raw_csv_url ='clean_data/percentiles_filled.csv',
-                      entity_mapping_url ='country_mapping.csv',
-                      mapping_varname_raw ='Original Name',
-                      mapping_vaname_owid = 'Our World In Data Name',
-                      data_varname_old = 'entity',
-                      data_varname_new = 'entity',
-                      s3_space_to_save_in = 'PIP',
-                      as_filename = 'percentiles_filled.csv')
-
-# Standardize percentile data for Joe's PhD (with extra variables) 
-standardize_and_save(raw_csv_url ='clean_data/percentile_data_for_joes_phd.csv',
-                      entity_mapping_url ='country_mapping.csv',
-                      mapping_varname_raw ='Original Name',
-                      mapping_vaname_owid = 'Our World In Data Name',
-                      data_varname_old = 'entity',
-                      data_varname_new = 'entity',
-                      s3_space_to_save_in = 'phd_global_dist',
-                      as_filename = 'percentiles_from_PIP.csv')
-
-
-
-# Standardize example API output 
-standardize_and_save(raw_csv_url ='API_output/example_response_filled.csv',
-                      entity_mapping_url ='country_mapping.csv',
-                      mapping_varname_raw ='Original Name',
-                      mapping_vaname_owid = 'Our World In Data Name',
-                      data_varname_old = 'country_name',
-                      data_varname_new = 'entity',
-                      s3_space_to_save_in = 'PIP',
-                      as_filename = 'example_response_filled.csv')
-
+# %%

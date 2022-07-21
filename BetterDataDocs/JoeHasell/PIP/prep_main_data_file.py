@@ -3,6 +3,9 @@ import pandas as pd
 
 import numpy as np
 
+from standardize_entities_and_save_from_df import standardize_and_save
+
+
 # %%
 id_vars = ['country_name', 'reporting_year','reporting_level','welfare_type']
 
@@ -120,7 +123,18 @@ df_original = df_original.rename(columns={
     })
 
 # %%
-# Write CSV
-df_original.to_csv(f'data/clean/main_data/filled_{is_filled}/main_data.csv', index=False)
+# Standadize country names and write to S3
+#df_original.to_csv(f'data/clean/main_data/filled_{is_filled}/main_data.csv', index=False)
+
+standardize_and_save(
+    orig_df = df_original,
+    entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+    mapping_varname_raw ='Original Name',
+    mapping_vaname_owid = 'Our World In Data Name',
+    data_varname_old = 'country_name',
+    data_varname_new = 'entity',
+    s3_space_to_save_in = 'PIP',
+    as_filename = "main_data.csv"
+    )
 
 # %%
