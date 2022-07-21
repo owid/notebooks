@@ -47,6 +47,8 @@ df_mapping = df_mapping[[mapping_varname_raw, mapping_vaname_owid]]
 df_harmonized = pd.merge(df_raw,df_mapping,
     left_on=data_varname_old,right_on=mapping_varname_raw, how='left')
 
+# drop rows from unmatched entities
+df_harmonized = df_harmonized[df_harmonized[mapping_vaname_owid].notnull()]
 # %%    
 # Drop the old entity names column, and the matching column from the mapping file
 df_harmonized = df_harmonized.drop(columns=[data_varname_old, mapping_varname_raw])
