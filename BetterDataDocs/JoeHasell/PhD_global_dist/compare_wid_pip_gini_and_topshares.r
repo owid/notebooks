@@ -47,16 +47,14 @@ df<- full_join(df_wid, df_pip,  by = c("entity" = "entity", "year" = "reporting_
 
 head(df)
 
-summary(df)
-
-df %>% filter(year %in% c(1990, 2019)) %>% select(entity, year, wid_gini, gini) %>% drop_na() %>% count(entity)
+names(df)
 
 # Calculate change in Gini 1990 – 2019
 
 # +
 gini_change<- df %>% filter(year %in% c(1990, 2019)) %>% 
-                select(entity, year, wid_gini, gini) %>%
-                pivot_wider(id_Cols = entity, names_from = year, values_from = c(wid_gini, gini), names_sep = "_")
+                select(entity, year, wid_gini, gini, wid_top_10_share, shares_decile_10, wid_top_1_share, shares_top_1pc) %>%
+                pivot_wider(names_from = year, values_from = c(wid_gini, gini, wid_top_10_share, shares_decile_10, wid_top_1_share, shares_top_1pc), names_sep = "_") 
 
 gini_change
 # -
