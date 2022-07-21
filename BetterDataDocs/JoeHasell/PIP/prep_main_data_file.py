@@ -86,7 +86,7 @@ df_original["gini"] = np.where(
         df_original["gini_constructed"], 
         df_original["gini_original"]) 
 
-for d in range(1,10):
+for d in range(1,11):
         
     varname = f"shares_decile_{d}"
 
