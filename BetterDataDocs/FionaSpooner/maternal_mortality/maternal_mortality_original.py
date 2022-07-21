@@ -29,7 +29,7 @@
 
 # In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine two existing datasets:
 
-# * Gapminder (1751-2008)
+# * GapMinder (1751-2008)
 # * World Health Organization (2000-2017)
 
 
@@ -38,7 +38,7 @@
 
 # In years where there is an overlap in both time-series we use the data from the WHO.
 
-# ## Downloading the Gapminder data
+# ## Downloading the GapMinder data
 
 # %%
 import numpy as np
@@ -50,7 +50,7 @@ import matplotlib.pyplot as plt
 
 #%%[markdown]
 
-# Firstly we download the data from Gapminder and save it locally. Then we read in the Gapminder data, clean up the column names and take a look at the data.
+# Firstly we download the data from GapMinder and save it locally. Then we read in the GapMinder data, clean up the column names and take a look at the data.
 
 
 # %%
@@ -70,10 +70,10 @@ df_d["Country"] = df_d["Country"].str.strip()
 df_d = df_d[~pd.isna(df_d["MMR"])]
 
 #%%[markdown]
-## Cleaning the Gapminder data
+## Cleaning the GapMinder data
 
 
-# There are some issues with the Gapminder data - we will manually clean them here.
+# There are some issues with the GapMinder data - we will manually clean them here.
 
 
 # * The first three rows in the 'year' column seem to be wrong as it seems as if each row covers 110 years, but in [another source](https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#) they cover only 10 years.
@@ -159,27 +159,20 @@ assert (
 df_d.columns
 
 # %% [markdown]
-# Checking the given MMR matches a calculated MMR, where the data for live births and maternal deaths is given. It seems largely okay but the values for Ireland, particularly from 1901-1920. There is a drop of almost 1000 maternal deaths between 1920 and 1922.
+# Checking the given MMR matches a calculated MMR, where the data for live births and maternal deaths is given. It seems largely okay but the values for Ireland, particularly from 1901-1920. There is a drop of almost 1000 maternal deaths between 1920 and 1922. 
 #
 # In the registrar general of Ireland it states that there were approximately 599 maternal deaths in Ireland in 1912 and on average 634 per year between 1903 and 1911. The estimated rate is 6 deaths per 1,000 births, so 600 per 100,000 births.
 #
-# I think this suggests that the Maternal deaths figures may be wrong for the period 1901-1920.
+# I think this suggests that the Maternal deaths figures may be wrong for the period 1901-1920. I think they may have back-calculated the maternal deaths from the MMR but accidentally used the year column instead as the calculated MMR works out as the year value. 
 
 # %%
-df_check = (
-    df_d[["Country", "year", "Live Births", "Maternal deaths", "MMR"]]
-    .dropna()
-    .reset_index(drop=True)
-)
-df_check["mmr_calc"] = (
-    ((df_check["Maternal deaths"] / df_check["Live Births"]) * 100000)
-    .astype(float)
-    .round(2)
-)
-df_check["MMR"] = df_check["MMR"].astype(float).round(2)
+df_check = df_d[['Country','year','Live Births', 'Maternal deaths', 'MMR']].dropna().reset_index(drop=True)
+df_check['mmr_calc'] = ((df_check['Maternal deaths']/df_check['Live Births'])* 100000).astype(float).round(2)
+df_check['MMR'] = df_check['MMR'].astype(float).round(2)
 
 
-df_check[df_check["mmr_calc"].round(2) != df_check["MMR"].round(2)]
+df_check[ df_check['mmr_calc'].round(2)!= df_check['MMR'].round(2)]
+
 
 
 # %%
@@ -287,7 +280,7 @@ who_df["source"] = "who"
 who_df["entity"] = who_df["entity"].map(stan_dict)
 who_df = who_df.dropna()
 #%%[markdown]
-# ## Merging the WHO data with the Gapminder data
+# ## Merging the WHO data with the GapMinder data
 
 # Combine the two datasets. For years where there is data from both datasets we preferentially keep data from the WHO.
 
@@ -305,7 +298,7 @@ oecd_df["entity"] = oecd_df["entity"].map(stan_dict)
 
 
 # %% [markdown]
-# Get the first years data from WHO and the last years data from Gapminder - to compare the values when the source changes.
+# Read in the older WHO data taken from a previous version of the WDI - we just want the data for 1990-1999
 
 # %%
 who_2015 = pd.read_csv("data/input/maternal-mortality_wb_2015.csv")
