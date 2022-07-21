@@ -4,14 +4,14 @@ import pandas as pd
 from functions import upload_to_s3
 
 #%%
-df_ginis = pd.read_csv("data/WID/stata_code_and_output/ginis.csv", keep_default_na=False)
+df_ginis = pd.read_csv("stata_code_and_output/ginis.csv", keep_default_na=False)
 
 df_ginis = df_ginis[['country', 'year', 'value']].rename(columns={
     'value': 'wid_gini'
 })
 
 #%%
-df_topshares = pd.read_csv("data/WID/stata_code_and_output/topshares.csv",keep_default_na=False)
+df_topshares = pd.read_csv("stata_code_and_output/topshares.csv",keep_default_na=False)
 
 df_topshares = df_topshares[['country', 'year', 'percentile', 'value']]
 
