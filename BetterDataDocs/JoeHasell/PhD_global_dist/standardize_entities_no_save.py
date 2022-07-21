@@ -1,23 +1,4 @@
 # %%
-# ACCESS TO STORAGE ----
-
-# Acess keys to write to  our s3 cloud storage
-from access_key import KEY_ID, SECRET_KEY 
-
-# boto3  allows us to write data to our s3 cloud storage
-import boto3
-
-# A function we have written to help upload our data to our s3 cloud storage
-from functions import upload_to_s3
-
-# Set up access for writing files to s3  
-session = boto3.session.Session()
-
-client = session.client('s3',
-                        endpoint_url="https://joeh.fra1.digitaloceanspaces.com",
-                        aws_access_key_id=KEY_ID,
-                        aws_secret_access_key=SECRET_KEY)
-
 # %%
 # Load packages
 
@@ -27,20 +8,18 @@ import pandas as pd
 
 
 # %% 
-def standardize_and_save(raw_csv_url,
+def standardize_entities_func(raw_csv_url,
                         entity_mapping_url,
                         mapping_varname_raw,
                         mapping_vaname_owid,
                         data_varname_old,
-                        data_varname_new,
-                        s3_space_to_save_in,
-                        as_filename):
+                        data_varname_new):
     
     # Read in raw dataframe
     df_raw = pd.read_csv(raw_csv_url)
 
 
-    # Read in mapping table which maps PWT names onto OWID names.
+    # Read in mapping table which maps orig names onto OWID names.
     df_mapping = pd.read_csv(entity_mapping_url)
 
     # Merge in mapping to raw
@@ -64,8 +43,5 @@ def standardize_and_save(raw_csv_url,
     # reorder the columns of the dataframe according to the list
     df_harmonized = df_harmonized.loc[:, cols]
 
+    return df_harmonized
 
-    # Upload prepared data to our database
-    upload_to_s3(df_harmonized, s3_space_to_save_in, as_filename)
-
-# %%
