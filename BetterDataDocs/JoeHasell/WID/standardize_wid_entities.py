@@ -34,7 +34,7 @@ as_filename='gini_and_topshares_standardized.csv'
 
 # %%   
 # Read in raw dataframe
-df_raw = pd.read_csv(raw_csv_url)
+df_raw = pd.read_csv(raw_csv_url, keep_default_na=False)
 
 # %% 
 # Read in mapping table – ignore default NaN because this catches 
