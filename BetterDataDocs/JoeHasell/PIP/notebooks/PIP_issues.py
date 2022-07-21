@@ -1,5 +1,30 @@
 #%%
+import pandas as pd
 
+#%%
+# fill_gaps = 'true' 
+# popshare = '0.9'
+# request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&popshare={popshare}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv'
+#%%
+#... swap this for api call
+df_p90_filled = pd.read_csv("data/API_output/percentiles/filled_true/P90.csv")
+
+df_p10_filled = pd.read_csv("data/API_output/percentiles/filled_true/P10.csv")
+
+
+#%%
+df_p90_filled = df_p90_filled[["country_name", "reporting_year"]]
+
+#%%
+fill_gaps = 'false' 
+popshare = '0.90'
+request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&popshare={popshare}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv'
+
+df_p90_survey = pd.read_csv(request_url)
+df_p10_survey = pd.read_csv(request_url)
+
+
+#Then compare – say for Botswansa – inequality changes over the interpolation. 
 
 #%%
 # Note: region aggregates return incorrect/broken headcount data when requesting povshare.
