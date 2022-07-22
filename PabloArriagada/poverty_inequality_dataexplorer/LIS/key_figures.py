@@ -67,4 +67,10 @@ hola['Gini Coefficient'].value_counts()
 fig = px.line(kf_excel, x="year", y="Gini Coefficient", color="entity", title='Inequality according to LIS')
 fig.show()
 
+fig = px.histogram(kf_excel, x="year", marginal="box", title="<b>Distribution of years in LIS</b>")
+fig.show()
+
+kf_count = kf_excel.groupby(['year']).size()
+kf_count
+
 
