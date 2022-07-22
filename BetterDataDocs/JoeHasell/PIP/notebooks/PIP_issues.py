@@ -4,12 +4,83 @@ import pandas as pd
 #%%
 # fill_gaps = 'true' 
 # popshare = '0.9'
-# request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&popshare={popshare}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv'
+# request_url = 
 #%%
-#... swap this for api call
-df_p90_filled = pd.read_csv("data/API_output/percentiles/filled_true/P90.csv")
 
-df_p10_filled = pd.read_csv("data/API_output/percentiles/filled_true/P10.csv")
+
+#%%
+def p90_10_ratio(select_country, select_year, p90, p10):
+    #Check p90 headcount is extremely close to 90%
+    print(f"In {select_country}, {select_year}:")
+
+    print(f"We see from the 'popshare' query that P90 and P10 were {p90} and {p10}.")
+
+    print(f"P90/P10 raio is: {p90/p10}")
+    
+    print("Let's double check these yield the right headcount ratios (i.e. 90% and 10%)")
+
+    fill_gaps = 'true'
+
+    df_p90 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p90}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+    heacount_p90 = df_p90['headcount'].values[0]
+    print(f"P90 headcount is: {heacount_p90}")
+
+    #Check p10 headcount is extremely close to 10%
+    df_p10 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p10}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+    heacount_p10 = df_p10['headcount'].values[0]
+    print(f"P10 headcount is: {heacount_p10}")
+
+    
+
+#%%
+select_country = "BWA"
+select_year = 1985
+
+p90 = 8.299255
+p10 = 0.731530
+
+p90_10_ratio(select_country,select_year, p90, p10)
+
+#%%
+select_country = "BWA"
+select_year = 2003
+
+p90 = 19.033194
+p10 = 1.021057
+
+p90_10_ratio(select_country,select_year, p90, p10)
+
+#%%
+#Check p90 headcount is extremely close to 90%
+fill_gaps = 'true'
+
+df_p90 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p90}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+p90 = df_p90['headcount'].values[0]
+
+
+
+
+
+
+#%%
+select_country = "BWA"
+select_year = 2003
+
+p90 = 19.868751
+
+#%%
+#Check p90 headcount is extremely close to 90%
+fill_gaps = 'true'
+
+df_p90 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p90}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+p90 = df_p90['headcount'].values[0]
+
+
+
 
 
 #%%
