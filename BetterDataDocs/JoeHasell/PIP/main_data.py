@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 
 from PIP_API_query import pip_query_country, pip_query_region
+from standardize_entities import standardize_enities
+from functions import upload_to_s3
 
 # function for multiplying by 100
 def multiply_by_100(number):
@@ -158,7 +160,14 @@ for is_filled in ['true', 'false']:
 
 
     # Standardize entity names
-
+    standardize_enities(
+    orig_df = df_final,
+    entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+    mapping_varname_raw ='Original Name',
+    mapping_vaname_owid = 'Our World In Data Name',
+    data_varname_old = 'entity',
+    data_varname_new = 'entity'
+    )
 
     # Amend the entity to reflect if data refers to urban or rural only
     df_final.loc[(\
@@ -169,8 +178,15 @@ for is_filled in ['true', 'false']:
         df_final.loc[(\
         df_final['reporting_level'].isin(["urban", "rural"])),'reporting_level']
 
-    # Write filled and survey data to csv
-    df_final.to_csv(f'data/poverty_vars_filled_{is_filled}.csv')
+    # Tidying – Rename and drop cols
+    df_final = df_final.rename(columns={'reporting_year': 'year'})
+    df_final = df_final.drop(columns=['reporting_level', 'welfare_type'])
+
+    # Save filled and survey data to csv in s3
+
+    upload_to_s3(df_final, 
+                'PIP', 
+                f'pip_poverty_vars_{is_filled}.csv')
 
 
 
