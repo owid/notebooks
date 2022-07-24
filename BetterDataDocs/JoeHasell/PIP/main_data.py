@@ -135,6 +135,32 @@ for is_filled in ['true', 'false']:
 
     df_final = headcounts_country_wide.append(headcounts_region_wide, ignore_index=False)
 
+
+    # TO DO: Calculate numbers in poverty between pov lines for stacked area charts
+    #Make sure the poverty lines are in order, lowest to highest
+    # poverty_lines_cents.sort()
+
+    # # for the lowest poverty line, we set a temporary var equal to the headcount 
+    # lower_varname<- f'number_below_{poverty_lines_cents[0]}
+    
+    # df_final[lower_varname] = df_final[f'headcount_{poverty_lines_cents[0]}']
+
+
+    # for i in range(1,len(poverty_lines_cents)-1):
+
+  
+    #     higher_varname<- f'number_below_{poverty_lines_cents[i]}'
+    #     lower_varname<- f'number_below_{poverty_lines_cents[i-1]}'
+
+    #     # Calculate the in between share
+
+    #     df_final[lower_varname] = df_final[f'headcount_{poverty_lines_cents[0]}']
+
+
+    # Standardize entity names
+
+
+    # Amend the entity to reflect if data refers to urban or rural only
     df_final.loc[(\
         df_final['reporting_level'].isin(["urban", "rural"])),'entity'] = \
         df_final.loc[(\
