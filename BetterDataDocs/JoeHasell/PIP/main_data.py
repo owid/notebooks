@@ -195,7 +195,7 @@ for is_filled in ['true', 'false']:
 
     # Flag duplicates – indicating multiple welfare_types
     df_inc_or_cons['duplicate_flag'] = df_inc_or_cons\
-        .duplicated(subset=['entity', 'year', 'reporting_level'])
+        .duplicated(subset=['Entity', 'Year', 'reporting_level'])
 
     print(f'Checking the filled = {is_filled} data for years with both income and consumption. Before dropping duplicated, there were {df_inc_or_cons.shape[0]} rows...')
     # Drop income where income and consumption are available
@@ -205,9 +205,9 @@ for is_filled in ['true', 'false']:
 
 
     # Save as csv
-    df_inc_only.to_csv(f'data/poverty_inc_only_filled_{is_filled}.csv')
-    df_cons_only.to_csv(f'data/poverty_cons_only_filled_{is_filled}.csv')
-    df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons_filled_{is_filled}.csv')
+    df_inc_only.to_csv(f'data/poverty_inc_only_filled_{is_filled}.csv', index=False)
+    df_cons_only.to_csv(f'data/poverty_cons_only_filled_{is_filled}.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons_filled_{is_filled}.csv', index=False)
 
 
     # I was saving this to s3 – but I don't know how to format the url from digital ocean so that the data can be picked up in the explorer
