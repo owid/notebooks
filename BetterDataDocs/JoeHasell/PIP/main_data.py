@@ -10,7 +10,7 @@ from functions import upload_to_s3
 def multiply_by_100(number):
             return 100 * number
 
-poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
+poverty_lines_cents = [100, 190, 320, 550, 1000, 1500, 2000, 3000, 4000]
 poverty_lines_cents = [100, 190]
 
 #%%
@@ -180,14 +180,46 @@ for is_filled in ['true', 'false']:
 
     # Tidying – Rename and drop cols
     df_final = df_final.rename(columns={'reporting_year': 'year'})
-    df_final = df_final.drop(columns=['reporting_level', 'welfare_type'])
-
-    # Save filled and survey data to csv in s3
-
-    upload_to_s3(df_final, 
-                'PIP', 
-                f'pip_poverty_vars_{is_filled}.csv')
 
 
+    # Separate out consumption-only, income-only, and both dataframes
+    df_inc_only = df_final.copy()
+    df_inc_only = df_inc_only[df_inc_only['welfare_type']=="income"]
+
+    df_cons_only = df_final.copy()
+    df_cons_only = df_cons_only[df_cons_only['welfare_type']=="consumption"]
+
+    df_inc_or_cons = df_final.copy()
+    # If both inc and cons are available in a given year, drop inc
+
+    # Flag duplicates – indicating multiple welfare_types
+    df_inc_or_cons['duplicate_flag'] = df_inc_or_cons\
+        .duplicated(subset=['entity', 'year', 'reporting_level'])
+
+    print(f'Checking the filled = {is_filled} data for years with both income and consumption. Before dropping duplicated, there were {df_inc_or_cons.shape[0]} rows...')
+    # Drop income where income and consumption are available
+    df_inc_or_cons = df_inc_or_cons[(df_inc_or_cons['duplicate_flag']==False) | (df_inc_or_cons['welfare_type']=='consumption')]
+    
+    print(f'After dropping duplicates there were {df_inc_or_cons.shape[0]} rows.')
+
+
+    # Save as csv
+    df_inc_only.to_csv(f'data/poverty_inc_only_filled_{is_filled}.csv')
+    df_cons_only.to_csv(f'data/poverty_cons_only_filled_{is_filled}.csv')
+    df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons_filled_{is_filled}.csv')
+
+
+    # I was saving this to s3 – but I don't know how to format the url from digital ocean so that the data can be picked up in the explorer
+    # upload_to_s3(df_inc_only, 
+    #             'PIP', 
+    #             f'poverty_inc_only_filled_{is_filled}.csv')
+
+    # upload_to_s3(df_cons_only, 
+    #             'PIP', 
+    #             f'poverty_cons_only_filled_{is_filled}.csv')
+
+    # upload_to_s3(df_inc_or_cons, 
+    #             'PIP', 
+    #             f'poverty_inc_or_cons_filled_{is_filled}.csv')
 
 #%%
