@@ -178,8 +178,9 @@ for is_filled in ['true', 'false']:
         df_final.loc[(\
         df_final['reporting_level'].isin(["urban", "rural"])),'reporting_level']
 
-    # Tidying – Rename and drop cols
-    df_final = df_final.rename(columns={'reporting_year': 'year'})
+    # Tidying – Rename cols
+    df_final = df_final.rename(columns={'reporting_year': 'Year',
+                                        "entity": "Entity"})
 
 
     # Separate out consumption-only, income-only, and both dataframes
