@@ -73,7 +73,16 @@ df = pd.concat([
 # %%
 # Make plot to base ilulstrator design on
 
-fig = px.line(df, x="year", y="pop_in_poverty", color='estimate')
+# Use only 1990 onwards data – to avoid confusion around the China bump in 1989
+df = df[df['year']>=1990]
+
+fig = px.line(df, x="year", y="pop_in_poverty", color='estimate',
+        template='none')
+
+fig.update_yaxes(rangemode="tozero")
+fig.update_layout(showlegend=False)
+
+
 fig.show()
 
 # %%

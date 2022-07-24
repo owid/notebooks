@@ -3,6 +3,7 @@ import pandas as pd
 
 from PIP_API_query import pip_query_country, pip_query_regions
 
+poverty_lines = [1, 1.9, 3.2, 5.5, 10, 20, 30, 40]
 #%%
 df_pov = pip_query_country("povline", 10)
 
