@@ -11,7 +11,6 @@ def multiply_by_100(number):
             return 100 * number
 
 poverty_lines_cents = [100, 190, 320, 550, 1000, 1500, 2000, 3000, 4000]
-poverty_lines_cents = [100, 190]
 
 #%%
 
