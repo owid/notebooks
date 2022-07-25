@@ -8,7 +8,7 @@ from access_key import KEY_ID, SECRET_KEY
 import boto3
 
 # A function we have written to help upload our data to our s3 cloud storage
-from functions import upload_to_s3
+from functions.upload import upload_to_s3
 
 # Set up access for writing files to s3  
 session = boto3.session.Session()

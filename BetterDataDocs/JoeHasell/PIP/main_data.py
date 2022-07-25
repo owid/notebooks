@@ -2,18 +2,22 @@
 import pandas as pd
 import numpy as np
 
-from PIP_API_query import pip_query_country, pip_query_region
-from standardize_entities import standardize_enities
-from functions import upload_to_s3
+from functions.PIP_API_query import pip_query_country, pip_query_region
+from functions.standardize_entities import standardize_enities
+from functions.upload import upload_to_s3
+
+
+#%%
 
 # function for multiplying by 100
 def multiply_by_100(number):
             return 100 * number
 
+# Here we define the poverty lines to query as cents
 poverty_lines_cents = [100, 190, 320, 550, 1000, 1500, 2000, 3000, 4000]
 
+# We make dictionaries to store the API responses, which will be concatenated later
 #%%
-
 headcount_dfs = {}
 headcount_dfs['filled_true'] = {}
 headcount_dfs['filled_false'] = {}
@@ -24,14 +28,19 @@ headcount_dfs['filled_false']['country'] = {}
 headcount_dfs['filled_false']['region'] = {}
 
 
+# Run the API query and clean the response...
+#... for each poverty line
 for p in poverty_lines_cents:
 
     p_dollar = p/100
 
+    #... for both the interpolated ('filled') data and the survey-year only data
     for is_filled in ['true', 'false']:
     
+        #.. and for both countries and WB regional aggregates
         for ent_type in ['country', 'region']:
 
+            # Make the API query for country data
             if ent_type == 'country':
         
                 df = pip_query_country(
@@ -51,8 +60,9 @@ for p in poverty_lines_cents:
                     'reporting_pop'
                 ]
             
-            # This runs for both is_filled= true and false, 
-            # even though it yields the same values each time 
+            # Make the API query for region data
+            # Note that the filled and not filled data is the same in this case .
+            # The code runs it twice anyhow.
             if ent_type == 'region':
 
                 df = pip_query_region(p_dollar)
@@ -203,13 +213,17 @@ for is_filled in ['true', 'false']:
     print(f'After dropping duplicates there were {df_inc_or_cons.shape[0]} rows.')
 
 
+    # I think better would be to save this to s3 – but I don't know how to format the url from 
+    # digital ocean so that the data can be picked up in the explorer. But I know how to do this
+    # if it's stored in GitHub. So for now I write it as csvs to this folder.
     # Save as csv
     df_inc_only.to_csv(f'data/poverty_inc_only_filled_{is_filled}.csv', index=False)
     df_cons_only.to_csv(f'data/poverty_cons_only_filled_{is_filled}.csv', index=False)
     df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons_filled_{is_filled}.csv', index=False)
 
 
-    # I was saving this to s3 – but I don't know how to format the url from digital ocean so that the data can be picked up in the explorer
+
+    # 
     # upload_to_s3(df_inc_only, 
     #             'PIP', 
     #             f'poverty_inc_only_filled_{is_filled}.csv')

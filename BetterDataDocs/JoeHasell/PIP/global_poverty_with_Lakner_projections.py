@@ -1,9 +1,20 @@
 
 #%%
+# ABOUT THIS SCRIPT
+"""
+In this script I am preparing the data for the static chart included in the Key Insight 'The pandemic
+pushed millions into extreme poverty'.
+
+https://owid.cloud/admin/posts/preview/51861?insight=the-pandemic-pushed-millions-into-extreme-poverty#key-insights-on-poverty
+
+I plot it with plotly and then save it as an svg, which I then have edited in Illustrator by hand.
+"""
+
+#%%
 from numpy import NaN
 import pandas as pd
-from PIP_API_query import pip_query_regions
 import plotly.express as px
+#%%
 
 
 
