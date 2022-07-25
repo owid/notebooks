@@ -99,15 +99,13 @@ for p in poverty_lines_cents:
 
 
             # Shares to percentages
- 
             # executing the function over list of vars
             var_list = ['headcount_ratio', 'income_gap_ratio', 'poverty_gap_index' ]
 
             df[var_list] = df[var_list].apply(multiply_by_100)  
 
 
-            # Add poverty line as a var
-
+            # Add poverty line as a var (I add the '_' character, because it being treated as a float later on was causing headaches)
             df['poverty line'] = f'_{p}'
 
             #Add dataframe to rolling dictionary.
@@ -116,6 +114,7 @@ for p in poverty_lines_cents:
 
 
 #%%
+# Unpack the dictionaries into two dfs (one for filled=true one for false)
 for is_filled in ['true', 'false']:
 
 # Append the dataframes for differnt poverty lines together
@@ -141,6 +140,7 @@ for is_filled in ['true', 'false']:
     headcounts_region_wide = headcounts_region_wide.reset_index()
 
     # Add NAN columns for reporting_level and welfare_type in the region data, before appending to country data
+    # (I'm sure there must be a way to append even though you don't have all the columns in both datasets but I haven't worked it out yet)
     headcounts_region_wide['reporting_level'] = np.NaN
     headcounts_region_wide['welfare_type'] = np.NaN
 
@@ -148,6 +148,7 @@ for is_filled in ['true', 'false']:
 
 
     # TO DO: Calculate numbers in poverty between pov lines for stacked area charts
+    # I started with this below, but I haven't finished it.
     #Make sure the poverty lines are in order, lowest to highest
     # poverty_lines_cents.sort()
 
@@ -188,8 +189,7 @@ for is_filled in ['true', 'false']:
         df_final['reporting_level'].isin(["urban", "rural"])),'reporting_level']
 
     # Tidying – Rename cols
-    df_final = df_final.rename(columns={'reporting_year': 'Year',
-                                        "entity": "Entity"})
+    df_final = df_final.rename(columns={'reporting_year': 'year'})
 
 
     # Separate out consumption-only, income-only, and both dataframes
@@ -204,7 +204,7 @@ for is_filled in ['true', 'false']:
 
     # Flag duplicates – indicating multiple welfare_types
     df_inc_or_cons['duplicate_flag'] = df_inc_or_cons\
-        .duplicated(subset=['Entity', 'Year', 'reporting_level'])
+        .duplicated(subset=['entity', 'year', 'reporting_level'])
 
     print(f'Checking the filled = {is_filled} data for years with both income and consumption. Before dropping duplicated, there were {df_inc_or_cons.shape[0]} rows...')
     # Drop income where income and consumption are available
