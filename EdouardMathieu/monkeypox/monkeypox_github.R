@@ -59,6 +59,7 @@ aggregate <- function(df, case_type, date_type, pop) {
 
 
 df <- read.csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
+
 setDT(df)
 df <- df[!is.na(df$Status) & !is.na(df$Country),]
 
@@ -97,6 +98,7 @@ dataframes <- list(
 
 df <- reduce(dataframes, full_join, by = c("location", "date"))
 
+df <- df[as.Date(df$date) >= as.Date("2022-05-07"),]
 df[, date := date(date)]
 df <- df[date < today()]
 setorder(df, location, date)
