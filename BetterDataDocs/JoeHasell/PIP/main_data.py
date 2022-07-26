@@ -1,4 +1,4 @@
-#%%
+# %%
 import pandas as pd
 import numpy as np
 
@@ -6,8 +6,10 @@ from functions.PIP_API_query import pip_query_country, pip_query_region
 from functions.standardize_entities import standardize_enities
 from functions.upload import upload_to_s3
 
+import time
 
-#%%
+
+# %%
 
 # function for multiplying by 100
 def multiply_by_100(number):
@@ -17,7 +19,9 @@ def multiply_by_100(number):
 poverty_lines_cents = [100, 190, 320, 550, 1000, 1500, 2000, 3000, 4000]
 
 # We make dictionaries to store the API responses, which will be concatenated later
-#%%
+# %%
+start_time = time.time()
+
 headcount_dfs = {}
 headcount_dfs['filled_true'] = {}
 headcount_dfs['filled_false'] = {}
@@ -111,9 +115,132 @@ for p in poverty_lines_cents:
             #Add dataframe to rolling dictionary.
 
             headcount_dfs[f'filled_{is_filled}'][ent_type][p] = df
+            
+end_time = time.time()
+elapsed_time = end_time - start_time
+print('Execution time:', elapsed_time, 'seconds')
 
 
-#%%
+# %%
+start_time = time.time()
+
+
+df_final = pd.DataFrame()
+
+
+headcount_dfs = {}
+headcount_dfs['filled_true'] = {}
+headcount_dfs['filled_false'] = {}
+headcount_dfs['filled_true']['country'] = {}
+headcount_dfs['filled_true']['region'] = {}
+
+headcount_dfs['filled_false']['country'] = {}
+headcount_dfs['filled_false']['region'] = {}
+
+
+# Run the API query and clean the response...
+#... for each poverty line
+for p in poverty_lines_cents:
+
+    p_dollar = p/100
+
+    #... for both the interpolated ('filled') data and the survey-year only data
+    for is_filled in ['true', 'false']:
+    
+        #.. and for both countries and WB regional aggregates
+        for ent_type in ['country', 'region']:
+
+            # Make the API query for country data
+            if ent_type == 'country':
+        
+                df = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = p_dollar, 
+                    fill_gaps=is_filled)
+
+                df = df.rename(columns={'country_name': 'entity'})
+
+                keep_vars = [ 
+                    'entity',
+                    'reporting_year',
+                    'reporting_level',
+                    'welfare_type', 
+                    'headcount',
+                    'poverty_gap',
+                    'reporting_pop'
+                ]
+            
+            # Make the API query for region data
+            # Note that the filled and not filled data is the same in this case .
+            # The code runs it twice anyhow.
+            if ent_type == 'region':
+
+                df = pip_query_region(p_dollar)
+
+                df = df.rename(columns={'region_name': 'entity'})
+
+                keep_vars = [ 
+                    'entity',
+                    'reporting_year',
+                    'headcount',
+                    'poverty_gap',
+                    'reporting_pop'
+                ]
+        
+
+            df = df[keep_vars]
+
+            # rename columns
+            df = df.rename(columns={
+            'headcount':'headcount_ratio',
+            'poverty_gap': 'poverty_gap_index'})
+
+            # Calculate number in poverty
+            df['headcount'] = df['headcount_ratio'] * df['reporting_pop']  
+
+            # Calculate shortfall of incomes
+            df['total_shortall'] = df['poverty_gap_index'] * p_dollar * df['reporting_pop']                      
+
+            # Calculate average shortfall of incomes (averaged across population in poverty)
+            df['avg_shortfall'] = df['total_shortall'] / df['headcount']
+
+            # Calculate income gap ratio (according to Ravallion's definition)
+            df['income_gap_ratio'] = (df['total_shortall'] / df['headcount']) / p_dollar
+
+
+            # Shares to percentages
+            # executing the function over list of vars
+            var_list = ['headcount_ratio', 'income_gap_ratio', 'poverty_gap_index' ]
+
+            df[var_list] = df[var_list].apply(multiply_by_100)  
+
+
+            # Add poverty line as a var (I add the '_' character, because it being treated as a float later on was causing headaches)
+            df['poverty line'] = f'_{p}'
+
+            #Add dataframe to rolling dictionary.
+
+            #headcount_dfs[f'filled_{is_filled}'][ent_type][p] = df
+            df_final = pd.concat([df_final, df],ignore_index=True)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print('Execution time:', elapsed_time, 'seconds')
+
+
+# %%
+df_final
+
+# %%
+headcount_dfs
+
+# %%
+headcount_dfs[f'filled_true']['country']
+
+# %%
+headcount_dfs[f'filled_false']['country']
+
+# %%
 # Unpack the dictionaries into two dfs (one for filled=true one for false)
 for is_filled in ['true', 'false']:
 
@@ -236,4 +363,4 @@ for is_filled in ['true', 'false']:
     #             'PIP', 
     #             f'poverty_inc_or_cons_filled_{is_filled}.csv')
 
-#%%
+# %%
