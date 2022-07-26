@@ -61,10 +61,13 @@ aggregate <- function(df, case_type, date_type, pop) {
 cols <- c("Country", "Status", "Date_entry", "Date_confirmation")
 
 df <- read.csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
+# Select data that isn't US has either date entry or date confirmed after may 6th 2022.
 df <- df %>%
   mutate(Date_entry = as.Date(Date_entry), Date_confirmation = as.Date(Date_confirmation)) %>% 
-  filter(Country != "United States" & (Date_entry >= as.Date("2022-05-06") | (Date_confirmation >= as.Date("2022-05-06"))) ) %>%
-           select(cols)
+  filter(Country != "United States") %>% 
+  filter(Date_entry >= as.Date("2022-05-06") & Date_confirmation >= as.Date("2022-05-06")) %>%
+  select(cols)
+
 gs4_deauth()
 df_usa <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
 df_usa <- df_usa %>% filter(Country == "United States") %>% select(cols)
@@ -109,9 +112,11 @@ dataframes <- list(
 
 df <- reduce(dataframes, full_join, by = c("location", "date"))
 
-df <- df[as.Date(df$date) >= as.Date("2022-05-07"),]
+#df <- df[as.Date(df$date) >= as.Date("2022-05-07"),]
 df[, date := date(date)]
 df <- df[date < today()]
 setorder(df, location, date)
 
 fwrite(df, "owid-monkeypox-data-gh.csv")
+
+
