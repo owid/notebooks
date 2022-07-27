@@ -63,21 +63,23 @@ cols <- c("Country", "Status", "Date_entry", "Date_confirmation")
 df <- read.csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
 # Select data that isn't US has either date entry or date confirmed after may 6th 2022.
 df <- df %>%
-  mutate(Date_entry = as.Date(Date_entry), Date_confirmation = as.Date(Date_confirmation)) %>% 
-  filter(Country != "United States") %>% 
-  filter(Date_entry >= as.Date("2022-05-06") & Date_confirmation >= as.Date("2022-05-06")) %>%
-  select(cols)
+  filter(Date_entry >= as.Date("2022-05-06") & Date_confirmation >= as.Date("2022-05-06"))
+#  mutate(Date_entry = as.Date(Date_entry), Date_confirmation = as.Date(Date_confirmation)) %>% 
+#  filter(Country != "United States") %>% 
 
-gs4_deauth()
-df_usa <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
-df_usa <- df_usa %>% filter(Country == "United States") %>% select(cols)
+#  select(cols)
 
-df <- rbind(df, df_usa)
+#gs4_deauth()
+#df_usa <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
+#df_usa <- df_usa %>% filter(Country == "United States") %>% select(cols)
+
+#df <- rbind(df, df_usa)
 
 setDT(df)
 df <- df[!is.na(df$Status) & !is.na(df$Country),]
 
-stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error", "suspected")))
+# removed suspected from this group
+stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error")))
 df <- df[!df$Status %in% c("discarded", "omit_error"),]
 
 df <- df[, c("Status", "Country", "Date_entry", "Date_confirmation")]
