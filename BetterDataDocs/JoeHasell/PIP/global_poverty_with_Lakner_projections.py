@@ -1,24 +1,17 @@
+# %% [markdown]
+# # About this script
+# In this script I am preparing the data for the static chart included in the Key Insight 'The pandemic
+# pushed millions into extreme poverty'.
+#
+# https://owid.cloud/admin/posts/preview/51861?insight=the-pandemic-pushed-millions-into-extreme-poverty#key-insights-on-poverty
+#
+# I plot it with plotly and then save it as an svg, which I then have edited in Illustrator by hand.
 
-#%%
-# ABOUT THIS SCRIPT
-"""
-In this script I am preparing the data for the static chart included in the Key Insight 'The pandemic
-pushed millions into extreme poverty'.
-
-https://owid.cloud/admin/posts/preview/51861?insight=the-pandemic-pushed-millions-into-extreme-poverty#key-insights-on-poverty
-
-I plot it with plotly and then save it as an svg, which I then have edited in Illustrator by hand.
-"""
-
-#%%
+# %%
 from numpy import NaN
 import pandas as pd
 import plotly.express as px
-#%%
-
-
-
-#%%
+# %%
 povline='1.9'
 # We will use a specific older version of the data in order to match up with the projections.
 version='20220408_2011_02_02_PROD'
@@ -97,6 +90,4 @@ fig.update_layout(showlegend=False)
 fig.show()
 
 # %%
-
 fig.write_image("graphics/global_pov_with_projections.svg")
-# %%
