@@ -26,8 +26,8 @@ import pandas as pd
                
 
 
-# %% 
-def standardize_enities(orig_df,
+# %%
+def standardize_entities(orig_df,
                         entity_mapping_url,
                         mapping_varname_raw,
                         mapping_vaname_owid,
