@@ -1,5 +1,9 @@
 # %% [markdown]
-# # About this script
+# # Static charts
+# These are codes to replicate charts from the World Bank to export and edit them in Illustrator
+
+# %% [markdown]
+# ## First chart
 # In this script I am preparing the data for the static chart included in the Key Insight 'The pandemic
 # pushed millions into extreme poverty'.
 #
@@ -91,3 +95,110 @@ fig.show()
 
 # %%
 fig.write_image("graphics/global_pov_with_projections.svg")
+
+# %% [markdown]
+# ## 
+
+# %%
+povline='1.9'
+# We will use a specific older version of the data in order to match up with the projections.
+version='20210401_2011_02_02_PROD'
+request_url = f'https://api.worldbank.org/pip/v1/pip-grp?povline={povline}&version={version}&year=all&group_by=wb&format=csv'
+
+df_stacked = pd.read_csv(request_url)
+df_stacked = df_stacked[(df_stacked['region_name'] != "World") & 
+                       (df_stacked['reporting_year'] >= 1990)].reset_index(drop=True)
+
+
+# %%
+df_stacked[(df_stacked['reporting_year'] == 1990)]
+
+# %%
+fig = px.area(df_stacked, x="reporting_year", y="pop_in_poverty", color="region_name")
+fig.show()
+
+# %%
+#Based on https://stackoverflow.com/questions/62031809/extracting-javascript-variables-into-python-dictionaries
+
+import re
+import json
+import requests
+
+url = 'https://flo.uri.sh/visualisation/3963899/embed?auto=1'
+
+html_data = requests.get(url).text
+data = re.search(r'_Flourish_data = (\{.*?\});', html_data).group(1)
+#data = re.search(r'_Flourish_data_column_names = (\{.*?\});', html_data)
+
+data = json.loads(data)
+
+# uncomment this to print all data:
+print(json.dumps(data, indent=4))
+
+#for row in data['data']:
+#    print('{:<55}{}'.format(*map(str.strip, row['filter'][:2])))
+
+# %%
+df_flourish = pd.DataFrame.from_dict(data['data'])
+df_flourish
+
+# %%
+values = df_flourish["value"].apply(pd.Series)
+
+# %%
+values
+
+# %%
+df_stacked = pd.concat([df_flourish, values], axis=1)
+cols = {
+    0: "Sub-Saharan Africa",
+    1: "South Asia",
+    2: "Rest of the world",
+    3: "Middle East & North Africa",
+    4: "Latin America & Caribbean",
+    5: "Europe & Central Asia",
+    6: "East Asia & Pacific",
+}
+
+
+df_stacked = df_stacked.rename(columns=cols)
+df_stacked = df_stacked.rename(columns = {'label': 'year',
+                                         'filter': 'c19_estimation',
+                                         })
+df_stacked = df_stacked.drop(columns=['metadata', 'value'])
+df_stacked = df_stacked.rename(columns = {'filter': 'c19_estimation'})
+
+replace_strings = {
+    'Historical poverty + COVID-19-baseline\n  forecast': "baseline",
+    'Historical poverty + COVID-19-downside\n  forecast': "downside",
+    'Historical poverty + Pre-COVID-19\n  forecast': "pre",
+}
+df_stacked['c19_estimation'] = df_stacked['c19_estimation'].replace(replace_strings)
+
+df_stacked = pd.melt(df_stacked, id_vars=['c19_estimation', 'year'],
+                     value_vars=["Sub-Saharan Africa", "South Asia",
+                                 "Rest of the world", "Middle East & North Africa",
+                                 "Latin America & Caribbean","Europe & Central Asia",
+                                 "East Asia & Pacific"],
+                    var_name='region', value_name='pop_poverty')
+
+df_stacked['year'] = df_stacked['year'].astype(int)
+df_stacked['pop_poverty'] = df_stacked['pop_poverty'].astype(float)
+
+df_stacked = df_stacked.rename(columns = {'label': 'year',
+                                         'filter': 'c19_estimation',
+                                         })
+
+
+# %%
+df_stacked
+
+# %%
+estimation_list = list(df_stacked['c19_estimation'].unique())
+
+for i in estimation_list:
+    fig = px.area(df_stacked[df_stacked['c19_estimation'] == i], x="year", y="pop_poverty", color="region", title=i)
+    fig.write_image(f'graphics/global_pov_with_projections_region_{i}.svg')
+    fig.show()
+
+# %%
