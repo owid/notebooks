@@ -6,7 +6,7 @@ library(purrr)
 library(dplyr)
 library(tidyr)
 library(lubridate)
-
+setwd('Documents/OWID/repos/notebooks/EdouardMathieu/monkeypox/')
 aggregate <- function(df, case_type, date_type, pop) {
   stopifnot(date_type %in% c("confirmation", "entry"))
   stopifnot(case_type %in% c("all", "confirmed"))
@@ -52,7 +52,7 @@ aggregate <- function(df, case_type, date_type, pop) {
   
   return(df)
 }
-
+gs4_deauth()
 df <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
 setDT(df)
 
@@ -81,6 +81,9 @@ pop <- fread(
   col.names = c("location", "population"),
   showProgress = FALSE
 )
+
+pop_missing <- data.frame(location = c("Martinique", "Guadeloupe"), population = c(374743,400013))
+pop <- rbind(pop, pop_missing)
 
 dataframes <- list(
   aggregate(df, "confirmed", "confirmation", pop),

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -27,16 +28,15 @@
 # > "The number of maternal deaths during a given time period per 100,000 live births during the same time period."
 
 
-# In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine two existing datasets:
+# In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine four existing datasets:
 
 # * GapMinder (1751-2008)
+# * OECD (1960-2021)
+# * World Health Organization (1990-2015)
 # * World Health Organization (2000-2017)
-
 
 #
 # We make the assumption that their methods are comparable and that the data can be combined without transformation.
-
-# In years where there is an overlap in both time-series we use the data from the WHO.
 
 # ## Downloading the GapMinder data
 
@@ -84,7 +84,7 @@ df_d = df_d[~pd.isna(df_d["MMR"])]
 
 # * There are also two errors for New Zealand, and one error for both Sweden and the US.
 
-# * Sri Lanka's maternal mortality rate seems to drop to zero in 1990, we will drop this value.
+# * Ireland, Denamrk and Sri Lanka's maternal mortality rate drops to zero at some points - we will remove these.
 
 
 # %%
@@ -140,7 +140,11 @@ df_d = df_d.drop(
     ].index
 )
 # %%
-# Check that there are no duplicates in the data.
+# Check that there are no country-year duplicates in the data.
+
+
+# %%
+df_d[(df_d['Country'] == 'Denmark')]
 
 
 # %%
@@ -154,9 +158,6 @@ assert (
 
 # For some rows a range of years is given for a particular maternal mortality rate. We want to find the mid-point of that range. We use this function to find the mid-value of years given.
 
-
-# %%
-df_d.columns
 
 # %% [markdown]
 # Checking the given MMR matches a calculated MMR, where the data for live births and maternal deaths is given. It seems largely okay but the values for Ireland, particularly from 1901-1920. There is a drop of almost 1000 maternal deaths between 1920 and 1922. 
@@ -174,6 +175,9 @@ df_check['MMR'] = df_check['MMR'].astype(float).round(2)
 df_check[ df_check['mmr_calc'].round(2)!= df_check['MMR'].round(2)]
 
 
+
+# %% [markdown]
+# There are some year values which are given as a range. The following function will find the mid year value where possible.
 
 # %%
 def get_mid_year(year: str):
@@ -220,7 +224,6 @@ assert df_d[df_d[["Country", "year"]].duplicated(keep=False)].shape[0] == 0
 
 
 # %%
-df_d = df_d.copy(deep=False)
 df_d["year"] = df_d["mid_year"]
 
 df_gap = df_d[["Country", "year", "MMR"]]
@@ -239,12 +242,28 @@ stand_countries = pd.read_csv(
 stan_dict = stand_countries.set_index("Country").squeeze().to_dict()
 df_gap["entity"] = df_gap["entity"].map(stan_dict)
 df_gap = df_gap.dropna()
+
+
 #%%[markdown]
 
-# ## Reading in the WHO data
+# ## Reading in the current WHO data
 
 # Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.
 # This data covers from the year 2000 onwards. A previous version had data from the year 1990 onwards, we will also read this in and use this preferentially over the GapMinder data.
+
+# %% [markdown]
+# Add in the OECD Stat Health data
+
+# %%
+oecd_df = pd.read_csv("data/input/HEALTH_STAT_21072022104153993.csv")
+oecd_df = oecd_df[["Country", "Year", "Value"]].rename(
+    columns={"Country": "entity", "Year": "year", "Value": "maternal_mortality_rate"}
+)
+oecd_df["source"] = "oecd"
+
+oecd_df["entity"] = oecd_df["entity"].map(stan_dict)
+assert oecd_df['entity'].isna().sum() == 0
+
 
 # %%
 r_who = requests.get(
@@ -276,8 +295,9 @@ who_df.rename(
     },
     inplace=True,
 )
-who_df["source"] = "who"
+who_df["source"] = "who_2019"
 who_df["entity"] = who_df["entity"].map(stan_dict)
+who_df['year'] = who_df['year'].astype(int)
 who_df = who_df.dropna()
 #%%[markdown]
 # ## Merging the WHO data with the GapMinder data
@@ -285,24 +305,11 @@ who_df = who_df.dropna()
 # Combine the two datasets. For years where there is data from both datasets we preferentially keep data from the WHO.
 
 # %% [markdown]
-# Add in the OECD Stat Health data
-
-# %%
-oecd_df = pd.read_csv("data/input/HEALTH_STAT_21072022104153993.csv")
-oecd_df = oecd_df[["Country", "Year", "Value"]].rename(
-    columns={"Country": "entity", "Year": "year", "Value": "maternal_mortality_rate"}
-)
-oecd_df["source"] = "oecd"
-
-oecd_df["entity"] = oecd_df["entity"].map(stan_dict)
-
-
-# %% [markdown]
 # Read in the older WHO data taken from a previous version of the WDI - we just want the data for 1990-1999
 
 # %%
 who_2015 = pd.read_csv("data/input/maternal-mortality_wb_2015.csv")
-who_2015["source"] = "who"
+who_2015["source"] = "who_2015"
 who_2015 = who_2015[
     [
         "Entity",
@@ -318,46 +325,141 @@ who_2015 = who_2015[
     }
 )
 who_2015 = who_2015[(who_2015["year"] < 2000) & (who_2015["year"] >= 1990)]
+who_2015["year"] = who_2015["year"].astype(int)
+
+# %% [markdown]
+# Combine the two WHO data sets into one dataframe - but we'll drop out countries within the OECD Stat Health data as we already have a full time series for these and the data is more detailed.
 
 # %%
-df = pd.concat([df_gap, who_2015, who_df, oecd_df], ignore_index=True)
+who_both = pd.concat([who_2015, who_df], ignore_index=True)
+who_both = who_both[~who_both['entity'].isin(oecd_df['entity'].unique())]
+
+#%%[markdown]
+# ## Cleaning geographic entities
+# We don't want to include all of the available regions in the data as it is difficult for us to define them clearly, so we drop out a selection here.
+entities_to_drop = [
+    "Africa Eastern and Southern",
+    "Africa Western and Central",
+    "Arab World",
+    "Central Europe and the Baltics",
+    "Early-demographic dividend",
+    "East Asia & Pacific (excluding high income)",
+    "East Asia & Pacific (IDA & IBRD countries)",
+    "Euro area",
+    "Europe & Central Asia (excluding high income)",
+    "Europe & Central Asia (IDA & IBRD countries)",
+    "European Union",
+    "Fragile and conflict affected situations",
+    "Heavily indebted poor countries (HIPC)",
+    "IBRD only",
+    "IDA & IBRD total",
+    "IDA blend",
+    "IDA only",
+    "IDA total",
+    "Late-demographic dividend",
+    "Latin America & Caribbean (excluding high income)",
+    "Latin America & the Caribbean (IDA & IBRD countries)",
+    "Least developed countries: UN classification",
+    "Middle East & North Africa (excluding high income)",
+    "Middle East & North Africa (IDA & IBRD countries)",
+    "Not classified",
+    "OECD members",
+    "Other small states",
+    "Pacific island small states",
+    "Post-demographic dividend",
+    "Pre-demographic dividend",
+    "Small states",
+    "South Asia (IDA & IBRD)",
+    "Sub-Saharan Africa (excluding high income)",
+    "Sub-Saharan Africa (IDA & IBRD countries)",
+]
+who_both = who_both[~who_both["entity"].isin(entities_to_drop)]
+
+
+# %%
+who_sel = who_both[(who_both["year"] >=1999) & (who_both["year"] <= 2000)]
+who_check = (who_sel.pivot(index='entity',columns="source", values="maternal_mortality_rate").sort_index(level=[1,0])).dropna().reset_index()
+
+# %% [markdown]
+# Plot out the countries where the difference between 1999 and 2000 is greater than 5% of the 2000 value.
+
+# %%
+who_check['diff_prop'] = who_check.apply(lambda x: ((x['who_2019'] - x['who_2015'])/x['who_2019']) *100, axis=1)
+entities_to_plot = who_check['entity'][abs(who_check['diff_prop']) > 5].tolist()
+who_plot = who_both[who_both['entity'].isin(entities_to_plot)]
+
+
+# %%
+plt.figure(figsize=(20, 20), facecolor="white")
+
+# plot numbering starts at 1, not 0
+plot_number = 1
+for countryname, selection in who_plot.groupby("entity"):
+    # Inside of an image that's a 15x13 grid, put this
+    # graph in the in the plot_number slot.
+    ax = plt.subplot(12,12, plot_number)
+    selection_who_2015 = selection[selection["source"] == "who_2015"]
+    selection_who_2019 = selection[selection["source"] == "who_2019"]
+    if selection_who_2015.shape[0] > 0:
+        selection_who_2015.plot(
+            x="year",
+            y="maternal_mortality_rate",
+            ax=ax,
+            label=countryname,
+            legend=False,
+        )
+    if selection_who_2019.shape[0] > 0:
+        selection_who_2019.plot(
+            x="year",
+            y="maternal_mortality_rate",
+            ax=ax,
+            label=countryname,
+            legend=False,
+        )
+    ax.set_title(countryname)
+    # Go to the next plot for the next loop
+    plot_number = plot_number + 1
+plt.tight_layout()
+
+
+# %% [markdown]
+# A list of countries where we consider the trend between the two WHO vintages to be improbable and therefore we will exclude the earlier years of these countries, using only the most recent WHO data. 
+
+# %%
+
+entities_to_chop = ['Afghanistan', 'Albania', 'Bahamas','Bahrain', 'Belarus', 'Belize', 'Benin', 'Botswana', 'Brunei', 'Cameroon', 'Cape Verde', 'Comoros', 'Congo',
+'Democratic Republic of Congo', 'Djibouti', 'Equatorial Guinea', 'Eritrea', 'Eswatini', 'Ethiopia','Fiji','Gabon','Georgia','Grenada','Guatemala','Guinea-Bissau','Guyana','Haiti',
+'Honduras','Iraq','Jamaica','Kenya','Kiribati','Kuwait','Lebanon','Liberia','Libya','Malawi','Malaysia','Maldives','Malta','Mauritius','Moldova','Morocco', 'Mozambique','Myanmar','Nicaragua',
+'North Korea', 'Papua New Guinea', 'Paraguay','Philippines','Puerto Rico', 'Qatar','Rwansa','Saint Lucia', 'Sao Tome and Principe','Senegal','Serbia','Singapore', 'Solomon Islands', 'Somalia', 'South Africa',
+'South Sudan', 'Sudan', 'Suriname','Syria', 'Thailand', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkmenistan', 'Uganda', 'United Arab Emirates', 'Uzbekistan','Venezuela','Vietnam', 'Yemen' ]
+
+
+who_clean = who_both.drop(who_both[(who_both['entity'].isin(entities_to_chop)) & (who_both['source'] == 'who_2015')].index)
+who_clean['source'] = 'who'
+
+# %% [markdown]
+# Combine the three remaining datasets 
+
+# %%
+df = pd.concat([df_gap, who_clean, oecd_df], ignore_index=True)
 df["year"] = df["year"].astype(int)
-df
+df[(df['entity'] == 'Denmark') & (df['year']> 1940) & (df['year']<  1980)]
 
-
-# %% [markdown]
-# Get the first years data from WHO and the last years data from GapMinder - to compare the values when the source changes.
-#
-
-# %%
-df_gap.sort_values(by=["entity", "year"], inplace=True)
-df_gap_gr = df_gap.groupby("entity")
-who_df.sort_values(by=["entity", "year"], inplace=True)
-who_df_gr = who_df.groupby("entity")
-
-first_last_df = (
-    pd.concat([who_df_gr.head(1), df_gap_gr.tail(1)])
-    .drop_duplicates()
-    .reset_index(drop=True)
-    .dropna()
-)
-
-# %% [markdown]
-# We want to look at countries which feature in both datasets.
-#
-
-# %%
-df_c = first_last_df.entity.value_counts()
-first_last_df = first_last_df[
-    first_last_df.entity.isin(df_c.index[df_c.gt(1)])
-].sort_values(by=["entity", "year"], ascending=[True, False])
-
-# %%
-df_dup = df[(df.entity.isin(first_last_df.entity)) & (df.year >= 1970)]
 
 
 # %% [markdown]
-# Plotting time-series of the data from 1985 onwards. GapMinder is shown in orange, WHO is shown in blue and OECD n green.
+# Find countries where there are values from more than one source i.e. there are duplicate country-year rows.
+
+# %%
+dup_ents = df['entity'][df.duplicated(subset=['entity', 'year'])].drop_duplicates()
+
+# %%
+df_dup = df[(df.entity.isin(dup_ents)) & (df.year >= 1950)]
+
+
+
+# %% [markdown]
+# Plotting time-series of the data from 1985 onwards. GapMinder is shown in orange, WHO is shown in blue and OECD in green.
 #
 
 # %%
@@ -401,45 +503,36 @@ for countryname, selection in df_dup.groupby("entity"):
     plot_number = plot_number + 1
 plt.tight_layout()
 
-# %%
-#%%[markdown]
-# ## Cleaning geographic entities
-# We don't want to include all of the available regions in the data as it is difficult for us to define them clearly, so we drop out a selection here.
-entities_to_drop = [
-    "Africa Eastern and Southern",
-    "Africa Western and Central",
-    "Arab World",
-    "Early-demographic dividend",
-    "East Asia & Pacific (excluding high income)",
-    "East Asia & Pacific (IDA & IBRD countries)",
-    "Euro area",
-    "Europe & Central Asia (excluding high income)",
-    "Europe & Central Asia (IDA & IBRD countries)",
-    "Fragile and conflict affected situations",
-    "Heavily indebted poor countries (HIPC)",
-    "IBRD only",
-    "IDA & IBRD total",
-    "IDA blend",
-    "IDA only",
-    "IDA total",
-    "Late-demographic dividend",
-    "Latin America & Caribbean (excluding high income)",
-    "Latin America & the Caribbean (IDA & IBRD countries)",
-    "Least developed countries: UN classification",
-    "Middle East & North Africa (excluding high income)",
-    "Middle East & North Africa (IDA & IBRD countries)",
-    "Not classified",
-    "Other small states",
-    "Pacific island small states",
-    "Post-demographic dividend",
-    "Pre-demographic dividend",
-    "Small states",
-    "South Asia (IDA & IBRD)",
-    "Sub-Saharan Africa (excluding high income)",
-    "Sub-Saharan Africa (IDA & IBRD countries)",
-]
+# %% [markdown]
+# The jump in the Sri Lanka trend is odd - we will drop the Gapminder data for this entity. 
 
-df = df[~df["entity"].isin(entities_to_drop)]
-df = df.dropna()
-df = df[["entity", "year", "maternal_mortality_rate"]]
-df.to_csv("data/output/maternal_mortality_rate.csv", index=False)
+# %%
+df = df.drop(df[(df["entity"] == "Sri Lanka") & (df["source"] == "gapminder")].index)
+
+# %% [markdown]
+# From 1980 onwards we will preferentially use the OECD data. Here we remove the necessary rows. 
+#
+
+# %%
+no_dups_df = df[~df.duplicated(subset=['entity', 'year'],keep= False)]
+keep_gap = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.year < 1980) & (df.source != 'oecd')]
+keep_oecd = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.year >= 1980)& (df.source != 'gapminder')]
+df_clean = pd.concat([no_dups_df, keep_gap, keep_oecd], ignore_index=True)
+
+# %%
+df[df['entity'] == "Denmark"]
+
+# %% [markdown]
+# Check that there are no country-year duplicates in the final dataset and do some checks that the data doesn't have any unexpected NAs in it. 
+
+# %%
+assert df_clean[(df_clean.duplicated(subset=['entity', 'year']))].shape[0] == 0
+assert df_clean['entity'].isna().sum() == 0
+assert df_clean['year'].isna().sum() == 0
+assert df_clean['maternal_mortality_rate'].isna().sum() == 0
+
+# %%
+df_clean['maternal_mortality_rate'] = df_clean['maternal_mortality_rate'].astype(float)
+df_clean['maternal_mortality_rate'] = round(df_clean['maternal_mortality_rate'], 2)
+df_clean = df_clean[["entity", "year", "maternal_mortality_rate"]]
+df_clean.to_csv("data/output/maternal_mortality_rate.csv", index=False)
