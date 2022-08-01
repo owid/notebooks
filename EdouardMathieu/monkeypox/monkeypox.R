@@ -6,7 +6,7 @@ library(purrr)
 library(dplyr)
 library(tidyr)
 library(lubridate)
-setwd('Documents/OWID/repos/notebooks/EdouardMathieu/monkeypox/')
+
 aggregate <- function(df, case_type, date_type, pop) {
   stopifnot(date_type %in% c("confirmation", "entry"))
   stopifnot(case_type %in% c("all", "confirmed"))
@@ -69,8 +69,6 @@ df_gh <- df_gh %>%
   select(cols)
 
 df <- rbind(df_gs, df_gh)
-
-
 
 setDT(df)
 
