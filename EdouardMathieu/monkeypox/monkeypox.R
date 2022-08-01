@@ -68,31 +68,15 @@ aggregate <- function(df, date_type, pop) {
   return(df)
 }
 
-cols <- c("Country", "Status", "Date_confirmation")
-
-# Import main data from Google Sheets
-gs4_deauth()
-df_gs <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0") %>% 
-  select(cols)
-
-### Get the endemic countries data from github - for cases after 6th May 2022
-df_gh <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv")
-# Select data that isn't US has either date entry or date confirmed after may 6th 2022.
-df_gh <- df_gh %>%
-  filter(Date_confirmation >= "2022-05-06") %>% 
-  filter(!Country %in% df_gs$Country) %>% 
-  select(cols)
-
-# Bind spreadsheet and GitHub files
-df <- rbind(df_gs, df_gh) %>%
-  filter(!is.na(Status), !is.na(Country))
-
-# Keep confirmed cases only
-stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error", "suspected")))
-df <- df %>%
+# Import all data from GitHub
+# The GitHub repo is updated after quality checks have run on the Google sheet, so sometimes data
+# is delayed by a day (usually few hours) while the issues are fixed.
+# G.H recommends using the GitHub repo as that has passed QC checks.
+df <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv") %>%
+  filter(Date_confirmation >= "2022-05-06") %>%
   filter(Status == "confirmed") %>%
-  select(Status, Country, Date_confirmation) %>%
-  rename(status = Status, location = Country)
+  filter(!is.na(Country)) %>%
+  select(status = Status, location = Country, Date_confirmation)
 
 # Entity cleaning
 country_mapping <- read_csv("country_mapping.csv")
