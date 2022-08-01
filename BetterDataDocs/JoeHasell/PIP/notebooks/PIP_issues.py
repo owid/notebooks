@@ -95,7 +95,7 @@ df_p10_survey = pd.read_csv(request_url)
 #Then compare – say for Botswansa – inequality changes over the interpolation. 
 
 #%%
-# Note: region aggregates return incorrect/broken headcount data when requesting povshare.
+# Note: region aggregates return incorrect/broken headcount data when requesting popshare.
 
 
 #%%
