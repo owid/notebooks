@@ -21,10 +21,6 @@ aggregate <- function(df, case_type, date_type, pop) {
   df <- df[, .N, c("location", "date")]
   df <- rbindlist(list(df, world), use.names = T)
   
-  # Check date format
-  df$date <- strftime(as.Date(df$date, format="%Y-%m-%d"), format="%Y-%m-%d")
-  df$date <-as.Date(df$date, "%Y-%m-%d")
-  
   # Fill missing dates with 0 for all countries
   date <- seq(min(df$date), max(df$date), by = "1 day")
   location <- unique(df$location)
@@ -57,30 +53,31 @@ aggregate <- function(df, case_type, date_type, pop) {
   return(df)
 }
 
-# read in data from github but replace USA data with Google Sheets
 cols <- c("Country", "Status", "Date_entry", "Date_confirmation")
 
-df <- read.csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
+gs4_deauth()
+df_gs <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0") %>% 
+  select(cols)
+
+### Get the endemic countries data from github - for cases after 6th May 2022
+df_gh <- read.csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
 # Select data that isn't US has either date entry or date confirmed after may 6th 2022.
-df <- df %>%
-  filter(Date_entry >= as.Date("2022-05-06") & Date_confirmation >= as.Date("2022-05-06"))
-#  mutate(Date_entry = as.Date(Date_entry), Date_confirmation = as.Date(Date_confirmation)) %>% 
-#  filter(Country != "United States") %>% 
+df_gh <- df_gh %>%
+  mutate(Date_entry = as.Date(Date_entry), Date_confirmation = as.Date(Date_confirmation)) %>% 
+  filter(Date_entry >= as.Date("2022-05-06") & Date_confirmation >= as.Date("2022-05-06")) %>% 
+  filter(!Country %in% df_gs$Country) %>% 
+  select(cols)
 
-#  select(cols)
+df <- rbind(df_gs, df_gh)
 
-#gs4_deauth()
-#df_usa <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0")
-#df_usa <- df_usa %>% filter(Country == "United States") %>% select(cols)
 
-#df <- rbind(df, df_usa)
 
 setDT(df)
-df <- df[!is.na(df$Status) & !is.na(df$Country),]
 
-# removed suspected from this group
-stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error")))
-df <- df[!df$Status %in% c("discarded", "omit_error"),]
+df <- df[!is.na(Status) & !is.na(Country)]
+
+stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error", "suspected")))
+df <- df[!Status %in% c("discarded", "omit_error")]
 
 df <- df[, c("Status", "Country", "Date_entry", "Date_confirmation")]
 setnames(df, c("Status", "Country"), c("status", "location"))
@@ -103,8 +100,8 @@ pop <- fread(
   showProgress = FALSE
 )
 
-pop_martinique <- data.frame(location = "Martinique", population = 374743)
-pop <- rbind(pop, pop_martinique)
+pop_missing <- data.frame(location = c("Martinique", "Guadeloupe"), population = c(374743,400013))
+pop <- rbind(pop, pop_missing)
 
 dataframes <- list(
   aggregate(df, "confirmed", "confirmation", pop),
@@ -114,11 +111,8 @@ dataframes <- list(
 
 df <- reduce(dataframes, full_join, by = c("location", "date"))
 
-#df <- df[as.Date(df$date) >= as.Date("2022-05-07"),]
 df[, date := date(date)]
 df <- df[date < today()]
 setorder(df, location, date)
 
-fwrite(df, "owid-monkeypox-data-gh.csv")
-
-
+fwrite(df, "owid-monkeypox-data.csv")
