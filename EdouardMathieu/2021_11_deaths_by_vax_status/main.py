@@ -4,7 +4,7 @@ import epiweeks
 import pandas as pd
 
 
-SOURCE_USA = "https://data.cdc.gov/api/views/d6p8-wqjm/rows.csv?accessType=DOWNLOAD"
+SOURCE_USA = "https://data.cdc.gov/api/views/ukww-au2k/rows.csv?accessType=DOWNLOAD"
 SOURCE_CHL = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto89/incidencia_en_vacunados_edad.csv"
 SOURCE_ENG = "input/referencetable2.xlsx"
 SOURCE_CHE = "https://www.covid19.admin.ch/api/data/context"
@@ -21,13 +21,15 @@ def process_usa(source: str):
             "age_group": "Entity",
             "crude_unvax_ir": "unvaccinated",
             "crude_vax_ir": "fully_vaccinated",
-            "crude_booster_ir": "boosted",
+            "crude_one_booster_ir": "one_booster",
+            "crude_two_booster_ir": "two_boosters",
         }
     )
 
-    df.loc[df.Entity == "all_ages", "unvaccinated"] = df.age_adj_unvax_ir
-    df.loc[df.Entity == "all_ages", "fully_vaccinated"] = df.age_adj_vax_ir
-    df.loc[df.Entity == "all_ages", "boosted"] = df.age_adj_booster_ir
+    df.loc[df.Entity == "all_ages_adj", "unvaccinated"] = df.age_adj_unvax_ir
+    df.loc[df.Entity == "all_ages_adj", "fully_vaccinated"] = df.age_adj_vax_ir
+    df.loc[df.Entity == "all_ages_adj", "one_booster"] = df.age_adj_one_booster_ir
+    df.loc[df.Entity == "all_ages_adj", "two_boosters"] = df.age_adj_two_booster_ir
 
     df = df.assign(Week=df.mmwr_week.mod(100), Year=df.mmwr_week.div(100).astype(int))
     df["Year"] = df.apply(epiweek_to_date, system="cdc", axis=1)
@@ -38,11 +40,12 @@ def process_usa(source: str):
             "Year",
             "unvaccinated",
             "fully_vaccinated",
-            "boosted",
+            "one_booster",
+            "two_boosters",
         ]
     ]
 
-    df["Entity"] = df.Entity.replace({"all_ages": "All ages"})
+    df["Entity"] = df.Entity.replace({"all_ages_adj": "All ages"})
 
     df.to_csv(
         "output/COVID-19 - Deaths by vaccination status - United States.csv",
