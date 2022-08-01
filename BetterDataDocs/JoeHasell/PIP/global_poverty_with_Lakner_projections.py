@@ -150,18 +150,18 @@ values
 
 # %%
 df_stacked = pd.concat([df_flourish, values], axis=1)
-cols = {
+
+cols_dict = {
     0: "Sub-Saharan Africa",
     1: "South Asia",
     2: "Rest of the world",
     3: "Middle East & North Africa",
     4: "Latin America & Caribbean",
     5: "Europe & Central Asia",
-    6: "East Asia & Pacific",
+    6: "East Asia & Pacific"
 }
 
-
-df_stacked = df_stacked.rename(columns=cols)
+df_stacked = df_stacked.rename(columns=cols_dict)
 df_stacked = df_stacked.rename(columns = {'label': 'year',
                                          'filter': 'c19_estimation',
                                          })
@@ -176,10 +176,13 @@ replace_strings = {
 df_stacked['c19_estimation'] = df_stacked['c19_estimation'].replace(replace_strings)
 
 df_stacked = pd.melt(df_stacked, id_vars=['c19_estimation', 'year'],
-                     value_vars=["Sub-Saharan Africa", "South Asia",
-                                 "Rest of the world", "Middle East & North Africa",
-                                 "Latin America & Caribbean","Europe & Central Asia",
-                                 "East Asia & Pacific"],
+                     value_vars=["Rest of the world",
+                                "Sub-Saharan Africa", 
+                                "Middle East & North Africa",
+                                "South Asia",
+                                "Latin America & Caribbean",
+                                "East Asia & Pacific",
+                                "Europe & Central Asia"],
                     var_name='region', value_name='pop_poverty')
 
 df_stacked['year'] = df_stacked['year'].astype(int)
