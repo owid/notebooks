@@ -76,7 +76,7 @@ df_gs <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJT
   select(cols)
 
 ### Get the endemic countries data from github - for cases after 6th May 2022
-df_gh <- read_csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
+df_gh <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv")
 # Select data that isn't US has either date entry or date confirmed after may 6th 2022.
 df_gh <- df_gh %>%
   filter(Date_confirmation >= "2022-05-06") %>% 
@@ -87,6 +87,7 @@ df_gh <- df_gh %>%
 df <- rbind(df_gs, df_gh) %>%
   filter(!is.na(Status), !is.na(Country))
 
+# Keep confirmed cases only
 stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error", "suspected")))
 df <- df %>%
   filter(Status == "confirmed") %>%
