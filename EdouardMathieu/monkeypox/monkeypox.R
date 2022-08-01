@@ -1,116 +1,124 @@
 rm(list = ls())
 library(googlesheets4)
 library(plyr)
-library(data.table)
+library(readr)
 library(purrr)
 library(dplyr)
 library(tidyr)
 library(lubridate)
+library(data.table)
 
-aggregate <- function(df, case_type, date_type, pop) {
-  stopifnot(date_type %in% c("confirmation", "entry"))
-  stopifnot(case_type %in% c("all", "confirmed"))
+aggregate <- function(df, date_type, pop) {
+  stopifnot(date_type %in% c("confirmation"))
   
-  if (case_type == "confirmed") df <- df[status == "confirmed"]
-  
-  setnames(df, sprintf("Date_%s", date_type), "date")
-  df <- df[!is.na(date), c("location", "date")]
-  
-  world <- df[, .N, "date"]
-  world[, location := "World"]
-  df <- df[, .N, c("location", "date")]
-  df <- rbindlist(list(df, world), use.names = T)
+  col_name <- sprintf("Date_%s", date_type)
+  df <- df %>%
+    rename(date := {{col_name}}) %>%
+    filter(!is.na(date)) %>%
+    select(location, date)
+
+  world <- df %>%
+    group_by(date) %>%
+    count() %>%
+    mutate(location = "World")
+  df <- df %>%
+    group_by(location, date) %>%
+    count()
+  df <- rbind(df, world)
   
   # Fill missing dates with 0 for all countries
   date <- seq(min(df$date), max(df$date), by = "1 day")
   location <- unique(df$location)
-  df_range <- data.table(crossing(date, location))
-  df <- merge(df, df_range, by = c("location", "date"), all = T)
-  df[, N := nafill(N, fill = 0)]
+  df_range <- data.frame(crossing(date, location))
+  df <- full_join(df, df_range, by = c("location", "date")) %>%
+    mutate(n = replace_na(n, 0))
   
   # Add 7-day average
-  setorder(df, date)
-  df[, rolling_avg := round(frollmean(N, 7), 2), location]
+  df <- df %>%
+    arrange(date) %>%
+    group_by(location) %>%
+    mutate(rolling_avg = round(frollmean(n, 7), 2))
   
   # Add cumulative version
-  df[, cumulative := cumsum(N), location]
-  
+  df <- df %>%
+    group_by(location) %>%
+    mutate(cumulative = cumsum(n))
+
   # Add per-capita metrics
-  df <- merge(df, pop, by = "location", all.x = TRUE)
+  df <- left_join(df, pop, by = "location")
   stopifnot(all(!is.na(df$population)))
-  df[, N_pm := round(N * 1000000 / population, 3)]
-  df[, cumulative_pm := round(cumulative * 1000000 / population, 3)]
-  df[, rolling_avg_pm := round(rolling_avg * 1000000 / population, 3)]
-  df[, population := NULL]
-  
+  df <- df %>%
+    mutate(
+      n_pm = round(n * 1000000 / population, 3),
+      cumulative_pm = round(cumulative * 1000000 / population, 3),
+      rolling_avg_pm = round(rolling_avg * 1000000 / population, 3)
+    ) %>%
+    select(-population)
+
+  # Rename columns
+  metric <- mapvalues(date_type, c("confirmation"), c("cases"))
+  col_names <- sprintf(c("new_%s", "total_%s", "new_%s_smoothed"), metric)
+  col_names_pm <- col_names %>% paste0("_per_million")
   setnames(
     df,
-    c("N", "cumulative", "rolling_avg", "N_pm", "cumulative_pm", "rolling_avg_pm"),
-    c(sprintf("%s_%s_by_%s", c("daily", "total", "7day"), case_type, date_type),
-      sprintf("%s_%s_by_%s_per_million", c("daily", "total", "7day"), case_type, date_type))
+    c("n", "cumulative", "rolling_avg", "n_pm", "cumulative_pm", "rolling_avg_pm"),
+    c(col_names, col_names_pm)
   )
   
   return(df)
 }
 
-cols <- c("Country", "Status", "Date_entry", "Date_confirmation")
+cols <- c("Country", "Status", "Date_confirmation")
 
+# Import main data from Google Sheets
 gs4_deauth()
 df_gs <- read_sheet("https://docs.google.com/spreadsheets/d/1CEBhao3rMe-qtCbAgJTn5ZKQMRFWeAeaiXFpBY3gbHE/edit#gid=0") %>% 
   select(cols)
 
 ### Get the endemic countries data from github - for cases after 6th May 2022
-df_gh <- read.csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
+df_gh <- read_csv('https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv')
 # Select data that isn't US has either date entry or date confirmed after may 6th 2022.
 df_gh <- df_gh %>%
-  mutate(Date_entry = as.Date(Date_entry), Date_confirmation = as.Date(Date_confirmation)) %>% 
-  filter(Date_entry >= as.Date("2022-05-06") & Date_confirmation >= as.Date("2022-05-06")) %>% 
+  filter(Date_confirmation >= "2022-05-06") %>% 
   filter(!Country %in% df_gs$Country) %>% 
   select(cols)
 
-df <- rbind(df_gs, df_gh)
-
-setDT(df)
-
-df <- df[!is.na(Status) & !is.na(Country)]
+# Bind spreadsheet and GitHub files
+df <- rbind(df_gs, df_gh) %>%
+  filter(!is.na(Status), !is.na(Country))
 
 stopifnot(all(sort(unique(df$Status)) == c("confirmed", "discarded", "omit_error", "suspected")))
-df <- df[!Status %in% c("discarded", "omit_error")]
-
-df <- df[, c("Status", "Country", "Date_entry", "Date_confirmation")]
-setnames(df, c("Status", "Country"), c("status", "location"))
+df <- df %>%
+  filter(Status == "confirmed") %>%
+  select(Status, Country, Date_confirmation) %>%
+  rename(status = Status, location = Country)
 
 # Entity cleaning
-country_mapping <- fread("country_mapping.csv")
-df <- merge(df, country_mapping, all.x = TRUE, on = "location")
+country_mapping <- read_csv("country_mapping.csv")
+df <- left_join(df, country_mapping, by = "location")
 if (any(is.na(df$new))) {
   stop("Missing location mapping", cat(df[is.na(new), unique(location)], sep = "\n"))
 }
-df[, location := NULL]
-setnames(df, "new", "location")
-setcolorder(df, "location")
+df <- df %>%
+  select(-location) %>%
+  rename(location = new) %>%
+  relocate(location)
 
 # Population data
-pop <- fread(
+pop <- read_csv(
   "https://github.com/owid/covid-19-data/raw/master/scripts/input/un/population_latest.csv",
-  select = c("entity", "population"),
-  col.names = c("location", "population"),
-  showProgress = FALSE
-)
-
-pop_missing <- data.frame(location = c("Martinique", "Guadeloupe"), population = c(374743,400013))
-pop <- rbind(pop, pop_missing)
+  col_select = c("entity", "population")
+) %>%
+  rename(location = entity)
 
 dataframes <- list(
-  aggregate(df, "confirmed", "confirmation", pop),
-  aggregate(df, "confirmed", "entry", pop),
-  aggregate(df, "all", "entry", pop)
+  aggregate(df, "confirmation", pop)
 )
 
-df <- reduce(dataframes, full_join, by = c("location", "date"))
+df <- reduce(dataframes, full_join, by = c("location", "date")) %>%
+  mutate(date = date(date)) %>%
+  filter(date < today()) %>%
+  relocate(location, date) %>%
+  arrange(location, date)
 
-df[, date := date(date)]
-df <- df[date < today()]
-setorder(df, location, date)
-
-fwrite(df, "owid-monkeypox-data.csv")
+write_csv(df, "owid-monkeypox-data.csv", na = "")
