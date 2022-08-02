@@ -9,7 +9,7 @@ library(lubridate)
 library(data.table)
 
 aggregate <- function(df, date_type, pop) {
-  stopifnot(date_type %in% c("confirmation"))
+  stopifnot(date_type %in% c("confirmation", "death"))
   
   col_name <- sprintf("Date_%s", date_type)
   df <- df %>%
@@ -56,7 +56,11 @@ aggregate <- function(df, date_type, pop) {
     select(-population)
 
   # Rename columns
-  metric <- mapvalues(date_type, c("confirmation"), c("cases"))
+  metric <- mapvalues(
+    date_type, warn_missing = FALSE,
+    c("confirmation", "death"),
+    c("cases", "deaths")
+  )
   col_names <- sprintf(c("new_%s", "total_%s", "new_%s_smoothed"), metric)
   col_names_pm <- col_names %>% paste0("_per_million")
   setnames(
@@ -74,12 +78,11 @@ aggregate <- function(df, date_type, pop) {
 # G.H recommends using the GitHub repo as that has passed QC checks.
 df <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv",
                show_col_types = FALSE, progress = FALSE)
-stopifnot(!"Date_death" %in% names(df))
 df <- df %>%
   filter(Date_confirmation >= "2022-05-06") %>%
   filter(Status == "confirmed") %>%
   filter(!is.na(Country)) %>%
-  select(status = Status, location = Country, Date_confirmation)
+  select(status = Status, location = Country, Date_confirmation, Date_death)
 
 # Entity cleaning
 country_mapping <- read_csv("country_mapping.csv", show_col_types = FALSE, progress = FALSE)
@@ -100,7 +103,8 @@ pop <- read_csv(
   rename(location = entity)
 
 dataframes <- list(
-  aggregate(df, "confirmation", pop)
+  aggregate(df, "confirmation", pop),
+  aggregate(df, "death", pop)
 )
 
 df <- reduce(dataframes, full_join, by = c("location", "date")) %>%
