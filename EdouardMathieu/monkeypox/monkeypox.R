@@ -72,7 +72,8 @@ aggregate <- function(df, date_type, pop) {
 # The GitHub repo is updated after quality checks have run on the Google sheet, so sometimes data
 # is delayed by a day (usually few hours) while the issues are fixed.
 # G.H recommends using the GitHub repo as that has passed QC checks.
-df <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv")
+df <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv",
+               show_col_types = FALSE)
 stopifnot(!"Date_death" %in% names(df))
 df <- df %>%
   filter(Date_confirmation >= "2022-05-06") %>%
@@ -81,10 +82,10 @@ df <- df %>%
   select(status = Status, location = Country, Date_confirmation)
 
 # Entity cleaning
-country_mapping <- read_csv("country_mapping.csv")
+country_mapping <- read_csv("country_mapping.csv", show_col_types = FALSE)
 df <- left_join(df, country_mapping, by = "location")
 if (any(is.na(df$new))) {
-  stop("Missing location mapping", cat(df[is.na(new), unique(location)], sep = "\n"))
+  stop("Missing location mapping", cat(df %>% filter(is.na(new)) %>% pull(unique(location)), sep = "\n"))
 }
 df <- df %>%
   select(-location) %>%
@@ -94,7 +95,7 @@ df <- df %>%
 # Population data
 pop <- read_csv(
   "https://github.com/owid/covid-19-data/raw/master/scripts/input/un/population_latest.csv",
-  col_select = c("entity", "population")
+  col_select = c("entity", "population"), show_col_types = FALSE
 ) %>%
   rename(location = entity)
 
