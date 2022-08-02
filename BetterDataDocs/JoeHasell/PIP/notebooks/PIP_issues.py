@@ -2,15 +2,75 @@
 # # PIP issues
 # This document is to find issues in the data extracted with World Bank's PIP query
 
+# %% [markdown]
+# ## Imports and functions from *functions* folder
+
 # %%
 import pandas as pd
 import numpy as np
-
-from functions.PIP_API_query import pip_query_country, pip_query_region
-from functions.standardize_entities import standardize_entities
-from functions.upload import upload_to_s3
-
 import time
+
+
+# %%
+def pip_query_country(popshare_or_povline, value, country_code="all", year="all", fill_gaps="true", welfare_type="all", reporting_level="all"):
+
+    # Build query
+    request_url = f'https://api.worldbank.org/pip/v1/pip?{popshare_or_povline}={value}&country={country_code}&year={year}&fill_gaps={fill_gaps}&welfare_type={welfare_type}&reporting_level={reporting_level}&format=csv'
+
+    df = pd.read_csv(request_url)
+
+    return df
+
+
+# %%
+# For world regions, the popshare query is not available (or rather, it returns nonsense).
+def pip_query_region(povline, year="all"):
+
+    # Build query
+    request_url = f'https://api.worldbank.org/pip/v1/pip-grp?povline={povline}&year={year}&group_by=wb&format=csv'
+
+    df = pd.read_csv(request_url)
+
+    return df
+
+
+# %%
+def standardize_entities(orig_df,
+                        entity_mapping_url,
+                        mapping_varname_raw,
+                        mapping_vaname_owid,
+                        data_varname_old,
+                        data_varname_new):
+
+
+    # Read in mapping table which maps PWT names onto OWID names.
+    df_mapping = pd.read_csv(entity_mapping_url)
+
+    # Merge in mapping to raw
+    df_harmonized = pd.merge(orig_df,df_mapping,
+      left_on=data_varname_old,right_on=mapping_varname_raw, how='left')
+    
+    # Drop the old entity names column, and the matching column from the mapping file
+    df_harmonized = df_harmonized.drop(columns=[data_varname_old, mapping_varname_raw])
+    
+    # Rename the new entity column
+    df_harmonized = df_harmonized.rename(columns={mapping_vaname_owid:data_varname_new})
+
+    # Move the entity column to front:
+
+    # get a list of columns
+    cols = list(df_harmonized)
+    
+    # move the country column to the first in the list of columns
+    cols.insert(0, cols.pop(cols.index(data_varname_new)))
+    
+    # reorder the columns of the dataframe according to the list
+    df_harmonized = df_harmonized.loc[:, cols]
+
+    return df_harmonized
+
+# %% [markdown]
+# ## Generating the data
 
 # %% [markdown]
 # The code to extract the data is replicated here:
@@ -116,10 +176,6 @@ for p in poverty_lines_cents:
 end_time = time.time()
 elapsed_time = end_time - start_time
 print('Execution time:', elapsed_time, 'seconds')
-
-# %% [markdown]
-# ## Percentage on different poverty lines do not add up to 100%
-# For each country-year the total number of people below, between and over multiple poverty lines are estimated to create a stacked chart with the distribution of income/consumption of the population. It is important then that these numbers add together to the total population (the aggregated percentage is 100%)
 
 # %%
 # Create different combinations of dataframe from df_complete
@@ -246,39 +302,70 @@ for i in range(len(poverty_lines_cents)):
 cols = col_ids + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct
 df_final = df_final[cols]
 
-df_final['sum_pct'] = df_final[col_stacked_pct].sum(axis=1)
-df_not_1 = df_final[(df_final['sum_pct'] >= 1.00000001) | (df_final['sum_pct'] <= 0.99999999)].copy().reset_index(drop=True)
+# %% [markdown]
+# ## Missing and zero values
+
+# %%
+cols_to_check = col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct
+
+df_null = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
+df_null
+
+# %%
+# Count number of zeros in all columns of Dataframe
+for column_name in cols_to_check:
+    column = df_null[column_name]
+    # Get the count of Zeros in column 
+    count = (column.isnull()).sum()
+    print('Count of zeros in column ', column_name, ' is : ', count)
+
+# %%
+df_zero = df_final[(df_final[cols_to_check] == 0).any(1)].reset_index(drop=True)
+df_zero
+
+# %%
+# Count number of zeros in all columns of Dataframe
+for column_name in cols_to_check:
+    column = df_zero[column_name]
+    # Get the count of Zeros in column 
+    count = (column == 0).sum()
+    print('Count of zeros in column ', column_name, ' is : ', count)
+
+# %% [markdown]
+# ## Percentage on different poverty lines do not add up to 100%
+# For each country-year the total number of people below, between and over multiple poverty lines are estimated to create a stacked chart with the distribution of income/consumption of the population. It is important then that these numbers add together to the total population (the aggregated percentage is 100%)
 
 # %% [markdown]
 # There are two countries with issues on several years. **Guinea-Bissau**'s total for the years 1981-1992 is less than 1 (around 0.7). In the table we can see why: there are no estimation of poor people living below \\$5.5 or any higher poverty line. A similar case happens with **Sierra Leone**, but with less impact: 1999 and 2001 show totals very close to 1, but there is a tiny fraction of people not considered because the query does not generate results for people earning less than \\$40 a day. As this number is very close to 1 we consider to only exclude the Guinea-Bissau cases.
 
 # %%
+df_final['sum_pct'] = df_final[col_stacked_pct].sum(axis=1)
+df_not_1 = df_final[(df_final['sum_pct'] >= 1.00000001) | (df_final['sum_pct'] <= 0.99999999)].copy().reset_index(drop=True)
 df_not_1
 
 # %% [markdown]
-# Note this is the dataset including both survey and inter/extrapolated data, as we can see here by querying again
+# Note this is the dataset including both survey and inter/extrapolated data, as we can see here by querying again. Only Guinea-Bissau data from 1991 is from a survey, all the other 13 rows with issues come from filled data.
 
 # %%
 df = pip_query_country(
                     popshare_or_povline = "povline", 
                     value = 1.9, 
                     fill_gaps='false')
+df[(df['country_name'] == 'Sierra Leone') | (df['country_name'] == 'Guinea-Bissau')][['country_name', 'reporting_year', 'reporting_level', 'welfare_type', 'estimation_type']]
 
 # %% [markdown]
-# Only Guinea-Bissau data from 1991 is from a survey, all the other 13 rows with issues come from filled data.
-
-# %%
-df[(df['country_name'] == 'Sierra Leone') | (df['country_name'] == 'Guinea-Bissau')][['country_name', 'reporting_year', 'estimation_type']]
-
-# %% [markdown]
-# ## Monotonicity in headcount poverty
+# ## Monotonicity checks
+# ###  Headcount poverty
 #
 # As poverty lines increase, the number of people below these poverty lines should increase as well. Let's see if that's the case
 
 # %%
+m_check_vars = []
 for i in range(len(col_headcount)):
     if i > 0:
-        df_final[f'm_check_{i}'] = df_final[f'{col_headcount[i]}'] >= df_final[f'{col_headcount[i-1]}']
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = df_final[f'{col_headcount[i]}'] >= df_final[f'{col_headcount[i-1]}']
+        m_check_vars.append(check_varname)
 
 
 # %% [markdown]
@@ -293,10 +380,89 @@ df_check = df_final[(df_final['m_check_1'] == False)
         | (df_final['m_check_6'] == False)
         | (df_final['m_check_7'] == False)
         ].copy()
-df_check
+df_check[['entity', 'year'] + m_check_vars]
 
 # %%
-df_check.to_csv('hoa.csv')
+print('Percentage of errors for each variable')
+(len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
+
+# %% [markdown]
+# This is because for Croatia there are not headcount values for the \\$5.5 poverty line for years between 1981 and 1988. Guinea Bissau and Sierra Leone cases are the same considered for the stacked variables in the previous section and the UAE situation is the strangest of the group: the headcount below the \\$10 poverty line is one order of magnitude greater than the headcount below \\$20
+
+# %%
+df_check[['entity', 'year'] + col_headcount]
+
+# %% [markdown]
+# Only Croatia-1988, UAE-2018 and Guinea-Bissau 1991 come from survey data. The other 21 rows come from filled data. This is the same situation for the headcount ratio, poverty gap and total shortfall variables.
+
+# %%
+df = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = 1.9, 
+                    fill_gaps='false')
+df[(df['country_name'] == 'Croatia') |(df['country_name'] == 'United Arab Emirates')][['country_name', 'reporting_year', 'reporting_level', 'welfare_type', 'estimation_type']]
+
+# %% [markdown]
+# ### Average shortfall
+# With this variable there are much more monotonicity issues: 1349 observations are affected (*though I am not sure monotonicity should exist*)
+
+# %%
+m_check_vars = []
+for i in range(len(col_avg_shortfall)):
+    if i > 0:
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = df_final[f'{col_avg_shortfall[i]}'] >= df_final[f'{col_avg_shortfall[i-1]}']
+        m_check_vars.append(check_varname)
+
+
+# %%
+df_check = df_final[(df_final['m_check_1'] == False) 
+        | (df_final['m_check_2'] == False)
+        | (df_final['m_check_3'] == False)
+        | (df_final['m_check_4'] == False)
+        | (df_final['m_check_5'] == False)
+        | (df_final['m_check_6'] == False)
+        | (df_final['m_check_7'] == False)
+        ].copy()
+df_check[['entity', 'year'] + m_check_vars]
+
+# %%
+print('Percentage of errors for each variable')
+(len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
+
+# %%
+df_check[['entity', 'year'] + col_avg_shortfall]
+
+# %% [markdown]
+# ### Income gap ratio
+# With this variable there are even more monotonicity issues: 3630 observations are affected (*though I am not sure monotonicity should exist*)
+
+# %%
+m_check_vars = []
+for i in range(len(col_incomegap)):
+    if i > 0:
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = df_final[f'{col_incomegap[i]}'] >= df_final[f'{col_incomegap[i-1]}']
+        m_check_vars.append(check_varname)
+
+
+# %%
+df_check = df_final[(df_final['m_check_1'] == False) 
+        | (df_final['m_check_2'] == False)
+        | (df_final['m_check_3'] == False)
+        | (df_final['m_check_4'] == False)
+        | (df_final['m_check_5'] == False)
+        | (df_final['m_check_6'] == False)
+        | (df_final['m_check_7'] == False)
+        ].copy()
+df_check[['entity', 'year'] + m_check_vars]
+
+# %%
+print('Percentage of errors for each variable')
+(len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
+
+# %%
+df_check[['entity', 'year'] + col_incomegap]
 
 # %%
 # For world regions, the popshare query is not available (or rather, it returns nonsense).
