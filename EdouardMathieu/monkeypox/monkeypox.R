@@ -72,7 +72,9 @@ aggregate <- function(df, date_type, pop) {
 # The GitHub repo is updated after quality checks have run on the Google sheet, so sometimes data
 # is delayed by a day (usually few hours) while the issues are fixed.
 # G.H recommends using the GitHub repo as that has passed QC checks.
-df <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv") %>%
+df <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv")
+stopifnot(!"Date_death" %in% names(df))
+df <- df %>%
   filter(Date_confirmation >= "2022-05-06") %>%
   filter(Status == "confirmed") %>%
   filter(!is.na(Country)) %>%
