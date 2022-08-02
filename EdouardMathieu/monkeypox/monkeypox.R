@@ -99,8 +99,8 @@ pop <- read_csv(
   rename(location = entity)
 
 dataframes <- list(
-  aggregate(df, pop, "confirmation", "cases"),
-  aggregate(df, pop, "death", "deaths")
+  aggregate(df, pop, date_type = "confirmation", metric_name = "cases"),
+  aggregate(df, pop, date_type = "death", metric_name = "deaths")
 )
 
 df <- reduce(dataframes, full_join, by = c("location", "date")) %>%
