@@ -16,7 +16,7 @@ def multiply_by_100(number):
             return 100 * number
 
 # Here we define the poverty lines to query as cents
-poverty_lines_cents = [100, 190, 320, 550, 1000, 1500, 2000, 3000, 4000]
+poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
 
 # %%
 #Create a dataframe for each poverty line on the list, including and excluding interpolations and for countries and regions
@@ -101,7 +101,8 @@ for p in poverty_lines_cents:
             # executing the function over list of vars
             var_list = ['headcount_ratio', 'income_gap_ratio', 'poverty_gap_index' ]
 
-            df[var_list] = df[var_list].apply(multiply_by_100)  
+            #df[var_list] = df[var_list].apply(multiply_by_100)
+            df.loc[:, var_list] = df[var_list] * 100
 
 
             # Add poverty line as a var (I add the '_' character, because it being treated as a float later on was causing headaches)
@@ -200,6 +201,14 @@ for is_filled in ['true', 'false']:
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
             
+    df_final.loc[:, col_stacked_pct] = df_final[col_stacked_pct] * 100
+            
+    print(f'{len(df_final)} rows before stacked values check (Filled: {is_filled})')
+    df_final['sum_pct'] = df_final[col_stacked_pct].sum(axis=1)
+    #df_final = df_final[df_final['sum_pct'] == 1].reset_index(drop=True)
+    df_final = df_final[~((df_final['sum_pct'] >= 100.1) | (df_final['sum_pct'] <= 99.9))].reset_index(drop=True)
+    print(f'{len(df_final)} rows before stacked values check (Filled: {is_filled})')
+            
 
     # Standardize entity names
     df_final = standardize_entities(
@@ -279,3 +288,5 @@ for is_filled in ['true', 'false']:
     #upload_to_s3(df_cons_only, 'PIP', f'poverty_cons_only_filled_{is_filled}.csv')
 
     #upload_to_s3(df_inc_or_cons, 'PIP', f'poverty_inc_or_cons_filled_{is_filled}.csv')
+
+# %%

@@ -1,0 +1,432 @@
+# %% [markdown]
+# # PIP issues
+# This document is to find issues in the data extracted with World Bank's PIP query
+
+# %%
+import pandas as pd
+import numpy as np
+
+from functions.PIP_API_query import pip_query_country, pip_query_region
+from functions.standardize_entities import standardize_entities
+from functions.upload import upload_to_s3
+
+import time
+
+# %% [markdown]
+# The code to extract the data is replicated here:
+
+# %%
+#Create a dataframe for each poverty line on the list, including and excluding interpolations and for countries and regions
+#Each of these combinations are concatenated in a larger data frame.
+
+start_time = time.time()
+
+# Here we define the poverty lines to query as cents
+poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
+
+df_complete = pd.DataFrame()
+
+# Run the API query and clean the response...
+#... for each poverty line
+for p in poverty_lines_cents:
+
+    p_dollar = p/100
+
+    #... for both the interpolated ('filled') data and the survey-year only data
+    for is_filled in ['true', 'false']:
+    
+        #.. and for both countries and WB regional aggregates
+        for ent_type in ['country', 'region']:
+
+            # Make the API query for country data
+            if ent_type == 'country':
+        
+                df = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = p_dollar, 
+                    fill_gaps=is_filled)
+
+                df = df.rename(columns={'country_name': 'entity'})
+                
+                # Keep only these variables:
+                keep_vars = [ 
+                    'entity',
+                    'reporting_year',
+                    'reporting_level',
+                    'welfare_type', 
+                    'headcount',
+                    'poverty_gap',
+                    'reporting_pop'
+                ]
+            
+            # Make the API query for region data
+            # Note that the filled and not filled data is the same in this case .
+            # The code runs it twice anyhow.
+            if ent_type == 'region':
+
+                df = pip_query_region(p_dollar)
+
+                df = df.rename(columns={'region_name': 'entity'})
+
+                keep_vars = [ 
+                    'entity',
+                    'reporting_year',
+                    'headcount',
+                    'poverty_gap',
+                    'reporting_pop'
+                ]
+        
+
+            df = df[keep_vars]
+
+            # rename columns
+            df = df.rename(columns={
+            'headcount':'headcount_ratio',
+            'poverty_gap': 'poverty_gap_index'})
+
+            # Calculate number in poverty
+            df['headcount'] = df['headcount_ratio'] * df['reporting_pop']  
+
+            # Calculate shortfall of incomes
+            df['total_shortfall'] = df['poverty_gap_index'] * p_dollar * df['reporting_pop']                      
+
+            # Calculate average shortfall of incomes (averaged across population in poverty)
+            df['avg_shortfall'] = df['total_shortfall'] / df['headcount']
+
+            # Calculate income gap ratio (according to Ravallion's definition)
+            df['income_gap_ratio'] = (df['total_shortfall'] / df['headcount']) / p_dollar
+
+
+            # Shares to percentages
+            # executing the function over list of vars
+            var_list = ['headcount_ratio', 'income_gap_ratio', 'poverty_gap_index' ]
+
+            #df[var_list] = df[var_list].apply(multiply_by_100)
+            df.loc[:, var_list] = df[var_list] * 100
+
+
+            # Add poverty line as a var (I add the '_' character, because it being treated as a float later on was causing headaches)
+            df['poverty line'] = f'_{p}'
+            df['filled'] = is_filled
+            df['ent_type'] = ent_type
+
+            #Concatenate all the results
+            df_complete = pd.concat([df_complete, df],ignore_index=True)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print('Execution time:', elapsed_time, 'seconds')
+
+# %% [markdown]
+# ## Percentage on different poverty lines do not add up to 100%
+# For each country-year the total number of people below, between and over multiple poverty lines are estimated to create a stacked chart with the distribution of income/consumption of the population. It is important then that these numbers add together to the total population (the aggregated percentage is 100%)
+
+# %%
+# Create different combinations of dataframe from df_complete
+
+# Select data for countries and filled or not
+headcounts_country = df_complete[(df_complete['ent_type'] == 'country') & (df_complete['filled'] == 'true')].reset_index(drop=True)
+
+# Select data for regions and filled or not
+headcounts_region = df_complete[(df_complete['ent_type'] == 'region')  & (df_complete['filled'] == 'true')].reset_index(drop=True)
+
+#Create pivot tables to make the data wide
+headcounts_country_wide = headcounts_country.pivot_table(index=['entity', 'reporting_year','reporting_level','welfare_type'], 
+                columns='poverty line')
+
+headcounts_region_wide = headcounts_region.pivot_table(index=['entity', 'reporting_year'], 
+                columns='poverty line')
+
+#Join multi index columns
+headcounts_country_wide.columns = [''.join(col).strip() for col in headcounts_country_wide.columns.values]
+headcounts_country_wide = headcounts_country_wide.reset_index()
+
+headcounts_region_wide.columns = [''.join(col).strip() for col in headcounts_region_wide.columns.values]
+headcounts_region_wide = headcounts_region_wide.reset_index()
+
+#Concatenate country and regional wide datasets
+df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
+
+#Keep only one reporting_pop variable (multiple columns with the same values were generated for each poverty line)
+for i in range(len(poverty_lines_cents)):
+    if i == 0:
+        df_final.rename(columns={f'reporting_pop_{poverty_lines_cents[i]}': 'reporting_pop'}, inplace=True)
+    else:
+        df_final.drop(columns=[f'reporting_pop_{poverty_lines_cents[i]}'], inplace=True)
+
+#Calculate numbers in poverty between pov lines for stacked area charts
+#Make sure the poverty lines are in order, lowest to highest
+poverty_lines_cents.sort()
+
+col_stacked_n = []
+col_stacked_pct = []
+
+#For each poverty line in poverty_lines_cents
+for i in range(len(poverty_lines_cents)):
+    #if it's the first value only get people below this poverty line (and percentage)
+    if i == 0:
+        varname_n = f'number_below_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'percentage_below_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+
+    #If it's the last value calculate the people between this value and the previous 
+    #and also the people over this poverty line (and percentages)
+    elif i == len(poverty_lines_cents)-1:
+
+        varname_n = f'number_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+
+        varname_n = f'number_over_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{poverty_lines_cents[i]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'percentage_over_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+
+    #If it's any value between the first and the last calculate the people between this value and the previous (and percentage)
+    else:
+        varname_n = f'number_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+        
+# Standardize entity names
+df_final = standardize_entities(
+    orig_df = df_final,
+    entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+    mapping_varname_raw ='Original Name',
+    mapping_vaname_owid = 'Our World In Data Name',
+    data_varname_old = 'entity',
+    data_varname_new = 'entity'
+)
+
+# Amend the entity to reflect if data refers to urban or rural only
+df_final.loc[(\
+    df_final['reporting_level'].isin(["urban", "rural"])),'entity'] = \
+    df_final.loc[(\
+    df_final['reporting_level'].isin(["urban", "rural"])),'entity'] + \
+        ' - ' + \
+    df_final.loc[(\
+    df_final['reporting_level'].isin(["urban", "rural"])),'reporting_level']
+
+# Tidying – Rename cols
+df_final = df_final.rename(columns={'reporting_year': 'year'})
+
+#Order columns by categorising them
+col_ids = ['entity', 'year', 'reporting_level', 'welfare_type', 'reporting_pop']
+col_avg_shortfall = []
+col_headcount = []
+col_headcount_ratio = []
+col_incomegap = []
+col_povertygap = []
+col_tot_shortfall = []
+
+for i in range(len(poverty_lines_cents)):
+    col_avg_shortfall.append(f'avg_shortfall_{poverty_lines_cents[i]}')
+    col_headcount.append(f'headcount_{poverty_lines_cents[i]}')
+    col_headcount_ratio.append(f'headcount_ratio_{poverty_lines_cents[i]}')
+    col_incomegap.append(f'income_gap_ratio_{poverty_lines_cents[i]}')
+    col_povertygap.append(f'poverty_gap_index_{poverty_lines_cents[i]}')
+    col_tot_shortfall.append(f'total_shortfall_{poverty_lines_cents[i]}')
+
+#Concatenate the entire list (including the previously estimated col_stacked_n and col_stacked_pct) and reorder
+cols = col_ids + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct
+df_final = df_final[cols]
+
+df_final['sum_pct'] = df_final[col_stacked_pct].sum(axis=1)
+df_not_1 = df_final[(df_final['sum_pct'] >= 1.00000001) | (df_final['sum_pct'] <= 0.99999999)].copy().reset_index(drop=True)
+
+# %% [markdown]
+# There are two countries with issues on several years. **Guinea-Bissau**'s total for the years 1981-1992 is less than 1 (around 0.7). In the table we can see why: there are no estimation of poor people living below \\$5.5 or any higher poverty line. A similar case happens with **Sierra Leone**, but with less impact: 1999 and 2001 show totals very close to 1, but there is a tiny fraction of people not considered because the query does not generate results for people earning less than \\$40 a day. As this number is very close to 1 we consider to only exclude the Guinea-Bissau cases.
+
+# %%
+df_not_1
+
+# %% [markdown]
+# Note this is the dataset including both survey and inter/extrapolated data, as we can see here by querying again
+
+# %%
+df = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = 1.9, 
+                    fill_gaps='false')
+
+# %% [markdown]
+# Only Guinea-Bissau data from 1991 is from a survey, all the other 13 rows with issues come from filled data.
+
+# %%
+df[(df['country_name'] == 'Sierra Leone') | (df['country_name'] == 'Guinea-Bissau')][['country_name', 'reporting_year', 'estimation_type']]
+
+# %% [markdown]
+# ## Monotonicity in headcount poverty
+#
+# As poverty lines increase, the number of people below these poverty lines should increase as well. Let's see if that's the case
+
+# %%
+for i in range(len(col_headcount)):
+    if i > 0:
+        df_final[f'm_check_{i}'] = df_final[f'{col_headcount[i]}'] >= df_final[f'{col_headcount[i-1]}']
+
+
+# %% [markdown]
+# Croatia, Guinea-Bissau, Sierra Leone and United Arab Emirates show issues:
+
+# %%
+df_check = df_final[(df_final['m_check_1'] == False) 
+        | (df_final['m_check_2'] == False)
+        | (df_final['m_check_3'] == False)
+        | (df_final['m_check_4'] == False)
+        | (df_final['m_check_5'] == False)
+        | (df_final['m_check_6'] == False)
+        | (df_final['m_check_7'] == False)
+        ].copy()
+df_check
+
+# %%
+df_check.to_csv('hoa.csv')
+
+# %%
+# For world regions, the popshare query is not available (or rather, it returns nonsense).
+
+
+# %%
+def p90_10_ratio(select_country, select_year, p90, p10):
+    #Check p90 headcount is extremely close to 90%
+    print(f"In {select_country}, {select_year}:")
+
+    print(f"We see from the 'popshare' query that P90 and P10 were {p90} and {p10}.")
+
+    print(f"P90/P10 raio is: {p90/p10}")
+    
+    print("Let's double check these yield the right headcount ratios (i.e. 90% and 10%)")
+
+    fill_gaps = 'true'
+
+    df_p90 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p90}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+    heacount_p90 = df_p90['headcount'].values[0]
+    print(f"P90 headcount is: {heacount_p90}")
+
+    #Check p10 headcount is extremely close to 10%
+    df_p10 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p10}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+    heacount_p10 = df_p10['headcount'].values[0]
+    print(f"P10 headcount is: {heacount_p10}")
+
+    
+
+# %%
+select_country = "BWA"
+select_year = 1985
+
+p90 = 8.299255
+p10 = 0.731530
+
+p90_10_ratio(select_country,select_year, p90, p10)
+
+# %%
+select_country = "BWA"
+select_year = 2003
+
+p90 = 19.033194
+p10 = 1.021057
+
+p90_10_ratio(select_country,select_year, p90, p10)
+
+# %%
+#Check p90 headcount is extremely close to 90%
+fill_gaps = 'true'
+
+df_p90 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p90}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+p90 = df_p90['headcount'].values[0]
+
+
+
+
+
+
+# %%
+select_country = "BWA"
+select_year = 2003
+
+p90 = 19.868751
+
+# %%
+#Check p90 headcount is extremely close to 90%
+fill_gaps = 'true'
+
+df_p90 = pd.read_csv(f'https://api.worldbank.org/pip/v1/pip?country={select_country}&year={select_year}&povline={p90}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv')
+
+p90 = df_p90['headcount'].values[0]
+
+
+
+
+
+# %%
+df_p90_filled = df_p90_filled[["country_name", "reporting_year"]]
+
+# %%
+fill_gaps = 'false' 
+popshare = '0.90'
+request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&popshare={popshare}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv'
+
+df_p90_survey = pd.read_csv(request_url)
+df_p10_survey = pd.read_csv(request_url)
+
+
+#Then compare – say for Botswansa – inequality changes over the interpolation. 
+
+# %%
+# Note: region aggregates return incorrect/broken headcount data when requesting popshare.
+
+
+# %%
+# Note: distributional data (median, Dini, deciles etc.) are missing for ~2000 rows,
+#  without it being clear why or what the patten is. For instnce Angola in 2000 yes, but 2001 no. 
+# Perhaps something to do with interpolation vs extrpolation
+
+
+# %%
+#Note on negative poverty lines returned by Sierra Leone and El Salvador.
+# For instance, see El Salvador povshare=0.19 in 1981. Or Sierra Leone 
+# poveshare =0.14 in 1990, using the following request
+
+fill_gaps = 'true' 
+popshare = '0.19'
+request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&popshare={popshare}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv'
+
+df = pd.read_csv(request_url)
+
+df[(df['country_name']=='El Salvador') & (df['request_year']==1981)]
+
+
+# %%
+# Monotonicity issues.
+
+# In the filled percentile data (at percentile resolution) it's only Ghana and Guyana.
+
+# In the survey percentile data:
+#Ghana 1987 – headcount= .10
+#Guyana 1992 – headcoutn - .20
+# India 1977 national and rural – headcount - ~.18
+
+# Odd issue with India 1977: the National distribution seems to be (exactly) equal to the Rural distribution.
+df_survey %>% filter(country_name=="India", reporting_year ==1977, requested_p<20, requested_p>15) %>% arrange(reporting_level, headcount)
+
+
+# Sierra Leone in general (filled data) – lots of negative values and lots of monotonicity issues.
