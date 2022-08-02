@@ -8,8 +8,9 @@ library(tidyr)
 library(lubridate)
 library(data.table)
 
-aggregate <- function(df, date_type, pop) {
+aggregate <- function(df, pop, date_type, metric_name) {
   stopifnot(date_type %in% c("confirmation", "death"))
+  stopifnot(metric_name %in% c("cases", "deaths"))
   
   col_name <- sprintf("Date_%s", date_type)
   df <- df %>%
@@ -56,12 +57,7 @@ aggregate <- function(df, date_type, pop) {
     select(-population)
 
   # Rename columns
-  metric <- mapvalues(
-    date_type, warn_missing = FALSE,
-    c("confirmation", "death"),
-    c("cases", "deaths")
-  )
-  col_names <- sprintf(c("new_%s", "total_%s", "new_%s_smoothed"), metric)
+  col_names <- sprintf(c("new_%s", "total_%s", "new_%s_smoothed"), metric_name)
   col_names_pm <- col_names %>% paste0("_per_million")
   setnames(
     df,
@@ -103,8 +99,8 @@ pop <- read_csv(
   rename(location = entity)
 
 dataframes <- list(
-  aggregate(df, "confirmation", pop),
-  aggregate(df, "death", pop)
+  aggregate(df, pop, "confirmation", "cases"),
+  aggregate(df, pop, "death", "deaths")
 )
 
 df <- reduce(dataframes, full_join, by = c("location", "date")) %>%
