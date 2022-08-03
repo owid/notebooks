@@ -28,11 +28,19 @@ aggregate <- function(df, pop, date_type, metric_name) {
   df <- rbind(df, world)
   
   # Fill missing dates with 0 for all countries
-  date <- seq(min(df$date), max(df$date), by = "1 day")
-  location <- unique(df$location)
-  df_range <- data.frame(crossing(date, location))
+  get_loc_range <- function(loc, df) {
+    date <- seq(
+      df %>% filter(location == loc) %>% pull(date) %>% min,
+      df %>% filter(location == loc) %>% pull(date) %>% max,
+      by = "1 day"
+    )
+    return(data.frame(crossing(date, loc)))
+  }
+  df_range <- rbindlist(lapply(unique(df$location), FUN = get_loc_range, df = df)) %>%
+    rename(location = loc)
   df <- full_join(df, df_range, by = c("location", "date")) %>%
-    mutate(n = replace_na(n, 0))
+    mutate(n = replace_na(n, 0)) %>%
+    arrange(date)
   
   # Add 7-day average
   df <- df %>%
