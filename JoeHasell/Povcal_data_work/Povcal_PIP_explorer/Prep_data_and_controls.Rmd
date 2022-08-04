@@ -32,6 +32,27 @@ df <- read.csv("PovcalNetMainDataCountriesOnly.csv", row.names = 1, header = T, 
 
 ```
 
+-----
+Compare original and estimated Ginis
+
+```{r}
+
+df_plot<- df %>%
+  select(Entity, Year, Gini.index, Gini_estimated) %>%
+  rename(Gini_original = Gini.index) %>%
+  pivot_longer(cols = c( Gini_original, Gini_estimated), names_to = "measure", values_to = "value") %>%
+  filter(Entity == "NAM")
+
+
+ggplot(data = df_plot, aes(x=Year, y=value, colour = measure) ) +
+  geom_line() +
+  ggtitle("Original and estimated Gini Coefficient for Botswana from PIP")
+
+```
+
+
+-----
+
 Map 3-letter codes to country names
 ```{r}
 name_mapping <- read.csv("entity_names_three_letter_country_standardized.csv") %>%

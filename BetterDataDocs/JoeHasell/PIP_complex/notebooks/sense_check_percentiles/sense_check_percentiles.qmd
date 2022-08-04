@@ -1,0 +1,140 @@
+---
+format: html
+toc: true
+jupyter:
+  jupytext:
+    formats: 'qmd:quarto,ipynb'
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.13.8
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+# Sense-checking the PIP percentile data
+
+
+In this notebook we take a look at the .
+
+This was obtained by querying the PIP API using the `povshare` parameter to obtain percentile threshold incomes for each percentile (p1 - p99) for each country.
+
+We set `fill_data` parameter to `true`: this is the lined-up data for xxx countries from 1981 - 2019 (except for India, which is to 2017...)
+
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Set-up: load packages'
+#Load packages
+import pandas as pd
+import plotly.express as px
+```
+
+
+
+
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Set-up: read in data'
+
+df = pd.read_csv('API_output/percentiles/all_percentiles.csv')
+
+```
+
+
+When you request, for example, p10 what you get is the 'poverty line' associated with a headcount ratio very very close to that percentile.
+
+But there are some examples where it seems to have misfired.
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Scatter of requested percentile and returned percentile'
+
+fig = px.scatter(df,
+                 x = 'requested_p',
+                 y = 'headcount',
+                 color = 'entity')
+
+fig.show()
+
+
+```
+
+Let's look at those observations where the returned percentile is so distant from the requested percentile that it is 'wrong' to nearest whole percentile.
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Scatter of requested percentile and returned percentile'
+df_check = df.copy()
+
+df_check['diff'] = abs(df_check['requested_p']-df_check['headcount']*100)
+
+df_check = df_check[df_check['diff']>0.5]
+
+
+fig = px.scatter(df_check,
+                 x = 'requested_p',
+                 y = 'headcount',
+                 color = 'entity')
+
+fig.show()
+
+
+```
+
+
+We also see that there are many results that return with `headcount`=0 and `poverty_line`=0.
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Describe p10 results'
+
+df[df['headcount']==0]
+
+
+```
+
+And there are also some results that return negative poverty_lines (see min).
+
+```{python}
+#| code-fold: true
+#| code-summary: 'With El Salvador and Sierra Leone'
+
+df['threshold'].describe()
+
+
+```
+
+These are all in El Salvador and Sierra Leone.
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Without El Salvador and Sierra Leone'
+
+df[~df['entity'].isin(['El Salvador', 'Sierra Leone'])]['threshold'].describe()
+
+
+```
+
+
+
+### Monotonicity
+
+```{python}
+#| code-fold: true
+#| code-summary: 'Without El Salvador and Sierra Leone'
+df_check = df.copy()
+
+df_check = df_check[~df_check['entity'].isin(['El Salvador', 'Sierra Leone'])]
+
+df_check = df_check[df_check['headcount']!=0]
+
+check_mono = df_check.sort_values('headcount',ascending=True).groupby(['entity','year'])['threshold'].is_monotonic_increasing.reset_index()
+
+check_mono[check_mono['threshold']==False]
+```
+

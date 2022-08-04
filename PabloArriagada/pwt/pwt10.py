@@ -300,7 +300,7 @@
 
 # **Real GDP per capita (expenditure-side) in 1960**
 # <br>
-# *rgdpe_60*
+# *gdppc_e_1960*
 # <br>
 # This is the real GDP per capita (expenditure-side) (*gdppc_e*) for the year 1960.
 
@@ -410,13 +410,19 @@ pwt10['gdppc_o'] = pwt10['rgdpo']/pwt10['pop']
 pwt10['gdppc_e'] = pwt10['rgdpe']/pwt10['pop']
 # -
 
-# An interative calculation is necessary to create the `rgdpe_60`. This is the **real GDP per capita (expenditure-side) in 1960**. It is then `gdppc_e` value for each country in 1960.
+# ~~An interative calculation is necessary to create the `gdppc_e_1960`. This is the **real GDP per capita (expenditure-side) in 1960**. It is then `gdppc_e` value for each country in 1960.~~
 
-for i in range(len(pwt10)): #runs for the entire length of th dataframe
-    country = pwt10['countrycode'][i] #gets the country from row i
-    #gets GDP_E from 1960 and the country I calculated in the previous row:
-    gdp60_country = pwt10.loc[(pwt10['countrycode'] == country) & (pwt10['year'] == 1960), 'gdppc_e'].iloc[0]
-    pwt10.loc[i,'rgdpe_60'] = gdp60_country #assigns the 1960 GDP value from "country" to every year for that country
+# +
+# for i in range(len(pwt10)): #runs for the entire length of th dataframe
+#     country = pwt10['countrycode'][i] #gets the country from row i
+#     #gets gdppc_e from 1960 and the country I calculated in the previous row:
+#     gdp60_country = pwt10.loc[(pwt10['countrycode'] == country) & (pwt10['year'] == 1960), 'gdppc_e'].iloc[0]
+#     pwt10.loc[i,'gdppc_e_1960'] = gdp60_country #assigns the 1960 GDP value from "country" to every year for that country
+# -
+
+# To create the `gdppc_e_1960`, the **real GDP per capita (expenditure-side) in 1960**, all the `gdppc_e` values from 1960 are assigned to this new variable.
+
+pwt10['gdppc_e_1960'] = pwt10.loc[pwt10['year'] == 1960, 'gdppc_e']
 
 # The variable `gdppc_o_yearbefore` is the **GDP per capita (output-side) lagged by one year**. This variable will be useful for the estimation of `rgdpo_growth`, the average growth between 1960 and 2019.
 
@@ -542,22 +548,27 @@ pwt10_owid.columns
 # OWID's v9.1 consists in every variable kept from the original dataset but `currency_unit` and the newly created variables, so this code removes the auxiliar variables used to create others and the ones that came from the national accounts file:
 
 pwt10_owid.drop(['exp_usd', 'gdp_usd', 'gdppc_o_yearbefore', 'imp_usd', 'gdppc_o_growth_count', 'v_gdp', 'v_m', 'v_x', 
-                 'world_exports', 'world_gdp', 'world_imports', 'xr2'], axis = 1)
+                 'world_exports', 'world_gdp', 'world_imports', 'xr2'], axis = 1, inplace=True)
 
 # There are two more variables in v10.0 compared to v9.1, because both `countrycode` and `currency_unit` are kept for reference.
 
-# The file is saved to use the [Country Standardizer Tool](https://owid.cloud/admin/standardize) from OWID.
+# The country names are formatted following the [Country Standardizer Tool](https://owid.cloud/admin/standardize) from OWID. The tool provides with a new variable called `Our World In Data Name`, which is OWID's standardisation applied.
 
-file = Path('data/pwt10_owid_beforestd.csv')
-pwt10_owid.to_csv(file, index=False)
+file = Path('data/country_standardization_mapping.csv')
+std_mapping = pd.read_csv(file)
+pwt10_owid = pd.merge(pwt10_owid, std_mapping, left_on='country', right_on='Original Name', how='left')
+pwt10_owid.drop(['Original Name'], axis = 1, inplace=True)
+pwt10_owid.loc[(pwt10_owid['country'] == 'World'), 'Our World In Data Name'] = 'World' #"World" is not available in the dictionary
 
-# The tool provides with a new variable called `Our World In Data Name`, which is OWID's standardisation applied.
-
-pwt10_path = Path('data/pwt10_owid_country_standardized.csv')
-pwt10_owid = pd.read_csv(pwt10_path)
-pwt10_owid
-
+# +
 pwt10_owid = pwt10_owid.rename(columns={'Our World In Data Name': 'entity'}) #To keep variable name from v9.1
+
+#Moving 'entity' to the first column
+first_column = pwt10_owid.pop('entity')
+pwt10_owid.insert(0, 'entity', first_column)
+
+pwt10_owid.drop(['countrycode', 'country', 'currency_unit'], axis = 1, inplace=True) #Removing old country identifiers
+# -
 
 file = Path('data/pwt10_owid.csv')
 pwt10_owid.to_csv(file, index=False)
@@ -590,7 +601,7 @@ pwt910_owid[['gdppc_e',
 
 # **Real GDP per capita in 1960 at chained PPPs** statistics for PWT 9.1 and PWT 10.0:
 
-pwt910_owid[['rgdpe_60',
+pwt910_owid[['gdppc_e_1960',
             'Real GDP per capita in 1960 at chained PPPs in 2011 US$ (PWT 9.1 (2019))']].describe()
 
 # **Average real GDP per capita growth 1960-2017 (2019), chained PPPs** statistics for PWT 9.1 and PWT 10.0:
@@ -621,7 +632,7 @@ pwt910_owid['gdppc_o_vs'] = pwt910_owid['gdppc_o']/pwt910_owid['Output-side real
 
 pwt910_owid['gdppc_e_vs'] = pwt910_owid['gdppc_e']/pwt910_owid['Expenditure-side real GDP per capita (gdppc_e) (PWT 9.1 (2019))']
 
-pwt910_owid['rgdpe_60_vs'] = pwt910_owid['rgdpe_60']/pwt910_owid['Real GDP per capita in 1960 at chained PPPs in 2011 US$ (PWT 9.1 (2019))']
+pwt910_owid['gdppc_e_1960_vs'] = pwt910_owid['gdppc_e_1960']/pwt910_owid['Real GDP per capita in 1960 at chained PPPs in 2011 US$ (PWT 9.1 (2019))']
 
 pwt910_owid['productivity_vs'] = pwt910_owid['productivity']/pwt910_owid['Productivity (PWT 9.1 (2019))']
 
@@ -707,15 +718,15 @@ fig.show()
 # **Real GDP per capita in 1960 (expenditure-side)** compared by country:
 
 # +
-fig = px.scatter(pwt910_owid_0, x="rgdpe_60", y="rgdpe_60_vs", 
+fig = px.scatter(pwt910_owid_0, x="gdppc_e_1960", y="gdppc_e_1960_vs", 
                  hover_data=['entity'], opacity=0.5, color='entity', 
                  title="Real GDP per capita in 1960 at chained PPPs comparison: PWT 9.1 vs PWT 10.0",
                  log_x=True,
                  log_y=True,
                  height=600,
                 labels={
-                     "rgdpe_60": "1960 Real GDP per capita PPP (PWT 10.0)",
-                     "rgdpe_60_vs": "PWT 10.0 / PWT 9.1 (1 = same value)",
+                     "gdppc_e_1960": "1960 Real GDP per capita PPP (PWT 10.0)",
+                     "gdppc_e_1960_vs": "PWT 10.0 / PWT 9.1 (1 = same value)",
                      "entity": "Country",
                  })
 
@@ -910,7 +921,3 @@ pwt9_10 = pd.concat([pwt9, pwt10], ignore_index=True)
 # - hc
 # - xr (with outlier)
 # - statcap
-
-
-
-

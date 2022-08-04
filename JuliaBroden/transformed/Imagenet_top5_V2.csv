@@ -1,0 +1,18 @@
+Entity,Year,Top5_accuracy,Imagenet_extra_training_data
+Alexnet,2012,0.846,Without Extra Training Data
+Overfeat - 7 accurate models,2013,0.868,Without Extra Training Data
+Vgg-19,2014,0.92,Without Extra Training Data
+Inception v3,2015,0.944,Without Extra Training Data
+"Inception resnet v2 + multi-crop, multi-scale",2016,0.963,Without Extra Training Data
+Nasnet-a(6),2017,0.962,Without Extra Training Data
+Resnext-101 32x16d,2018,0.972,Without Extra Training Data
+Advprop (efficientnet-b8),2019,0.973,Without Extra Training Data
+Fixefficientnet-b8,2020,0.976,Without Extra Training Data
+Nfnet-f6 w/ sam,2021,0.979,Without Extra Training Data
+Alexnet - 7cnns + imagenet 2011 pretrain,2012,0.846,With Extra Training Data
+Resnet-101,2015,0.9395,With Extra Training Data
+Jft-300m finetuning,2017,0.947,With Extra Training Data
+Resnext-101 32x48d,2018,0.976,With Extra Training Data
+Bit-l (resnet),2019,0.9846,With Extra Training Data
+Noisystudent (efficientnet-l2),2020,0.987,With Extra Training Data
+Florence-coswim-h,2021,0.9902,With Extra Training Data
