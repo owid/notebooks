@@ -46,11 +46,12 @@ for p in poverty_lines_cents:
                     value = p_dollar, 
                     fill_gaps=is_filled)
 
-                df = df.rename(columns={'country_name': 'entity'})
+                #"Entity" when is in titlecase is automatically recognised as EntityName
+                df = df.rename(columns={'country_name': 'Entity'})
                 
                 # Keep only these variables:
                 keep_vars = [ 
-                    'entity',
+                    'Entity',
                     'reporting_year',
                     'reporting_level',
                     'welfare_type', 
@@ -66,10 +67,10 @@ for p in poverty_lines_cents:
 
                 df = pip_query_region(p_dollar)
 
-                df = df.rename(columns={'region_name': 'entity'})
+                df = df.rename(columns={'region_name': 'Entity'})
 
                 keep_vars = [ 
-                    'entity',
+                    'Entity',
                     'reporting_year',
                     'headcount',
                     'poverty_gap',
@@ -129,10 +130,10 @@ for is_filled in ['true', 'false']:
     headcounts_region = df_complete[(df_complete['ent_type'] == 'region')  & (df_complete['filled'] == is_filled)].reset_index(drop=True)
 
     #Create pivot tables to make the data wide
-    headcounts_country_wide = headcounts_country.pivot_table(index=['entity', 'reporting_year','reporting_level','welfare_type'], 
+    headcounts_country_wide = headcounts_country.pivot_table(index=['Entity', 'reporting_year','reporting_level','welfare_type'], 
                     columns='poverty line')
 
-    headcounts_region_wide = headcounts_region.pivot_table(index=['entity', 'reporting_year'], 
+    headcounts_region_wide = headcounts_region.pivot_table(index=['Entity', 'reporting_year'], 
                     columns='poverty line')
 
     #Join multi index columns
@@ -216,24 +217,25 @@ for is_filled in ['true', 'false']:
         entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
         mapping_varname_raw ='Original Name',
         mapping_vaname_owid = 'Our World In Data Name',
-        data_varname_old = 'entity',
-        data_varname_new = 'entity'
+        data_varname_old = 'Entity',
+        data_varname_new = 'Entity'
     )
 
     # Amend the entity to reflect if data refers to urban or rural only
     df_final.loc[(\
-        df_final['reporting_level'].isin(["urban", "rural"])),'entity'] = \
+        df_final['reporting_level'].isin(["urban", "rural"])),'Entity'] = \
         df_final.loc[(\
-        df_final['reporting_level'].isin(["urban", "rural"])),'entity'] + \
+        df_final['reporting_level'].isin(["urban", "rural"])),'Entity'] + \
             ' - ' + \
         df_final.loc[(\
         df_final['reporting_level'].isin(["urban", "rural"])),'reporting_level']
 
     # Tidying – Rename cols
-    df_final = df_final.rename(columns={'reporting_year': 'year'})
+    #Year is only recognised as a Year type when titlecase
+    df_final = df_final.rename(columns={'reporting_year': 'Year'})
     
     #Order columns by categorising them
-    col_ids = ['entity', 'year', 'reporting_level', 'welfare_type', 'reporting_pop']
+    col_ids = ['Entity', 'Year', 'reporting_level', 'welfare_type', 'reporting_pop']
     col_avg_shortfall = []
     col_headcount = []
     col_headcount_ratio = []
@@ -262,8 +264,8 @@ for is_filled in ['true', 'false']:
 
     # Flag duplicates – indicating multiple welfare_types
     #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
-    df_inc_or_cons.sort_values(by=['entity', 'year', 'reporting_level', 'welfare_type'], ignore_index=True)
-    df_inc_or_cons['duplicate_flag'] = df_inc_or_cons.duplicated(subset=['entity', 'year', 'reporting_level'])
+    df_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True)
+    df_inc_or_cons['duplicate_flag'] = df_inc_or_cons.duplicated(subset=['Entity', 'Year', 'reporting_level'])
 
     print(f'Checking the filled = {is_filled} data for years with both income and consumption. Before dropping duplicated, there were {len(df_inc_or_cons)} rows...')
     # Drop income where income and consumption are available
