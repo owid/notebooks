@@ -558,10 +558,17 @@ for i in col_headcount:
                   title=f'Variable: <b>{i}, world</b>', template='none', height=450)
     fig.show()
 
+# %% [markdown]
+# For a more direct comparison we calculate the ratio between the headcount aggregate for countries or regions and the World aggregate provided by the World Bank.
+
 # %%
+#Generate dataframes for each level of aggregation
 df_countries = df_final[df_final['entity'].isin(countries)].copy().reset_index(drop=True)
 df_regions = df_final[df_final['entity'].isin(regions)].copy().reset_index(drop=True)
 df_world = df_final[df_final['entity'].isin(world)].copy().reset_index(drop=True)
+
+# %% [markdown]
+# We can see the countries aggregations for headcount in different poverty lines are fairly similar to the world aggregation: the countries aggregation ranges between 97.5% and 99%, concentrated mostly around 98%. Similar situation happens with the total shortfall.
 
 # %%
 df_countries_year = df_countries.groupby(['year']).sum().reset_index()
@@ -577,8 +584,11 @@ df_world_year = pd.melt(df_world_year, id_vars=['year', 'entity'], value_vars=co
 df_world_comparison = pd.merge(df_countries_year,df_world_year, on=['year','headcount_name'])
 df_world_comparison['ratio'] = df_world_comparison['headcount_value_x'] / df_world_comparison['headcount_value_y']
 
-fig = px.line(df_world_comparison, x="year", y="ratio", color="headcount_name", title='Countries aggregations vs. World')
+fig = px.line(df_world_comparison, x="year", y="ratio", color="headcount_name", title='<b>Headcount</b>: Countries aggregations vs. World')
 fig.show()
+
+# %% [markdown]
+# Regional aggregations are a different story. The missing data for South Asia and Sub Saharan Africa makes the aggregations less reliable: ranging from 55-70% to almost 100% of the world aggregation. We recommend to not use the regional aggregations together without any transformation. Similar situation happens with the total shortfall.
 
 # %%
 df_regions_year = df_regions.groupby(['year']).sum().reset_index()
@@ -594,7 +604,7 @@ df_world_year = pd.melt(df_world_year, id_vars=['year', 'entity'], value_vars=co
 df_world_comparison = pd.merge(df_regions_year,df_world_year, on=['year','headcount_name'])
 df_world_comparison['ratio'] = df_world_comparison['headcount_value_x'] / df_world_comparison['headcount_value_y']
 
-fig = px.line(df_world_comparison, x="year", y="ratio", color="headcount_name", title='Regional aggregation vs. World')
+fig = px.line(df_world_comparison, x="year", y="ratio", color="headcount_name", title='<b>Headcount</b>: Regional aggregation vs. World')
 fig.show()
 
 # %%
