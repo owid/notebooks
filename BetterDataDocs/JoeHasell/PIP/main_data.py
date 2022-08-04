@@ -8,13 +8,7 @@ from functions.upload import upload_to_s3
 
 import time
 
-
 # %%
-
-# function for multiplying by 100
-def multiply_by_100(number):
-            return 100 * number
-
 # Here we define the poverty lines to query as cents
 poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
 
@@ -164,11 +158,11 @@ for is_filled in ['true', 'false']:
     for i in range(len(poverty_lines_cents)):
         #if it's the first value only get people below this poverty line (and percentage)
         if i == 0:
-            varname_n = f'number_below_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_below_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
             
@@ -176,29 +170,29 @@ for is_filled in ['true', 'false']:
         #and also the people over this poverty line (and percentages)
         elif i == len(poverty_lines_cents)-1:
             
-            varname_n = f'number_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
             
-            varname_n = f'number_over_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_above_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{poverty_lines_cents[i]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_over_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_above_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
         
         #If it's any value between the first and the last calculate the people between this value and the previous (and percentage)
         else:
-            varname_n = f'number_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
             
