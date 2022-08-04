@@ -1,4 +1,4 @@
-Entity,Year,Number_ai_publications_by_field
+Entity,Year,Number_ai_publications
 Other AI,2010,69408
 Pattern recognition,2010,23285
 Computer vision,2010,17454
@@ -8,7 +8,7 @@ Natural language processing,2010,7313
 Data mining,2010,6761
 Control theory,2010,6193
 Machine learning,2010,5999
-Human‚Äìcomputer interaction,2010,5408
+Human-computer interaction,2010,5408
 Other AI,2011,73973
 Pattern recognition,2011,24195
 Computer vision,2011,18414
@@ -18,7 +18,7 @@ Natural language processing,2011,6969
 Control theory,2011,6618
 Data mining,2011,6529
 Machine learning,2011,6373
-Human‚Äìcomputer interaction,2011,5983
+Human-computer interaction,2011,5983
 Other AI,2012,76148
 Pattern recognition,2012,25539
 Computer vision,2012,19341
@@ -28,7 +28,7 @@ Natural language processing,2012,7825
 Machine learning,2012,6916
 Data mining,2012,6770
 Control theory,2012,6630
-Human‚Äìcomputer interaction,2012,5975
+Human-computer interaction,2012,5975
 Other AI,2013,79208
 Pattern recognition,2013,26843
 Computer vision,2013,19930
@@ -38,7 +38,7 @@ Natural language processing,2013,7803
 Machine learning,2013,7566
 Control theory,2013,6992
 Data mining,2013,6986
-Human‚Äìcomputer interaction,2013,6425
+Human-computer interaction,2013,6425
 Other AI,2014,82500
 Pattern recognition,2014,28784
 Computer vision,2014,20292
@@ -48,7 +48,7 @@ Natural language processing,2014,8665
 Machine learning,2014,8371
 Data mining,2014,7389
 Control theory,2014,7177
-Human‚Äìcomputer interaction,2014,6532
+Human-computer interaction,2014,6532
 Other AI,2015,83266
 Pattern recognition,2015,28965
 Computer vision,2015,20291
@@ -58,7 +58,7 @@ Machine learning,2015,9335
 Natural language processing,2015,8562
 Data mining,2015,7317
 Control theory,2015,6849
-Human‚Äìcomputer interaction,2015,6802
+Human-computer interaction,2015,6802
 Other AI,2016,83874
 Pattern recognition,2016,29733
 Computer vision,2016,18766
@@ -68,7 +68,7 @@ Natural language processing,2016,8909
 Linguistics,2016,8810
 Data mining,2016,7346
 Control theory,2016,6955
-Human‚Äìcomputer interaction,2016,6781
+Human-computer interaction,2016,6781
 Other AI,2017,89373
 Pattern recognition,2017,32603
 Computer vision,2017,19296
@@ -76,7 +76,7 @@ Machine learning,2017,13706
 Algorithm,2017,12538
 Natural language processing,2017,9017
 Data mining,2017,7705
-Human‚Äìcomputer interaction,2017,7499
+Human-computer interaction,2017,7499
 Linguistics,2017,7449
 Control theory,2017,7206
 Other AI,2018,101591
@@ -86,7 +86,7 @@ Machine learning,2018,19072
 Algorithm,2018,14314
 Natural language processing,2018,10979
 Data mining,2018,9203
-Human‚Äìcomputer interaction,2018,8352
+Human-computer interaction,2018,8352
 Control theory,2018,7618
 Linguistics,2018,6912
 Other AI,2019,121111
@@ -96,7 +96,7 @@ Computer vision,2019,23597
 Algorithm,2019,16404
 Natural language processing,2019,12463
 Data mining,2019,11839
-Human‚Äìcomputer interaction,2019,9533
+Human-computer interaction,2019,9533
 Control theory,2019,8284
 Linguistics,2019,6803
 Other AI,2020,137272
@@ -106,7 +106,7 @@ Computer vision,2020,24099
 Algorithm,2020,17212
 Natural language processing,2020,13989
 Data mining,2020,13333
-Human‚Äìcomputer interaction,2020,9672
+Human-computer interaction,2020,9672
 Control theory,2020,8311
 Linguistics,2020,7227
 Other AI,2021,147147
@@ -116,6 +116,6 @@ Computer vision,2021,24798
 Algorithm,2021,18296
 Data mining,2021,15268
 Natural language processing,2021,13433
-Human‚Äìcomputer interaction,2021,9703
+Human-computer interaction,2021,9703
 Control theory,2021,8451
 Linguistics,2021,5783
