@@ -9,6 +9,9 @@
 import pandas as pd
 import numpy as np
 import time
+import plotly.express as px
+import plotly.io as pio
+pio.renderers.default='jupyterlab+png+colab+notebook_connected+vscode'
 
 
 # %%
@@ -513,6 +516,86 @@ print('Percentage of errors for each variable')
 
 # %%
 df_check[['entity', 'year'] + col_incomegap]
+
+# %% [markdown]
+# ## Aggregation of data
+# This section shows how countries and regions aggregations are compared to the world aggregation.
+
+# %%
+#Defining the different aggregations
+world = ['World']
+
+regions = ['East Asia and Pacific', 
+           'Europe and Central Asia',
+           'Latin America and the Caribbean', 
+           'Middle East and North Africa', 
+           'South Asia', 
+           'Sub-Saharan Africa']
+
+high_income = ['High income countries']
+
+redundant_countries = ['China - urban', 
+                       'China - rural', 
+                       'India - urban', 
+                       'India - rural', 
+                       'Indonesia - urban',
+                       'Indonesia - rural']
+
+countries = list(set(list(df_final['entity'].unique())) - set(regions) - set(world) - set(high_income) - set(redundant_countries))
+
+# %% [markdown]
+# On a first visual inspection we can see a big bump in the headcount data between 1988 and 1989, mainly driven by China. Another bump in 1998 is driven by Indonesia. There is missing headcount data for South Asia between 1997 and 2001 and in Sub Saharan Africa before 1990, but it seems not to be affected for the world aggregation.
+
+# %%
+for i in col_headcount:
+    fig = px.area(df_final[df_final['entity'].isin(countries)], x="year", y=i, color="entity",
+                  title=f'Variable: <b>{i}, countries</b>', template='none', height=450)
+    fig.show()
+    fig = px.area(df_final[df_final['entity'].isin(regions)], x="year", y=i, color="entity",
+                  title=f'Variable: <b>{i}, regions</b>', template='none', height=450)
+    fig.show()
+    fig = px.area(df_final[df_final['entity'].isin(world)], x="year", y=i, color="entity",
+                  title=f'Variable: <b>{i}, world</b>', template='none', height=450)
+    fig.show()
+
+# %%
+df_countries = df_final[df_final['entity'].isin(countries)].copy().reset_index(drop=True)
+df_regions = df_final[df_final['entity'].isin(regions)].copy().reset_index(drop=True)
+df_world = df_final[df_final['entity'].isin(world)].copy().reset_index(drop=True)
+
+# %%
+df_countries_year = df_countries.groupby(['year']).sum().reset_index()
+df_countries_year['entity'] = "World (countries)"
+df_countries_year = df_countries_year[['entity', 'year'] + col_headcount]
+df_countries_year = pd.melt(df_countries_year, id_vars=['year', 'entity'], value_vars=col_headcount,
+                            var_name='headcount_name', value_name='headcount_value')
+
+df_world_year = df_world[['entity', 'year'] + col_headcount]
+df_world_year = pd.melt(df_world_year, id_vars=['year', 'entity'], value_vars=col_headcount,
+                            var_name='headcount_name', value_name='headcount_value')
+
+df_world_comparison = pd.merge(df_countries_year,df_world_year, on=['year','headcount_name'])
+df_world_comparison['ratio'] = df_world_comparison['headcount_value_x'] / df_world_comparison['headcount_value_y']
+
+fig = px.line(df_world_comparison, x="year", y="ratio", color="headcount_name", title='Countries aggregations vs. World')
+fig.show()
+
+# %%
+df_regions_year = df_regions.groupby(['year']).sum().reset_index()
+df_regions_year['entity'] = "World (regions)"
+df_regions_year = df_regions_year[['entity', 'year'] + col_headcount]
+df_regions_year = pd.melt(df_regions_year, id_vars=['year', 'entity'], value_vars=col_headcount,
+                            var_name='headcount_name', value_name='headcount_value')
+
+df_world_year = df_world[['entity', 'year'] + col_headcount]
+df_world_year = pd.melt(df_world_year, id_vars=['year', 'entity'], value_vars=col_headcount,
+                            var_name='headcount_name', value_name='headcount_value')
+
+df_world_comparison = pd.merge(df_regions_year,df_world_year, on=['year','headcount_name'])
+df_world_comparison['ratio'] = df_world_comparison['headcount_value_x'] / df_world_comparison['headcount_value_y']
+
+fig = px.line(df_world_comparison, x="year", y="ratio", color="headcount_name", title='Regional aggregation vs. World')
+fig.show()
 
 # %%
 # For world regions, the popshare query is not available (or rather, it returns nonsense).
