@@ -29,11 +29,8 @@ aggregate <- function(df, pop, date_type, metric_name) {
   
   # Fill missing dates with 0 for all countries
   get_loc_range <- function(loc, df) {
-    date <- seq(
-      df %>% filter(location == loc) %>% pull(date) %>% min,
-      df %>% filter(location == loc) %>% pull(date) %>% max,
-      by = "1 day"
-    )
+    dates <- df %>% filter(location == loc) %>% pull(date)
+    date <- seq(min(dates), max(dates), by = "1 day")
     return(data.frame(crossing(date, loc)))
   }
   df_range <- rbindlist(lapply(unique(df$location), FUN = get_loc_range, df = df)) %>%
