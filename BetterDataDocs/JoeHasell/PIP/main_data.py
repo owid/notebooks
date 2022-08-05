@@ -285,4 +285,111 @@ for is_filled in ['true', 'false']:
 
     #upload_to_s3(df_inc_or_cons, 'PIP', f'poverty_inc_or_cons_filled_{is_filled}.csv')
 
+# %% [markdown]
+# ## Relative poverty
+
+# %%
+df = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = 1.9, 
+                    fill_gaps="true")
+
+# %%
+df.columns
+
+# %%
+df[['median']].describe()
+
+# %%
+df['median_40'] = df['median'] * 0.4
+df['median_50'] = df['median'] * 0.5
+df['median_60'] = df['median'] * 0.6
+
+# %%
+df.to_csv('complete.csv')
+
+# %%
+import numpy as np
+
+my_list = []
+for i in range(len(df)):
+
+    df_query = pip_query_country(popshare_or_povline = "povline",
+                                 country_code = df['country_code'][i],
+                                 year = df['reporting_year'][i],
+                                 welfare_type = df['welfare_type'][i],
+                                 reporting_level = df['reporting_level'][i],
+                                 value = df['median_40'][i],
+                                 fill_gaps="true")
+    try:
+        headcount_value = df_query['headcount'][0]
+        my_list.append(headcount_value)
+    except:
+        my_list.append(np.nan)
+    
+
+# %%
+my_list
+
+# %%
+import numpy as np
+
+headcount_40_list = []
+headcount_50_list = []
+headcount_60_list = []
+
+for i in range(len(df)):
+
+    df_query_40 = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = df['country_code'][i],
+                                    year = df['reporting_year'][i],
+                                    welfare_type = df['welfare_type'][i],
+                                    reporting_level = df['reporting_level'][i],
+                                    value = df['median_40'][i],
+                                    fill_gaps="true")
+    
+    df_query_50 = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = df['country_code'][i],
+                                    year = df['reporting_year'][i],
+                                    welfare_type = df['welfare_type'][i],
+                                    reporting_level = df['reporting_level'][i],
+                                    value = df['median_50'][i],
+                                    fill_gaps="true")
+    
+    df_query_60 = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = df['country_code'][i],
+                                    year = df['reporting_year'][i],
+                                    welfare_type = df['welfare_type'][i],
+                                    reporting_level = df['reporting_level'][i],
+                                    value = df['median_60'][i],
+                                    fill_gaps="true")
+    
+    try:
+        headcount_40_value = df_query_40['headcount'][0]
+        headcount_40_list.append(headcount_40_value)
+        
+        headcount_50_value = df_query_50['headcount'][0]
+        headcount_50_list.append(headcount_50_value)
+        
+        headcount_60_value = df_query_60['headcount'][0]
+        headcount_60_list.append(headcount_60_value)
+        
+    except:
+        headcount_40_list.append(np.nan)
+        headcount_50_list.append(np.nan)
+        headcount_60_list.append(np.nan)
+
+# %%
+df_query
+
+# %%
+df['median_40'][3]
+
+# %%
+request_url = f'https://api.worldbank.org/pip/v1/pip?povline=1.9&country=CHL&year=2017&fill_gaps=true&welfare_type=all&reporting_level=all&format=csv'
+df_query = pd.read_csv(request_url)
+
+# %%
+df_query
+
 # %%
