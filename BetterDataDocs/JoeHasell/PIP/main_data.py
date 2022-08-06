@@ -309,30 +309,12 @@ df['median_60'] = df['median'] * 0.6
 df.to_csv('complete.csv')
 
 # %%
-import numpy as np
-
-my_list = []
-for i in range(len(df)):
-
-    df_query = pip_query_country(popshare_or_povline = "povline",
-                                 country_code = df['country_code'][i],
-                                 year = df['reporting_year'][i],
-                                 welfare_type = df['welfare_type'][i],
-                                 reporting_level = df['reporting_level'][i],
-                                 value = df['median_40'][i],
-                                 fill_gaps="true")
-    try:
-        headcount_value = df_query['headcount'][0]
-        my_list.append(headcount_value)
-    except:
-        my_list.append(np.nan)
-    
-
-# %%
-my_list
+df = df.iloc[0:10,:]
 
 # %%
 import numpy as np
+
+start_time = time.time()
 
 headcount_40_list = []
 headcount_50_list = []
@@ -378,18 +360,82 @@ for i in range(len(df)):
         headcount_40_list.append(np.nan)
         headcount_50_list.append(np.nan)
         headcount_60_list.append(np.nan)
+        
+df['headcount_ratio_40'] = headcount_40_list
+df['headcount_ratio_50'] = headcount_50_list
+df['headcount_ratio_60'] = headcount_60_list
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print('Execution time:', elapsed_time, 'seconds')
 
 # %%
-df_query
+import numpy as np
 
-# %%
-df['median_40'][3]
+start_time = time.time()
 
-# %%
-request_url = f'https://api.worldbank.org/pip/v1/pip?povline=1.9&country=CHL&year=2017&fill_gaps=true&welfare_type=all&reporting_level=all&format=csv'
-df_query = pd.read_csv(request_url)
+headcount_40_list = []
+headcount_50_list = []
+headcount_60_list = []
 
-# %%
-df_query
+median = 0
+
+for i in range(len(df)):
+    
+    if median == df['median'][i]:
+        
+        headcount_40_list.append(headcount_40_value)
+        headcount_50_list.append(headcount_50_value)
+        headcount_60_list.append(headcount_60_value)
+        
+    else:
+        
+        median = df['median'][i]
+
+        df_query_40 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['reporting_year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_40'][i],
+                                        fill_gaps="true")
+
+        df_query_50 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['reporting_year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_50'][i],
+                                        fill_gaps="true")
+
+        df_query_60 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['reporting_year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_60'][i],
+                                        fill_gaps="true")
+
+        try:
+            headcount_40_value = df_query_40['headcount'][0]
+            headcount_50_value = df_query_50['headcount'][0]
+            headcount_60_value = df_query_60['headcount'][0]
+
+        except:
+            headcount_40_value = np.nan
+            headcount_50_value = np.nan
+            headcount_60_value = np.nan
+            
+        headcount_40_list.append(headcount_40_value)
+        headcount_50_list.append(headcount_50_value)
+        headcount_60_list.append(headcount_60_value)
+        
+df['headcount_ratio_40'] = headcount_40_list
+df['headcount_ratio_50'] = headcount_50_list
+df['headcount_ratio_60'] = headcount_60_list
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print('Execution time:', elapsed_time, 'seconds')
 
 # %%
