@@ -1,5 +1,4 @@
 rm(list = ls())
-library(googlesheets4)
 library(plyr)
 library(readr)
 library(purrr)
