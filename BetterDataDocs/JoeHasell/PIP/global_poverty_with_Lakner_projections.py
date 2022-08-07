@@ -191,14 +191,15 @@ replace_strings = {
 }
 df_stacked['c19_estimation'] = df_stacked['c19_estimation'].replace(replace_strings)
 
+
 df_stacked = pd.melt(df_stacked, id_vars=['c19_estimation', 'year'],
-                     value_vars=["Rest of the world",
-                                "Sub-Saharan Africa", 
-                                "Middle East & North Africa",
-                                "South Asia",
-                                "Latin America & Caribbean",
-                                "East Asia & Pacific",
-                                "Europe & Central Asia"],
+                     value_vars=["Europe & Central Asia",
+                                    "Rest of the world",
+                                    "Latin America & Caribbean",
+                                    "Middle East & North Africa",
+                                    "Sub-Saharan Africa",
+                                    "East Asia & Pacific",
+                                    "South Asia"],
                     var_name='region', value_name='pop_poverty')
 
 df_stacked['year'] = df_stacked['year'].astype(int)
@@ -222,6 +223,15 @@ for i in estimation_list:
                  annotation_text="<b>Projection</b>", annotation_position="top left")
 
     fig.write_image(f'graphics/global_pov_with_projections_region_{i}.svg')
+
     fig.show()
+
+# %%
+# Calculate global total
+df_global = df_stacked.groupby(['c19_estimation','year']).sum()
+df_global = df_global.reset_index()
+# %%
+df_global[df_global['c19_estimation']=="baseline"]
+
 
 # %%
