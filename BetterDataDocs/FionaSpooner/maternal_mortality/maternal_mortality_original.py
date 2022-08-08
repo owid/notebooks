@@ -31,7 +31,7 @@
 # In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine four existing datasets:
 
 # * GapMinder (1751-2008)
-# * OECD (1960-2021)
+# * OECD (1960-2020)
 # * World Health Organization (1990-2015)
 # * World Health Organization (2000-2017)
 
@@ -47,6 +47,21 @@ import requests
 from pathlib import Path
 import zipfile
 import matplotlib.pyplot as plt
+from functools import reduce
+
+
+def standardise_entities(entities_to_standardise: pd.Series, stan_dict:dict) -> pd.Series:
+    """ A function to standardise the entities so they match OWID entities.
+    """
+    standardised_entities = entities_to_standardise.map(stan_dict)
+    ents = entities_to_standardise.drop_duplicates().to_list()
+    for ent in ents:
+        if ent not in stan_dict.keys():
+            print(f"{ent} missing from entity mapping")
+
+    assert standardised_entities.isna().sum() == 0
+
+    return standardised_entities
 
 #%%[markdown]
 
@@ -144,10 +159,6 @@ df_d = df_d.drop(
 
 
 # %%
-df_d[(df_d['Country'] == 'Denmark')]
-
-
-# %%
 assert (
     df_d[["Country", "year"]][df_d[["Country", "year"]].duplicated(keep=False)].shape[0]
     == 0
@@ -164,7 +175,7 @@ assert (
 #
 # In the registrar general of Ireland it states that there were approximately 599 maternal deaths in Ireland in 1912 and on average 634 per year between 1903 and 1911. The estimated rate is 6 deaths per 1,000 births, so 600 per 100,000 births.
 #
-# I think this suggests that the Maternal deaths figures may be wrong for the period 1901-1920. I think they may have back-calculated the maternal deaths from the MMR but accidentally used the year column instead as the calculated MMR works out as the year value. 
+# I think this suggests that the 'maternal deaths' figures may be wrong for the period 1901-1920. I think they may have back-calculated the maternal deaths from the MMR but accidentally used the year column instead as the calculated MMR works out as the year value. 
 
 # %%
 df_check = df_d[['Country','year','Live Births', 'Maternal deaths', 'MMR']].dropna().reset_index(drop=True)
@@ -240,10 +251,29 @@ stand_countries = pd.read_csv(
     "data/input/countries_to_standardise_country_standardized.csv"
 )
 stan_dict = stand_countries.set_index("Country").squeeze().to_dict()
-df_gap["entity"] = df_gap["entity"].map(stan_dict)
-df_gap = df_gap.dropna()
+df_gap["entity"] = standardise_entities(df_gap["entity"], stan_dict)
+df_gap = df_gap.dropna(subset=['maternal_mortality_rate'])
+assert df_gap['entity'].isna().sum() == 0
 
 
+
+# %% [markdown]
+# Add in the OECD Stat Health data - this is not available on the OECD stat API so we manually download it.
+#
+
+# %%
+oecd_df = pd.read_csv("data/input/HEALTH_STAT_08082022144439675.csv")
+oecd_df = oecd_df[(oecd_df['VAR'] == 'MATIMATM')]
+oecd_df = oecd_df[["Country", "Year", "Value"]].rename(
+    columns={"Country": "entity", "Year": "year", "Value": "maternal_mortality_rate"}
+)
+oecd_df["source"] = "oecd"
+
+oecd_df["entity"] = standardise_entities(oecd_df["entity"], stan_dict)
+assert oecd_df['entity'].isna().sum() == 0
+
+
+# %%
 #%%[markdown]
 
 # ## Reading in the current WHO data
@@ -251,21 +281,6 @@ df_gap = df_gap.dropna()
 # Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.
 # This data covers from the year 2000 onwards. A previous version had data from the year 1990 onwards, we will also read this in and use this preferentially over the GapMinder data.
 
-# %% [markdown]
-# Add in the OECD Stat Health data
-
-# %%
-oecd_df = pd.read_csv("data/input/HEALTH_STAT_21072022104153993.csv")
-oecd_df = oecd_df[["Country", "Year", "Value"]].rename(
-    columns={"Country": "entity", "Year": "year", "Value": "maternal_mortality_rate"}
-)
-oecd_df["source"] = "oecd"
-
-oecd_df["entity"] = oecd_df["entity"].map(stan_dict)
-assert oecd_df['entity'].isna().sum() == 0
-
-
-# %%
 r_who = requests.get(
     "https://api.worldbank.org/v2/en/indicator/SH.STA.MMRT?downloadformat=csv"
 )
@@ -296,7 +311,7 @@ who_df.rename(
     inplace=True,
 )
 who_df["source"] = "who_2019"
-who_df["entity"] = who_df["entity"].map(stan_dict)
+who_df["entity"] = standardise_entities(who_df["entity"], stan_dict)
 who_df['year'] = who_df['year'].astype(int)
 who_df = who_df.dropna()
 #%%[markdown]
@@ -325,7 +340,11 @@ who_2015 = who_2015[
     }
 )
 who_2015 = who_2015[(who_2015["year"] < 2000) & (who_2015["year"] >= 1990)]
+
 who_2015["year"] = who_2015["year"].astype(int)
+
+who_2015["entity"] = standardise_entities(who_2015["entity"], stan_dict)
+
 
 # %% [markdown]
 # Combine the two WHO data sets into one dataframe - but we'll drop out countries within the OECD Stat Health data as we already have a full time series for these and the data is more detailed.
@@ -427,11 +446,11 @@ plt.tight_layout()
 
 # %%
 
-entities_to_chop = ['Afghanistan', 'Albania', 'Bahamas','Bahrain', 'Belarus', 'Belize', 'Benin', 'Botswana', 'Brunei', 'Cameroon', 'Cape Verde', 'Comoros', 'Congo',
-'Democratic Republic of Congo', 'Djibouti', 'Equatorial Guinea', 'Eritrea', 'Eswatini', 'Ethiopia','Fiji','Gabon','Georgia','Grenada','Guatemala','Guinea-Bissau','Guyana','Haiti',
-'Honduras','Iraq','Jamaica','Kenya','Kiribati','Kuwait','Lebanon','Liberia','Libya','Malawi','Malaysia','Maldives','Malta','Mauritius','Moldova','Morocco', 'Mozambique','Myanmar','Nicaragua',
+entities_to_chop = ['Afghanistan', 'Albania', 'Bahamas','Bahrain', 'Belarus', 'Belize', 'Benin', 'Botswana', 'Brunei', 'Bulgaria','Cameroon', 'Cape Verde', 'Comoros', 'Congo',
+'Democratic Republic of Congo', 'Djibouti', 'Equatorial Guinea', 'Eritrea', 'Eswatini', 'Ethiopia','Europe & Central Asia (WB)','Fiji','Gabon','Georgia','Grenada','Guatemala','Guinea-Bissau','Guyana','Haiti',
+'Honduras','Iraq','Jamaica','Kenya','Kiribati','Kuwait','Lebanon','Liberia','Libya','Malawi','Malaysia','Maldives','Malta','Mauritius','Middle East and North Africa (WB)','Moldova','Morocco', 'Mozambique','Myanmar','Nicaragua',
 'North Korea', 'Papua New Guinea', 'Paraguay','Philippines','Puerto Rico', 'Qatar','Rwansa','Saint Lucia', 'Sao Tome and Principe','Senegal','Serbia','Singapore', 'Solomon Islands', 'Somalia', 'South Africa',
-'South Sudan', 'Sudan', 'Suriname','Syria', 'Thailand', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkmenistan', 'Uganda', 'United Arab Emirates', 'Uzbekistan','Venezuela','Vietnam', 'Yemen' ]
+'South Sudan', 'Sudan', 'Suriname','Syria', 'Thailand', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkmenistan', 'Uganda', 'United Arab Emirates','Upper middle income (WB)', 'Uzbekistan','Venezuela','Vietnam', 'Yemen' ]
 
 
 who_clean = who_both.drop(who_both[(who_both['entity'].isin(entities_to_chop)) & (who_both['source'] == 'who_2015')].index)
@@ -443,8 +462,7 @@ who_clean['source'] = 'who'
 # %%
 df = pd.concat([df_gap, who_clean, oecd_df], ignore_index=True)
 df["year"] = df["year"].astype(int)
-df[(df['entity'] == 'Denmark') & (df['year']> 1940) & (df['year']<  1980)]
-
+df['maternal_mortality_rate'] = df['maternal_mortality_rate'].astype(float)
 
 
 # %% [markdown]
@@ -470,7 +488,7 @@ plot_number = 1
 for countryname, selection in df_dup.groupby("entity"):
     # Inside of an image that's a 15x13 grid, put this
     # graph in the in the plot_number slot.
-    ax = plt.subplot(5, 3, plot_number)
+    ax = plt.subplot(4, 4, plot_number)
     selection_gap = selection[selection["source"] == "gapminder"]
     selection_who = selection[selection["source"] == "who"]
     selection_oecd = selection[selection["source"] == "oecd"]
@@ -510,17 +528,13 @@ plt.tight_layout()
 df = df.drop(df[(df["entity"] == "Sri Lanka") & (df["source"] == "gapminder")].index)
 
 # %% [markdown]
-# From 1980 onwards we will preferentially use the OECD data. Here we remove the necessary rows. 
-#
+# We'll keep the gapminder data for the countries where possible as this will ensure the smoothest time-series
 
 # %%
 no_dups_df = df[~df.duplicated(subset=['entity', 'year'],keep= False)]
-keep_gap = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.year < 1980) & (df.source != 'oecd')]
-keep_oecd = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.year >= 1980)& (df.source != 'gapminder')]
-df_clean = pd.concat([no_dups_df, keep_gap, keep_oecd], ignore_index=True)
-
-# %%
-df[df['entity'] == "Denmark"]
+keep_gap = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.source == 'gapminder')]
+#keep_oecd = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.year >= 1980)& (df.source != 'gapminder')]
+df_clean = pd.concat([no_dups_df, keep_gap], ignore_index=True)
 
 # %% [markdown]
 # Check that there are no country-year duplicates in the final dataset and do some checks that the data doesn't have any unexpected NAs in it. 
@@ -535,4 +549,20 @@ assert df_clean['maternal_mortality_rate'].isna().sum() == 0
 df_clean['maternal_mortality_rate'] = df_clean['maternal_mortality_rate'].astype(float)
 df_clean['maternal_mortality_rate'] = round(df_clean['maternal_mortality_rate'], 2)
 df_clean = df_clean[["entity", "year", "maternal_mortality_rate"]]
-df_clean.to_csv("data/output/maternal_mortality_rate.csv", index=False)
+#df_clean.to_csv("data/output/maternal_mortality_rate.csv", index=False)
+
+# %% [markdown]
+# Add a column for each source for comparison in grapher.
+
+# %%
+who_2015 = who_2015.rename(columns={"maternal_mortality_rate": "maternal_mortality_rate_who_2015"}).drop(columns=['source'])
+who_df = who_df.rename(columns={"maternal_mortality_rate": "maternal_mortality_rate_who_2019"}).drop(columns=['source'])
+oecd_df = oecd_df.rename(columns={"maternal_mortality_rate": "maternal_mortality_rate_oecd"}).drop(columns=['source'])
+df_gap = df_gap.rename(columns={"maternal_mortality_rate": "maternal_mortality_rate_gapminder"}).drop(columns=['source'])
+df_clean = df_clean.rename(columns={"maternal_mortality_rate": "maternal_mortality_rate_owid"})
+
+dfs = [df_clean,who_2015, who_df, oecd_df, df_gap]
+df_merged = reduce(lambda left,right: pd. merge(left,right,on=['entity', 'year'],how='outer'), dfs)
+df_merged = df_merged[~df_merged['entity'].isin(entities_to_drop)]
+
+df_merged.to_csv("data/output/maternal_mortality_rate.csv", index=False)
