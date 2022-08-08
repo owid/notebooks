@@ -11,8 +11,10 @@
 # Import
 import pandas as pd
 from plotnine import *
+
+#%%
 #read original data file provided by Nicolai and Usha
-df = pd.read_csv('Original/GMPI2021_publicuse.csv')
+df = pd.read_csv('joe_earlier_work/Original/GMPI2021_publicuse.csv')
 
 #%%
 # Standardize country names
@@ -22,7 +24,7 @@ df = pd.read_csv('Original/GMPI2021_publicuse.csv')
 # df[['cty_lab']].rename(columns={'cty_lab': 'country'}).drop_duplicates().to_csv("Manipulation/MPI countries.csv", index = False)
 
 # Grab country name mapping csv
-country_names_map = pd.read_csv("Manipulation/MPI countries_country_standardized.csv")
+country_names_map = pd.read_csv("joe_earlier_work/Manipulation/MPI countries_country_standardized.csv")
 
 # Merge into main data
 df = pd.merge(df.rename(columns={'cty_lab': 'country'}),country_names_map,how='left', on='country')
@@ -165,7 +167,7 @@ df_main_hot.head()
 
 #%%
 # Write to csv
-df_main_hot.to_csv("final/MPI (2021) – Harmonized over time estimates.csv")
+df_main_hot.to_csv("joe_earlier_work/final/MPI (2021) – Harmonized over time estimates.csv")
 
 #%%
 # Plot HOT data
@@ -187,7 +189,7 @@ df_main_cme.head()
 
 #%%
 # Write to csv
-df_main_cme.to_csv("final/MPI (2021) – Current estimates.csv")
+df_main_cme.to_csv("joe_earlier_work/final/MPI (2021) – Current estimates.csv")
 
 #%%
 # Plot CME data
