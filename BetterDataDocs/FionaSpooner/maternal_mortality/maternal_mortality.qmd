@@ -233,7 +233,7 @@ df_d.loc[
 assert(df_d[df_d[["Country", "year"]].duplicated(keep=False)].shape[0] == 0)
 ```
 
-Rename the columns and keep only the columns we are interested in.
+Rename the columns, keeping only the columns we are interested in and  standardise the country names and drop rows with NA values.
 
 ```{python}
 df_d = df_d.copy(deep=False)
@@ -244,11 +244,7 @@ df_gap["source"] = "gapminder"
 df_gap.rename(
     columns={"Country": "entity", "MMR": "maternal_mortality_rate"}, inplace=True
 )
-```
- 
- Standardise the country names and drop rows with NA values.
 
-```{python}
 stand_countries = pd.read_csv(
     "data/input/countries_to_standardise_country_standardized.csv"
 )
@@ -258,7 +254,7 @@ df_gap = df_gap.dropna(subset=['maternal_mortality_rate'])
 assert df_gap['entity'].isna().sum() == 0
 ```
 
-
+## Read in the OECD Stat data
 Add in the OECD Stat Health data - this is not available on the OECD stat API so we manually download it.
 
 ```{python}
@@ -275,7 +271,7 @@ assert oecd_df['entity'].isna().sum() == 0
 
 
 
-## Reading in the WHO data
+## Read in the latest WHO data
 
 Read in data from WDI - in future iterations we will read this in from ETL so it is auto updated. The WDI sources this variable from the WHO so we will henceforth refer to it as the WHO data.
 
@@ -294,7 +290,7 @@ who = pd.read_csv(
 ```
 
 
-## Cleaning the WHO data
+## Cleaning the latest WHO data
 Pivot and clean the WHO data, standardise the country names and drop values that are NA.
 
 ```{python}
@@ -318,7 +314,7 @@ who_df = who_df.dropna(subset=['maternal_mortality_rate'])
 
 ```
 
-
+### Read in the older WHO (2015) data 
 Read in the older WHO data taken from a previous version of the WDI - we just want the data for 1990-1999
 
 ```{python}
@@ -345,6 +341,7 @@ who_2015["year"] = who_2015["year"].astype(int)
 who_2015["entity"] = standardise_entities(who_2015["entity"], stan_dict)
 ```
 
+### Combine the WHO datasets
 Combine the two WHO data sets into one dataframe - but we'll drop out countries within the OECD Stat Health data as we already have a full time series for these and the data is more detailed.
 
 ```{python}
@@ -395,6 +392,7 @@ who_sel = who_both[(who_both["year"] >=1999) & (who_both["year"] <= 2000)]
 who_check = (who_sel.pivot(index='entity',columns="source", values="maternal_mortality_rate").sort_index(level=[1,0])).dropna().reset_index()
 ```
 
+### Check the transition between the two WHO datasets
 Plot out the countries where the difference between 1999 and 2000 is greater than 5% of the 2000 value.
 
 ```{python}
@@ -404,7 +402,7 @@ who_plot = who_both[who_both['entity'].isin(entities_to_plot)]
 ```
 
 ```{python}
-plt.figure(figsize=(20, 20), facecolor="white")
+plt.figure(figsize=(18, 18), facecolor="white")
 
 # plot numbering starts at 1, not 0
 plot_number = 1
@@ -436,6 +434,7 @@ for countryname, selection in who_plot.groupby("entity"):
 plt.tight_layout()
 ```
 
+### Remove countries where the time-series looks like it is not a smooth transition
 A list of countries where we consider the trend between the two WHO vintages to be improbable and therefore we will exclude the earlier years of these countries, using only the most recent WHO data. 
 
 ```{python}
@@ -451,7 +450,7 @@ who_clean = who_both.drop(who_both[(who_both['entity'].isin(entities_to_chop)) &
 who_clean['source'] = 'who'
 
 ```
-Combine the three datasets: GapMinder, OECD Stat and WHO
+## Combine the three datasets: GapMinder, OECD Stat and WHO
 
 ```{python}
 df = pd.concat([df_gap, who_clean, oecd_df], ignore_index=True)
@@ -465,11 +464,11 @@ dup_ents = df['entity'][df.duplicated(subset=['entity', 'year'])].drop_duplicate
 
 ```
 
-Plotting time-series of the data from 1950 onwards. GapMinder is shown in orange, WHO is shown in blue and OECD in green.
+Plotting time-series of the data from 1950 onwards. GapMinder is shown in blue and OECD in orange.
 ```{python}
 df_dup = df[(df.entity.isin(dup_ents)) & (df.year >= 1950)]
 
-plt.figure(figsize=(10, 8), facecolor="white")
+plt.figure(figsize=(8,6), facecolor="white")
 
 # plot numbering starts at 1, not 0
 plot_number = 1
@@ -514,7 +513,7 @@ plt.tight_layout()
 The jump in the Sri Lanka trend is odd - we will drop the Gapminder data for this entity. 
 
 
-We'll keep the GapMinder data for the countries where possible as this will ensure the smoothest time-series.
+We'll keep the full extent of the GapMinder data where possible as this will ensure the smoothest time-series.
 ```{python}
 no_dups_df = df[~df.duplicated(subset=['entity', 'year'],keep= False)]
 keep_gap = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.source == 'gapminder')]
