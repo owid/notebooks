@@ -566,7 +566,7 @@ dup_ents = df["entity"][df.duplicated(subset=["entity", "year"])].drop_duplicate
 
 
 # %% [markdown]
-# Plotting time-series of the data from 1950 onwards. GapMinder is shown in blue and OECD in orange.
+# Plotting time-series of the data from 1950 onwards. WHO is shown in blue, GapMinder in green and OECD in red.
 #
 
 # %%
@@ -587,6 +587,7 @@ for countryname, selection in df_dup.groupby("entity"):
         selection_who.plot(
             x="year",
             y="maternal_mortality_rate",
+            color="b",
             ax=ax,
             label=countryname,
             legend=False,
@@ -595,6 +596,7 @@ for countryname, selection in df_dup.groupby("entity"):
         selection_gap.plot(
             x="year",
             y="maternal_mortality_rate",
+            color="g",
             ax=ax,
             label=countryname,
             legend=False,
@@ -603,6 +605,7 @@ for countryname, selection in df_dup.groupby("entity"):
         selection_oecd.plot(
             x="year",
             y="maternal_mortality_rate",
+            color="r",
             ax=ax,
             label=countryname,
             legend=False,
