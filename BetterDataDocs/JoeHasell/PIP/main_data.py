@@ -292,10 +292,13 @@ for is_filled in ['true', 'false']:
 df = pip_query_country(
                     popshare_or_povline = "povline", 
                     value = 1.9, 
-                    fill_gaps="true")
+                    fill_gaps="false")
 
 # %%
 df.columns
+
+# %%
+df
 
 # %%
 df[['median']].describe()
@@ -309,7 +312,7 @@ df['median_60'] = df['median'] * 0.6
 df.to_csv('complete.csv')
 
 # %%
-df = df.iloc[0:10,:]
+#df = df.iloc[0:10,:]
 
 # %%
 import numpy as np
@@ -368,6 +371,9 @@ df['headcount_ratio_60'] = headcount_60_list
 end_time = time.time()
 elapsed_time = end_time - start_time
 print('Execution time:', elapsed_time, 'seconds')
+
+# %%
+df.to_csv('data/relative_poverty.csv')
 
 # %%
 import numpy as np
