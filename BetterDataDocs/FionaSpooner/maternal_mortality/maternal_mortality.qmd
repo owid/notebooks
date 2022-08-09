@@ -12,7 +12,6 @@ format:
     toc: true
     toc-depth: 2
     self-contained: true
-    smooth-scroll: true
     anchor-sections: true
 comments:
   hypothesis: true
