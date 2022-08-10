@@ -1,5 +1,7 @@
 # %% [markdown]
 # # World Bank Poverty and Inequality Platform dataset
+#
+# ***To get the most updated dataset it is required to run the `relative_poverty.py` code first. It is not included here because it takes more than an hour to complete.***
 
 # %%
 import pandas as pd
@@ -97,6 +99,10 @@ for p in poverty_lines_cents:
         df = df.rename(columns={
         'headcount':'headcount_ratio',
         'poverty_gap': 'poverty_gap_index'})
+        
+        for i in range(1,11):
+            df = df.rename(columns={f'decile{i}': f'decile{i}_share'})
+        
 
         # Calculate number in poverty
         df['headcount'] = df['headcount_ratio'] * df['reporting_pop']  
@@ -176,16 +182,16 @@ for i in range(len(poverty_lines_cents)):
                                  f'ppp_{poverty_lines_cents[i]}': 'ppp',
                                  f'reporting_gdp_{poverty_lines_cents[i]}': 'reporting_gdp',
                                  f'reporting_pce_{poverty_lines_cents[i]}': 'reporting_pce',
-                                 f'decile1_{poverty_lines_cents[i]}': 'decile1',
-                                 f'decile2_{poverty_lines_cents[i]}': 'decile2',
-                                 f'decile3_{poverty_lines_cents[i]}': 'decile3',
-                                 f'decile4_{poverty_lines_cents[i]}': 'decile4',
-                                 f'decile5_{poverty_lines_cents[i]}': 'decile5',
-                                 f'decile6_{poverty_lines_cents[i]}': 'decile6',
-                                 f'decile7_{poverty_lines_cents[i]}': 'decile7',
-                                 f'decile8_{poverty_lines_cents[i]}': 'decile8',
-                                 f'decile9_{poverty_lines_cents[i]}': 'decile9',
-                                 f'decile10_{poverty_lines_cents[i]}': 'decile10'
+                                 f'decile1_share_{poverty_lines_cents[i]}': 'decile1_share',
+                                 f'decile2_share_{poverty_lines_cents[i]}': 'decile2_share',
+                                 f'decile3_share_{poverty_lines_cents[i]}': 'decile3_share',
+                                 f'decile4_share_{poverty_lines_cents[i]}': 'decile4_share',
+                                 f'decile5_share_{poverty_lines_cents[i]}': 'decile5_share',
+                                 f'decile6_share_{poverty_lines_cents[i]}': 'decile6_share',
+                                 f'decile7_share_{poverty_lines_cents[i]}': 'decile7_share',
+                                 f'decile8_share_{poverty_lines_cents[i]}': 'decile8_share',
+                                 f'decile9_share_{poverty_lines_cents[i]}': 'decile9_share',
+                                 f'decile10_share_{poverty_lines_cents[i]}': 'decile10_share'
                                 }, 
                         inplace=True)
     else:
@@ -201,16 +207,16 @@ for i in range(len(poverty_lines_cents)):
                                f'ppp_{poverty_lines_cents[i]}',
                                f'reporting_gdp_{poverty_lines_cents[i]}',
                                f'reporting_pce_{poverty_lines_cents[i]}',
-                               f'decile1_{poverty_lines_cents[i]}',
-                               f'decile2_{poverty_lines_cents[i]}',
-                               f'decile3_{poverty_lines_cents[i]}',
-                               f'decile4_{poverty_lines_cents[i]}',
-                               f'decile5_{poverty_lines_cents[i]}',
-                               f'decile6_{poverty_lines_cents[i]}',
-                               f'decile7_{poverty_lines_cents[i]}',
-                               f'decile8_{poverty_lines_cents[i]}',
-                               f'decile9_{poverty_lines_cents[i]}',
-                               f'decile10_{poverty_lines_cents[i]}'
+                               f'decile1_share_{poverty_lines_cents[i]}',
+                               f'decile2_share_{poverty_lines_cents[i]}',
+                               f'decile3_share_{poverty_lines_cents[i]}',
+                               f'decile4_share_{poverty_lines_cents[i]}',
+                               f'decile5_share_{poverty_lines_cents[i]}',
+                               f'decile6_share_{poverty_lines_cents[i]}',
+                               f'decile7_share_{poverty_lines_cents[i]}',
+                               f'decile8_share_{poverty_lines_cents[i]}',
+                               f'decile9_share_{poverty_lines_cents[i]}',
+                               f'decile10_share_{poverty_lines_cents[i]}'
                               ],
                       inplace=True)
 
@@ -266,6 +272,22 @@ for i in range(len(poverty_lines_cents)):
 
 df_final.loc[:, col_stacked_pct] = df_final[col_stacked_pct] * 100
 
+# Create decile variables: average and threshold (besides share)
+col_decile_share = []
+col_decile_avg = []
+col_decile_thr = []
+
+for i in range(1,11):
+    varname_share = f'decile{i}_share'
+    varname_avg = f'decile{i}_avg'
+    varname_thr = f'decile{i}_thr'
+    df_final[varname_avg] = df_final[varname_share] * df_final['mean'] / 0.1
+    df_final[varname_thr] = np.nan
+    
+    col_decile_share.append(varname_share)
+    col_decile_avg.append(varname_avg)
+    col_decile_thr.append(varname_thr)
+
 
 # Standardize entity names
 df_final = standardize_entities(
@@ -301,7 +323,6 @@ col_tot_shortfall = []
 col_poverty_severity = []
 col_watts = []
 col_central = ['mean', 'median']
-col_deciles = ['decile1', 'decile2', 'decile3', 'decile4','decile5', 'decile6', 'decile7', 'decile8', 'decile9', 'decile10']
 col_inequality = ['mld', 'gini', 'polarization']
 col_extra = ['survey_year', 'survey_comparability', 'comparable_spell', 'distribution_type', 'estimation_type',
             'cpi', 'ppp', 'reporting_gdp', 'reporting_pce']
@@ -317,7 +338,7 @@ for i in range(len(poverty_lines_cents)):
     col_watts.append(f'watts_{poverty_lines_cents[i]}')
     
 #Multiplies decile columns by 100
-df_final.loc[:, col_deciles] = df_final[col_deciles] * 100
+df_final.loc[:, col_decile_share] = df_final[col_decile_share] * 100
 
 # %% [markdown]
 # ## Dropping rows with issues
@@ -360,14 +381,29 @@ regions_list = ['East Asia and Pacific',
 
 high_income_list = ['High income countries']
 
-df_final['sum_deciles'] = df_final[col_deciles].sum(axis=1)
+df_final['sum_deciles'] = df_final[col_decile_share].sum(axis=1)
 df_final = df_final[~((df_final['sum_deciles'] >= 100.1) | (df_final['sum_deciles'] <= 99.9)) 
                     & (~df_final['Entity'].isin(regions_list + world_list + high_income_list))].reset_index(drop=True)
 print(f'{len(df_final)} rows before deciles values check CODE NOT READY YET')
 
+# %% [markdown]
+# ## Integrate the relative poverty data
+# The data comes from an over 1 hour query in `relative_poverty.py`. Be warned you have to update it first when running a massive update to the dataset
 
-#Concatenate the entire list (including the previously estimated col_stacked_n and col_stacked_pct) and reorder
-cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_deciles + col_inequality + col_extra
+# %%
+file = 'data/relative_poverty.csv'
+df_relative = pd.read_csv(file)
+
+col_headcount_relative = ['headcount_40', 'headcount_50', 'headcount_60']
+col_headcount_ratio_relative = ['headcount_ratio_40', 'headcount_ratio_50', 'headcount_ratio_60']
+
+df_final = pd.merge(df_final, df_relative[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_headcount_relative + col_headcount_ratio_relative], 
+                    how='left', on=['Entity', 'Year', 'reporting_level', 'welfare_type'])
+
+
+
+#Concatenate the entire list of columns and reorder
+cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_headcount_relative + col_headcount_ratio_relative + col_decile_share + col_decile_thr + col_decile_avg + col_inequality + col_extra
 df_final = df_final[cols]
 
 # %% [markdown]
@@ -398,9 +434,9 @@ print(f'After dropping duplicates there were {len(df_inc_or_cons)} rows.')
 # digital ocean so that the data can be picked up in the explorer. But I know how to do this
 # if it's stored in GitHub. So for now I write it as csvs to this folder.
 # Save as csv
-df_inc_only.to_csv(f'data/poverty_inc_only_filled_true.csv', index=False)
-df_cons_only.to_csv(f'data/poverty_cons_only_filled_true.csv', index=False)
-df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons_filled_true.csv', index=False)
+df_inc_only.to_csv(f'data/poverty_inc_only.csv', index=False)
+df_cons_only.to_csv(f'data/poverty_cons_only.csv', index=False)
+df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons.csv', index=False)
 
 
 
@@ -409,161 +445,5 @@ df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons_filled_true.csv', index=False)
 #upload_to_s3(df_cons_only, 'PIP', f'poverty_cons_only_filled_{is_filled}.csv')
 
 #upload_to_s3(df_inc_or_cons, 'PIP', f'poverty_inc_or_cons_filled_{is_filled}.csv')
-
-# %% [markdown]
-# ## Relative poverty
-
-# %%
-df = pip_query_country(
-                    popshare_or_povline = "povline", 
-                    value = 1.9, 
-                    fill_gaps="false")
-
-# %%
-df.columns
-
-# %%
-df
-
-# %%
-df[['median']].describe()
-
-# %%
-df['median_40'] = df['median'] * 0.4
-df['median_50'] = df['median'] * 0.5
-df['median_60'] = df['median'] * 0.6
-
-# %%
-df.to_csv('complete.csv')
-
-# %%
-import numpy as np
-
-start_time = time.time()
-
-headcount_40_list = []
-headcount_50_list = []
-headcount_60_list = []
-
-for i in range(len(df)):
-
-    df_query_40 = pip_query_country(popshare_or_povline = "povline",
-                                    country_code = df['country_code'][i],
-                                    year = df['reporting_year'][i],
-                                    welfare_type = df['welfare_type'][i],
-                                    reporting_level = df['reporting_level'][i],
-                                    value = df['median_40'][i],
-                                    fill_gaps="true")
-    
-    df_query_50 = pip_query_country(popshare_or_povline = "povline",
-                                    country_code = df['country_code'][i],
-                                    year = df['reporting_year'][i],
-                                    welfare_type = df['welfare_type'][i],
-                                    reporting_level = df['reporting_level'][i],
-                                    value = df['median_50'][i],
-                                    fill_gaps="true")
-    
-    df_query_60 = pip_query_country(popshare_or_povline = "povline",
-                                    country_code = df['country_code'][i],
-                                    year = df['reporting_year'][i],
-                                    welfare_type = df['welfare_type'][i],
-                                    reporting_level = df['reporting_level'][i],
-                                    value = df['median_60'][i],
-                                    fill_gaps="true")
-    
-    try:
-        headcount_40_value = df_query_40['headcount'][0]
-        headcount_40_list.append(headcount_40_value)
-        
-        headcount_50_value = df_query_50['headcount'][0]
-        headcount_50_list.append(headcount_50_value)
-        
-        headcount_60_value = df_query_60['headcount'][0]
-        headcount_60_list.append(headcount_60_value)
-        
-    except:
-        headcount_40_list.append(np.nan)
-        headcount_50_list.append(np.nan)
-        headcount_60_list.append(np.nan)
-        
-df['headcount_ratio_40'] = headcount_40_list
-df['headcount_ratio_50'] = headcount_50_list
-df['headcount_ratio_60'] = headcount_60_list
-
-end_time = time.time()
-elapsed_time = end_time - start_time
-print('Execution time:', elapsed_time, 'seconds')
-
-# %%
-df.to_csv('data/relative_poverty.csv')
-
-# %%
-import numpy as np
-
-start_time = time.time()
-
-headcount_40_list = []
-headcount_50_list = []
-headcount_60_list = []
-
-median = 0
-
-for i in range(len(df)):
-    
-    if median == df['median'][i]:
-        
-        headcount_40_list.append(headcount_40_value)
-        headcount_50_list.append(headcount_50_value)
-        headcount_60_list.append(headcount_60_value)
-        
-    else:
-        
-        median = df['median'][i]
-
-        df_query_40 = pip_query_country(popshare_or_povline = "povline",
-                                        country_code = df['country_code'][i],
-                                        year = df['reporting_year'][i],
-                                        welfare_type = df['welfare_type'][i],
-                                        reporting_level = df['reporting_level'][i],
-                                        value = df['median_40'][i],
-                                        fill_gaps="true")
-
-        df_query_50 = pip_query_country(popshare_or_povline = "povline",
-                                        country_code = df['country_code'][i],
-                                        year = df['reporting_year'][i],
-                                        welfare_type = df['welfare_type'][i],
-                                        reporting_level = df['reporting_level'][i],
-                                        value = df['median_50'][i],
-                                        fill_gaps="true")
-
-        df_query_60 = pip_query_country(popshare_or_povline = "povline",
-                                        country_code = df['country_code'][i],
-                                        year = df['reporting_year'][i],
-                                        welfare_type = df['welfare_type'][i],
-                                        reporting_level = df['reporting_level'][i],
-                                        value = df['median_60'][i],
-                                        fill_gaps="true")
-
-        try:
-            headcount_40_value = df_query_40['headcount'][0]
-            headcount_50_value = df_query_50['headcount'][0]
-            headcount_60_value = df_query_60['headcount'][0]
-
-        except:
-            headcount_40_value = np.nan
-            headcount_50_value = np.nan
-            headcount_60_value = np.nan
-            
-        headcount_40_list.append(headcount_40_value)
-        headcount_50_list.append(headcount_50_value)
-        headcount_60_list.append(headcount_60_value)
-        
-df['headcount_ratio_40'] = headcount_40_list
-df['headcount_ratio_50'] = headcount_50_list
-df['headcount_ratio_60'] = headcount_60_list
-
-end_time = time.time()
-elapsed_time = end_time - start_time
-print('Execution time:', elapsed_time, 'seconds')
 
 # %%
