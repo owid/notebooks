@@ -10,8 +10,7 @@ df <- read_sheet(sheet_url, sheet = 2)
 
 df <- df %>%
   rename(c(Entity = `Field of Study`, Number_ai_publications = `Number of AI Publications`)) %>%
-  relocate(Entity, Year)
+  relocate(Entity, Year) %>%
+  mutate(Entity = ifelse(Entity == "Human‚Äìcomputer interaction", "Human-computer interaction", Entity))
 
-df$Entity[df$Entity == "Human‚Äìcomputer interaction"] <- "Human-computer interaction"
-  
-write_csv(df, "AI_publications_by_field.csv")
+write_csv(df, "transformed/AI_publications_by_field.csv")
