@@ -8,13 +8,7 @@ from functions.upload import upload_to_s3
 
 import time
 
-
 # %%
-
-# function for multiplying by 100
-def multiply_by_100(number):
-            return 100 * number
-
 # Here we define the poverty lines to query as cents
 poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
 
@@ -46,11 +40,12 @@ for p in poverty_lines_cents:
                     value = p_dollar, 
                     fill_gaps=is_filled)
 
-                df = df.rename(columns={'country_name': 'entity'})
+                #"Entity" when is in titlecase is automatically recognised as EntityName
+                df = df.rename(columns={'country_name': 'Entity'})
                 
                 # Keep only these variables:
                 keep_vars = [ 
-                    'entity',
+                    'Entity',
                     'reporting_year',
                     'reporting_level',
                     'welfare_type', 
@@ -66,10 +61,10 @@ for p in poverty_lines_cents:
 
                 df = pip_query_region(p_dollar)
 
-                df = df.rename(columns={'region_name': 'entity'})
+                df = df.rename(columns={'region_name': 'Entity'})
 
                 keep_vars = [ 
-                    'entity',
+                    'Entity',
                     'reporting_year',
                     'headcount',
                     'poverty_gap',
@@ -129,10 +124,10 @@ for is_filled in ['true', 'false']:
     headcounts_region = df_complete[(df_complete['ent_type'] == 'region')  & (df_complete['filled'] == is_filled)].reset_index(drop=True)
 
     #Create pivot tables to make the data wide
-    headcounts_country_wide = headcounts_country.pivot_table(index=['entity', 'reporting_year','reporting_level','welfare_type'], 
+    headcounts_country_wide = headcounts_country.pivot_table(index=['Entity', 'reporting_year','reporting_level','welfare_type'], 
                     columns='poverty line')
 
-    headcounts_region_wide = headcounts_region.pivot_table(index=['entity', 'reporting_year'], 
+    headcounts_region_wide = headcounts_region.pivot_table(index=['Entity', 'reporting_year'], 
                     columns='poverty line')
 
     #Join multi index columns
@@ -163,11 +158,11 @@ for is_filled in ['true', 'false']:
     for i in range(len(poverty_lines_cents)):
         #if it's the first value only get people below this poverty line (and percentage)
         if i == 0:
-            varname_n = f'number_below_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_below_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
             
@@ -175,29 +170,29 @@ for is_filled in ['true', 'false']:
         #and also the people over this poverty line (and percentages)
         elif i == len(poverty_lines_cents)-1:
             
-            varname_n = f'number_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
             
-            varname_n = f'number_over_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_above_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{poverty_lines_cents[i]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_over_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_above_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
         
         #If it's any value between the first and the last calculate the people between this value and the previous (and percentage)
         else:
-            varname_n = f'number_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
             col_stacked_n.append(varname_n)
             
-            varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
+            varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
             df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
             col_stacked_pct.append(varname_pct)
             
@@ -216,24 +211,25 @@ for is_filled in ['true', 'false']:
         entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
         mapping_varname_raw ='Original Name',
         mapping_vaname_owid = 'Our World In Data Name',
-        data_varname_old = 'entity',
-        data_varname_new = 'entity'
+        data_varname_old = 'Entity',
+        data_varname_new = 'Entity'
     )
 
     # Amend the entity to reflect if data refers to urban or rural only
     df_final.loc[(\
-        df_final['reporting_level'].isin(["urban", "rural"])),'entity'] = \
+        df_final['reporting_level'].isin(["urban", "rural"])),'Entity'] = \
         df_final.loc[(\
-        df_final['reporting_level'].isin(["urban", "rural"])),'entity'] + \
+        df_final['reporting_level'].isin(["urban", "rural"])),'Entity'] + \
             ' - ' + \
         df_final.loc[(\
         df_final['reporting_level'].isin(["urban", "rural"])),'reporting_level']
 
     # Tidying – Rename cols
-    df_final = df_final.rename(columns={'reporting_year': 'year'})
+    #Year is only recognised as a Year type when titlecase
+    df_final = df_final.rename(columns={'reporting_year': 'Year'})
     
     #Order columns by categorising them
-    col_ids = ['entity', 'year', 'reporting_level', 'welfare_type', 'reporting_pop']
+    col_ids = ['Entity', 'Year', 'reporting_level', 'welfare_type', 'reporting_pop']
     col_avg_shortfall = []
     col_headcount = []
     col_headcount_ratio = []
@@ -262,8 +258,8 @@ for is_filled in ['true', 'false']:
 
     # Flag duplicates – indicating multiple welfare_types
     #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
-    df_inc_or_cons.sort_values(by=['entity', 'year', 'reporting_level', 'welfare_type'], ignore_index=True)
-    df_inc_or_cons['duplicate_flag'] = df_inc_or_cons.duplicated(subset=['entity', 'year', 'reporting_level'])
+    df_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True)
+    df_inc_or_cons['duplicate_flag'] = df_inc_or_cons.duplicated(subset=['Entity', 'Year', 'reporting_level'])
 
     print(f'Checking the filled = {is_filled} data for years with both income and consumption. Before dropping duplicated, there were {len(df_inc_or_cons)} rows...')
     # Drop income where income and consumption are available
@@ -288,5 +284,164 @@ for is_filled in ['true', 'false']:
     #upload_to_s3(df_cons_only, 'PIP', f'poverty_cons_only_filled_{is_filled}.csv')
 
     #upload_to_s3(df_inc_or_cons, 'PIP', f'poverty_inc_or_cons_filled_{is_filled}.csv')
+
+# %% [markdown]
+# ## Relative poverty
+
+# %%
+df = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = 1.9, 
+                    fill_gaps="false")
+
+# %%
+df.columns
+
+# %%
+df
+
+# %%
+df[['median']].describe()
+
+# %%
+df['median_40'] = df['median'] * 0.4
+df['median_50'] = df['median'] * 0.5
+df['median_60'] = df['median'] * 0.6
+
+# %%
+df.to_csv('complete.csv')
+
+# %%
+#df = df.iloc[0:10,:]
+
+# %%
+import numpy as np
+
+start_time = time.time()
+
+headcount_40_list = []
+headcount_50_list = []
+headcount_60_list = []
+
+for i in range(len(df)):
+
+    df_query_40 = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = df['country_code'][i],
+                                    year = df['reporting_year'][i],
+                                    welfare_type = df['welfare_type'][i],
+                                    reporting_level = df['reporting_level'][i],
+                                    value = df['median_40'][i],
+                                    fill_gaps="true")
+    
+    df_query_50 = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = df['country_code'][i],
+                                    year = df['reporting_year'][i],
+                                    welfare_type = df['welfare_type'][i],
+                                    reporting_level = df['reporting_level'][i],
+                                    value = df['median_50'][i],
+                                    fill_gaps="true")
+    
+    df_query_60 = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = df['country_code'][i],
+                                    year = df['reporting_year'][i],
+                                    welfare_type = df['welfare_type'][i],
+                                    reporting_level = df['reporting_level'][i],
+                                    value = df['median_60'][i],
+                                    fill_gaps="true")
+    
+    try:
+        headcount_40_value = df_query_40['headcount'][0]
+        headcount_40_list.append(headcount_40_value)
+        
+        headcount_50_value = df_query_50['headcount'][0]
+        headcount_50_list.append(headcount_50_value)
+        
+        headcount_60_value = df_query_60['headcount'][0]
+        headcount_60_list.append(headcount_60_value)
+        
+    except:
+        headcount_40_list.append(np.nan)
+        headcount_50_list.append(np.nan)
+        headcount_60_list.append(np.nan)
+        
+df['headcount_ratio_40'] = headcount_40_list
+df['headcount_ratio_50'] = headcount_50_list
+df['headcount_ratio_60'] = headcount_60_list
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print('Execution time:', elapsed_time, 'seconds')
+
+# %%
+df.to_csv('data/relative_poverty.csv')
+
+# %%
+import numpy as np
+
+start_time = time.time()
+
+headcount_40_list = []
+headcount_50_list = []
+headcount_60_list = []
+
+median = 0
+
+for i in range(len(df)):
+    
+    if median == df['median'][i]:
+        
+        headcount_40_list.append(headcount_40_value)
+        headcount_50_list.append(headcount_50_value)
+        headcount_60_list.append(headcount_60_value)
+        
+    else:
+        
+        median = df['median'][i]
+
+        df_query_40 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['reporting_year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_40'][i],
+                                        fill_gaps="true")
+
+        df_query_50 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['reporting_year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_50'][i],
+                                        fill_gaps="true")
+
+        df_query_60 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['reporting_year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_60'][i],
+                                        fill_gaps="true")
+
+        try:
+            headcount_40_value = df_query_40['headcount'][0]
+            headcount_50_value = df_query_50['headcount'][0]
+            headcount_60_value = df_query_60['headcount'][0]
+
+        except:
+            headcount_40_value = np.nan
+            headcount_50_value = np.nan
+            headcount_60_value = np.nan
+            
+        headcount_40_list.append(headcount_40_value)
+        headcount_50_list.append(headcount_50_value)
+        headcount_60_list.append(headcount_60_value)
+        
+df['headcount_ratio_40'] = headcount_40_list
+df['headcount_ratio_50'] = headcount_50_list
+df['headcount_ratio_60'] = headcount_60_list
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print('Execution time:', elapsed_time, 'seconds')
 
 # %%
