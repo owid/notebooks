@@ -1,0 +1,6 @@
+varname,varlabel
+country_name,Country name
+year,Year
+democracy_satisf_claassen,Citizen satisfaction with democracy (Claassen)
+democracy_satisf_high_claassen,"Citizen satisfaction with democracy (upper bound, Claassen)"
+democracy_satisf_low_claassen,"Citizen satisfaction with democracy (lower bound, Claassen)"

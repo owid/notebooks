@@ -10,9 +10,8 @@ sheet_url <- "https://docs.google.com/spreadsheets/d/19XGeINgrM0_q5wVblicx-vrj2i
 df <- read_sheet(sheet_url)
 
 df <- df %>%
-  rename(Entity = `Name`) %>%
-  gather(Year,Conference_attendance, -Entity)
+  rename(Entity = Name) %>%
+  gather(Year, Conference_attendance, -Entity) %>%
+  mutate(Year = as.numeric(Year))
 
-df$Year <- as.numeric(df$Year)
-
-write_csv(df, "Attendance_ai_conference.csv")
+write_csv(df, "transformed/Attendance_ai_conference.csv", na = "")

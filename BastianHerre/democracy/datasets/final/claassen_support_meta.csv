@@ -1,0 +1,6 @@
+varname,varlabel
+country_name,Country name
+year,Year
+democracy_support_claassen,Citizen support for democracy (Claassen)
+democracy_support_high_claassen,"Citizen support for democracy (upper bound, Claassen)"
+democracy_support_low_claassen,"Citizen support for democracy (lower bound, Claassen)"
