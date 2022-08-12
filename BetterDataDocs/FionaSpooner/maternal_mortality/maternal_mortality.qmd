@@ -29,7 +29,7 @@ The definition of maternal mortality ratio is:
 
 In this notebook we will create a long-term time-series of maternal mortality ratio. To do this we will combine four existing datasets:
 
-* GapMinder (1751-2008)
+* Gapminder (1751-2008)
 * OECD (1960-2020)
 * World Health Organization (1990-2015)
 * World Health Organization (2000-2017)
@@ -47,7 +47,7 @@ This document will go through the steps required to create the data for this cha
 ```
 
 
-## Downloading the GapMinder data
+## Downloading the Gapminder data
 ```{python}
 #| echo: false 
 import numpy as np
@@ -74,7 +74,7 @@ def standardise_entities(entities_to_standardise: pd.Series, stan_dict:dict) -> 
 ```
 
 
-Firstly we download the data from GapMinder and save it locally. Then we read in the GapMinder data, clean up the column names and take a look at the data. 
+Firstly we download the data from Gapminder and save it locally. Then we read in the Gapminder data, clean up the column names and take a look at the data. 
 
 ```{python}
 r = requests.get("https://www.gapminder.org/documentation/documentation/gapdata010.xls")
@@ -93,10 +93,10 @@ df_d = df.drop(df.index[0:16]).reset_index()
 df_d["Country"] = df_d["Country"].str.strip()
 df_d = df_d[~pd.isna(df_d["MMR"])]
 ```
-## Cleaning the GapMinder data
+## Cleaning the Gapminder data
 
 :::{.callout-important}
-There are some issues with the GapMinder data - we will manually clean them here. 
+There are some issues with the Gapminder data - we will manually clean them here. 
 :::
 
 * The first three rows in the 'year' column seem to be wrong as it seems as if each row covers 110 years, but in [another source](https://docs.google.com/spreadsheets/u/0/d/14ZtQy9kd0pMRKWg_zKsTg3qKHoGtflj-Ekal9gIPZ4A/pub?gid=1#) they cover only 10 years.
@@ -401,7 +401,7 @@ who_plot = who_both[who_both['entity'].isin(entities_to_plot)]
 ```
 
 ```{python}
-plt.figure(figsize=(18, 18), facecolor="white")
+plt.figure(figsize=(20, 20), facecolor="white")
 
 # plot numbering starts at 1, not 0
 plot_number = 1
@@ -446,10 +446,51 @@ entities_to_chop = ['Afghanistan', 'Albania', 'Bahamas','Bahrain', 'Belarus', 'B
 
 
 who_clean = who_both.drop(who_both[(who_both['entity'].isin(entities_to_chop)) & (who_both['source'] == 'who_2015')].index)
-who_clean['source'] = 'who'
+#who_clean['source'] = 'who'
 
 ```
-## Combine the three datasets: GapMinder, OECD Stat and WHO
+
+### Check the transition between the two WHO datasets
+
+We remove countries which do not appear to have a smooth transition and inspect the remaining time-series:
+```{python}
+plt.figure(figsize=(22, 22), facecolor="white")
+
+# plot numbering starts at 1, not 0
+plot_number = 1
+for countryname, selection in who_clean.groupby("entity"):
+    # Inside of an image that's a 15x13 grid, put this
+    # graph in the in the plot_number slot.
+    ax = plt.subplot(13,13, plot_number)
+    selection_who_2015 = selection[selection["source"] == "who_2015"]
+    selection_who_2019 = selection[selection["source"] == "who_2019"]
+    if selection_who_2015.shape[0] > 0:
+        selection_who_2015.plot(
+            x="year",
+            y="maternal_mortality_rate",
+            ax=ax,
+            label=countryname,
+            legend=False,
+        )
+    if selection_who_2019.shape[0] > 0:
+        selection_who_2019.plot(
+            x="year",
+            y="maternal_mortality_rate",
+            ax=ax,
+            label=countryname,
+            legend=False,
+        )
+    ax.set_title(countryname)
+    # Go to the next plot for the next loop
+    plot_number = plot_number + 1
+plt.tight_layout()
+
+who_clean['source'] = 'who'
+```
+
+
+
+## Combine the three datasets: Gapminder, OECD Stat and WHO
 
 ```{python}
 df = pd.concat([df_gap, who_clean, oecd_df], ignore_index=True)
@@ -463,7 +504,7 @@ dup_ents = df['entity'][df.duplicated(subset=['entity', 'year'])].drop_duplicate
 
 ```
 
-Plotting time-series of the data from 1950 onwards. WHO is shown in blue, GapMinder in green and OECD in red.
+Plotting time-series of the data from 1950 onwards. WHO is shown in blue, Gapminder in green and OECD in red.
 ```{python}
 df_dup = df[(df.entity.isin(dup_ents)) & (df.year >= 1950)]
 
@@ -515,7 +556,7 @@ plt.tight_layout()
 The jump in the Sri Lanka trend is odd - we will drop the Gapminder data for this entity. 
 
 
-We'll keep the full extent of the GapMinder data where possible as this will ensure the smoothest time-series.
+We'll keep the full extent of the Gapminder data where possible as this will ensure the smoothest time-series.
 ```{python}
 no_dups_df = df[~df.duplicated(subset=['entity', 'year'],keep= False)]
 keep_gap = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.source == 'gapminder')]
