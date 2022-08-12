@@ -11,8 +11,6 @@ import plotly.express as px
 deciles = [1,2,3,4,5,6,7,8,9]
 
 #%%
-deciles = [1, 2]
-
 df_complete = pd.DataFrame()
 
 
