@@ -11,6 +11,8 @@ import numpy as np
 import time
 import plotly.express as px
 import plotly.io as pio
+import requests
+import io
 pio.renderers.default='jupyterlab+png+colab+notebook_connected+vscode'
 
 
@@ -20,7 +22,9 @@ def pip_query_country(popshare_or_povline, value, country_code="all", year="all"
     # Build query
     request_url = f'https://api.worldbank.org/pip/v1/pip?{popshare_or_povline}={value}&country={country_code}&year={year}&fill_gaps={fill_gaps}&welfare_type={welfare_type}&reporting_level={reporting_level}&format=csv'
 
-    df = pd.read_csv(request_url)
+    #df = pd.read_csv(request_url)
+    response = requests.get(request_url, timeout=50).content
+    df = pd.read_csv(io.StringIO(response.decode('utf-8')))
 
     return df
 
@@ -32,7 +36,9 @@ def pip_query_region(povline, year="all"):
     # Build query
     request_url = f'https://api.worldbank.org/pip/v1/pip-grp?povline={povline}&year={year}&group_by=wb&format=csv'
 
-    df = pd.read_csv(request_url)
+    #df = pd.read_csv(request_url)
+    response = requests.get(request_url, timeout=50).content
+    df = pd.read_csv(io.StringIO(response.decode('utf-8')))
 
     return df
 
@@ -396,6 +402,9 @@ for column_name in cols_to_check:
     print(f'Count of nulls in column {column_name} is : {count}')
 
 # %% [markdown]
+# ### Selected poverty variables
+
+# %% [markdown]
 # The average shortfall and income gap ratio have much more null values compared to the rest of poverty variables. If I exclude them from the analysis (besides poverty severity and the Watts index) I only have one observation with nulls: **Guinea-Bissau** in 1991:
 
 # %%
@@ -403,6 +412,9 @@ cols_to_check = col_headcount + col_headcount_ratio + col_povertygap + col_tot_s
 
 df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
 df_null_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# ### Poverty severity and Watts index
 
 # %% [markdown]
 # Isolating the poverty severity and the Watts index they have 8 null observations, including **Guinea-Bissau 1991**. The others are in **China (2012, 2014, 2015, 2018 and 2019), El Salvador 1989 and Sierra Leone 1989**. 
@@ -414,6 +426,9 @@ df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_
 df_null_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
 
 # %% [markdown]
+# ### Average shortfall and income gap ratio
+
+# %% [markdown]
 # 76 different countries show null values for average shortfall and income gap ratio variables.
 
 # %%
@@ -421,6 +436,9 @@ cols_to_check = col_avg_shortfall + col_incomegap
 
 df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
 df_null_selected['entity'].value_counts()
+
+# %% [markdown]
+# ### Mean, median, decile shares and inequality measures
 
 # %% [markdown]
 # If mean, median, deciles and inequality statistics are grouped together we have a larger group of nulls:
@@ -471,7 +489,28 @@ df_null_selected_noregions[['entity', 'year', 'reporting_level', 'welfare_type']
 df_null_selected_noregions['entity'].value_counts()
 
 # %% [markdown]
-# It is interesting that there are less null values for the (share of) decile 5 (9) than for the median (62), because one should be obtained from the other:
+# This is actually all the observations for these three countries.
+
+# %%
+df_excluding_null = df_final[~df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
+df_excluding_null = df_excluding_null[df_excluding_null['entity'].isin(['Indonesia', 'China', 'India'])]
+df_excluding_null[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# And for these three countries only the median is missing.
+
+# %%
+# Count number of nulls in all columns of Dataframe
+df_null_chn_ind_idn = df_null_selected_noregions[df_null_selected_noregions['entity'].isin(['Indonesia', 'China', 'India'])].copy().reset_index(drop=True)
+
+for column_name in cols_to_check:
+    column = df_null_chn_ind_idn[column_name]
+    # Get the count of nulls in column 
+    count = (column.isnull()).sum()
+    print(f'Count of nulls in column {column_name} is : {count}')
+
+# %% [markdown]
+# It is interesting that there are less null values for the share of decile 5 (9) than for the median (62), because one should be obtained from the other. 56/62 missing median values are concentrated in China, India and Indonesia:
 
 # %%
 # Count number of nulls in all columns of Dataframe
@@ -491,6 +530,55 @@ for column_name in cols_to_check:
     # Get the count of nulls in column 
     count = (column.isnull()).sum()
     print(f'Count of nulls in column {column_name} is : {count}')
+
+# %% [markdown]
+# ### Median
+
+# %% [markdown]
+# Missing median data can actually be obtained by using the `popshare` command instead of `povline`. While `povline` returns the headcount (and other poverty/inequality values) when a poverty line is given, `popshare` returns the poverty line when a population share (headcount) is given. This way, the poverty line the latter command returns when the popshare value is 0.5 is the median income/consumption value. See for example China
+
+# %%
+df_popshare = pip_query_country(
+                    popshare_or_povline = "popshare",
+                    country_code = "CHN",
+                    value = 0.5,
+                    reporting_level = "national",
+                    fill_gaps="false")
+
+# %% [markdown]
+# The poverty_line column corresponds to the missing median. We can see that for the cases where the median is not null, i.e. the urban and rural data.
+
+# %%
+df_popshare[['country_name','reporting_year', 'reporting_level', 'welfare_type', 'poverty_line', 'headcount',
+             'mean', 'median', 'mld','gini', 'polarization']].head(10)
+
+# %% [markdown]
+# This is not possible though for regions. Even if there is a `popshare` option available, the query returns poverty lines equal to 1.9.
+
+# %%
+popshare = 0.5
+year = "all"
+request_url = f'https://api.worldbank.org/pip/v1/pip-grp?popshare={popshare}&year={year}&group_by=wb&format=csv'
+df_popshare_regions = pd.read_csv(request_url)
+
+# %%
+df_popshare_regions
+
+# %% [markdown]
+# The median income values besides of their own value allow to estimate relative poverty measures. So it is essential to have median for each entity as possible.
+
+# %% [markdown]
+# ### Inequality indices
+# Six observations have their mean log deviation, gini and polarization measures missing: El Salvador 89, Guatemala 98, Guinea-Bissau 91, Guyana 92, Namibia 93 and Sierra Leone 89.
+
+# %%
+cols_to_check = col_inequality
+
+df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
+df_null_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+df_null_selected_noregions = df_null_selected[~df_null_selected['entity'].isin(world_list + regions_list + high_income_list)]
+df_null_selected_regions = df_null_selected[df_null_selected['entity'].isin(world_list + regions_list + high_income_list)]
+df_null_selected_noregions[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
 
 # %% [markdown]
 # ## Zero values
@@ -660,6 +748,57 @@ df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_incomegap]
 # %%
 print('Percentage of errors for each variable')
 (len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
+
+# %% [markdown]
+# ## Reporting and survey year comparison
+# The dataset contains two different year variables. One is `reporting_year`, renamed `year` for OWID processing, which is an integer value, but there is also a `survey_year` which represents when the income/consumption survey is ran in more than one year: the value has decimals representing the weight of the years. 
+#
+# >The decimal year notation is used when data are collected over **two calendar years**. The number before the decimal
+# point refers to the first year of data collection, while the numbers after the decimal point show the proportion of data
+# collected in the second year. For example, the Fiji survey (2013.24) was conducted in 2013 and 2014, with 24% of
+# the data collected in 2014. For these countries, we use a weighted average of the annual CPI series, where the weights
+# are based on the data collection. In the case of Fiji, we use a CPI that is the weighted average of the 2013 and 2014
+# CPIs, with weights of 76% and 24%, respectively.
+#
+# (Atamanov et al. 2018. “April 2018 PovcalNet update: What’s new.” Global Poverty Monitoring Technical Note 1. Washington, DC: World Bank. Footnote 2, available [here](https://documents1.worldbank.org/curated/en/173171524715215230/pdf/April-2018-Povcalnet-Update-What-s-New.pdf))
+#
+# We can compare these values by dividing them and see how different they are.
+# The ratio between the reporting year and the survey year is almost always less or equal than 1, except for the case of Tanzania in 2018: the survey year is 2017.92. The ratio is also very close to 1, from 0.99954 to 1.00004.
+
+# %%
+df_final['year_ratio'] = df_final['year'] / df_final['survey_year']
+
+fig = px.scatter(df_final, x="year", y="year_ratio", color="entity",
+                 hover_data=['survey_year'], opacity=0.5,
+                 title="<b>Reporting year vs Survey year</b><br>Ratio between both measures vs year",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+# %% [markdown]
+# The absolute difference between the values is always 1. The cases which they are more apart are when the survey year is 0.92 greater than the reporting year (Tanzania 91, Vietnam 97, Eswatini 2000)
+
+# %%
+df_final['year_diff'] = df_final['year'] - df_final['survey_year']
+
+fig = px.scatter(df_final, x="year", y="year_diff", color="entity",
+                 hover_data=['survey_year'], opacity=0.5,
+                 title="<b>Reporting year vs Survey year</b><br>Difference between both measures vs year",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+# %% [markdown]
+# Most of the data though is the same. The ratio is 1 for about 89% of the data.
+
+# %%
+fig = px.histogram(df_final, x="year_ratio", nbins=50, histnorm="percent", marginal="box")
+fig.show()
+
+# %% [markdown]
+# For OWID purposes, `reporting_year` is preferred, though `survey_year` is also available.
 
 # %% [markdown]
 # ## Aggregation of data
