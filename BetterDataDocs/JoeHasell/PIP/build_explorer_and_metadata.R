@@ -236,7 +236,7 @@ build_OWID_controls<- function(gsheets_id){
   
     
     # for each table
-    for (i in 2:nrow(tables)){
+    for (i in 1:nrow(tables)){
       
       this_tableSlug<- as.character(tables[i,"tableSlug"])
       
