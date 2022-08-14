@@ -96,8 +96,8 @@ applymyReplaceFunRowwise<- function(df_block, sheet_name, df_replacements_rows){
 # Specify special sheet names (the sheets that do not contain Aux control options)
 special_sheets<- list()
 
-special_sheets[["explorer_sheetname"]]<- "explorer_controls"
-special_sheets[["grapher_stubs_sheetname"]]<- "grapher_stubs_main"
+special_sheets[["explorer_sheetname"]]<- "explorer_sheet_main"
+special_sheets[["graphers_stubs_sheetname"]]<- "grapher_stubs_main"
 special_sheets[["table_stubs_sheetname"]]<- "table_stubs_main"
 special_sheets[["global_controls_sheetname"]]<- "global_controls_main"
 special_sheets[["tables_sheetname"]]<- "tables_main"
@@ -108,16 +108,24 @@ aux_sheet_pattern<- "AUX_" #The string in the workbook sheetnames that calls a
                             #given
 
 
-# Specify the set of column headers
 
 # This is the function
 build_OWID_controls<- function(gsheets_id){
   
+  # Authorise access to google sheets
+  gs4_auth()
+  
+  # Clear current contents
+  range_clear(
+    ss = gsheets_id,
+    sheet = special_sheets[["explorer_sheetname"]],
+    range = NULL,
+    reformat = TRUE)
+  
+  
   # Print progress status
   print("Multiplying up the controls")
   
-  # Authorise access to google sheets
-  gs4_auth()
   
   # Make a vector of the names of the other sheets (these are the Aux sheets, which will 
     # be used to multiply-up the control stubs, replacing the various combination of values 
@@ -127,8 +135,25 @@ build_OWID_controls<- function(gsheets_id){
   
   stubs_multiplied<- list()
   
+  # grab global controls as specified in workbook
+  global_controls<- read_sheet(gsheets_id, sheet = special_sheets[["global_controls_sheetname"]])
+  
+  last_row<- 0
+  
+  range_write(
+    ss = gsheets_id,
+    data = global_controls,
+    sheet = special_sheets[["explorer_sheetname"]],
+    range = cell_limits(c(last_row + 1, 1), c(NA, NA)),
+    col_names = FALSE,
+    reformat = FALSE
+  )
+  
+  last_row<- last_row + nrow(global_controls) # keep track of the last row printed in the google sheet
+  
+  
   # For both grapher and table stubs...
-  for(stubs_sheet in c("grapher", "table")){
+  for(stubs_sheet in c("graphers", "table")){
     
     # Pull in the stubs from gsheets
     stubs<- read_sheet(gsheets_id, sheet = special_sheets[[paste0(stubs_sheet,"_stubs_sheetname")]])
@@ -165,178 +190,115 @@ build_OWID_controls<- function(gsheets_id){
     
   }
   
-  return(stubs_multiplied)
+    
+    # Print progress status
+    print(paste0("Overwriting explorer sheet - graphers"))
+
+    # Write the word 'graphers' or  in the right place
+    print_col<- 1
+    
+    range_write(
+            ss = gsheets_id,
+            data = as.data.frame('graphers'),  #range_write requires dataframe input
+            sheet = special_sheets[["explorer_sheetname"]],
+            range = cell_limits(c(last_row + 2, print_col), c(NA, NA)), #NB print in first column
+            col_names = FALSE,
+            reformat = FALSE
+          )
+
+    
+    last_row<- last_row + 2 # keep track of the last row printed in the google sheet
+    
+    
+
+    # Print the controls one row down, and from second column
+    print_col<- 2
+      
+    range_write(
+            ss = gsheets_id,
+            data = stubs_multiplied[['graphers']],
+            sheet = special_sheets[["explorer_sheetname"]],
+            range = cell_limits(c(last_row +1, print_col), c(NA, NA)),
+            col_names = TRUE,
+            reformat = FALSE
+          )
+    
+    last_row<- last_row + nrow(stubs_multiplied[['graphers']]) + 1 # keep track of the last row printed in the google sheet
+    
+
+    
+    # Print progress status
+    print("Overwriting explorer sheet - table controls")
+    
+    
+    # Grab tables sheet from workbook
+    tables<- read_sheet(gsheets_id, sheet = special_sheets[["tables_sheetname"]])
+  
+    
+    # for each table
+    for (i in 2:nrow(tables)){
+      
+      this_tableSlug<- as.character(tables[i,"tableSlug"])
+      
+      
+      # Print progress status
+      print(paste0("Overwriting explorer sheet - table controls: ", this_tableSlug))
+      
+      # Filter the controls for the rows matching this table slug and drop the tableSlug column from the table controls 
+      df_table_controls_this_table<- stubs_multiplied[['table']] %>%
+            filter(tableSlug == this_tableSlug) %>%
+            select(-tableSlug)
+      
+    
+      
+      # table link and header for table cols
+
+        # build a dataframe that contains the right text
+        table_header<- tables[i,]
+
+        table_header<- rbind(table_header, table_header) %>%
+                    mutate(first_col = c("table", "columns")) %>%
+                    select(first_col, links, tableSlug)
+
+        table_header[2,2]<- this_tableSlug
+        table_header[2,3]<- ""
+
+
+         # print the table link and header
+         print_col<- 1
+
+         range_write(
+                    ss = gsheets_id,
+                    data = table_header,
+                    sheet = special_sheets[["explorer_sheetname"]],
+                    range = cell_limits(c(last_row + 2, print_col), c(NA, NA)),
+                    col_names = FALSE,
+                    reformat = FALSE
+                  )
+
+         last_row<- last_row + nrow(table_header) + 2 # keep track of the last row printed in the google sheet
+         
+         
+      # print table controls
+      print_col<- 2
+
+      range_write(
+              ss = gsheets_id,
+              data = df_table_controls_this_table,
+              sheet = special_sheets[["explorer_sheetname"]],
+              range = cell_limits(c(last_row+1, print_col), c(NA, NA)),
+              col_names = TRUE,
+              reformat = FALSE
+                     )
+      
+      
+         last_row<- last_row + nrow(df_table_controls_this_table) + 1 # keep track of the last row printed in the google sheet
+         
+    }
+    
+
 }
 
-
-  
-  # ## Write to final controls google sheet
-  # 
-  # # Clear current contents
-  # range_clear(
-  #   ss = gsheets_id, 
-  #   sheet = special_sheets[["explorer_sheetname"]], 
-  #   range = NULL, 
-  #   reformat = TRUE)
-  # 
-  # 
-  # 
-  # # initial global controls
-  # 
-  #   # Print progress status
-  #   print("Overwriting explorer sheet - Global controls")
-  # 
-  #   # grab global controls as specified in workbook 
-  #   global_controls<- read_sheet(gsheets_id, sheet = special_sheets[["global_controls_sheetname"]])
-  # 
-  # range_write(
-  #   ss = gsheets_id,
-  #   data = global_controls,
-  #   sheet = special_sheets[["explorer_sheetname"]],
-  #   range = cell_limits(c(1, 1), c(NA, NA)),
-  #   col_names = FALSE,
-  #   reformat = FALSE
-  # )
-  #   
-  # 
-  #   # Write grapher rows
-  # 
-  #     # Print progress status
-  #     print("Overwriting explorer sheet - Global 'graphers' controls")
-  # 
-  #     # Write the word 'graphers' in the right place
-  #     print_row<- nrow(global_controls) + 2 #The row to print "graphers" on = the number of controls + a gap
-  #     print_col<- 1
-  #       
-  #       range_write(
-  #         ss = gsheets_id,
-  #         data = as.data.frame("graphers"),  #range_write requires dataframe input (I transpose here to flip the vector to rows)
-  #         sheet = special_sheets[["explorer_sheetname"]],
-  #         range = cell_limits(c(print_row, 1), c(NA, NA)), #NB print in first column
-  #         col_names = FALSE,
-  #         reformat = FALSE
-  #       )
-  # 
-  # 
-  #     # Print the grapher columns in the next row
-  #       
-  #       # Grab the grapher columns as specified in workbook 
-  #       graphers_columns<- read_sheet(gsheets_id, sheet = special_sheets[["graphers_columns_sheetname"]])
-  #      
-  #       # Select the grapher columns from the controls and rename to final names
-  #       df_grapher_controls<- controls_multiplied_up %>%
-  #         select(all_of(graphers_columns$names_in_this_workbook)) #This also orders the columns
-  #       
-  #       # rename columns to final explorer names
-  #       names(df_grapher_controls)<- graphers_columns$final_explorer_names #Note names vector is in same order
-  # 
-  #       
-  #       # Filter out any controls with title missing (which will have ben added to build multi-metric rows)
-  #       df_grapher_controls<- df_grapher_controls %>%
-  #         filter(!is.na(title))
-  #       
-  #       
-  #       # Print the controls one row down, and from second column
-  #       print_row<- print_row + 1
-  #       print_col<- 2
-  #       range_write(
-  #         ss = gsheets_id,
-  #         data = df_grapher_controls,
-  #         sheet = special_sheets[["explorer_sheetname"]],
-  #         range = cell_limits(c(print_row, print_col), c(NA, NA)), 
-  #         col_names = TRUE,
-  #         reformat = FALSE
-  #       )
-  #   
-  #       
-  #     # Write table controls 
-  #       
-  #       # Print progress status
-  #       print("Overwriting explorer sheet - table controls")
-  #       
-  #       # Grab tables sheet from workbook
-  #       tables<- read_sheet(gsheets_id, sheet = special_sheets[["tables_sheetname"]])
-  #       
-  #       # Grab table columns sheet from workbook
-  #       table_columns<- read_sheet(gsheets_id, sheet = special_sheets[["table_columns_sheetname"]])
-  #       
-  #       
-  #       
-  #       # specify starting print row (the length of the two blocks printed so far, plus header and gap)
-  #       print_row<- nrow(global_controls) + nrow(df_grapher_controls) + 5 
-  # 
-  #       # for each table
-  #       for (i in 1:nrow(tables)){
-  #         
-  #         this_tableSlug<- as.character(tables[i,"tableSlug"])
-  #         
-  #         # Print progress status
-  #         print(paste0("Overwriting explorer sheet - table controls: ", this_tableSlug))
-  #         
-  #         # Filter the controls for the rows matching this table slug
-  #         df_table_controls_this_table<- controls_multiplied_up %>%
-  #           filter(tableSlug == this_tableSlug)
-  #         
-  #         # Select the table columns from the controls and rename to final names
-  #         df_table_controls_this_table<- df_table_controls_this_table %>%
-  #           select(all_of(table_columns$names_in_this_workbook)) #This also orders the columns
-  #         
-  #         # rename columns to final explorer names
-  #         names(df_table_controls_this_table)<- table_columns$final_explorer_names #Note names vector is in same order
-  #         
-  #         # Filter out any controls with name missing (because of multi-metric rows)
-  #         df_table_controls_this_table<- df_table_controls_this_table %>%
-  #           filter(!is.na(name))
-  #         
-  #         
-  #         
-  #         # table link and header
-  # 
-  #           # build a dataframe that contains the right text
-  #           table_header<- tables[i,]
-  #            
-  #           table_header<- rbind(table_header, table_header) %>%
-  #             mutate(first_col = c("table", "columns")) %>%
-  #             select(first_col, links, tableSlug)
-  #           
-  #           table_header[2,2]<- this_tableSlug
-  #           table_header[2,3]<- ""
-  #           
-  #             
-  #           # print the table link and header
-  #           print_col<- 1
-  #           
-  #           range_write(
-  #             ss = gsheets_id,
-  #             data = table_header,
-  #             sheet = special_sheets[["explorer_sheetname"]],
-  #             range = cell_limits(c(print_row, print_col), c(NA, NA)),
-  #             col_names = FALSE,
-  #             reformat = FALSE
-  #           )
-  #         
-  #         
-  #         # print table controls
-  #           print_row<- print_row + 2 # Increment print row
-  #           print_col<- 2
-  #         
-  #           range_write(
-  #             ss = gsheets_id,
-  #             data = df_table_controls_this_table,
-  #             sheet = special_sheets[["explorer_sheetname"]],
-  #             range = cell_limits(c(print_row, print_col), c(NA, NA)),
-  #             col_names = TRUE,
-  #             reformat = FALSE
-  #           )
-  #         
-  #       # Increment print row
-  #       print_row<- print_row + nrow(df_table_controls_this_table) + 2
-  #         
-  #       }
-        
-      
-  
-  
   
 
 
