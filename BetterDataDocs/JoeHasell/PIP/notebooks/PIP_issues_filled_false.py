@@ -227,7 +227,16 @@ headcounts_region_wide = headcounts_region_wide.reset_index()
 #Concatenate country and regional wide datasets
 df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
 
+
+# %%
+
 #Keep only one variable (multiple columns with the same values were generated for each poverty line)
+
+# JH COMMENT: This seems a bit convoluted to me. I think it'd be easier to follow
+    # if you didn't get duplicate versions of deciles, gini etc (one for each poverty
+    # line) and then have to drop them in this way. And instead you get these variables 
+    # from one additional API query (outside of the poverty line loop) and then merge 
+    # them in.
 for i in range(len(poverty_lines_cents)):
     if i == 0:
         df_final.rename(columns={f'reporting_pop_{poverty_lines_cents[i]}': 'reporting_pop',
@@ -280,6 +289,8 @@ for i in range(len(poverty_lines_cents)):
                               ],
                       inplace=True)
 
+
+# %%
 #Calculate numbers in poverty between pov lines for stacked area charts
 #Make sure the poverty lines are in order, lowest to highest
 poverty_lines_cents.sort()
@@ -328,6 +339,9 @@ for i in range(len(poverty_lines_cents)):
         varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
         df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
         col_stacked_pct.append(varname_pct)
+
+
+# %%
         
 # Standardize entity names
 df_final = standardize_entities(
