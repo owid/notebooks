@@ -46,30 +46,21 @@ for p in poverty_lines_cents:
                 fill_gaps="false")
 
             #"Entity" when is in titlecase is automatically recognised as EntityName
-            df = df.rename(columns={'country_name': 'Entity'})
+            #Year is only recognised as a Year type when titlecase
+            df = df.rename(columns={'country_name': 'Entity',
+                                    'reporting_year': 'Year'})
 
             # Keep only these variables:
             keep_vars = [ 
                 'Entity',
-                'reporting_year',
+                'Year',
                 'reporting_level',
                 'welfare_type', 
                 'headcount',
                 'poverty_gap',
-                'reporting_pop',
-                'survey_year',
-                'survey_comparability', 
-                'comparable_spell', 
                 'poverty_severity', 
-                'watts', 
-                'mean', 
-                'median', 
-                'mld',
-                'gini', 
-                'polarization', 
-                'decile1', 'decile2', 'decile3', 'decile4','decile5', 'decile6', 'decile7', 'decile8', 'decile9', 'decile10',
-                'cpi', 'ppp', 'reporting_gdp', 'reporting_pce', 
-                'distribution_type', 'estimation_type'
+                'watts',
+                'reporting_pop'
             ]
 
         # Make the API query for region data
@@ -79,17 +70,17 @@ for p in poverty_lines_cents:
 
             df = pip_query_region(p_dollar)
 
-            df = df.rename(columns={'region_name': 'Entity'})
+            df = df.rename(columns={'region_name': 'Entity',
+                                   'reporting_year': 'Year'})
 
             keep_vars = [ 
                 'Entity',
-                'reporting_year',
+                'Year',
                 'headcount',
                 'poverty_gap',
-                'reporting_pop',
                 'poverty_severity',
                 'watts',
-                'mean'
+                'reporting_pop'
             ]
 
 
@@ -99,9 +90,6 @@ for p in poverty_lines_cents:
         df = df.rename(columns={
         'headcount':'headcount_ratio',
         'poverty_gap': 'poverty_gap_index'})
-        
-        for i in range(1,11):
-            df = df.rename(columns={f'decile{i}': f'decile{i}_share'})
         
 
         # Calculate number in poverty
@@ -132,6 +120,9 @@ for p in poverty_lines_cents:
 
         #Concatenate all the results
         df_complete = pd.concat([df_complete, df],ignore_index=True)
+        
+#I drop 'reporting_pop' for now to avoid it to get multiplied by all the poverty lines in the next section
+df_complete = df_complete.drop(columns=['reporting_pop'])
 
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -139,8 +130,86 @@ print('Execution time:', elapsed_time, 'seconds')
 
 
 # %% [markdown]
+# ## Data transformations
+
+# %%
+# Create different combinations of dataframe from df_complete
+
+# Select data for countries 
+headcounts_country = df_complete[(df_complete['ent_type'] == 'country')].reset_index(drop=True)
+
+# Select data for regions
+headcounts_region = df_complete[(df_complete['ent_type'] == 'region')].reset_index(drop=True)
+
+#Create pivot tables to make the data wide
+headcounts_country_wide = headcounts_country.pivot_table(index=['Entity', 'Year', 'reporting_level', 'welfare_type'], 
+                columns='poverty line')
+
+headcounts_region_wide = headcounts_region.pivot_table(index=['Entity', 'Year'], 
+                columns='poverty line')
+
+#Join multi index columns
+headcounts_country_wide.columns = [''.join(col).strip() for col in headcounts_country_wide.columns.values]
+headcounts_country_wide = headcounts_country_wide.reset_index()
+
+headcounts_region_wide.columns = [''.join(col).strip() for col in headcounts_region_wide.columns.values]
+headcounts_region_wide = headcounts_region_wide.reset_index()
+
+#Concatenate country and regional wide datasets
+df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
+
+
+#Integrate variables not coming from multiple poverty lines
+df_query_country = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = 1.9, 
+                    fill_gaps="false")
+df_query_country = df_query_country.rename(columns={'country_name': 'Entity',
+                                                    'reporting_year': 'Year'})
+
+df_query_regions = pip_query_region(1.9)
+df_query_regions = df_query_regions.rename(columns={'region_name': 'Entity',
+                                                    'reporting_year': 'Year'})
+
+df_query_country = df_query_country[['Entity', 'Year', 'reporting_level', 'welfare_type',
+                                     'reporting_pop',
+                                     'survey_year',
+                                     'survey_comparability', 
+                                     'comparable_spell', 
+                                     'mean', 
+                                     'median', 
+                                     'mld',
+                                     'gini', 
+                                     'polarization', 
+                                     'decile1', 'decile2', 'decile3', 'decile4','decile5', 
+                                     'decile6', 'decile7', 'decile8', 'decile9', 'decile10',
+                                     'cpi', 'ppp', 'reporting_gdp', 'reporting_pce', 
+                                     'distribution_type', 'estimation_type']]
+
+for i in range(1,11):
+    df_query_country = df_query_country.rename(columns={f'decile{i}': f'decile{i}_share'})
+
+
+df_query_regions = df_query_regions[['Entity', 'Year', 'reporting_pop', 'mean']]
+
+df_final = pd.merge(df_final, df_query_country,
+                    how='left', 
+                    on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
+                    validate='many_to_one')
+
+df_final = pd.merge(df_final, df_query_regions,
+                    how='left', 
+                    on=['Entity', 'Year'],
+                    validate='many_to_one')
+
+df_final['mean'] = np.where((df_final['mean_x'].isnull()) & ~(df_final['mean_y'].isnull()), df_final['mean_y'], df_final['mean_x'])
+df_final['reporting_pop'] = np.where((df_final['reporting_pop_x'].isnull()) & ~(df_final['reporting_pop_y'].isnull()), df_final['reporting_pop_y'], df_final['reporting_pop_x'])
+
+df_final = df_final.drop(columns=['mean_x', 'mean_y', 'reporting_pop_x', 'reporting_pop_y'])
+
+# %% [markdown]
 # ## Patching missing median data
-# As a small but considerable part of the median data is not available by default (PIP does not provide China, India and Indonesia national medians). It can be obtained by getting the poverty line for the 50% of the population, with the `popshare` command.
+# A small but considerable part of the median data is not available by default (PIP does not provide China, India and Indonesia national medians). It can be obtained by getting the poverty line for the 50% of the population, with the `popshare` command.
 
 # %%
 start_time = time.time()
@@ -175,20 +244,21 @@ for i in range(len(df_query)):
                
 
 df_query['median2'] = median_list
+df_query = df_query.rename(columns={'country_name': 'Entity',
+                                    'reporting_year': 'Year'})
 null_median = (df_query['median'].isnull()).sum()
 null_median2 = (df_query['median2'].isnull()).sum()
 print(f'Before patching: {null_median} nulls for median')
 print(f'After patching: {null_median2} nulls for median')
 
-df_complete = pd.merge(df_complete, df_query[['country_name', 'reporting_year', 'welfare_type', 'reporting_level', 'median2']], 
+df_final = pd.merge(df_final, df_query[['Entity', 'Year', 'welfare_type', 'reporting_level', 'median2']], 
                        how='left', 
-                       left_on=['Entity', 'reporting_year', 'welfare_type', 'reporting_level'], 
-                       right_on=['country_name', 'reporting_year', 'welfare_type', 'reporting_level'], 
+                       on=['Entity', 'Year', 'welfare_type', 'reporting_level'], 
                        validate='many_to_one')
-df_complete['median_ratio'] = df_complete['median'] / df_complete['median2']
-median_ratio_median = (df_complete['median_ratio']).median()
-median_ratio_min = (df_complete['median_ratio']).min()
-median_ratio_max = (df_complete['median_ratio']).max()
+df_final['median_ratio'] = df_final['median'] / df_final['median2']
+median_ratio_median = (df_final['median_ratio']).median()
+median_ratio_min = (df_final['median_ratio']).min()
+median_ratio_max = (df_final['median_ratio']).max()
 
 if median_ratio_median == 1 and median_ratio_min == 1 and median_ratio_max == 1:
     print(f'Patch successful.')
@@ -197,8 +267,8 @@ else:
     print(f'Patch changed some median values. Please check for errors.')
     print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
 
-df_complete.drop(columns=['median', 'median_ratio'], inplace=True)
-df_complete.rename(columns={'median2': 'median'}, inplace=True)
+df_final.drop(columns=['median', 'median_ratio'], inplace=True)
+df_final.rename(columns={'median2': 'median'}, inplace=True)
 
 
 end_time = time.time()
@@ -230,115 +300,29 @@ for dec in range(1,10):
 df_threshold = pd.pivot(df_threshold, index=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
                        columns='decile_name', values='poverty_line').reset_index()
 
-df_threshold = df_threshold.rename(columns={'country_name': 'Entity'})
+df_threshold = df_threshold.rename(columns={'country_name': 'Entity',
+                                            'reporting_year': 'Year'})
 
-df_complete = pd.merge(df_complete, df_threshold, 
+df_final = pd.merge(df_final, df_threshold, 
                        how='left', 
-                       on=['Entity', 'reporting_year', 'welfare_type', 'reporting_level'],
+                       on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
                        validate='many_to_one')
 
 # %% [markdown]
-# ## Data transformations
+# ## Integrate the relative poverty data
+# The data comes from an over 1 hour query in `relative_poverty.py`. Be warned you have to update it first when running a massive update to the dataset
 
 # %%
-# Create different combinations of dataframe from df_complete
+file = 'data/relative_poverty.csv'
+df_relative = pd.read_csv(file)
 
-# Select data for countries 
-headcounts_country = df_complete[(df_complete['ent_type'] == 'country')].reset_index(drop=True)
+col_headcount_relative = ['headcount_40', 'headcount_50', 'headcount_60']
+col_headcount_ratio_relative = ['headcount_ratio_40', 'headcount_ratio_50', 'headcount_ratio_60']
 
-# Select data for regions
-headcounts_region = df_complete[(df_complete['ent_type'] == 'region')].reset_index(drop=True)
+df_final = pd.merge(df_final, df_relative[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_headcount_relative + col_headcount_ratio_relative], 
+                    how='left', on=['Entity', 'Year', 'reporting_level', 'welfare_type'])
 
-#Create pivot tables to make the data wide
-headcounts_country_wide = headcounts_country.pivot_table(index=['Entity', 'reporting_year','reporting_level','welfare_type',
-                                                               'comparable_spell', 'distribution_type', 'estimation_type'], 
-                columns='poverty line')
-
-headcounts_region_wide = headcounts_region.pivot_table(index=['Entity', 'reporting_year'], 
-                columns='poverty line')
-
-#Join multi index columns
-headcounts_country_wide.columns = [''.join(col).strip() for col in headcounts_country_wide.columns.values]
-headcounts_country_wide = headcounts_country_wide.reset_index()
-
-headcounts_region_wide.columns = [''.join(col).strip() for col in headcounts_region_wide.columns.values]
-headcounts_region_wide = headcounts_region_wide.reset_index()
-
-#Concatenate country and regional wide datasets
-df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
-
-#Keep only one variable (multiple columns with the same values were generated for each poverty line)
-for i in range(len(poverty_lines_cents)):
-    if i == 0:
-        df_final.rename(columns={f'reporting_pop_{poverty_lines_cents[i]}': 'reporting_pop',
-                                 f'survey_year_{poverty_lines_cents[i]}': 'survey_year',
-                                 f'survey_comparability_{poverty_lines_cents[i]}': 'survey_comparability',
-                                 f'mean_{poverty_lines_cents[i]}': 'mean',
-                                 f'median_{poverty_lines_cents[i]}': 'median',
-                                 f'mld_{poverty_lines_cents[i]}': 'mld',
-                                 f'gini_{poverty_lines_cents[i]}': 'gini',
-                                 f'polarization_{poverty_lines_cents[i]}': 'polarization',
-                                 f'cpi_{poverty_lines_cents[i]}': 'cpi',
-                                 f'ppp_{poverty_lines_cents[i]}': 'ppp',
-                                 f'reporting_gdp_{poverty_lines_cents[i]}': 'reporting_gdp',
-                                 f'reporting_pce_{poverty_lines_cents[i]}': 'reporting_pce',
-                                 f'decile1_share_{poverty_lines_cents[i]}': 'decile1_share',
-                                 f'decile2_share_{poverty_lines_cents[i]}': 'decile2_share',
-                                 f'decile3_share_{poverty_lines_cents[i]}': 'decile3_share',
-                                 f'decile4_share_{poverty_lines_cents[i]}': 'decile4_share',
-                                 f'decile5_share_{poverty_lines_cents[i]}': 'decile5_share',
-                                 f'decile6_share_{poverty_lines_cents[i]}': 'decile6_share',
-                                 f'decile7_share_{poverty_lines_cents[i]}': 'decile7_share',
-                                 f'decile8_share_{poverty_lines_cents[i]}': 'decile8_share',
-                                 f'decile9_share_{poverty_lines_cents[i]}': 'decile9_share',
-                                 f'decile10_share_{poverty_lines_cents[i]}': 'decile10_share',
-                                 f'decile2_thr_{poverty_lines_cents[i]}': 'decile2_thr',
-                                 f'decile3_thr_{poverty_lines_cents[i]}': 'decile3_thr',
-                                 f'decile4_thr_{poverty_lines_cents[i]}': 'decile4_thr',
-                                 f'decile5_thr_{poverty_lines_cents[i]}': 'decile5_thr',
-                                 f'decile6_thr_{poverty_lines_cents[i]}': 'decile6_thr',
-                                 f'decile7_thr_{poverty_lines_cents[i]}': 'decile7_thr',
-                                 f'decile8_thr_{poverty_lines_cents[i]}': 'decile8_thr',
-                                 f'decile9_thr_{poverty_lines_cents[i]}': 'decile9_thr',
-                                 f'decile10_thr_{poverty_lines_cents[i]}': 'decile10_thr'
-                                }, 
-                        inplace=True)
-    else:
-        df_final.drop(columns=[f'reporting_pop_{poverty_lines_cents[i]}',
-                               f'survey_year_{poverty_lines_cents[i]}',
-                               f'survey_comparability_{poverty_lines_cents[i]}',
-                               f'mean_{poverty_lines_cents[i]}',
-                               f'median_{poverty_lines_cents[i]}',
-                               f'mld_{poverty_lines_cents[i]}',
-                               f'gini_{poverty_lines_cents[i]}',
-                               f'polarization_{poverty_lines_cents[i]}',
-                               f'cpi_{poverty_lines_cents[i]}',
-                               f'ppp_{poverty_lines_cents[i]}',
-                               f'reporting_gdp_{poverty_lines_cents[i]}',
-                               f'reporting_pce_{poverty_lines_cents[i]}',
-                               f'decile1_share_{poverty_lines_cents[i]}',
-                               f'decile2_share_{poverty_lines_cents[i]}',
-                               f'decile3_share_{poverty_lines_cents[i]}',
-                               f'decile4_share_{poverty_lines_cents[i]}',
-                               f'decile5_share_{poverty_lines_cents[i]}',
-                               f'decile6_share_{poverty_lines_cents[i]}',
-                               f'decile7_share_{poverty_lines_cents[i]}',
-                               f'decile8_share_{poverty_lines_cents[i]}',
-                               f'decile9_share_{poverty_lines_cents[i]}',
-                               f'decile10_share_{poverty_lines_cents[i]}',
-                               f'decile2_thr_{poverty_lines_cents[i]}',
-                               f'decile3_thr_{poverty_lines_cents[i]}',
-                               f'decile4_thr_{poverty_lines_cents[i]}',
-                               f'decile5_thr_{poverty_lines_cents[i]}',
-                               f'decile6_thr_{poverty_lines_cents[i]}',
-                               f'decile7_thr_{poverty_lines_cents[i]}',
-                               f'decile8_thr_{poverty_lines_cents[i]}',
-                               f'decile9_thr_{poverty_lines_cents[i]}',
-                               f'decile10_thr_{poverty_lines_cents[i]}',
-                              ],
-                      inplace=True)
-
-
+# %%
 #Calculate numbers in poverty between pov lines for stacked area charts
 #Make sure the poverty lines are in order, lowest to highest
 poverty_lines_cents.sort()
@@ -428,8 +412,6 @@ df_final.loc[(\
     df_final['reporting_level'].isin(["urban", "rural"])),'reporting_level']
 
 # Tidying – Rename cols
-#Year is only recognised as a Year type when titlecase
-df_final = df_final.rename(columns={'reporting_year': 'Year'})
 
 #Order columns by categorising them
 col_ids = ['Entity', 'Year', 'reporting_level', 'welfare_type', 'reporting_pop']
@@ -458,6 +440,10 @@ for i in range(len(poverty_lines_cents)):
     
 #Multiplies decile columns by 100
 df_final.loc[:, col_decile_share] = df_final[col_decile_share] * 100
+
+#Concatenate the entire list of columns and reorder
+cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_headcount_relative + col_headcount_ratio_relative + col_decile_share + col_decile_thr + col_decile_avg + col_inequality + col_extra
+df_final = df_final[cols]
 
 # %% [markdown]
 # ## Dropping rows with issues
@@ -507,26 +493,6 @@ print(f'{len(df_final)} rows before deciles values check CODE NOT READY YET')
 
 # %%
 df_final
-
-# %% [markdown]
-# ## Integrate the relative poverty data
-# The data comes from an over 1 hour query in `relative_poverty.py`. Be warned you have to update it first when running a massive update to the dataset
-
-# %%
-file = 'data/relative_poverty.csv'
-df_relative = pd.read_csv(file)
-
-col_headcount_relative = ['headcount_40', 'headcount_50', 'headcount_60']
-col_headcount_ratio_relative = ['headcount_ratio_40', 'headcount_ratio_50', 'headcount_ratio_60']
-
-df_final = pd.merge(df_final, df_relative[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_headcount_relative + col_headcount_ratio_relative], 
-                    how='left', on=['Entity', 'Year', 'reporting_level', 'welfare_type'])
-
-
-
-#Concatenate the entire list of columns and reorder
-cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_headcount_relative + col_headcount_ratio_relative + col_decile_share + col_decile_thr + col_decile_avg + col_inequality + col_extra
-df_final = df_final[cols]
 
 # %% [markdown]
 # ## Exporting the transformed dataset
