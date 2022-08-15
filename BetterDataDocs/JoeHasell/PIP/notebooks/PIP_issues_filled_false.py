@@ -167,7 +167,8 @@ for p in poverty_lines_cents:
         'poverty_gap': 'poverty_gap_index'})
 
         # Calculate number in poverty
-        df['headcount'] = df['headcount_ratio'] * df['reporting_pop']  
+        df['headcount'] = df['headcount_ratio'] * df['reporting_pop']
+        df['headcount'] = df['headcount'].round(0)
 
         # Calculate shortfall of incomes
         df['total_shortfall'] = df['poverty_gap_index'] * p_dollar * df['reporting_pop']                      
@@ -226,7 +227,16 @@ headcounts_region_wide = headcounts_region_wide.reset_index()
 #Concatenate country and regional wide datasets
 df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
 
+
+# %%
+
 #Keep only one variable (multiple columns with the same values were generated for each poverty line)
+
+# JH COMMENT: This seems a bit convoluted to me. I think it'd be easier to follow
+    # if you didn't get duplicate versions of deciles, gini etc (one for each poverty
+    # line) and then have to drop them in this way. And instead you get these variables 
+    # from one additional API query (outside of the poverty line loop) and then merge 
+    # them in.
 for i in range(len(poverty_lines_cents)):
     if i == 0:
         df_final.rename(columns={f'reporting_pop_{poverty_lines_cents[i]}': 'reporting_pop',
@@ -279,6 +289,8 @@ for i in range(len(poverty_lines_cents)):
                               ],
                       inplace=True)
 
+
+# %%
 #Calculate numbers in poverty between pov lines for stacked area charts
 #Make sure the poverty lines are in order, lowest to highest
 poverty_lines_cents.sort()
@@ -327,6 +339,9 @@ for i in range(len(poverty_lines_cents)):
         varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
         df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
         col_stacked_pct.append(varname_pct)
+
+
+# %%
         
 # Standardize entity names
 df_final = standardize_entities(
@@ -706,6 +721,56 @@ print('Percentage of errors for each variable')
 (len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
 
 # %% [markdown]
+# What if the condition is more strict? If filter the values not strictly increasing I have more rows: 
+
+# %%
+m_check_vars = []
+for i in range(len(col_headcount)):
+    if i > 0:
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = (df_final[f'{col_headcount[i]}'] > df_final[f'{col_headcount[i-1]}'])
+        m_check_vars.append(check_varname)
+
+
+# %% [markdown]
+# 382 observations have at least one headcount value equal to the previous one.
+
+# %%
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_headcount]
+
+# %% [markdown]
+# If the zero values for the second headcount are filtered out, we exclude the richest countries with multiple zero headcounts. If I also exclude the second to last headcount ratio values greater than 99, the repeated valued at the top 1% are gone. There are 153 observations left
+
+# %%
+df_check = df_check[(df_check[col_headcount[1]] != 0) & (df_check[col_headcount_ratio[-2]] <= 99)]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_headcount]
+
+# %%
+df_check.to_csv('repeated_headcounts.csv')
+
+# %% [markdown]
+# All of these issues are concentrated for the first three comparisons (the first four headcounts)
+
+# %%
+print('Percentage of errors for each variable')
+(len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
+
+# %% [markdown]
+# And this is the list of countries showing the issue (mostly advanced economies, probably very few observations at the bottom of the distribution):
+
+# %%
+df_check['entity'].value_counts()
+
+# %% [markdown]
+# Further evidence to think about few observations at the bottom is that the fourth headcount ratio for this group of countries ($5.5 poverty line) has a median of 0.73\% and a maximum of 6.36%
+
+# %%
+fig = px.histogram(df_check, x=col_headcount_ratio[3], histnorm="percent", marginal="box")
+fig.show()
+
+# %% [markdown]
 # ### Average shortfall
 # With this variable there are much more monotonicity issues: 573 observations are affected (*though I am not sure monotonicity should exist*)
 
@@ -721,6 +786,13 @@ for i in range(len(col_avg_shortfall)):
 # %%
 df_final['check_total'] = df_final[m_check_vars].all(1)
 df_check = df_final[df_final['check_total'] == False]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_avg_shortfall]
+
+# %% [markdown]
+# Excluding null values for the lowest poverty line there are 215 rows with the issue
+
+# %%
+df_check = df_check[~df_check[col_avg_shortfall[0]].isnull()]
 df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_avg_shortfall]
 
 # %%
@@ -743,6 +815,13 @@ for i in range(len(col_incomegap)):
 # %%
 df_final['check_total'] = df_final[m_check_vars].all(1)
 df_check = df_final[df_final['check_total'] == False]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_incomegap]
+
+# %% [markdown]
+# Excluding null values for the lowest poverty line there are 1321 rows with the issue
+
+# %%
+df_check = df_check[~df_check[col_incomegap[0]].isnull()]
 df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_incomegap]
 
 # %%

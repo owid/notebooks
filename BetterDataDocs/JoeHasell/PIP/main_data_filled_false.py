@@ -105,7 +105,8 @@ for p in poverty_lines_cents:
         
 
         # Calculate number in poverty
-        df['headcount'] = df['headcount_ratio'] * df['reporting_pop']  
+        df['headcount'] = df['headcount_ratio'] * df['reporting_pop']
+        df['headcount'] = df['headcount'].round(0)
 
         # Calculate shortfall of incomes
         df['total_shortfall'] = df['poverty_gap_index'] * p_dollar * df['reporting_pop']                      
@@ -139,6 +140,7 @@ print('Execution time:', elapsed_time, 'seconds')
 
 # %% [markdown]
 # ## Patching missing median data
+# As a small but considerable part of the median data is not available by default (PIP does not provide China, India and Indonesia national medians). It can be obtained by getting the poverty line for the 50% of the population, with the `popshare` command.
 
 # %%
 start_time = time.time()
@@ -183,13 +185,57 @@ df_complete = pd.merge(df_complete, df_query[['country_name', 'reporting_year', 
                        left_on=['Entity', 'reporting_year', 'welfare_type', 'reporting_level'], 
                        right_on=['country_name', 'reporting_year', 'welfare_type', 'reporting_level'], 
                        validate='many_to_one')
-df_complete.drop(columns=['median'], inplace=True)
+df_complete['median_ratio'] = df_complete['median'] / df_complete['median2']
+median_ratio_median = (df_complete['median_ratio']).median()
+median_ratio_min = (df_complete['median_ratio']).min()
+median_ratio_max = (df_complete['median_ratio']).max()
+
+if median_ratio_median == 1 and median_ratio_min == 1 and median_ratio_max == 1:
+    print(f'Patch successful.')
+    print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
+else:
+    print(f'Patch changed some median values. Please check for errors.')
+    print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
+
+df_complete.drop(columns=['median', 'median_ratio'], inplace=True)
 df_complete.rename(columns={'median2': 'median'}, inplace=True)
 
 
 end_time = time.time()
 elapsed_time = end_time - start_time
 print('Execution time:', elapsed_time, 'seconds')
+
+# %% [markdown]
+# ## Decile thresholds
+
+# %%
+df_threshold = pd.DataFrame()
+
+
+for dec in range(1,10):
+
+    popshare = dec/10
+    
+    df = pip_query_country(
+                    popshare_or_povline = "popshare", 
+                    value = popshare, 
+                    fill_gaps='false')
+
+    df['requested_decile'] = dec
+    decile_number = dec + 1
+    df['decile_name'] = f'decile{decile_number}_thr'
+
+    df_threshold = pd.concat([df_threshold, df],ignore_index=True)
+    
+df_threshold = pd.pivot(df_threshold, index=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+                       columns='decile_name', values='poverty_line').reset_index()
+
+df_threshold = df_threshold.rename(columns={'country_name': 'Entity'})
+
+df_complete = pd.merge(df_complete, df_threshold, 
+                       how='left', 
+                       on=['Entity', 'reporting_year', 'welfare_type', 'reporting_level'],
+                       validate='many_to_one')
 
 # %% [markdown]
 # ## Data transformations
@@ -245,7 +291,16 @@ for i in range(len(poverty_lines_cents)):
                                  f'decile7_share_{poverty_lines_cents[i]}': 'decile7_share',
                                  f'decile8_share_{poverty_lines_cents[i]}': 'decile8_share',
                                  f'decile9_share_{poverty_lines_cents[i]}': 'decile9_share',
-                                 f'decile10_share_{poverty_lines_cents[i]}': 'decile10_share'
+                                 f'decile10_share_{poverty_lines_cents[i]}': 'decile10_share',
+                                 f'decile2_thr_{poverty_lines_cents[i]}': 'decile2_thr',
+                                 f'decile3_thr_{poverty_lines_cents[i]}': 'decile3_thr',
+                                 f'decile4_thr_{poverty_lines_cents[i]}': 'decile4_thr',
+                                 f'decile5_thr_{poverty_lines_cents[i]}': 'decile5_thr',
+                                 f'decile6_thr_{poverty_lines_cents[i]}': 'decile6_thr',
+                                 f'decile7_thr_{poverty_lines_cents[i]}': 'decile7_thr',
+                                 f'decile8_thr_{poverty_lines_cents[i]}': 'decile8_thr',
+                                 f'decile9_thr_{poverty_lines_cents[i]}': 'decile9_thr',
+                                 f'decile10_thr_{poverty_lines_cents[i]}': 'decile10_thr'
                                 }, 
                         inplace=True)
     else:
@@ -270,7 +325,16 @@ for i in range(len(poverty_lines_cents)):
                                f'decile7_share_{poverty_lines_cents[i]}',
                                f'decile8_share_{poverty_lines_cents[i]}',
                                f'decile9_share_{poverty_lines_cents[i]}',
-                               f'decile10_share_{poverty_lines_cents[i]}'
+                               f'decile10_share_{poverty_lines_cents[i]}',
+                               f'decile2_thr_{poverty_lines_cents[i]}',
+                               f'decile3_thr_{poverty_lines_cents[i]}',
+                               f'decile4_thr_{poverty_lines_cents[i]}',
+                               f'decile5_thr_{poverty_lines_cents[i]}',
+                               f'decile6_thr_{poverty_lines_cents[i]}',
+                               f'decile7_thr_{poverty_lines_cents[i]}',
+                               f'decile8_thr_{poverty_lines_cents[i]}',
+                               f'decile9_thr_{poverty_lines_cents[i]}',
+                               f'decile10_thr_{poverty_lines_cents[i]}',
                               ],
                       inplace=True)
 
@@ -332,16 +396,17 @@ col_decile_avg = []
 col_decile_thr = []
 
 for i in range(1,11):
+    
+    if i !=1:
+        varname_thr = f'decile{i}_thr'
+        col_decile_thr.append(varname_thr)
+    
     varname_share = f'decile{i}_share'
     varname_avg = f'decile{i}_avg'
-    varname_thr = f'decile{i}_thr'
     df_final[varname_avg] = df_final[varname_share] * df_final['mean'] / 0.1
-    df_final[varname_thr] = np.nan
     
     col_decile_share.append(varname_share)
     col_decile_avg.append(varname_avg)
-    col_decile_thr.append(varname_thr)
-
 
 # Standardize entity names
 df_final = standardize_entities(
@@ -436,9 +501,12 @@ regions_list = ['East Asia and Pacific',
 high_income_list = ['High income countries']
 
 df_final['sum_deciles'] = df_final[col_decile_share].sum(axis=1)
-df_final = df_final[~((df_final['sum_deciles'] >= 100.1) | (df_final['sum_deciles'] <= 99.9)) 
-                    & (~df_final['Entity'].isin(regions_list + world_list + high_income_list))].reset_index(drop=True)
+#df_final = df_final[~((df_final['sum_deciles'] >= 100.1) | (df_final['sum_deciles'] <= 99.9)) 
+#                    | (df_final['sum_deciles'].isna())].reset_index(drop=True)
 print(f'{len(df_final)} rows before deciles values check CODE NOT READY YET')
+
+# %%
+df_final
 
 # %% [markdown]
 # ## Integrate the relative poverty data
