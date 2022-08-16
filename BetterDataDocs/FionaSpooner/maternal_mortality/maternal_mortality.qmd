@@ -370,13 +370,12 @@ df = pd.concat([df_gap, who_df, oecd_df], ignore_index=True)
 df["year"] = df["year"].astype(int)
 df['maternal_mortality_rate'] = df['maternal_mortality_rate'].astype(float)
 ```
-Find countries where there are values from more than one source i.e. there are duplicate country-year rows. Where there are duplicate values sourced from WHO we drop these. 
 
 ```{python}
 dup_ents = df[['entity', 'year']][df.duplicated(subset=['entity', 'year'])].drop_duplicates()
 dup_ents['ent_year'] = dup_ents['entity'] + '_' + dup_ents['year'].astype(str)
-
-
+gap_ents = df['entity'][df['source'] == 'gapminder'].drop_duplicates().to_list()
+oecd_ents = df['entity'][df['source'] == 'oecd'].drop_duplicates().to_list()
 ```
 
 ```{python}
@@ -384,15 +383,14 @@ df['ent_year'] = df['entity'] + '_' + df['year'].astype(str)
 
 df = df[~((df['ent_year'].isin(dup_ents['ent_year'])) & (df['source'] == 'who'))]
 
-dup_ents = df['entity'][df.duplicated(subset=['entity', 'year'])].drop_duplicates()
-
 
 ```
 
 
-Plotting time-series of the data from 1950 onwards. WHO is shown in blue, Gapminder in green and OECD in red.
+Plot the countries which have data from Gapminder so we can inspect the full timeline. Where there are duplicate values sourced from WHO we drop these. 
+The data is shown from from 1950 onwards. WHO is shown in blue, Gapminder in green and OECD in red.
 ```{python}
-df_dup = df[(df.entity.isin(dup_ents)) & (df.year >= 1950)]
+df_dup = df[(df.entity.isin(gap_ents)) & (df.year >= 1950)]
 
 plt.figure(figsize=(12,7), facecolor="white")
 
@@ -401,7 +399,7 @@ plot_number = 1
 for countryname, selection in df_dup.groupby("entity"):
     # Inside of an image that's a 15x13 grid, put this
     # graph in the in the plot_number slot.
-    ax = plt.subplot(3, 4, plot_number)
+    ax = plt.subplot(4, 4, plot_number)
     selection_gap = selection[selection["source"] == "gapminder"]
     selection_who = selection[selection["source"] == "who"]
     selection_oecd = selection[selection["source"] == "oecd"]
@@ -439,9 +437,67 @@ plt.tight_layout()
 ```
 
 
-The jump in the Sri Lanka trend is odd - we will drop the Gapminder data for this entity. 
+The jump in the Sri Lanka and Malaysia trends are odd - we will drop the Gapminder data for this entity. 
 ```{python}
-df = df[~((df['entity'] == 'Sri Lanka') & (df['source'] == 'gapminder'))]
+df = df[~((df['entity'].isin(['Sri Lanka', 'Malaysia'])) & (df['source'] == 'gapminder'))]
+
+```
+
+
+Plot the countries which have data from OECD so we can inspect the full timeline. Where there are duplicate values sourced from WHO we drop these. 
+The data is shown from from 1950 onwards. WHO is shown in blue, Gapminder in green and OECD in red.
+
+```{python}
+df_dup = df[(df.entity.isin(oecd_ents)) & (df.year >= 1950)]
+
+plt.figure(figsize=(12,7), facecolor="white")
+
+# plot numbering starts at 1, not 0
+plot_number = 1
+for countryname, selection in df_dup.groupby("entity"):
+    # Inside of an image that's a 15x13 grid, put this
+    # graph in the in the plot_number slot.
+    ax = plt.subplot(6, 7, plot_number)
+    selection_gap = selection[selection["source"] == "gapminder"]
+    selection_who = selection[selection["source"] == "who"]
+    selection_oecd = selection[selection["source"] == "oecd"]
+    if selection_who.shape[0] > 0:
+        selection_who.plot(
+            x="year",
+            y="maternal_mortality_rate",
+            color = 'b',
+            ax=ax,
+            label=countryname,
+            legend=False,
+        )
+    if selection_gap.shape[0] > 0:
+        selection_gap.plot(
+            x="year",
+            y="maternal_mortality_rate",
+            color = 'g',
+            ax=ax,
+            label=countryname,
+            legend=False,
+        )
+    if selection_oecd.shape[0] > 0:
+        selection_oecd.plot(
+            x="year",
+            y="maternal_mortality_rate",
+            color = 'r',
+            ax=ax,
+            label=countryname,
+            legend=False,
+        )
+    ax.set_title(countryname)
+    # Go to the next plot for the next loop
+    plot_number = plot_number + 1
+plt.tight_layout()
+```
+
+Turkey only has data every 8/9 years with the OECD but it's not appropriate to fill in the gaps with the WHO data so we will drop that data for Turkey. 
+
+```{python}
+df = df[~((df['entity'].isin(['Turkey'])) & (df['source'] == 'who'))]
 ```
 
 
@@ -451,6 +507,7 @@ no_dups_df = df[~df.duplicated(subset=['entity', 'year'],keep= False)]
 keep_gap = df[(df.duplicated(subset=['entity', 'year'], keep = False)) & (df.source == 'gapminder')]
 
 df_clean = pd.concat([no_dups_df, keep_gap], ignore_index=True)
+
 ```
 
 Check that there are no country-year duplicates in the final dataset and do some checks that the data doesn't have any unexpected NAs in it. 
