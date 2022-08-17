@@ -302,7 +302,7 @@ lower_limit_close = 0.45
 upper_limit_close = 0.55
 increment_close = 0.1
 
-#Limits and increment when headcount values are between 0 to 0.4 and 0.6 to 0.6
+#Limits and increment when headcount values are between 0 to 0.4 and 0.6 to 1
 lower_limit_far = 0.4
 upper_limit_far = 0.6
 increment_far = 0.3
