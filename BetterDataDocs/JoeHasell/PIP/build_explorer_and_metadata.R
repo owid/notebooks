@@ -102,6 +102,10 @@ special_sheets[["table_stubs_sheetname"]]<- "table_stubs_main"
 special_sheets[["global_controls_sheetname"]]<- "global_controls_main"
 special_sheets[["tables_sheetname"]]<- "tables_main"
 
+special_sheets[["admin_sheetname"]]<- "admin_metadata_auto"
+
+
+
 aux_sheet_pattern<- "AUX_" #The string in the workbook sheetnames that calls a 
                             #sheet out as being an 'Aux sheet' -  i.e. a sheet
                             #where the various values of the placeholders are
@@ -234,6 +238,8 @@ build_OWID_controls<- function(gsheets_id){
     # Grab tables sheet from workbook
     tables<- read_sheet(gsheets_id, sheet = special_sheets[["tables_sheetname"]])
   
+    # make a list of the table controls dataframes that the loop below will produce
+    table_controls<- list()
     
     # for each table
     for (i in 1:nrow(tables)){
@@ -294,9 +300,27 @@ build_OWID_controls<- function(gsheets_id){
       
          last_row<- last_row + nrow(df_table_controls_this_table) + 1 # keep track of the last row printed in the google sheet
          
+      
+      #Add controls to list   
+      table_controls[[this_tableSlug]]<- df_table_controls_this_table
+      
     }
     
 
+  
+  # Write database metadata
+      # Here I will use the 'both inc and expenditure' data. This is what we 
+      # will add to the grapher database.
+    
+    range_write(
+      ss = gsheets_id,
+      data = table_controls[["inc_or_cons"]],
+      sheet = special_sheets[["admin_sheetname"]],
+      range = cell_limits(c(NA, NA), c(NA, NA)),
+      col_names = TRUE,
+      reformat = FALSE
+    )
+    
 }
 
   
