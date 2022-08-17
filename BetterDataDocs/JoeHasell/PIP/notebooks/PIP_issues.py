@@ -11,6 +11,8 @@ import numpy as np
 import time
 import plotly.express as px
 import plotly.io as pio
+import requests
+import io
 pio.renderers.default='jupyterlab+png+colab+notebook_connected+vscode'
 
 
@@ -20,7 +22,9 @@ def pip_query_country(popshare_or_povline, value, country_code="all", year="all"
     # Build query
     request_url = f'https://api.worldbank.org/pip/v1/pip?{popshare_or_povline}={value}&country={country_code}&year={year}&fill_gaps={fill_gaps}&welfare_type={welfare_type}&reporting_level={reporting_level}&format=csv'
 
-    df = pd.read_csv(request_url)
+    #df = pd.read_csv(request_url)
+    response = requests.get(request_url, timeout=50).content
+    df = pd.read_csv(io.StringIO(response.decode('utf-8')))
 
     return df
 
@@ -32,7 +36,9 @@ def pip_query_region(povline, year="all"):
     # Build query
     request_url = f'https://api.worldbank.org/pip/v1/pip-grp?povline={povline}&year={year}&group_by=wb&format=csv'
 
-    df = pd.read_csv(request_url)
+    #df = pd.read_csv(request_url)
+    response = requests.get(request_url, timeout=50).content
+    df = pd.read_csv(io.StringIO(response.decode('utf-8')))
 
     return df
 
@@ -95,86 +101,100 @@ for p in poverty_lines_cents:
 
     p_dollar = p/100
 
-    #... for both the interpolated ('filled') data and the survey-year only data
-    for is_filled in ['true', 'false']:
-    
-        #.. and for both countries and WB regional aggregates
-        for ent_type in ['country', 'region']:
+    #.. and for both countries and WB regional aggregates
+    for ent_type in ['country', 'region']:
 
-            # Make the API query for country data
-            if ent_type == 'country':
-        
-                df = pip_query_country(
-                    popshare_or_povline = "povline", 
-                    value = p_dollar, 
-                    fill_gaps=is_filled)
+        # Make the API query for country data
+        if ent_type == 'country':
 
-                df = df.rename(columns={'country_name': 'entity'})
-                
-                # Keep only these variables:
-                keep_vars = [ 
-                    'entity',
-                    'reporting_year',
-                    'reporting_level',
-                    'welfare_type', 
-                    'headcount',
-                    'poverty_gap',
-                    'reporting_pop'
-                ]
+            df = pip_query_country(
+                popshare_or_povline = "povline", 
+                value = p_dollar, 
+                fill_gaps="false")
+
+            df = df.rename(columns={'country_name': 'entity'})
             
-            # Make the API query for region data
-            # Note that the filled and not filled data is the same in this case .
-            # The code runs it twice anyhow.
-            if ent_type == 'region':
+            # Keep only these variables:
+            keep_vars = [ 
+                'entity',
+                'reporting_year',
+                'reporting_level',
+                'welfare_type', 
+                'headcount',
+                'poverty_gap',
+                'reporting_pop',
+                'survey_year',
+                'survey_comparability', 
+                'comparable_spell', 
+                'poverty_severity', 
+                'watts', 
+                'mean', 
+                'median', 
+                'mld',
+                'gini', 
+                'polarization', 
+                'decile1', 'decile2', 'decile3', 'decile4','decile5', 'decile6', 'decile7', 'decile8', 'decile9', 'decile10',
+                'cpi', 'ppp', 'reporting_gdp', 'reporting_pce', 
+                'distribution_type', 'estimation_type'
+            ]
 
-                df = pip_query_region(p_dollar)
+        # Make the API query for region data
+        # Note that the filled and not filled data is the same in this case .
+        # The code runs it twice anyhow.
+        if ent_type == 'region':
 
-                df = df.rename(columns={'region_name': 'entity'})
+            df = pip_query_region(p_dollar)
 
-                keep_vars = [ 
-                    'entity',
-                    'reporting_year',
-                    'headcount',
-                    'poverty_gap',
-                    'reporting_pop'
-                ]
-        
+            df = df.rename(columns={'region_name': 'entity'})
 
-            df = df[keep_vars]
-
-            # rename columns
-            df = df.rename(columns={
-            'headcount':'headcount_ratio',
-            'poverty_gap': 'poverty_gap_index'})
-
-            # Calculate number in poverty
-            df['headcount'] = df['headcount_ratio'] * df['reporting_pop']  
-
-            # Calculate shortfall of incomes
-            df['total_shortfall'] = df['poverty_gap_index'] * p_dollar * df['reporting_pop']                      
-
-            # Calculate average shortfall of incomes (averaged across population in poverty)
-            df['avg_shortfall'] = df['total_shortfall'] / df['headcount']
-
-            # Calculate income gap ratio (according to Ravallion's definition)
-            df['income_gap_ratio'] = (df['total_shortfall'] / df['headcount']) / p_dollar
+            keep_vars = [ 
+                'entity',
+                'reporting_year',
+                'headcount',
+                'poverty_gap',
+                'reporting_pop',
+                'poverty_severity',
+                'watts',
+                'mean'
+            ]
 
 
-            # Shares to percentages
-            # executing the function over list of vars
-            var_list = ['headcount_ratio', 'income_gap_ratio', 'poverty_gap_index' ]
+        df = df[keep_vars]
 
-            #df[var_list] = df[var_list].apply(multiply_by_100)
-            df.loc[:, var_list] = df[var_list] * 100
+        # rename columns
+        df = df.rename(columns={
+        'headcount':'headcount_ratio',
+        'poverty_gap': 'poverty_gap_index'})
+
+        # Calculate number in poverty
+        df['headcount'] = df['headcount_ratio'] * df['reporting_pop']
+        df['headcount'] = df['headcount'].round(0)
+
+        # Calculate shortfall of incomes
+        df['total_shortfall'] = df['poverty_gap_index'] * p_dollar * df['reporting_pop']                      
+
+        # Calculate average shortfall of incomes (averaged across population in poverty)
+        df['avg_shortfall'] = df['total_shortfall'] / df['headcount']
+
+        # Calculate income gap ratio (according to Ravallion's definition)
+        df['income_gap_ratio'] = (df['total_shortfall'] / df['headcount']) / p_dollar
 
 
-            # Add poverty line as a var (I add the '_' character, because it being treated as a float later on was causing headaches)
-            df['poverty line'] = f'_{p}'
-            df['filled'] = is_filled
-            df['ent_type'] = ent_type
+        # Shares to percentages
+        # executing the function over list of vars
+        var_list = ['headcount_ratio', 'income_gap_ratio', 'poverty_gap_index' ]
 
-            #Concatenate all the results
-            df_complete = pd.concat([df_complete, df],ignore_index=True)
+        #df[var_list] = df[var_list].apply(multiply_by_100)
+        df.loc[:, var_list] = df[var_list] * 100
+
+
+        # Add poverty line as a var (I add the '_' character, because it being treated as a float later on was causing headaches)
+        df['poverty line'] = f'_{p}'
+        #df['filled'] = is_filled
+        df['ent_type'] = ent_type
+
+        #Concatenate all the results
+        df_complete = pd.concat([df_complete, df],ignore_index=True)
 
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -183,18 +203,19 @@ print('Execution time:', elapsed_time, 'seconds')
 # %%
 # Create different combinations of dataframe from df_complete
 
-# Select data for countries and filled or not
-headcounts_country = df_complete[(df_complete['ent_type'] == 'country') & (df_complete['filled'] == 'true')].reset_index(drop=True)
+# Select data for countries
+headcounts_country = df_complete[(df_complete['ent_type'] == 'country')].reset_index(drop=True)
 
-# Select data for regions and filled or not
-headcounts_region = df_complete[(df_complete['ent_type'] == 'region')  & (df_complete['filled'] == 'true')].reset_index(drop=True)
+# Select data for regions
+headcounts_region = df_complete[(df_complete['ent_type'] == 'region')].reset_index(drop=True)
 
 #Create pivot tables to make the data wide
-headcounts_country_wide = headcounts_country.pivot_table(index=['entity', 'reporting_year','reporting_level','welfare_type'], 
-                columns='poverty line')
+headcounts_country_wide = headcounts_country.pivot_table(index=['entity', 'reporting_year','reporting_level','welfare_type',
+                                                               'comparable_spell', 'distribution_type', 'estimation_type'],
+                                                         columns='poverty line')
 
-headcounts_region_wide = headcounts_region.pivot_table(index=['entity', 'reporting_year'], 
-                columns='poverty line')
+headcounts_region_wide = headcounts_region.pivot_table(index=['entity', 'reporting_year'],
+                                                       columns='poverty line')
 
 #Join multi index columns
 headcounts_country_wide.columns = [''.join(col).strip() for col in headcounts_country_wide.columns.values]
@@ -206,13 +227,70 @@ headcounts_region_wide = headcounts_region_wide.reset_index()
 #Concatenate country and regional wide datasets
 df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
 
-#Keep only one reporting_pop variable (multiple columns with the same values were generated for each poverty line)
+
+# %%
+
+#Keep only one variable (multiple columns with the same values were generated for each poverty line)
+
+# JH COMMENT: This seems a bit convoluted to me. I think it'd be easier to follow
+    # if you didn't get duplicate versions of deciles, gini etc (one for each poverty
+    # line) and then have to drop them in this way. And instead you get these variables 
+    # from one additional API query (outside of the poverty line loop) and then merge 
+    # them in.
 for i in range(len(poverty_lines_cents)):
     if i == 0:
-        df_final.rename(columns={f'reporting_pop_{poverty_lines_cents[i]}': 'reporting_pop'}, inplace=True)
+        df_final.rename(columns={f'reporting_pop_{poverty_lines_cents[i]}': 'reporting_pop',
+                                 f'survey_year_{poverty_lines_cents[i]}': 'survey_year',
+                                 f'survey_comparability_{poverty_lines_cents[i]}': 'survey_comparability',
+                                 f'mean_{poverty_lines_cents[i]}': 'mean',
+                                 f'median_{poverty_lines_cents[i]}': 'median',
+                                 f'mld_{poverty_lines_cents[i]}': 'mld',
+                                 f'gini_{poverty_lines_cents[i]}': 'gini',
+                                 f'polarization_{poverty_lines_cents[i]}': 'polarization',
+                                 f'cpi_{poverty_lines_cents[i]}': 'cpi',
+                                 f'ppp_{poverty_lines_cents[i]}': 'ppp',
+                                 f'reporting_gdp_{poverty_lines_cents[i]}': 'reporting_gdp',
+                                 f'reporting_pce_{poverty_lines_cents[i]}': 'reporting_pce',
+                                 f'decile1_{poverty_lines_cents[i]}': 'decile1',
+                                 f'decile2_{poverty_lines_cents[i]}': 'decile2',
+                                 f'decile3_{poverty_lines_cents[i]}': 'decile3',
+                                 f'decile4_{poverty_lines_cents[i]}': 'decile4',
+                                 f'decile5_{poverty_lines_cents[i]}': 'decile5',
+                                 f'decile6_{poverty_lines_cents[i]}': 'decile6',
+                                 f'decile7_{poverty_lines_cents[i]}': 'decile7',
+                                 f'decile8_{poverty_lines_cents[i]}': 'decile8',
+                                 f'decile9_{poverty_lines_cents[i]}': 'decile9',
+                                 f'decile10_{poverty_lines_cents[i]}': 'decile10'
+                                }, 
+                        inplace=True)
     else:
-        df_final.drop(columns=[f'reporting_pop_{poverty_lines_cents[i]}'], inplace=True)
+        df_final.drop(columns=[f'reporting_pop_{poverty_lines_cents[i]}',
+                               f'survey_year_{poverty_lines_cents[i]}',
+                               f'survey_comparability_{poverty_lines_cents[i]}',
+                               f'mean_{poverty_lines_cents[i]}',
+                               f'median_{poverty_lines_cents[i]}',
+                               f'mld_{poverty_lines_cents[i]}',
+                               f'gini_{poverty_lines_cents[i]}',
+                               f'polarization_{poverty_lines_cents[i]}',
+                               f'cpi_{poverty_lines_cents[i]}',
+                               f'ppp_{poverty_lines_cents[i]}',
+                               f'reporting_gdp_{poverty_lines_cents[i]}',
+                               f'reporting_pce_{poverty_lines_cents[i]}',
+                               f'decile1_{poverty_lines_cents[i]}',
+                               f'decile2_{poverty_lines_cents[i]}',
+                               f'decile3_{poverty_lines_cents[i]}',
+                               f'decile4_{poverty_lines_cents[i]}',
+                               f'decile5_{poverty_lines_cents[i]}',
+                               f'decile6_{poverty_lines_cents[i]}',
+                               f'decile7_{poverty_lines_cents[i]}',
+                               f'decile8_{poverty_lines_cents[i]}',
+                               f'decile9_{poverty_lines_cents[i]}',
+                               f'decile10_{poverty_lines_cents[i]}'
+                              ],
+                      inplace=True)
 
+
+# %%
 #Calculate numbers in poverty between pov lines for stacked area charts
 #Make sure the poverty lines are in order, lowest to highest
 poverty_lines_cents.sort()
@@ -261,6 +339,9 @@ for i in range(len(poverty_lines_cents)):
         varname_pct = f'percentage_between_{poverty_lines_cents[i-1]}_{poverty_lines_cents[i]}'
         df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
         col_stacked_pct.append(varname_pct)
+
+
+# %%
         
 # Standardize entity names
 df_final = standardize_entities(
@@ -292,6 +373,13 @@ col_headcount_ratio = []
 col_incomegap = []
 col_povertygap = []
 col_tot_shortfall = []
+col_poverty_severity = []
+col_watts = []
+col_central = ['mean', 'median']
+col_deciles = ['decile1', 'decile2', 'decile3', 'decile4','decile5', 'decile6', 'decile7', 'decile8', 'decile9', 'decile10']
+col_inequality = ['mld', 'gini', 'polarization']
+col_extra = ['survey_year', 'survey_comparability', 'comparable_spell', 'distribution_type', 'estimation_type',
+            'cpi', 'ppp', 'reporting_gdp', 'reporting_pce']
 
 for i in range(len(poverty_lines_cents)):
     col_avg_shortfall.append(f'avg_shortfall_{poverty_lines_cents[i]}')
@@ -300,9 +388,11 @@ for i in range(len(poverty_lines_cents)):
     col_incomegap.append(f'income_gap_ratio_{poverty_lines_cents[i]}')
     col_povertygap.append(f'poverty_gap_index_{poverty_lines_cents[i]}')
     col_tot_shortfall.append(f'total_shortfall_{poverty_lines_cents[i]}')
+    col_poverty_severity.append(f'poverty_severity_{poverty_lines_cents[i]}')
+    col_watts.append(f'watts_{poverty_lines_cents[i]}')
 
 #Concatenate the entire list (including the previously estimated col_stacked_n and col_stacked_pct) and reorder
-cols = col_ids + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct
+cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_deciles + col_inequality + col_extra
 df_final = df_final[cols]
 
 # %% [markdown]
@@ -310,13 +400,13 @@ df_final = df_final[cols]
 # In this section I look for observations which are missing or with a zero value for the poverty variables. First, I check the null observations:
 
 # %%
-cols_to_check = ['reporting_pop'] + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct
+cols_to_check = ['reporting_pop'] + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_deciles + col_inequality
 
 df_null = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
 df_null
 
 # %% [markdown]
-# 885 rows have at least one null value. But the distribution of them by variable is not uniform:
+# 701 rows have at least one null value. But the distribution of them by variable is not uniform:
 
 # %%
 # Count number of nulls in all columns of Dataframe
@@ -327,13 +417,31 @@ for column_name in cols_to_check:
     print(f'Count of nulls in column {column_name} is : {count}')
 
 # %% [markdown]
-# Only the average shortfall and income gap ratio variables have much more null values compared to the rest. If I exclude them from the analysis I only have 14 observations with nulls: **Guinea-Bissau** 1981-1992 and **Sierra Leone** 1999 and 2001:
+# ### Selected poverty variables
+
+# %% [markdown]
+# The average shortfall and income gap ratio have much more null values compared to the rest of poverty variables. If I exclude them from the analysis (besides poverty severity and the Watts index) I only have one observation with nulls: **Guinea-Bissau** in 1991:
 
 # %%
 cols_to_check = col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_stacked_n + col_stacked_pct
 
 df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
-df_null_selected
+df_null_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# ### Poverty severity and Watts index
+
+# %% [markdown]
+# Isolating the poverty severity and the Watts index they have 8 null observations, including **Guinea-Bissau 1991**. The others are in **China (2012, 2014, 2015, 2018 and 2019), El Salvador 1989 and Sierra Leone 1989**. 
+
+# %%
+cols_to_check = col_poverty_severity + col_watts
+
+df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
+df_null_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# ### Average shortfall and income gap ratio
 
 # %% [markdown]
 # 76 different countries show null values for average shortfall and income gap ratio variables.
@@ -345,11 +453,154 @@ df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_
 df_null_selected['entity'].value_counts()
 
 # %% [markdown]
-# ## Zero values
-# What about zero values? 1051 observations include at least one value equal to zero.
+# ### Mean, median, decile shares and inequality measures
+
+# %% [markdown]
+# If mean, median, deciles and inequality statistics are grouped together we have a larger group of nulls:
 
 # %%
-cols_to_check = ['reporting_pop'] + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_stacked_n + col_stacked_pct
+cols_to_check = col_central + col_deciles + col_inequality
+
+df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
+df_null_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# Though a considerable part of the nulls are concentrated on the regional data, so I filter out them:
+
+# %%
+#Defining the different aggregations
+world_list = ['World']
+
+regions_list = ['East Asia and Pacific', 
+           'Europe and Central Asia',
+           'Latin America and the Caribbean', 
+           'Middle East and North Africa', 
+           'South Asia', 
+           'Sub-Saharan Africa']
+
+high_income_list = ['High income countries']
+
+redundant_countries = ['China - urban', 
+                       'China - rural', 
+                       'India - urban', 
+                       'India - rural', 
+                       'Indonesia - urban',
+                       'Indonesia - rural']
+
+countries_list = list(set(list(df_final['entity'].unique())) - set(regions_list) - set(world_list) - set(high_income_list) - set(redundant_countries))
+
+# %% [markdown]
+# Now they are 65 different observations with null values for these variables
+
+# %%
+df_null_selected_noregions = df_null_selected[~df_null_selected['entity'].isin(world_list + regions_list + high_income_list)]
+df_null_selected_regions = df_null_selected[df_null_selected['entity'].isin(world_list + regions_list + high_income_list)]
+df_null_selected_noregions[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# The nulls for mean, median, deciles and inequality statistics are concentrated mostly in Indonesia, China and India:
+
+# %%
+df_null_selected_noregions['entity'].value_counts()
+
+# %% [markdown]
+# This is actually all the observations for these three countries.
+
+# %%
+df_excluding_null = df_final[~df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
+df_excluding_null = df_excluding_null[df_excluding_null['entity'].isin(['Indonesia', 'China', 'India'])]
+df_excluding_null[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# And for these three countries only the median is missing.
+
+# %%
+# Count number of nulls in all columns of Dataframe
+df_null_chn_ind_idn = df_null_selected_noregions[df_null_selected_noregions['entity'].isin(['Indonesia', 'China', 'India'])].copy().reset_index(drop=True)
+
+for column_name in cols_to_check:
+    column = df_null_chn_ind_idn[column_name]
+    # Get the count of nulls in column 
+    count = (column.isnull()).sum()
+    print(f'Count of nulls in column {column_name} is : {count}')
+
+# %% [markdown]
+# It is interesting that there are less null values for the share of decile 5 (9) than for the median (62), because one should be obtained from the other. 56/62 missing median values are concentrated in China, India and Indonesia:
+
+# %%
+# Count number of nulls in all columns of Dataframe
+for column_name in cols_to_check:
+    column = df_null_selected_noregions[column_name]
+    # Get the count of nulls in column 
+    count = (column.isnull()).sum()
+    print(f'Count of nulls in column {column_name} is : {count}')
+
+# %% [markdown]
+# For regions only mean values are included:
+
+# %%
+# Count number of nulls in all columns of Dataframe
+for column_name in cols_to_check:
+    column = df_null_selected_regions[column_name]
+    # Get the count of nulls in column 
+    count = (column.isnull()).sum()
+    print(f'Count of nulls in column {column_name} is : {count}')
+
+# %% [markdown]
+# ### Median
+
+# %% [markdown]
+# Missing median data can actually be obtained by using the `popshare` command instead of `povline`. While `povline` returns the headcount (and other poverty/inequality values) when a poverty line is given, `popshare` returns the poverty line when a population share (headcount) is given. This way, the poverty line the latter command returns when the popshare value is 0.5 is the median income/consumption value. See for example China
+
+# %%
+df_popshare = pip_query_country(
+                    popshare_or_povline = "popshare",
+                    country_code = "CHN",
+                    value = 0.5,
+                    reporting_level = "national",
+                    fill_gaps="false")
+
+# %% [markdown]
+# The poverty_line column corresponds to the missing median. We can see that for the cases where the median is not null, i.e. the urban and rural data.
+
+# %%
+df_popshare[['country_name','reporting_year', 'reporting_level', 'welfare_type', 'poverty_line', 'headcount',
+             'mean', 'median', 'mld','gini', 'polarization']].head(10)
+
+# %% [markdown]
+# This is not possible though for regions. Even if there is a `popshare` option available, the query returns poverty lines equal to 1.9.
+
+# %%
+popshare = 0.5
+year = "all"
+request_url = f'https://api.worldbank.org/pip/v1/pip-grp?popshare={popshare}&year={year}&group_by=wb&format=csv'
+df_popshare_regions = pd.read_csv(request_url)
+
+# %%
+df_popshare_regions
+
+# %% [markdown]
+# The median income values besides of their own value allow to estimate relative poverty measures. So it is essential to have median for each entity as possible.
+
+# %% [markdown]
+# ### Inequality indices
+# Six observations have their mean log deviation, gini and polarization measures missing: El Salvador 89, Guatemala 98, Guinea-Bissau 91, Guyana 92, Namibia 93 and Sierra Leone 89.
+
+# %%
+cols_to_check = col_inequality
+
+df_null_selected = df_final[df_final[cols_to_check].isna().any(1)].copy().reset_index(drop=True)
+df_null_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+df_null_selected_noregions = df_null_selected[~df_null_selected['entity'].isin(world_list + regions_list + high_income_list)]
+df_null_selected_regions = df_null_selected[df_null_selected['entity'].isin(world_list + regions_list + high_income_list)]
+df_null_selected_noregions[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# ## Zero values
+# What about zero values? 613 observations include at least one value equal to zero.
+
+# %%
+cols_to_check = ['reporting_pop'] + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_deciles + col_inequality
 df_zero = df_final[(df_final[cols_to_check] == 0).any(1)].reset_index(drop=True)
 df_zero
 
@@ -369,14 +620,17 @@ for column_name in cols_to_check:
 #
 # | Poverty line | Zero values<br>Headcount | Null values<br>Average shortfall<br>Income gap ratio | Difference | Null values<br>Headcount |
 # | --- | --- | --- | --- | --- |
-# | 1.0 | 863 | 863 | 0 | 0 |
-# | 1.9 | 406 | 406 | 0 | 0 |
-# | 3.2 | 200 | 200 | 0 | 0 |
-# | 5.5 | 67 | 79 | 12 | 12 |
-# | 10 | 35 | 47 | 12 | 12 |
-# | 20 | 18 | 30 | 12 | 12 |
-# | 30 | 6 | 18 | 12 | 12 |
-# | 40 | 0 | 14 | 14 | 14 |
+# | 1.0 | 358 | 358 | 0 | 0 |
+# | 1.9 | 154 | 154 | 0 | 0 |
+# | 3.2 | 54 | 54 | 0 | 0 |
+# | 5.5 | 8 | 9 | 1 | 1 |
+# | 10 | 3 | 4 | 1 | 1 |
+# | 20 | 0 | 1 | 1 | 1 |
+# | 30 | 0 | 1 | 1 | 1 |
+# | 40 | 0 | 1 | 1 | 1 |
+
+# %% [markdown]
+# 76 different countries have 0 values for headcount:
 
 # %%
 cols_to_check = col_headcount
@@ -385,11 +639,35 @@ df_zero_selected = df_final[(df_final[cols_to_check] == 0).any(1)].reset_index(d
 df_zero_selected['entity'].value_counts()
 
 # %% [markdown]
+# There are more zero values for the Watts index than for the other poverty variables
+
+# %%
+cols_to_check = col_poverty_severity + col_watts
+
+df_zero_selected = df_final[(df_final[cols_to_check] == 0).any(1)].copy().reset_index(drop=True)
+df_zero_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# 77 different countries have zero values for the Watts index (and the poverty severity as well)
+
+# %%
+df_zero_selected['entity'].value_counts()
+
+# %% [markdown]
+# If mean, median, deciles and inequality statistics are grouped together we only find one zero value, and it is for `decile1` in the case of <b>Suriname - urban</b>
+
+# %%
+cols_to_check = col_central + col_deciles + col_inequality
+
+df_zero_selected = df_final[(df_final[cols_to_check] == 0).any(1)].copy().reset_index(drop=True)
+df_zero_selected[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
 # ## Percentage on different poverty lines do not add up to 100%
 # For each country-year the total number of people below, between and over multiple poverty lines are estimated to create a stacked chart with the distribution of income/consumption of the population. It is important then that these numbers add together to the total population (the aggregated percentage is 100%)
 
 # %% [markdown]
-# There are two countries with issues on several years, which are the same two reported before: **Guinea-Bissau**'s total for the years 1981-1992 is less than 1 (around 0.7). In the table we can see why: there are no estimation of poor people living below \\$5.5 or any higher poverty line. A similar case happens with **Sierra Leone**, but with less impact: 1999 and 2001 show totals very close to 1, but there is a tiny fraction of people not considered because the query does not generate results for people earning less than \\$40 a day. As this number is very close to 1 we consider to only exclude the Guinea-Bissau cases.
+# One country show issues and it is again **Guinea-Bissau** in 1991: the total for this year is less than 1 (0.64). In the table we can see why: there are no estimation of poor people living below \\$5.5 or any higher poverty line.
 
 # %%
 df_final['sum_pct'] = df_final[col_stacked_pct].sum(axis=1)
@@ -397,14 +675,23 @@ df_not_1 = df_final[(df_final['sum_pct'] >= 1.00000001) | (df_final['sum_pct'] <
 df_not_1
 
 # %% [markdown]
-# Note this is the dataset including both survey and inter/extrapolated data, as we can see here by querying again. Only Guinea-Bissau data from 1991 is from a survey, all the other 13 rows with issues come from filled data.
+# ## Percentage for decile shares do not add up to 100%
+# Similarly, in the case of decile shares, in every row the sum of `decile1` to `decile10` should be 1
+
+# %% [markdown]
+# 9 different countries-years fail in this requirement: **El Salvador 1989, Guatemala 1998, Guinea-Bissau 1991 (again), Guyana 1992, Namibia 1993, Sierra Leone 1989, Somalia 2017, South Sudan 2016 and Zimbabwe 2019**. And this is because every `decile` variable for these observations is null.
 
 # %%
-df = pip_query_country(
-                    popshare_or_povline = "povline", 
-                    value = 1.9, 
-                    fill_gaps='false')
-df[(df['country_name'] == 'Sierra Leone') | (df['country_name'] == 'Guinea-Bissau')][['country_name', 'reporting_year', 'reporting_level', 'welfare_type', 'estimation_type']]
+df_final['sum_deciles'] = df_final[col_deciles].sum(axis=1)
+df_not_1 = df_final[((df_final['sum_deciles'] >= 1.00000001) | (df_final['sum_deciles'] <= 0.99999999))].copy().reset_index(drop=True)
+df_not_1 = df_not_1[~df_not_1['entity'].isin(regions_list + world_list + high_income_list)].reset_index(drop=True)
+df_not_1[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check + ['sum_deciles']]
+
+# %%
+df_final['sum_deciles'] = df_final[col_deciles].sum(axis=1)
+df_not_1 = df_final[((df_final['sum_deciles'] >= 1.001) | (df_final['sum_deciles'] <= 0.999))].copy().reset_index(drop=True)
+df_not_1 = df_not_1[~df_not_1['entity'].isin(regions_list + world_list + high_income_list)].reset_index(drop=True)
+df_not_1[['entity', 'year', 'reporting_level', 'welfare_type'] + cols_to_check + ['sum_deciles']]
 
 # %% [markdown]
 # ## Monotonicity checks
@@ -422,42 +709,70 @@ for i in range(len(col_headcount)):
 
 
 # %% [markdown]
-# **Croatia, Guinea-Bissau, Sierra Leone and United Arab Emirates** show issues:
+# **Croatia, Guinea-Bissau and United Arab Emirates** show issues. This is because for Croatia there are not headcount values for the \\$5.5 poverty line for years between 1981 and 1988. Guinea Bissau 1991 is the same considered for the stacked variables in the previous section and the UAE situation is the strangest of the group: the headcount below the \\$10 poverty line is one order of magnitude greater than the headcount below \\$20
 
 # %%
-df_check = df_final[(df_final['m_check_1'] == False) 
-        | (df_final['m_check_2'] == False)
-        | (df_final['m_check_3'] == False)
-        | (df_final['m_check_4'] == False)
-        | (df_final['m_check_5'] == False)
-        | (df_final['m_check_6'] == False)
-        | (df_final['m_check_7'] == False)
-        ].copy()
-df_check[['entity', 'year'] + m_check_vars]
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_headcount]
 
 # %%
 print('Percentage of errors for each variable')
 (len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
 
 # %% [markdown]
-# This is because for Croatia there are not headcount values for the \\$5.5 poverty line for years between 1981 and 1988. Guinea Bissau and Sierra Leone cases are the same considered for the stacked variables in the previous section and the UAE situation is the strangest of the group: the headcount below the \\$10 poverty line is one order of magnitude greater than the headcount below \\$20
+# What if the condition is more strict? If filter the values not strictly increasing I have more rows: 
 
 # %%
-df_check[['entity', 'year'] + col_headcount]
+m_check_vars = []
+for i in range(len(col_headcount)):
+    if i > 0:
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = (df_final[f'{col_headcount[i]}'] > df_final[f'{col_headcount[i-1]}'])
+        m_check_vars.append(check_varname)
+
 
 # %% [markdown]
-# Only Croatia-1988, UAE-2018 and Guinea-Bissau 1991 come from survey data. The other 21 rows come from filled data. This is the same situation for the headcount ratio, poverty gap and total shortfall variables.
+# 382 observations have at least one headcount value equal to the previous one.
 
 # %%
-df = pip_query_country(
-                    popshare_or_povline = "povline", 
-                    value = 1.9, 
-                    fill_gaps='false')
-df[(df['country_name'] == 'Croatia') |(df['country_name'] == 'United Arab Emirates')][['country_name', 'reporting_year', 'reporting_level', 'welfare_type', 'estimation_type']]
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_headcount]
+
+# %% [markdown]
+# If the zero values for the second headcount are filtered out, we exclude the richest countries with multiple zero headcounts. If I also exclude the second to last headcount ratio values greater than 99, the repeated valued at the top 1% are gone. There are 153 observations left
+
+# %%
+df_check = df_check[(df_check[col_headcount[1]] != 0) & (df_check[col_headcount_ratio[-2]] <= 99)]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_headcount]
+
+# %%
+df_check.to_csv('repeated_headcounts.csv')
+
+# %% [markdown]
+# All of these issues are concentrated for the first three comparisons (the first four headcounts)
+
+# %%
+print('Percentage of errors for each variable')
+(len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
+
+# %% [markdown]
+# And this is the list of countries showing the issue (mostly advanced economies, probably very few observations at the bottom of the distribution):
+
+# %%
+df_check['entity'].value_counts()
+
+# %% [markdown]
+# Further evidence to think about few observations at the bottom is that the fourth headcount ratio for this group of countries ($5.5 poverty line) has a median of 0.73\% and a maximum of 6.36%
+
+# %%
+fig = px.histogram(df_check, x=col_headcount_ratio[3], histnorm="percent", marginal="box")
+fig.show()
 
 # %% [markdown]
 # ### Average shortfall
-# With this variable there are much more monotonicity issues: 1349 observations are affected (*though I am not sure monotonicity should exist*)
+# With this variable there are much more monotonicity issues: 573 observations are affected (*though I am not sure monotonicity should exist*)
 
 # %%
 m_check_vars = []
@@ -469,26 +784,24 @@ for i in range(len(col_avg_shortfall)):
 
 
 # %%
-df_check = df_final[(df_final['m_check_1'] == False) 
-        | (df_final['m_check_2'] == False)
-        | (df_final['m_check_3'] == False)
-        | (df_final['m_check_4'] == False)
-        | (df_final['m_check_5'] == False)
-        | (df_final['m_check_6'] == False)
-        | (df_final['m_check_7'] == False)
-        ].copy()
-df_check[['entity', 'year'] + m_check_vars]
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_avg_shortfall]
+
+# %% [markdown]
+# Excluding null values for the lowest poverty line there are 215 rows with the issue
+
+# %%
+df_check = df_check[~df_check[col_avg_shortfall[0]].isnull()]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_avg_shortfall]
 
 # %%
 print('Percentage of errors for each variable')
 (len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
 
-# %%
-df_check[['entity', 'year'] + col_avg_shortfall]
-
 # %% [markdown]
 # ### Income gap ratio
-# With this variable there are even more monotonicity issues: 3630 observations are affected (*though I am not sure monotonicity should exist*)
+# With this variable there are even more monotonicity issues: 1670 observations are affected (*though I am not sure monotonicity should exist*)
 
 # %%
 m_check_vars = []
@@ -500,22 +813,71 @@ for i in range(len(col_incomegap)):
 
 
 # %%
-df_check = df_final[(df_final['m_check_1'] == False) 
-        | (df_final['m_check_2'] == False)
-        | (df_final['m_check_3'] == False)
-        | (df_final['m_check_4'] == False)
-        | (df_final['m_check_5'] == False)
-        | (df_final['m_check_6'] == False)
-        | (df_final['m_check_7'] == False)
-        ].copy()
-df_check[['entity', 'year'] + m_check_vars]
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_incomegap]
+
+# %% [markdown]
+# Excluding null values for the lowest poverty line there are 1321 rows with the issue
+
+# %%
+df_check = df_check[~df_check[col_incomegap[0]].isnull()]
+df_check[['entity', 'year', 'reporting_level', 'welfare_type'] + col_incomegap]
 
 # %%
 print('Percentage of errors for each variable')
 (len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
 
+# %% [markdown]
+# ## Reporting and survey year comparison
+# The dataset contains two different year variables. One is `reporting_year`, renamed `year` for OWID processing, which is an integer value, but there is also a `survey_year` which represents when the income/consumption survey is ran in more than one year: the value has decimals representing the weight of the years. 
+#
+# >The decimal year notation is used when data are collected over **two calendar years**. The number before the decimal
+# point refers to the first year of data collection, while the numbers after the decimal point show the proportion of data
+# collected in the second year. For example, the Fiji survey (2013.24) was conducted in 2013 and 2014, with 24% of
+# the data collected in 2014. For these countries, we use a weighted average of the annual CPI series, where the weights
+# are based on the data collection. In the case of Fiji, we use a CPI that is the weighted average of the 2013 and 2014
+# CPIs, with weights of 76% and 24%, respectively.
+#
+# (Atamanov et al. 2018. “April 2018 PovcalNet update: What’s new.” Global Poverty Monitoring Technical Note 1. Washington, DC: World Bank. Footnote 2, available [here](https://documents1.worldbank.org/curated/en/173171524715215230/pdf/April-2018-Povcalnet-Update-What-s-New.pdf))
+#
+# We can compare these values by dividing them and see how different they are.
+# The ratio between the reporting year and the survey year is almost always less or equal than 1, except for the case of Tanzania in 2018: the survey year is 2017.92. The ratio is also very close to 1, from 0.99954 to 1.00004.
+
 # %%
-df_check[['entity', 'year'] + col_incomegap]
+df_final['year_ratio'] = df_final['year'] / df_final['survey_year']
+
+fig = px.scatter(df_final, x="year", y="year_ratio", color="entity",
+                 hover_data=['survey_year'], opacity=0.5,
+                 title="<b>Reporting year vs Survey year</b><br>Ratio between both measures vs year",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+# %% [markdown]
+# The absolute difference between the values is always 1. The cases which they are more apart are when the survey year is 0.92 greater than the reporting year (Tanzania 91, Vietnam 97, Eswatini 2000)
+
+# %%
+df_final['year_diff'] = df_final['year'] - df_final['survey_year']
+
+fig = px.scatter(df_final, x="year", y="year_diff", color="entity",
+                 hover_data=['survey_year'], opacity=0.5,
+                 title="<b>Reporting year vs Survey year</b><br>Difference between both measures vs year",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+# %% [markdown]
+# Most of the data though is the same. The ratio is 1 for about 89% of the data.
+
+# %%
+fig = px.histogram(df_final, x="year_ratio", nbins=50, histnorm="percent", marginal="box")
+fig.show()
+
+# %% [markdown]
+# For OWID purposes, `reporting_year` is preferred, though `survey_year` is also available.
 
 # %% [markdown]
 # ## Aggregation of data
@@ -544,7 +906,7 @@ redundant_countries = ['China - urban',
 countries = list(set(list(df_final['entity'].unique())) - set(regions) - set(world) - set(high_income) - set(redundant_countries))
 
 # %% [markdown]
-# On a first visual inspection we can see a big bump in the headcount data between 1988 and 1989, mainly driven by China. Another bump in 1998 is driven by Indonesia. There is missing headcount data for South Asia between 1997 and 2001 and in Sub Saharan Africa before 1990, but it seems not to be affected for the world aggregation.
+# On a first visual inspection we can hardly compare the countries data without inter/extrapolations with the world aggregation, because all the countries are never available for the same year. Regarding regional aggregations there is missing headcount data for South Asia between 1997 and 2001 and in Sub Saharan Africa before 1990, but it seems not to be affected for the world aggregation.
 
 # %%
 for i in col_headcount:
@@ -568,7 +930,7 @@ df_regions = df_final[df_final['entity'].isin(regions)].copy().reset_index(drop=
 df_world = df_final[df_final['entity'].isin(world)].copy().reset_index(drop=True)
 
 # %% [markdown]
-# We can see the countries aggregations for headcount in different poverty lines are fairly similar to the world aggregation: the countries aggregation ranges between 97.5% and 99%, concentrated mostly around 98%. Similar situation happens with the total shortfall.
+# We can see the countries aggregations for headcount in different poverty lines fluctuate a lot: between a 2 and 70% of the world aggregation. Similar situation happens with the total shortfall. These aggregations can't be compared.
 
 # %%
 df_countries_year = df_countries.groupby(['year']).sum().reset_index()
@@ -588,7 +950,7 @@ fig = px.line(df_world_comparison, x="year", y="ratio", color="headcount_name", 
 fig.show()
 
 # %% [markdown]
-# Regional aggregations are a different story. The missing data for South Asia and Sub Saharan Africa makes the aggregations less reliable: ranging from 55-70% to almost 100% of the world aggregation. We recommend to not use the regional aggregations together without any transformation. Similar situation happens with the total shortfall.
+# Regional aggregations are a similar story. The missing data for South Asia and Sub Saharan Africa makes the aggregations less reliable: ranging from 55-70% to almost 100% of the world aggregation. We recommend to not use the regional aggregations together without any transformation. Similar situation happens with the total shortfall.
 
 # %%
 df_regions_year = df_regions.groupby(['year']).sum().reset_index()
@@ -609,6 +971,11 @@ fig.show()
 
 # %%
 # For world regions, the popshare query is not available (or rather, it returns nonsense).
+
+
+# %%
+regions = pip_query_region(1.9)
+regions.columns
 
 
 # %%
