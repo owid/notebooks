@@ -86,6 +86,7 @@ output.close()
 
 ```
 
+Some preliminary cleaning of the data: 1) remove the first 16 rows, 2) remove white space from the country names and 3) remove rows where the maternal mortality rate is NA.
 ```{python}
 df = pd.read_excel("data/input/gapminder.xls")
 df_d = df.drop(df.index[0:16]).reset_index()
@@ -106,7 +107,7 @@ There are some issues with the Gapminder data - we will manually clean them here
 
 * There are also two errors for New Zealand, and one error for both Sweden and the US.
 
-* Ireland, Denamrk and Sri Lanka's maternal mortality rate drops to zero at some points - we will remove these.
+* Ireland, Denmark and Sri Lanka's maternal mortality rate drops to zero at some points - we will remove these.
 
 ```{python}
 df_d.loc[:2, "year"] = ["1875", "1885", "1895"]
@@ -177,6 +178,8 @@ In the registrar general of Ireland it states that there were approximately 599 
 
 I think this suggests that the 'maternal deaths' figures may be wrong for the period 1901-1920. I think they may have back-calculated the maternal deaths from the MMR but accidentally used the year column instead as the calculated MMR works out as the year value. 
 
+Additionally there are some rows for the UK which don't quite match, but they are very close so we will continue with the original values. 
+
 ```{python}
 df_check = df_d[['Country','year','Live Births', 'Maternal deaths', 'MMR']].dropna().reset_index(drop=True)
 df_check['mmr_calc'] = ((df_check['Maternal deaths']/df_check['Live Births'])* 100000).astype(float).round(2)
@@ -222,9 +225,7 @@ df_d["year_begin"] = df_years[0].astype(int)
 df_d["mid_year"] = df_years[1].astype(int)
 
 df_d[df_d["year_begin"] > df_d["mid_year"]]
-```
 
-```{python}
 df_d.loc[
     (df_d["year"] == "1897-01") & (df_d["Country"] == "New Zealand"), "mid_year"
 ] = 1899
@@ -253,7 +254,7 @@ assert df_gap['entity'].isna().sum() == 0
 ```
 
 ## Read in the OECD Stat data
-Add in the OECD Stat Health data - this is not available on the OECD stat API so we manually download it.
+Add in the OECD Stat Health data - this is not available on the OECD stat API so we manually download it from here: https://stats.oecd.org/index.aspx?queryid=30116
 
 ```{python}
 oecd_df = pd.read_csv("data/input/HEALTH_STAT_08082022144439675.csv")
@@ -317,6 +318,7 @@ who_df = who_df.dropna(subset=['maternal_mortality_rate'])
 
 ```
 
+Remove entities that we aren't interested in displaying on grapher as it is difficult to clearly define them.
 ```{python}
 
 #%%[markdown]
@@ -371,9 +373,12 @@ df["year"] = df["year"].astype(int)
 df['maternal_mortality_rate'] = df['maternal_mortality_rate'].astype(float)
 ```
 
+Identify entities and years which have data from multiple datasets so that we can plot these. 
+
 ```{python}
 dup_ents = df[['entity', 'year']][df.duplicated(subset=['entity', 'year'])].drop_duplicates()
 dup_ents['ent_year'] = dup_ents['entity'] + '_' + dup_ents['year'].astype(str)
+
 gap_ents = df['entity'][df['source'] == 'gapminder'].drop_duplicates().to_list()
 oecd_ents = df['entity'][df['source'] == 'oecd'].drop_duplicates().to_list()
 ```
@@ -388,6 +393,7 @@ df = df[~((df['ent_year'].isin(dup_ents['ent_year'])) & (df['source'] == 'who'))
 
 
 Plot the countries which have data from Gapminder so we can inspect the full timeline. Where there are duplicate values sourced from WHO we drop these. 
+
 The data is shown from from 1950 onwards. WHO is shown in blue, Gapminder in green and OECD in red.
 ```{python}
 df_dup = df[(df.entity.isin(gap_ents)) & (df.year >= 1950)]
@@ -445,6 +451,7 @@ df = df[~((df['entity'].isin(['Sri Lanka', 'Malaysia'])) & (df['source'] == 'gap
 
 
 Plot the countries which have data from OECD so we can inspect the full timeline. Where there are duplicate values sourced from WHO we drop these. 
+
 The data is shown from from 1950 onwards. WHO is shown in blue, Gapminder in green and OECD in red.
 
 ```{python}
@@ -494,7 +501,7 @@ for countryname, selection in df_dup.groupby("entity"):
 plt.tight_layout()
 ```
 
-Turkey only has data every 8/9 years with the OECD but it's not appropriate to fill in the gaps with the WHO data so we will drop that data for Turkey. 
+Turkey only has data every 8/9 years with the OECD but it's not appropriate to fill in the gaps with the WHO data so we will drop the WHO data for Turkey. 
 
 ```{python}
 df = df[~((df['entity'].isin(['Turkey'])) & (df['source'] == 'who'))]
