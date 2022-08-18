@@ -216,74 +216,172 @@ df_final['reporting_pop'] = np.where((df_final['reporting_pop_x'].isnull()) & ~(
 df_final = df_final.drop(columns=['mean_x', 'mean_y', 'reporting_pop_x', 'reporting_pop_y'])
 
 # %% [markdown]
-# ## Patching missing median data
-# A small but considerable part of the median data is not available by default (PIP does not provide China, India and Indonesia national medians). It can be obtained by getting the poverty line for the 50% of the population, with the `popshare` command.
+# ## Integrate the relative poverty data
+# The data comes from an over 1 hour query in `relative_poverty.py`. Be warned you have to update it first when running a massive update to the dataset
 
 # %%
-## 
+file = 'data/relative_poverty.csv'
+df_relative = pd.read_csv(file)
 
-# start_time = time.time()
+df_final = pd.merge(df_final, df_relative, 
+                    how='left', on=['Entity', 'Year', 'reporting_level', 'welfare_type'])
 
-# df_query = pip_query_country(
-#                     popshare_or_povline = "povline", 
-#                     value = 1.9, 
-#                     fill_gaps="false")
+#Save the relative poverty variables to order the final output
+col_relative = list(df_relative.columns)
+col_relative = [e for e in col_relative if e not in ['Entity', 'Year', 'reporting_level', 'welfare_type']]
 
-# median_list = []
+# %% [markdown]
+# ## Stacked area variables
 
-# for i in range(len(df_query)):
-#     if np.isnan(df_query['median'][i]):
-#         df_popshare = pip_query_country(popshare_or_povline = "popshare",
-#                                         country_code = df_query['country_code'][i],
-#                                         year = df_query['reporting_year'][i],
-#                                         welfare_type = df_query['welfare_type'][i],
-#                                         reporting_level = df_query['reporting_level'][i],
-#                                         value = 0.5,
-#                                         fill_gaps="false")
-#         try:
-#             median_value = df_popshare['poverty_line'][0]
-#             median_list.append(median_value)
-        
-#         except:
-#             median_list.append(np.nan)
-        
-        
-#     else:
-#         median_value = df_query['median'][i]
-#         median_list.append(median_value)
-               
+# %%
+#Calculate numbers in poverty between pov lines for stacked area charts
+#Make sure the poverty lines are in order, lowest to highest
+poverty_lines_cents.sort()
 
-# df_query['median2'] = median_list
-# df_query = df_query.rename(columns={'country_name': 'Entity',
-#                                     'reporting_year': 'Year'})
-# null_median = (df_query['median'].isnull()).sum()
-# null_median2 = (df_query['median2'].isnull()).sum()
-# print(f'Before patching: {null_median} nulls for median')
-# print(f'After patching: {null_median2} nulls for median')
+col_stacked_n = []
+col_stacked_pct = []
 
-# df_final = pd.merge(df_final, df_query[['Entity', 'Year', 'welfare_type', 'reporting_level', 'median2']], 
+#For each poverty line in poverty_lines_cents
+for i in range(len(poverty_lines_cents)):
+    #if it's the first value only get people below this poverty line (and percentage)
+    if i == 0:
+        varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+
+    #If it's the last value calculate the people between this value and the previous 
+    #and also the people over this poverty line (and percentages)
+    elif i == len(poverty_lines_cents)-1:
+
+        varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+
+        varname_n = f'headcount_stacked_above_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{poverty_lines_cents[i]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'headcount_ratio_stacked_above_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+
+    #If it's any value between the first and the last calculate the people between this value and the previous (and percentage)
+    else:
+        varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
+        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
+        col_stacked_n.append(varname_n)
+
+        varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
+        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
+        col_stacked_pct.append(varname_pct)
+
+df_final.loc[:, col_stacked_pct] = df_final[col_stacked_pct] * 100
+
+# %% [markdown]
+# ## Decile thresholds
+
+# %%
+# #Thresholds are defined as the lower threshold, meaning that the decile 1 do not have one (it would be an entire column of zeros)
+# df_threshold = pd.DataFrame()
+
+
+# for dec in range(1,10):
+
+#     popshare = dec/10
+    
+#     df = pip_query_country(
+#                     popshare_or_povline = "popshare", 
+#                     value = popshare, 
+#                     fill_gaps='false')
+
+#     df['requested_decile'] = dec
+#     decile_number = dec + 1
+#     df['decile_name'] = f'decile{decile_number}_thr'
+
+#     df_threshold = pd.concat([df_threshold, df],ignore_index=True)
+    
+# df_threshold = pd.pivot(df_threshold, index=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+#                        columns='decile_name', values='poverty_line').reset_index()
+
+# df_threshold = df_threshold.rename(columns={'country_name': 'Entity',
+#                                             'reporting_year': 'Year'})
+
+# df_final = pd.merge(df_final, df_threshold, 
 #                        how='left', 
-#                        on=['Entity', 'Year', 'welfare_type', 'reporting_level'], 
+#                        on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
 #                        validate='many_to_one')
-# df_final['median_ratio'] = df_final['median'] / df_final['median2']
-# median_ratio_median = (df_final['median_ratio']).median()
-# median_ratio_min = (df_final['median_ratio']).min()
-# median_ratio_max = (df_final['median_ratio']).max()
 
-# if median_ratio_median == 1 and median_ratio_min == 1 and median_ratio_max == 1:
-#     print(f'Patch successful.')
-#     print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
-# else:
-#     print(f'Patch changed some median values. Please check for errors.')
-#     print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
+# %%
+df_percentiles = pd.read_csv('data/percentiles.csv')
+deciles = []
 
-# df_final.drop(columns=['median', 'median_ratio'], inplace=True)
-# df_final.rename(columns={'median2': 'median'}, inplace=True)
+for i in range(10,100,10):
+    deciles.append(f'P{i}')
 
+df_percentiles = df_percentiles[df_percentiles['target_percentile'].isin(deciles)].reset_index(drop=True)
+df_percentiles = pd.pivot(df_percentiles, 
+                          index=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'], 
+                          columns=deciles, 
+                          values='poverty_line').reset_index()
 
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-# print('Execution time:', elapsed_time, 'seconds')
+for i in range(10,100,10):
+    df_percentiles = df_percentiles.rename(columns={f'P{i}': f'decile{int(i/10)}_thr'})
+    
+df_percentiles = df_percentiles.rename(columns={'country_name': 'Entity',
+                                                'reporting_year': 'Year'})
+
+df_final = pd.merge(df_final, df_percentiles, 
+                    how='left', 
+                    on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
+                    validate='many_to_one')
+
+# %% [markdown]
+# ## Additional inequality variables
+
+# %%
+# Create average decile income/consumption
+col_decile_share = []
+col_decile_avg = []
+col_decile_thr = []
+
+for i in range(1,11):
+    
+    if i !=1:
+        varname_thr = f'decile{i}_thr'
+        col_decile_thr.append(varname_thr)
+    
+    varname_share = f'decile{i}_share'
+    varname_avg = f'decile{i}_avg'
+    df_final[varname_avg] = df_final[varname_share] * df_final['mean'] / 0.1
+    
+    col_decile_share.append(varname_share)
+    col_decile_avg.append(varname_avg)
+    
+#Multiplies decile columns by 100
+df_final.loc[:, col_decile_share] = df_final[col_decile_share] * 100
+
+#Palma ratio and other average/share ratios
+df_final['palma_ratio'] = df_final['decile10_share'] / (df_final['decile1_share'] + df_final['decile2_share'] + df_final['decile3_share'] + df_final['decile4_share'])
+df_final['s80_s20_ratio'] =  (df_final['decile9_share'] + df_final['decile10_share']) / (df_final['decile1_share'] + df_final['decile2_share'])
+df_final['p90_p10_ratio'] =  df_final['decile9_thr'] / df_final['decile1_thr']
+df_final['p90_p50_ratio'] =  df_final['decile9_thr'] / df_final['decile5_thr']
+df_final['p90_p10_ratio'] =  df_final['decile5_thr'] / df_final['decile1_thr']
+
+# %%
+#Export all the data to use it in PIP_issues
+df_final.to_csv('notebooks/allthedata.csv', index=False)
+
+# %% [markdown]
+# ## Patching missing median data
+# A small but considerable part of the median data is not available by default (PIP does not provide China, India and Indonesia national medians). It can be obtained by getting the poverty line for the 50% of the population, with the `popshare` command.
 
 # %%
 #Starting from an adjusted mean, the code evaluates the headcount ratio associated with it and increases or diminishes
@@ -412,141 +510,45 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 print('Execution time:', elapsed_time, 'seconds')
 
-# %% [markdown]
-# ## Integrate the relative poverty data
-# The data comes from an over 1 hour query in `relative_poverty.py`. Be warned you have to update it first when running a massive update to the dataset
-
 # %%
-file = 'data/relative_poverty.csv'
-df_relative = pd.read_csv(file)
+df_median = pd.read_csv('data/percentiles.csv')
+df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
-df_final = pd.merge(df_final, df_relative, 
-                    how='left', on=['Entity', 'Year', 'reporting_level', 'welfare_type'])
+df_final = pd.merge(df_final, 
+                    df_percentiles[['country_name', 'reporting_year','reporting_level', 'welfare_type',
+                                    'poverty_line']], 
+                    how='left', 
+                    left_on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
+                    right_on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+                    validate='many_to_one')
 
-#Save the relative poverty variables to order the final output
-col_relative = list(df_relative.columns)
-col_relative = [e for e in col_relative if e not in ['Entity', 'Year', 'reporting_level', 'welfare_type']]
+#Create the column median2, a combination between the old and new median values
+df_final['median2'] = np.where((df_final['median'].isnull()) & ~(df_final['poverty_line'].isnull()), df_final['poverty_line'], df_final['median'])
 
-# %% [markdown]
-# ## Stacked area variables
+#Median nulls in original and new columns
+null_median = (df_query['median'].isnull()).sum()
+null_median2 = (df_query['median2'].isnull()).sum()
 
-# %%
-#Calculate numbers in poverty between pov lines for stacked area charts
-#Make sure the poverty lines are in order, lowest to highest
-poverty_lines_cents.sort()
+#Print these two different values to show the change generated by the patch 
+print(f'Before patching: {null_median} nulls for median')
+print(f'After patching: {null_median2} nulls for median')
 
-col_stacked_n = []
-col_stacked_pct = []
+#This is a quick last check to compare previous and new median values
+df_final['median_ratio'] = df_final['median'] / df_final['median2']
+median_ratio_median = (df_final['median_ratio']).median()
+median_ratio_min = (df_final['median_ratio']).min()
+median_ratio_max = (df_final['median_ratio']).max()
 
-#For each poverty line in poverty_lines_cents
-for i in range(len(poverty_lines_cents)):
-    #if it's the first value only get people below this poverty line (and percentage)
-    if i == 0:
-        varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
-        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}']
-        col_stacked_n.append(varname_n)
+if median_ratio_median == 1 and median_ratio_min == 1 and median_ratio_max == 1:
+    print(f'Patch successful.')
+    print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
+else:
+    print(f'Patch changed some median values. Please check for errors.')
+    print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
 
-        varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
-        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
-        col_stacked_pct.append(varname_pct)
-
-    #If it's the last value calculate the people between this value and the previous 
-    #and also the people over this poverty line (and percentages)
-    elif i == len(poverty_lines_cents)-1:
-
-        varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
-        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
-        col_stacked_n.append(varname_n)
-
-        varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
-        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
-        col_stacked_pct.append(varname_pct)
-
-        varname_n = f'headcount_stacked_above_{poverty_lines_cents[i]}'
-        df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{poverty_lines_cents[i]}']
-        col_stacked_n.append(varname_n)
-
-        varname_pct = f'headcount_ratio_stacked_above_{poverty_lines_cents[i]}'
-        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
-        col_stacked_pct.append(varname_pct)
-
-    #If it's any value between the first and the last calculate the people between this value and the previous (and percentage)
-    else:
-        varname_n = f'headcount_stacked_below_{poverty_lines_cents[i]}'
-        df_final[varname_n] = df_final[f'headcount_{poverty_lines_cents[i]}'] - df_final[f'headcount_{poverty_lines_cents[i-1]}']
-        col_stacked_n.append(varname_n)
-
-        varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
-        df_final[varname_pct] = df_final[varname_n] / df_final['reporting_pop']
-        col_stacked_pct.append(varname_pct)
-
-df_final.loc[:, col_stacked_pct] = df_final[col_stacked_pct] * 100
-
-# %% [markdown]
-# ## Decile thresholds
-
-# %%
-#Thresholds are defined as the lower threshold, meaning that the decile 1 do not have one (it would be an entire column of zeros)
-df_threshold = pd.DataFrame()
-
-
-for dec in range(1,10):
-
-    popshare = dec/10
-    
-    df = pip_query_country(
-                    popshare_or_povline = "popshare", 
-                    value = popshare, 
-                    fill_gaps='false')
-
-    df['requested_decile'] = dec
-    decile_number = dec + 1
-    df['decile_name'] = f'decile{decile_number}_thr'
-
-    df_threshold = pd.concat([df_threshold, df],ignore_index=True)
-    
-df_threshold = pd.pivot(df_threshold, index=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
-                       columns='decile_name', values='poverty_line').reset_index()
-
-df_threshold = df_threshold.rename(columns={'country_name': 'Entity',
-                                            'reporting_year': 'Year'})
-
-df_final = pd.merge(df_final, df_threshold, 
-                       how='left', 
-                       on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
-                       validate='many_to_one')
-
-# %% [markdown]
-# ## Additional inequality variables
-
-# %%
-# Create average decile income/consumption
-col_decile_share = []
-col_decile_avg = []
-col_decile_thr = []
-
-for i in range(1,11):
-    
-    if i !=1:
-        varname_thr = f'decile{i}_thr'
-        col_decile_thr.append(varname_thr)
-    
-    varname_share = f'decile{i}_share'
-    varname_avg = f'decile{i}_avg'
-    df_final[varname_avg] = df_final[varname_share] * df_final['mean'] / 0.1
-    
-    col_decile_share.append(varname_share)
-    col_decile_avg.append(varname_avg)
-    
-#Multiplies decile columns by 100
-df_final.loc[:, col_decile_share] = df_final[col_decile_share] * 100
-
-#Palma ratio and other average/share ratios
-df_final['palma_ratio'] = df_final['decile10_share'] / (df_final['decile1_share'] + df_final['decile2_share'] + df_final['decile3_share'] + df_final['decile4_share'])
-df_final['s80_s20_ratio'] =  (df_final['decile9_share'] + df_final['decile10_share']) / (df_final['decile1_share'] + df_final['decile2_share'])
-df_final['p90_p10_ratio'] =  df_final['decile10_thr'] / df_final['decile2_thr']
-df_final['p90_p50_ratio'] =  df_final['decile10_thr'] / df_final['median']
-df_final['p90_p10_ratio'] =  df_final['median'] / df_final['decile2_thr']
+#Drop the check and the old median and rename the new median
+df_final.drop(columns=['median', 'median_ratio', 'poverty_line'], inplace=True)
+df_final.rename(columns={'median2': 'median'}, inplace=True)
 
 # %% [markdown]
 # ## Standardisation
