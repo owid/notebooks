@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import json
+import numpy as np
 
 
 def get_country_codes(base_url: str) -> list:
@@ -62,6 +63,7 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
     df["BVIC"] = (
         df["BVIC_2DEL"] + df["BVIC_3DEL"] + df["BVIC_NODEL"] + df["BVIC_DELUNK"]
     )
+    df["INF_NEGATIVE"] = df["INF_NEGATIVE"].replace(r"^\s*$", np.nan, regex=True)
     df["pcnt_pos"] = (df["INF_ALL"] / (df["INF_ALL"] + df["INF_NEGATIVE"])) * 100
     df["pcnt_pos"] = df["pcnt_pos"].fillna(0).round(2)
     df["year"] = df["ISO_YEAR"].astype(int)
@@ -84,10 +86,8 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def standardise_countries(df: pd.DataFrame) -> pd.DataFrame:
-    stan_countries = pd.read_csv(
-        "FionaSpooner/flunet/country_codes_country_standardized.csv"
-    )
+def standardise_countries(df: pd.DataFrame, path: str) -> pd.DataFrame:
+    stan_countries = pd.read_csv(f"{path}/country_codes_country_standardized.csv")
     stan_dict = stan_countries.set_index("Country").squeeze().to_dict()
     df["Country"] = df["Country"].map(stan_dict)
 
