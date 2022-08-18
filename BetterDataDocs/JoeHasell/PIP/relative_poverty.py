@@ -15,149 +15,37 @@ import time
 relative_poverty_lines = [40, 50, 60]
 
 # %%
-# #Just as for the main data here we need to 'patch' missing median data for several countries, including China, India and Indonesia
-# start_time = time.time()
-
-# # A $1.9 poverty line query to get the median data from each observation
-# df = pip_query_country(
-#                     popshare_or_povline = "povline", 
-#                     value = 1.9, 
-#                     fill_gaps="false")
-
-# median_list = []
-
-# for i in range(len(df)):
-#     if np.isnan(df['median'][i]):
-#         df_popshare = pip_query_country(popshare_or_povline = "popshare",
-#                                         country_code = df['country_code'][i],
-#                                         year = df['reporting_year'][i],
-#                                         welfare_type = df['welfare_type'][i],
-#                                         reporting_level = df['reporting_level'][i],
-#                                         value = 0.5,
-#                                         fill_gaps="false")
-#         try:
-#             median_value = df_popshare['poverty_line'][0]
-#             median_list.append(median_value)
-        
-#         except:
-#             median_list.append(np.nan)
-        
-        
-#     else:
-#         median_value = df['median'][i]
-#         median_list.append(median_value)
-               
-
-# df['median2'] = median_list
-# df = df.rename(columns={'country_name': 'Entity',
-#                                     'reporting_year': 'Year'})
-# null_median = (df['median'].isnull()).sum()
-# null_median2 = (df['median2'].isnull()).sum()
-# print(f'Before patching: {null_median} nulls for median')
-# print(f'After patching: {null_median2} nulls for median')
-
-# df['median_ratio'] = df['median'] / df['median2']
-# median_ratio_median = (df['median_ratio']).median()
-# median_ratio_min = (df['median_ratio']).min()
-# median_ratio_max = (df['median_ratio']).max()
-
-# if median_ratio_median == 1 and median_ratio_min == 1 and median_ratio_max == 1:
-#     print(f'Patch successful.')
-#     print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
-# else:
-#     print(f'Patch changed some median values. Please check for errors.')
-#     print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
-
-# df.drop(columns=['median', 'median_ratio'], inplace=True)
-# df.rename(columns={'median2': 'median'}, inplace=True)
-
-# # Generate relative poverty lines for each observation
-# df['median_40'] = df['median'] * 0.4
-# df['median_50'] = df['median'] * 0.5
-# df['median_60'] = df['median'] * 0.6
-
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-# print('Execution time:', elapsed_time, 'seconds')
-
-# %%
-#Trying a new iterative method
-
+#Just as for the main data here we need to 'patch' missing median data for several countries, including China, India and Indonesia
 start_time = time.time()
 
-lower_limit = 0.49
-upper_limit = 0.51
-increment = 0.025
-
-lower_limit_close = 0.45
-upper_limit_close = 0.55
-increment_close = 0.1
-
-lower_limit_far = 0.4
-upper_limit_far = 0.6
-increment_far = 0.3
-
-mean_adjustment = 2
-
+# A $1.9 poverty line query to get the median data from each observation
 df = pip_query_country(
                     popshare_or_povline = "povline", 
                     value = 1.9, 
                     fill_gaps="false")
 
-median_list = []
+df_median = pd.read_csv('data/percentiles.csv')
+df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
-for i in range(len(df)):
-    if np.isnan(df['median'][i]):
-        median_candidate = max(df['mean'][i] - mean_adjustment,0.1)
-        headcount_ratio = 0
-        
-        while headcount_ratio < lower_limit or headcount_ratio > upper_limit: 
-            df_candidate = pip_query_country(popshare_or_povline = "povline",
-                                            country_code = df['country_code'][i],
-                                            year = df['reporting_year'][i],
-                                            welfare_type = df['welfare_type'][i],
-                                            reporting_level = df['reporting_level'][i],
-                                            value = median_candidate,
-                                            fill_gaps="false")
-            
-            headcount_ratio = df_candidate['headcount'][0]
-            
-            print(f'{i}, median {median_candidate}, headcount {headcount_ratio}')
-            
-            if headcount_ratio < lower_limit_far:
-                median_candidate += increment_far
-                
-            elif headcount_ratio > upper_limit_far:
-                median_candidate -= increment_far
-                
-            elif headcount_ratio < lower_limit_close:
-                median_candidate += increment_close
-                
-            elif headcount_ratio > upper_limit_close:
-                median_candidate -= increment_close
-            
-            elif headcount_ratio < lower_limit:
-                median_candidate += increment
-            
-            elif headcount_ratio > upper_limit:
-                median_candidate -= increment
-                
-                
-        median_list.append(median_candidate)
-        
-    else:
-        median_value = df['median'][i]
-        median_list.append(median_value)
-               
+df = pd.merge(df,
+              df_median[['country_name', 'reporting_year','reporting_level', 'welfare_type',
+                         'poverty_line']], 
+              how='left',
+              on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+              validate='one_to_one')
 
-df['median2'] = median_list
-df = df.rename(columns={'country_name': 'Entity',
-                                    'reporting_year': 'Year'})
+#Create the column median2, a combination between the old and new median values
+df['median2'] = np.where((df['median'].isnull()) & ~(df['poverty_line_y'].isnull()), df['poverty_line_y'], df['median'])
+
+#Median nulls in original and new columns
 null_median = (df['median'].isnull()).sum()
 null_median2 = (df['median2'].isnull()).sum()
+
+#Print these two different values to show the change generated by the patch 
 print(f'Before patching: {null_median} nulls for median')
 print(f'After patching: {null_median2} nulls for median')
 
+#This is a quick last check to compare previous and new median values
 df['median_ratio'] = df['median'] / df['median2']
 median_ratio_median = (df['median_ratio']).median()
 median_ratio_min = (df['median_ratio']).min()
@@ -170,17 +58,14 @@ else:
     print(f'Patch changed some median values. Please check for errors.')
     print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')
 
-df.drop(columns=['median', 'median_ratio'], inplace=True)
-df.rename(columns={'median2': 'median'}, inplace=True)
+#Drop the check and the old median and rename the new median
+df.drop(columns=['median', 'median_ratio', 'poverty_line_y'], inplace=True)
+df.rename(columns={'median2': 'median', 'poverty_line_x': 'poverty_line'}, inplace=True)
 
 # Generate relative poverty lines for each observation
-df['median_40'] = df['median'] * 0.4
-df['median_50'] = df['median'] * 0.5
-df['median_60'] = df['median'] * 0.6
 
-end_time = time.time()
-elapsed_time = end_time - start_time
-print('Execution time:', elapsed_time, 'seconds')
+for pct in relative_poverty_lines:
+    df[f'median_{pct}'] = df['median'] * pct/100
 
 # %%
 start_time = time.time()
@@ -208,7 +93,7 @@ for i in range(len(df)):
     # Run 3 queries, one for each relative poverty line, to get the headcount (ratio)
     df_query_40 = pip_query_country(popshare_or_povline = "povline",
                                     country_code = df['country_code'][i],
-                                    year = df['Year'][i],
+                                    year = df['reporting_year'][i],
                                     welfare_type = df['welfare_type'][i],
                                     reporting_level = df['reporting_level'][i],
                                     value = df['median_40'][i],
@@ -216,7 +101,7 @@ for i in range(len(df)):
     
     df_query_50 = pip_query_country(popshare_or_povline = "povline",
                                     country_code = df['country_code'][i],
-                                    year = df['Year'][i],
+                                    year = df['reporting_year'][i],
                                     welfare_type = df['welfare_type'][i],
                                     reporting_level = df['reporting_level'][i],
                                     value = df['median_50'][i],
@@ -224,7 +109,7 @@ for i in range(len(df)):
     
     df_query_60 = pip_query_country(popshare_or_povline = "povline",
                                     country_code = df['country_code'][i],
-                                    year = df['Year'][i],
+                                    year = df['reporting_year'][i],
                                     welfare_type = df['welfare_type'][i],
                                     reporting_level = df['reporting_level'][i],
                                     value = df['median_60'][i],
@@ -294,59 +179,22 @@ df['watts_40_median'] = watts_40_list
 df['watts_50_median'] = watts_50_list
 df['watts_60_median'] = watts_60_list
 
-
-df['headcount_40_median'] = df['headcount_ratio_40_median'] * df['reporting_pop']
-df['headcount_50_median'] = df['headcount_ratio_50_median'] * df['reporting_pop']
-df['headcount_60_median'] = df['headcount_ratio_60_median'] * df['reporting_pop']
-
-df['headcount_40_median'] = df['headcount_40_median'].round(0)
-df['headcount_50_median'] = df['headcount_50_median'].round(0)
-df['headcount_60_median'] = df['headcount_60_median'].round(0)
-
-df['total_shortfall_40_median'] = df['poverty_gap_index_40_median'] * df['median_40'] * df['reporting_pop']
-df['total_shortfall_50_median'] = df['poverty_gap_index_50_median'] * df['median_50'] * df['reporting_pop']  
-df['total_shortfall_60_median'] = df['poverty_gap_index_60_median'] * df['median_60'] * df['reporting_pop']
-
-df['avg_shortfall_40_median'] = df['total_shortfall_40_median'] / df['headcount_40_median']
-df['avg_shortfall_50_median'] = df['total_shortfall_50_median'] / df['headcount_50_median']
-df['avg_shortfall_60_median'] = df['total_shortfall_60_median'] / df['headcount_60_median']
-
-df['income_gap_ratio_40_median'] = (df['total_shortfall_40_median'] / df['headcount_40_median']) / df['median_40']
-df['income_gap_ratio_50_median'] = (df['total_shortfall_50_median'] / df['headcount_50_median']) / df['median_50']
-df['income_gap_ratio_60_median'] = (df['total_shortfall_60_median'] / df['headcount_60_median']) / df['median_60']
-
-df['headcount_ratio_40_median'] = df['headcount_ratio_40_median'] * 100
-df['headcount_ratio_50_median'] = df['headcount_ratio_50_median'] * 100
-df['headcount_ratio_60_median'] = df['headcount_ratio_60_median'] * 100
-
-df['income_gap_ratio_40_median'] = df['income_gap_ratio_40_median'] * 100
-df['income_gap_ratio_50_median'] = df['income_gap_ratio_50_median'] * 100
-df['income_gap_ratio_60_median'] = df['income_gap_ratio_60_median'] * 100
-
-df['poverty_gap_index_40_median'] = df['poverty_gap_index_40_median'] * 100
-df['poverty_gap_index_50_median'] = df['poverty_gap_index_50_median'] * 100
-df['poverty_gap_index_60_median'] = df['poverty_gap_index_60_median'] * 100
+for pct in relative_poverty_lines:
+    df[f'headcount_{pct}_median'] = df[f'headcount_ratio_{pct}_median'] * df['reporting_pop']
+    df[f'headcount_{pct}_median'] = df[f'headcount_{pct}_median'].round(0)
+    df[f'total_shortfall_{pct}_median'] = df[f'poverty_gap_index_{pct}_median'] * df[f'median_{pct}'] * df['reporting_pop']
+    df[f'avg_shortfall_{pct}_median'] = df[f'total_shortfall_{pct}_median'] / df[f'headcount_{pct}_median']
+    df[f'income_gap_ratio_{pct}_median'] = (df[f'total_shortfall_{pct}_median'] / df[f'headcount_{pct}_median']) / df[f'median_{pct}']
+    df[f'headcount_ratio_{pct}_median'] = df[f'headcount_ratio_{pct}_median'] * 100
+    df[f'income_gap_ratio_{pct}_median'] = df[f'income_gap_ratio_{pct}_median'] * 100
+    df[f'poverty_gap_index_{pct}_median'] = df[f'poverty_gap_index_{pct}_median'] * 100
 
 df = df.rename(columns={'country_name': 'Entity',
-                        'Year': 'Year'})
+                        'reporting_year': 'Year'})
 
 end_time = time.time()
 elapsed_time = end_time - start_time
 print('Execution time:', elapsed_time, 'seconds')
-
-# %%
-# for i in range(len(relative_poverty_lines)):
-#     varname = f'headcount_{relative_poverty_lines[i]}_median'
-#     df[varname] = df[f'headcount_ratio_{relative_poverty_lines[i]}_median'] * df['reporting_pop']
-#     col_headcount_relative.append(varname)
-    
-#     varname = f'total_shortfall_{relative_poverty_lines[i]}_median'
-#     df[varname] = df[f'poverty_gap_index_{relative_poverty_lines[i]}_median'] * df[f'median_{relative_poverty_lines[i]}'] * df['reporting_pop']
-#     col_pgi_relative.append(varname)
-    
-#     varname = f'total_shortfall_{relative_poverty_lines[i]}_median'
-#     df[varname] = df[f'poverty_gap_index_{relative_poverty_lines[i]}_median'] * df[f'median_{relative_poverty_lines[i]}'] * df['reporting_pop']
-#     col_pgi_relative.append(varname)
 
 # %%
 #Calculate numbers in poverty between pov lines for stacked area charts
@@ -412,16 +260,16 @@ col_avg_shortfall = []
 col_income_gap_ratio = []
 
 # %%
-for i in range(len(relative_poverty_lines)):
-    col_povlines.append(f'median_{relative_poverty_lines[i]}')
-    col_headcount.append(f'headcount_{relative_poverty_lines[i]}_median')
-    col_headcount_ratio.append(f'headcount_ratio_{relative_poverty_lines[i]}_median')
-    col_pgi.append(f'poverty_gap_index_{relative_poverty_lines[i]}_median')
-    col_severity.append(f'poverty_severity_{relative_poverty_lines[i]}_median')
-    col_watts.append(f'watts_{relative_poverty_lines[i]}_median')
-    col_total_shortfall.append(f'total_shortfall_{relative_poverty_lines[i]}_median')
-    col_avg_shortfall.append(f'avg_shortfall_{relative_poverty_lines[i]}_median')
-    col_income_gap_ratio.append(f'income_gap_ratio_{relative_poverty_lines[i]}_median')
+for pct in relative_poverty_lines:
+    col_povlines.append(f'median_{pct}')
+    col_headcount.append(f'headcount_{pct}_median')
+    col_headcount_ratio.append(f'headcount_ratio_{pct}_median')
+    col_pgi.append(f'poverty_gap_index_{pct}_median')
+    col_severity.append(f'poverty_severity_{pct}_median')
+    col_watts.append(f'watts_{pct}_median')
+    col_total_shortfall.append(f'total_shortfall_{pct}_median')
+    col_avg_shortfall.append(f'avg_shortfall_{pct}_median')
+    col_income_gap_ratio.append(f'income_gap_ratio_{pct}_median')
 
 # %%
 df = df[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_povlines + col_headcount + col_headcount_ratio + col_pgi + col_total_shortfall + col_avg_shortfall + col_income_gap_ratio + col_severity + col_watts + col_stacked_n + col_stacked_pct]
