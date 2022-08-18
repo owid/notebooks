@@ -297,15 +297,12 @@ for i in range(10,100,10):
 
 df_percentiles = df_percentiles[df_percentiles['target_percentile'].isin(deciles)].reset_index(drop=True)
 df_percentiles = pd.pivot(df_percentiles, 
-                          index=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'], 
+                          index=['Entity', 'Year', 'reporting_level', 'welfare_type'], 
                           columns='target_percentile', 
                           values='poverty_line').reset_index()
 
 for i in range(10,100,10):
     df_percentiles = df_percentiles.rename(columns={f'P{i}': f'decile{int(i/10)}_thr'})
-    
-df_percentiles = df_percentiles.rename(columns={'country_name': 'Entity',
-                                                'reporting_year': 'Year'})
 
 df_final = pd.merge(df_final, df_percentiles, 
                     how='left', 
@@ -357,11 +354,10 @@ df_median = pd.read_csv('data/percentiles.csv')
 df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
 df_final = pd.merge(df_final, 
-                    df_median[['country_name', 'reporting_year','reporting_level', 'welfare_type',
+                    df_median[['Entity', 'Year', 'reporting_level', 'welfare_type',
                                     'poverty_line']], 
                     how='left', 
-                    left_on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
-                    right_on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+                    on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
                     validate='many_to_one')
 
 #Create the column median2, a combination between the old and new median values

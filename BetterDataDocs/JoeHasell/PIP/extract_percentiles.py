@@ -135,6 +135,12 @@ fig = px.scatter(df_closest_complete, x="target_percentile", y="distance_to_p", 
                  height=600)
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
+fig.write_image(f'graphics/target_p_vs_distance_percentiles.svg')
+
+# %%
+fig = px.histogram(df_closest_complete, x="distance_to_p", histnorm="percent", marginal="box")
+fig.show()
+fig.write_image(f'graphics/distance_percentiles_histogram.svg')
 
 # %%
 deciles = []
@@ -151,6 +157,12 @@ fig = px.scatter(df_closest_deciles, x="target_percentile", y="distance_to_p", c
                  height=600)
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
+fig.write_image(f'graphics/target_p_vs_distance_deciles.svg')
+
+# %%
+fig = px.histogram(df_closest_deciles, x="distance_to_p", histnorm="percent", marginal="box")
+fig.show()
+fig.write_image(f'graphics/distance_deciles_histogram.svg')
 
 # %%
 df_closest_complete.to_csv('data/full_dist/percentiles_countries.csv', index=False)
@@ -259,11 +271,11 @@ for p in percentiles:
 
     df_complete_regions['distance_to_p'] = abs(df_complete_regions['headcount']-p/100)
 
-    df_closest = df_complete_regions.sort_values("distance_to_p").groupby(['country_name', 'reporting_year','reporting_level','welfare_type'], as_index=False).first()
+    df_closest = df_complete_regions.sort_values("distance_to_p").groupby(['region_name', 'reporting_year'], as_index=False).first()
     
     df_closest['target_percentile'] = f'P{p}'
 
-    df_closest = df_closest[['country_name', 'reporting_year','reporting_level','welfare_type', 'target_percentile', 'poverty_line', 'headcount', 'distance_to_p']]
+    df_closest = df_closest[['region_name', 'reporting_year', 'target_percentile', 'poverty_line', 'headcount', 'distance_to_p']]
 
     df_closest_complete_regions = pd.concat([df_closest_complete_regions, df_closest],ignore_index=True)
     
@@ -271,13 +283,19 @@ end_time = time.time()
 print(f'Execution time: {end_time - start_time} seconds')
 
 # %%
-fig = px.scatter(df_closest_complete_regions, x="target_percentile", y="distance_to_p", color="country_name",
+fig = px.scatter(df_closest_complete_regions, x="target_percentile", y="distance_to_p", color="region_name",
                  hover_data=['poverty_line', 'headcount', 'reporting_year'], opacity=0.5,
                  title="<b>Target p vs. Distance to p for regions</b><br>Percentiles",
                  log_y=False,
                  height=600)
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
+fig.write_image(f'graphics/target_p_vs_distance_percentiles_regions.svg')
+
+# %%
+fig = px.histogram(df_closest_complete_regions, x="distance_to_p", histnorm="percent", marginal="box")
+fig.show()
+fig.write_image(f'graphics/distance_percentiles_histogram_regions.svg')
 
 # %%
 deciles = []
@@ -285,15 +303,21 @@ deciles = []
 for i in range(10,100,10):
     deciles.append(f'P{i}')
     
-df_closest_deciles = df_closest_complete_regions[df_closest_complete_regions['target_percentile'].isin(deciles)].copy().reset_index(drop=True)
+df_closest_deciles_regions = df_closest_complete_regions[df_closest_complete_regions['target_percentile'].isin(deciles)].copy().reset_index(drop=True)
 
-fig = px.scatter(df_closest_deciles, x="target_percentile", y="distance_to_p", color="country_name",
+fig = px.scatter(df_closest_deciles_regions, x="target_percentile", y="distance_to_p", color="region_name",
                  hover_data=['poverty_line', 'headcount', 'reporting_year'], opacity=0.5,
                  title="<b>Target p vs. Distance to p for regions</b><br>Deciles",
                  log_y=False,
                  height=600)
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
+fig.write_image(f'graphics/target_p_vs_distance_deciles_regions.svg')
+
+# %%
+fig = px.histogram(df_closest_deciles_regions, x="distance_to_p", histnorm="percent", marginal="box")
+fig.show()
+fig.write_image(f'graphics/distance_deciles_histogram_regions.svg')
 
 # %%
 df_closest_complete_regions.to_csv('data/full_dist_regions/percentiles_regions.csv', index=False)
@@ -304,6 +328,11 @@ df_closest_complete_regions.to_csv('data/full_dist_regions/percentiles_regions.c
 # %%
 df_closest_complete = pd.read_csv('data/full_dist/percentiles_countries.csv')
 df_closest_complete_regions = pd.read_csv('data/full_dist_regions/percentiles_regions.csv')
+
+df_closest_complete = df_closest_complete.rename(columns={'country_name': 'Entity',
+                                                          'reporting_year': 'Year'})
+df_closest_complete_regions = df_closest_complete_regions.rename(columns={'region_name': 'Entity',
+                                                                          'reporting_year': 'Year'})
 
 df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
 df_percentiles.to_csv('data/percentiles.csv', index=False)

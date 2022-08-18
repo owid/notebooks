@@ -28,10 +28,10 @@ df_median = pd.read_csv('data/percentiles.csv')
 df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
 df = pd.merge(df,
-              df_median[['country_name', 'reporting_year','reporting_level', 'welfare_type',
+              df_median[['Entity', 'Year','reporting_level', 'welfare_type',
                          'poverty_line']], 
               how='left',
-              on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+              on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
               validate='one_to_one')
 
 #Create the column median2, a combination between the old and new median values
