@@ -114,6 +114,15 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
     )
     df_com.loc[df_com["pcnt_pos"] > 100, "pcnt_pos"] = np.nan
 
+    # Rows where the percentage positive is 100 but all possible denominators are 0
+    df_com.loc[
+        (df_com["pcnt_pos"] == 100)
+        & (df_com["INF_NEGATIVE"] == 0)
+        & (df_com["SPEC_PROCESSED_NB"] == 0)
+        & (df_com["SPEC_RECEIVED_NB"] == 0),
+        "pcnt_pos",
+    ] = np.nan
+
     df_com = df_com.drop(
         [
             "ANOTSUBTYPABLE",
