@@ -7,6 +7,7 @@ from flu_utils import (
     aggregate_surveillance_type,
     combine_columns_calc_percent,
     standardise_countries,
+    aggregate_regions,
 )
 
 PATH = str(Path(__file__).parent.resolve())
@@ -15,9 +16,8 @@ FLUNET_DATA_DIR = os.path.join(PATH, "data/flunet/")
 FLUNET_URL = "https://frontdoor-l4uikgap6gz3m.azurefd.net/FLUMART/VIW_FNT"
 FLUNET_COLS = [
     "COUNTRY/AREA/TERRITORY",
-    "COUNTRY_CODE",
+    "HEMISPHERE",
     "ISO_WEEKSTARTDATE",
-    "ISO_YEAR",
     "ORIGIN_SOURCE",
     "AH1N12009",
     "AH1",
@@ -47,7 +47,7 @@ FLUID_URL = "https://frontdoor-l4uikgap6gz3m.azurefd.net/FLUMART/VIW_FID"
 
 def main():
     run_flunet()
-    run_fluid()
+    # run_fluid()
 
 
 def run_flunet():
@@ -59,6 +59,7 @@ def run_flunet():
         data_dir=FLUNET_DATA_DIR, country_codes=country_codes
     )
     df = aggregate_surveillance_type(combined_df, FLUNET_COLS)
+    df = aggregate_regions(df)
     df = combine_columns_calc_percent(df)
     flunet_df = standardise_countries(df, PATH)
     flunet_df.to_csv(os.path.join(PATH, "data", "flunet.csv"), index=False)

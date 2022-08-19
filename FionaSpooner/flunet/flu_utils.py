@@ -42,6 +42,7 @@ def combine_country_datasets(data_dir: str, country_codes: list) -> pd.DataFrame
         pd.read_csv(f"{data_dir}{country_code}.csv") for country_code in country_codes
     ]
     combined_df = pd.concat(data_dfs)
+    combined_df = combined_df[combined_df["HEMISPHERE"].isin(["NH", "SH"])]
     return combined_df
 
 
@@ -55,13 +56,25 @@ def aggregate_surveillance_type(
         df["ISO_WEEKSTARTDATE"], format="%Y-%m-%d", utc=True
     ).dt.date
     df_agg = (
-        df.groupby(["COUNTRY_CODE", "COUNTRY/AREA/TERRITORY", "ISO_YEAR", "date"])
-        .sum()
-        .reset_index()
+        df.groupby(["COUNTRY/AREA/TERRITORY", "HEMISPHERE", "date"]).sum().reset_index()
     )
+    df_agg = df_agg.rename(columns={"COUNTRY/AREA/TERRITORY": "Country"})
     # Check we haven't lost any cases along the way
     assert combined_df["INF_ALL"].sum() == df_agg["INF_ALL"].sum()
     return df_agg
+
+
+def aggregate_regions(df: pd.DataFrame) -> pd.DataFrame:
+
+    glob_df = df.groupby(["date"]).sum().reset_index()
+    glob_df["Country"] = "World"
+    nh_df = df[df["HEMISPHERE"] == "NH"].groupby(["date"]).sum().reset_index()
+    nh_df["Country"] = "Northern Hemisphere"
+    sh_df = df[df["HEMISPHERE"] == "SH"].groupby(["date"]).sum().reset_index()
+    sh_df["Country"] = "Southern Hemisphere"
+    df.drop(["HEMISPHERE"], axis=1, inplace=True)
+    df = pd.concat([df, glob_df, nh_df, sh_df])
+    return df
 
 
 def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
@@ -107,7 +120,6 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
     assert df_com.shape[0] == df.shape[0]
 
     df_com["pcnt_pos"] = df_com["pcnt_pos"].round(2)
-    df_com["year"] = df_com["ISO_YEAR"].astype(int)
     over_100_pcnt = df_com[df_com["pcnt_pos"] > 100].shape[0]
     print(
         f"{over_100_pcnt} variables with a percentage positive over 100. We'll set these to NA."
@@ -131,8 +143,6 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
             "BVIC_3DEL",
             "BVIC_NODEL",
             "BVIC_DELUNK",
-            "ISO_YEAR",
-            "COUNTRY_CODE",
         ],
         axis=1,
     )
