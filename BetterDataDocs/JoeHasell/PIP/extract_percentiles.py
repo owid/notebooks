@@ -338,3 +338,7 @@ df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], i
 df_percentiles.to_csv('data/percentiles.csv', index=False)
 
 # %%
+#To use it in PIP issues
+df_percentiles.to_csv('notebooks/percentiles.csv', index=False)
+
+# %%
