@@ -45,4 +45,4 @@ df_final = standardise(df_final)
 export(df_final, cols)
 end_time = time.time()
 elapsed_time = end_time - start_time
-print(f'The files were created in {elapsed_time} :)')
+print(f'The files were created in {elapsed_time} seconds :)')
