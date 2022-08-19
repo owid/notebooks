@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import json
 import numpy as np
+import time
 
 
 def get_country_codes(base_url: str) -> list:
@@ -16,8 +17,14 @@ def get_country_codes(base_url: str) -> list:
 
 def get_flu_data(base_url: str, code: str):
     country_url = f"{base_url}?$filter=COUNTRY_CODE%20eq%20%27{code}%27"
-    data_json = requests.get(country_url).json()
-    data_df = pd.DataFrame.from_records(data_json["value"])
+    try:
+        data_json = requests.get(country_url).json()
+        data_df = pd.DataFrame.from_records(data_json["value"])
+    except requests.exceptions.JSONDecodeError:
+        time.sleep(5)
+        data_json = requests.get(country_url).json()
+        data_df = pd.DataFrame.from_records(data_json["value"])
+
     return data_df
 
 
@@ -25,6 +32,7 @@ def download_country_flu_data(
     data_dir: str, base_url: str, country_codes: list
 ) -> None:
     for country_code in country_codes:
+        print(country_code, end=" ", flush=True)
         data_df = get_flu_data(base_url, country_code)
         data_df.to_csv(f"{data_dir}{country_code}.csv", index=False, escapechar="\\")
 
@@ -64,11 +72,49 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
         df["BVIC_2DEL"] + df["BVIC_3DEL"] + df["BVIC_NODEL"] + df["BVIC_DELUNK"]
     )
     df["INF_NEGATIVE"] = df["INF_NEGATIVE"].replace(r"^\s*$", np.nan, regex=True)
-    df["pcnt_pos"] = (df["INF_ALL"] / (df["INF_ALL"] + df["INF_NEGATIVE"])) * 100
-    df["pcnt_pos"] = df["pcnt_pos"].fillna(0).round(2)
-    df["year"] = df["ISO_YEAR"].astype(int)
-    assert (df["pcnt_pos"] <= 100).all()
-    df = df.drop(
+    df["denom"] = (
+        df[["INF_NEGATIVE", "SPEC_PROCESSED_NB"]]
+        .replace(0, np.nan)
+        .bfill(axis=1)
+        .iloc[:, 0]
+        .fillna(0)
+    )
+    df["denominator"] = (
+        df[["denom", "SPEC_RECEIVED_NB"]]
+        .replace(0, np.nan)
+        .bfill(axis=1)
+        .iloc[:, 0]
+        .fillna(0)
+    )
+    df["pcnt_pos_neg"] = (df["INF_ALL"] / (df["INF_ALL"] + df["INF_NEGATIVE"])) * 100
+    df["pcnt_pos_denom"] = (df["INF_ALL"] / df["denominator"]) * 100
+
+    df_den = df[(df["INF_NEGATIVE"] == 0) & (df["denominator"] != 0)]
+    df_neg = df[df["INF_NEGATIVE"] == df["denominator"]]
+
+    assert (
+        df_neg.shape[0] + df_den.shape[0] == df.shape[0]
+    ), "Some rows are missing from one of the dataframes"
+
+    df_neg = df_neg.drop(["denom", "denominator", "pcnt_pos_denom"], axis=1).rename(
+        columns={"pcnt_pos_neg": "pcnt_pos"}
+    )
+    df_den = df_den.drop(["denom", "denominator", "pcnt_pos_neg"], axis=1).rename(
+        columns={"pcnt_pos_denom": "pcnt_pos"}
+    )
+
+    df_com = pd.concat([df_neg, df_den])
+    assert df_com.shape[0] == df.shape[0]
+
+    df_com["pcnt_pos"] = df_com["pcnt_pos"].round(2)
+    df_com["year"] = df_com["ISO_YEAR"].astype(int)
+    over_100_pcnt = df_com[df_com["pcnt_pos"] > 100].shape[0]
+    print(
+        f"{over_100_pcnt} variables with a percentage positive over 100. We'll set these to NA."
+    )
+    df_com.loc[df_com["pcnt_pos"] > 100, "pcnt_pos"] = np.nan
+
+    df_com = df_com.drop(
         [
             "ANOTSUBTYPABLE",
             "AOTHER_SUBTYPE",
@@ -81,9 +127,9 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
         ],
         axis=1,
     )
-    df.rename(columns={"COUNTRY/AREA/TERRITORY": "Country"}, inplace=True)
+    df_com.rename(columns={"COUNTRY/AREA/TERRITORY": "Country"}, inplace=True)
 
-    return df
+    return df_com
 
 
 def standardise_countries(df: pd.DataFrame, path: str) -> pd.DataFrame:

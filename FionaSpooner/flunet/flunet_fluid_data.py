@@ -38,6 +38,7 @@ FLUNET_COLS = [
     "INF_ALL",
     "INF_NEGATIVE",
     "SPEC_PROCESSED_NB",
+    "SPEC_RECEIVED_NB",
 ]
 
 FLUID_DATA_DIR = os.path.join(PATH, "data/fluid/")
@@ -45,10 +46,8 @@ FLUID_URL = "https://frontdoor-l4uikgap6gz3m.azurefd.net/FLUMART/VIW_FID"
 
 
 def main():
-    # Get country codes and download FluNet data for each country
     run_flunet()
-
-    # Get country codes and download FluID data for each country
+    run_fluid()
 
 
 def run_flunet():
