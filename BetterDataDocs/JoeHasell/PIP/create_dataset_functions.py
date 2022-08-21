@@ -460,13 +460,13 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
     print(f'{len(df_final)} rows before stacked values check')
     df_final['sum_pct'] = df_final[col_stacked_pct].sum(axis=1)
     df_final = df_final[~((df_final['sum_pct'] >= 100.1) | (df_final['sum_pct'] <= 99.9))].reset_index(drop=True)
-    print(f'{len(df_final)} rows before stacked values check')
+    print(f'{len(df_final)} rows after stacked values check')
 
     #missing poverty values (headcount, poverty gap, total shortfall)
     print(f'{len(df_final)} rows before missing values check')
     cols_to_check = col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_stacked_n + col_stacked_pct
     df_final = df_final[~df_final[cols_to_check].isna().any(1)].reset_index(drop=True)
-    print(f'{len(df_final)} rows before missing values check')
+    print(f'{len(df_final)} rows after missing values check')
 
     # headcount monotonicity check
     print(f'{len(df_final)} rows before headcount monotonicity check')
@@ -478,7 +478,7 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
             m_check_vars.append(check_varname)       
     df_final['check_total'] = df_final[m_check_vars].all(1)
     df_final = df_final[df_final['check_total'] == True].reset_index(drop=True)
-    print(f'{len(df_final)} rows before headcount monotonicity  check')
+    print(f'{len(df_final)} rows after headcount monotonicity  check')
 
     end_time = time.time()
     elapsed_time = end_time - start_time
