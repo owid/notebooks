@@ -52,7 +52,7 @@ df_final = pd.read_csv('allthedata.csv')
 poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
 poverty_lines_cents.sort()
 
-col_ids = ['Entity', 'Year', 'reporting_level', 'welfare_type', 'reporting_pop']
+col_ids = ['Entity', 'Year', 'reporting_level', 'welfare_type']
 col_avg_shortfall = []
 col_headcount = []
 col_headcount_ratio = []
@@ -61,7 +61,7 @@ col_povertygap = []
 col_tot_shortfall = []
 col_poverty_severity = []
 col_watts = []
-col_central = ['mean', 'median']
+col_central = ['mean', 'median', 'reporting_pop']
 col_inequality = ['mld', 'gini', 'polarization', 'palma_ratio', 's80_s20_ratio', 'p90_p10_ratio', 'p90_p50_ratio', 'p90_p10_ratio']
 col_extra = ['survey_year', 'survey_comparability', 'comparable_spell', 'distribution_type', 'estimation_type',
             'cpi', 'ppp', 'reporting_gdp', 'reporting_pce']
@@ -84,7 +84,7 @@ col_decile_thr = []
 
 for i in range(1,11):
     
-    if i !=1:
+    if i !=10:
         varname_thr = f'decile{i}_thr'
         col_decile_thr.append(varname_thr)
     
@@ -131,6 +131,11 @@ for i in range(len(poverty_lines_cents)):
 
         varname_pct = f'headcount_ratio_stacked_below_{poverty_lines_cents[i]}'
         col_stacked_pct.append(varname_pct)
+
+
+#Save the relative poverty variables
+col_relative = list(df_final.columns)
+col_relative = [e for e in col_relative if e not in col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + col_avg_shortfall + col_incomegap + col_stacked_n + col_stacked_pct + col_poverty_severity + col_watts + col_decile_share + col_inequality + col_extra + col_decile_share + col_decile_thr + col_decile_avg]
 
 # %% [markdown]
 # ## Missing values
@@ -215,7 +220,7 @@ regions_list = ['East Asia and Pacific',
            'South Asia', 
            'Sub-Saharan Africa']
 
-high_income_list = ['High income countries']
+high_income_list = ['High income countries', 'Other high Income']
 
 redundant_countries = ['China - urban', 
                        'China - rural', 
@@ -292,39 +297,6 @@ for column_name in cols_to_check:
 # %%
 df_null_selected_median = df_null_selected_noregions[df_null_selected_noregions['median'].isna()].copy().reset_index(drop=True)
 df_null_selected_median['Entity'].value_counts()
-
-# %% [markdown]
-# Missing median data can actually be obtained by using the `popshare` command instead of `povline`. While `povline` returns the headcount (and other poverty/inequality values) when a poverty line is given, `popshare` returns the poverty line when a population share (headcount) is given. This way, the poverty line the latter command returns when the popshare value is 0.5 is the median income/consumption value. See for example China
-
-# %%
-df_popshare = pip_query_country(
-                    popshare_or_povline = "popshare",
-                    country_code = "CHN",
-                    value = 0.5,
-                    reporting_level = "national",
-                    fill_gaps="false")
-
-# %% [markdown]
-# The poverty_line column corresponds to the missing median. We can see that for the cases where the median is not null, i.e. the urban and rural data.
-
-# %%
-df_popshare[['country_name','reporting_year', 'reporting_level', 'welfare_type', 'poverty_line', 'headcount',
-             'mean', 'median', 'mld','gini', 'polarization']].head(10)
-
-# %% [markdown]
-# This is not possible though for regions. Even if there is a `popshare` option available, the query returns poverty lines equal to 1.9.
-
-# %%
-popshare = 0.5
-year = "all"
-request_url = f'https://api.worldbank.org/pip/v1/pip-grp?popshare={popshare}&year={year}&group_by=wb&format=csv'
-df_popshare_regions = pd.read_csv(request_url)
-
-# %%
-df_popshare_regions
-
-# %% [markdown]
-# The median income values besides of their own value allow to estimate relative poverty measures. So it is essential to have median for each Entity as possible.
 
 # %% [markdown]
 # ### Inequality indices
@@ -407,6 +379,159 @@ df_zero_selected = df_final[(df_final[cols_to_check] == 0).any(1)].copy().reset_
 df_zero_selected[['Entity', 'Year', 'reporting_level', 'welfare_type'] + cols_to_check]
 
 # %% [markdown]
+# ## Negative values
+# Two observations show negative values
+
+# %%
+cols_to_check = [e for e in df_final.columns if e not in col_ids + col_extra]
+
+df_negative = df_final[(df_final[cols_to_check] < 0).any(1)].copy().reset_index(drop=True)
+df_negative[['Entity', 'Year', 'reporting_level', 'welfare_type'] + cols_to_check]
+
+# %% [markdown]
+# They are concentrated in the stacked headcount (ratio) variables
+
+# %%
+# Count number of negative values in all columns of Dataframe
+col_negative = []
+for column_name in cols_to_check:
+    column = df_negative[column_name]
+    # Get the count of zeros in column 
+    count = (column < 0).sum()
+    if count > 0:
+        print(f'Count of negatives in column {column_name} is : {count}')
+        col_negative.append(column_name)
+
+# %%
+df_negative[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_negative]
+
+# %% [markdown]
+# These columns are dropped because they fail monoticity checks for headcount (see monotonicity section).
+
+# %% [markdown]
+# ## Missing median values cannot be replaced with the `popshare` command
+# The most straightforward solution for patching missing median data would be to obtain them from a `popshare` query for value=0.5, but this does not provide the desired output.
+#
+# Returning to the countries with missing data:
+
+# %%
+df_null_selected_median['Entity'].value_counts()
+
+# %% [markdown]
+# Or, more in detail:
+
+# %%
+df_null_selected_median['missing_obs'] = df_null_selected_median['Entity'] + "-" + df_null_selected_median['Year'].astype(str) + "-" + df_null_selected_median['reporting_level'] + "-" + df_null_selected_median['welfare_type']
+missing_obs_list = list(df_null_selected_median['missing_obs'].unique())
+missing_obs_list
+
+# %% [markdown]
+# In theory, while `povline` returns the headcount (and other poverty/inequality values) when a poverty line is given, `popshare` returns the poverty line when a population share (headcount) is given. This way, the poverty line the latter command would return when the popshare value is 0.5 is the median income/consumption value
+
+# %%
+df_popshare = pip_query_country(
+                    popshare_or_povline = "popshare",
+                    country_code = "all",
+                    value = 0.5,
+                    reporting_level = "all",
+                    fill_gaps="false")
+
+df_popshare['missing_obs'] = df_popshare['country_name'] + "-" + df_popshare['reporting_year'].astype(str)
+
+df_null_selected_median['missing_obs'] = df_null_selected_median['Entity'] + "-" + df_null_selected_median['Year'].astype(str)
+missing_countryyear_list = list(df_null_selected_median['missing_obs'].unique())
+
+df_popshare = df_popshare[df_popshare['missing_obs'].isin(missing_countryyear_list)].reset_index(drop=True)
+
+# %% [markdown]
+# Filtering for the countries with missing median, we can see the headcount is in fact ~0.5 for every observation
+
+# %%
+df_popshare[['headcount']].describe(include='all')
+
+# %% [markdown]
+# The data generated by povshare patches all the missing medians, but in countries like China, India and Indonesia it just replaces national data with rural data, as you can see by deselecting the "national" legend. This is obviously wrong, because the national value should lie between the urban and rural data.
+
+# %%
+fig = px.line(df_popshare, x="reporting_year", y="poverty_line", 
+              title=f"<b>New medians generated by `povshare`</b><br>Country-years with missing medians",
+              color='reporting_level', facet_col="country_name", facet_col_wrap=3, markers=True)
+fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+fig.update_yaxes(matches=None)
+fig.show()
+
+# %% [markdown]
+# If the percentile thresholds are iteratively obtained with the povline command (see `extract_percentiles.py`), the medians can be properly obtained
+
+# %%
+df_median = pd.read_csv('percentiles.csv')
+df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
+
+# df_median_merge = pd.merge(df_final, 
+#                     df_median[['Entity', 'Year', 'reporting_level', 'welfare_type',
+#                                     'poverty_line']], 
+#                     how='left', 
+#                     on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
+#                     validate='many_to_one')
+
+df_median_merge = pd.merge(df_final, 
+                    df_median[['country_name', 'reporting_year', 'reporting_level', 'welfare_type',
+                                    'poverty_line']], 
+                    how='left', 
+                    left_on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
+                    right_on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+                    validate='many_to_one')
+
+#Create the column median2, a combination between the old and new median values
+df_median_merge['median2'] = np.where((df_median_merge['median'].isnull()) & ~(df_median_merge['poverty_line'].isnull()), df_median_merge['poverty_line'], df_median_merge['median'])
+
+df_median_merge['missing_obs'] = df_median_merge['Entity'] + "-" + df_median_merge['Year'].astype(str)
+
+df_median_merge = df_median_merge[df_median_merge['missing_obs'].isin(missing_countryyear_list)].reset_index(drop=True)
+
+# %% [markdown]
+# And now the national medians lie between the urban and rural observations for China, Indian and Indonesia.
+
+# %%
+fig = px.line(df_median_merge, x="Year", y="median2", 
+              title=f"<b>New medians generated by brute-force method</b><br>Country-years with missing medians",
+              color='reporting_level', facet_col="country_name", facet_col_wrap=3, markers=True)
+fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+fig.update_yaxes(matches=None)
+fig.show()
+
+# %%
+df_median_merge = pd.merge(df_median_merge, 
+                    df_popshare[['country_name', 'reporting_year', 'reporting_level', 'welfare_type',
+                                    'poverty_line']], 
+                    how='left', 
+                    left_on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
+                    right_on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+                    validate='many_to_one')
+df_median_merge
+
+# %% [markdown]
+# The missing medians for the countries which are not China, India or Indonesia are fairly similar. The difference seems to be related more with less presition in the brute force method (2 decimals)
+
+# %%
+df_median_merge['median_ratio'] = df_median_merge['median2'] / df_median_merge['poverty_line_y']
+df_median_merge = df_median_merge[~df_median_merge['Entity'].isin(['China', 'India', 'Indonesia'])].reset_index(drop=True)
+
+df_median_merge.rename(columns={'median2': 'median_bruteforce',
+                               'poverty_line_y': 'median_popshare'}, inplace=True)
+
+df_median_merge[['Entity', 'Year', 'reporting_level', 'welfare_type', 'median_bruteforce', 'median_popshare', 'median_ratio']]
+
+# %%
+fig = px.scatter(df_median_merge, x="Year", y="median_ratio", color="Entity",
+                 hover_data=['median_bruteforce', 'median_popshare'], opacity=0.5,
+                 title="<b>Median comparison for missing observations</b><br>Ratio between popshare and brute force methods",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+
+# %% [markdown]
 # ## Percentage on different poverty lines do not add up to 100%
 # For each country-year the total number of people below, between and over multiple poverty lines are estimated to create a stacked chart with the distribution of income/consumption of the population. It is important then that these numbers add together to the total population (the aggregated percentage is 100%)
 
@@ -465,7 +590,7 @@ print('Percentage of errors for each variable')
 (len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
 
 # %% [markdown]
-# What if the condition is more strict? If filter the values not strictly increasing I have more rows: 
+# **What if the condition is stricter?** If filter the values not strictly increasing I have more rows: 
 
 # %%
 m_check_vars = []
@@ -491,9 +616,6 @@ df_check[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_headcount]
 df_check = df_check[(df_check[col_headcount[1]] != 0) & (df_check[col_headcount_ratio[-2]] <= 99)]
 df_check[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_headcount]
 
-# %%
-df_check.to_csv('repeated_headcounts.csv')
-
 # %% [markdown]
 # All of these issues are concentrated for the first three comparisons (the first four headcounts)
 
@@ -508,10 +630,11 @@ print('Percentage of errors for each variable')
 df_check['Entity'].value_counts()
 
 # %% [markdown]
-# Further evidence to think about few observations at the bottom is that the fourth headcount ratio for this group of countries ($5.5 poverty line) has a median of 0.73\% and a maximum of 6.36%
+# Further evidence to think about few observations at the bottom is that the fourth headcount ratio for this group of countries ($5.5 poverty line) has a median of 0.73\% and a maximum of 6.36\%. These observations should not be dropped.
 
 # %%
-fig = px.histogram(df_check, x=col_headcount_ratio[3], histnorm="percent", marginal="box")
+fig = px.histogram(df_check, x=col_headcount_ratio[3], histnorm="percent", marginal="box",
+                  title=f"<b>Distribution of values for {col_headcount_ratio[3]}</b>")
 fig.show()
 
 # %% [markdown]
@@ -573,6 +696,60 @@ print('Percentage of errors for each variable')
 (len(df_check) - df_check[m_check_vars].sum(0))/len(df_check)*100
 
 # %% [markdown]
+# ### Decile shares
+
+# %%
+m_check_vars = []
+for i in range(len(col_decile_share)):
+    if i > 0:
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = df_final[f'{col_decile_share[i]}'] >= df_final[f'{col_decile_share[i-1]}']
+        m_check_vars.append(check_varname)
+
+
+# %% [markdown]
+# 286 observations show issues..
+
+# %%
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False].reset_index(drop=True)
+df_check[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_decile_share]
+
+# %% [markdown]
+# ... but they are all because the columns are empty. The same happens with decile averages, which is derived from the shares
+
+# %%
+df_check = df_check[~df_check['decile1_share'].isnull()].reset_index(drop=True)
+df_check[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_decile_share]
+
+# %% [markdown]
+# ### Decile thresholds
+
+# %%
+m_check_vars = []
+for i in range(len(col_decile_thr)):
+    if i > 0:
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = df_final[f'{col_decile_thr[i]}'] >= df_final[f'{col_decile_thr[i-1]}']
+        m_check_vars.append(check_varname)
+
+
+# %% [markdown]
+# 277 observations show issues..
+
+# %%
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False].reset_index(drop=True)
+df_check[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_decile_thr]
+
+# %% [markdown]
+# ... but they are all because the columns are empty (regions) ***will update this***
+
+# %%
+df_check = df_check[~df_check['decile1_thr'].isnull()].reset_index(drop=True)
+df_check[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_decile_share]
+
+# %% [markdown]
 # ## Reporting and survey year comparison
 # The dataset contains two different year variables. One is `reporting_year`, renamed `year` for OWID processing, which is an integer value, but there is also a `survey_year` which represents when the income/consumption survey is ran in more than one year: the value has decimals representing the weight of the years. 
 #
@@ -586,38 +763,27 @@ print('Percentage of errors for each variable')
 # (Atamanov et al. 2018. “April 2018 PovcalNet update: What’s new.” Global Poverty Monitoring Technical Note 1. Washington, DC: World Bank. Footnote 2, available [here](https://documents1.worldbank.org/curated/en/173171524715215230/pdf/April-2018-Povcalnet-Update-What-s-New.pdf))
 #
 # We can compare these values by dividing them and see how different they are.
-# The ratio between the reporting year and the survey year is almost always less or equal than 1, except for the case of Tanzania in 2018: the survey year is 2017.92. The ratio is also very close to 1, from 0.99954 to 1.00004.
-
-# %%
-df_final['year_ratio'] = df_final['Year'] / df_final['survey_year']
-
-fig = px.scatter(df_final, x="Year", y="year_ratio", color="Entity",
-                 hover_data=['survey_year'], opacity=0.5,
-                 title="<b>Reporting year vs Survey year</b><br>Ratio between both measures vs year",
-                 log_y=False,
-                 height=600)
-fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-fig.show()
 
 # %% [markdown]
-# The absolute difference between the values is always 1. The cases which they are more apart are when the survey year is 0.92 greater than the reporting year (Tanzania 91, Vietnam 97, Eswatini 2000)
+# The absolute difference between the values is always less than 1. The cases in which they are more apart are when the survey year is 0.92 greater than the reporting year (Tanzania 91, Vietnam 97, Eswatini 2000). On the other side we have the only observation where reporting year is greater than survey year is Tanzania 2018 (2018 vs 2017.92) 
 
 # %%
 df_final['year_diff'] = df_final['Year'] - df_final['survey_year']
 
 fig = px.scatter(df_final, x="Year", y="year_diff", color="Entity",
                  hover_data=['survey_year'], opacity=0.5,
-                 title="<b>Reporting year vs Survey year</b><br>Difference between both measures vs year",
+                 title="<b>Reporting year vs Survey year</b><br>Difference between both measures vs reporting year",
                  log_y=False,
                  height=600)
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
 
 # %% [markdown]
-# Most of the data though is the same. The ratio is 1 for about 89% of the data.
+# Most of the data though is the same. The difference is 0 for about 89% of the data.
 
 # %%
-fig = px.histogram(df_final, x="year_ratio", nbins=50, histnorm="percent", marginal="box")
+fig = px.histogram(df_final, x="year_diff", nbins=50, histnorm="percent", marginal="box",
+                  title=f"<b>Distribution of values for the difference between years</b>")
 fig.show()
 
 # %% [markdown]
@@ -713,9 +879,9 @@ df_world_comparison['ratio'] = df_world_comparison['headcount_value_x'] / df_wor
 fig = px.line(df_world_comparison, x="Year", y="ratio", color="headcount_name", title='<b>Headcount</b>: Regional aggregation vs. World')
 fig.show()
 
-# %%
+# %% [markdown]
+# ## Additional issues
 # For world regions, the popshare query is not available (or rather, it returns nonsense).
-
 
 # %%
 regions = pip_query_region(1.9)
@@ -729,7 +895,7 @@ def p90_10_ratio(select_country, select_year, p90, p10):
 
     print(f"We see from the 'popshare' query that P90 and P10 were {p90} and {p10}.")
 
-    print(f"P90/P10 raio is: {p90/p10}")
+    print(f"P90/P10 ratio is: {p90/p10}")
     
     print("Let's double check these yield the right headcount ratios (i.e. 90% and 10%)")
 
@@ -746,7 +912,6 @@ def p90_10_ratio(select_country, select_year, p90, p10):
     heacount_p10 = df_p10['headcount'].values[0]
     print(f"P10 headcount is: {heacount_p10}")
 
-    
 
 # %%
 select_country = "BWA"
@@ -798,9 +963,6 @@ p90 = df_p90['headcount'].values[0]
 
 
 # %%
-df_p90_filled = df_p90_filled[["country_name", "reporting_year"]]
-
-# %%
 fill_gaps = 'false' 
 popshare = '0.90'
 request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&popshare={popshare}&fill_gaps={fill_gaps}&welfare_type=all&reporting_level=all&format=csv'
@@ -832,7 +994,7 @@ request_url = f'https://api.worldbank.org/pip/v1/pip?country=all&year=all&popsha
 
 df = pd.read_csv(request_url)
 
-df[(df['country_name']=='El Salvador') & (df['request_year']==1981)]
+df[(df['country_name']=='El Salvador') & (df['reporting_year']==1981)]
 
 
 # %%

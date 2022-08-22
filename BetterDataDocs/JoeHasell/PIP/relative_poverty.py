@@ -31,7 +31,8 @@ df = pd.merge(df,
               df_median[['Entity', 'Year','reporting_level', 'welfare_type',
                          'poverty_line']], 
               how='left',
-              on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
+              left_on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
+              right_on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
               validate='one_to_one')
 
 #Create the column median2, a combination between the old and new median values
