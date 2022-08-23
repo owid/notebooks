@@ -5,6 +5,16 @@ import numpy as np
 import time
 
 
+def get_metadata(output_path) -> pd.DataFrame:
+    r = requests.get(
+        "https://frontdoor-l4uikgap6gz3m.azurefd.net/FLUMART/VIW_FLU_METADATA"
+    )
+    value_json = json.loads(r.content)["value"]
+    metadata = pd.DataFrame.from_records(value_json)
+    metadata.to_csv(output_path, index=False)
+    return metadata
+
+
 def get_country_codes(base_url: str) -> list:
     url = f"{base_url}?$apply=groupby((COUNTRY_CODE))"
     res = requests.get(url)
@@ -155,5 +165,69 @@ def standardise_countries(df: pd.DataFrame, path: str) -> pd.DataFrame:
     stan_countries = pd.read_csv(f"{path}/country_codes_country_standardized.csv")
     stan_dict = stan_countries.set_index("Country").squeeze().to_dict()
     df["Country"] = df["Country"].map(stan_dict)
+    assert df["Country"].isna().sum() == 0, "Some countries are not standardised"
+
+    return df
+
+
+def clean_fluid_data(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy(deep=True)
+    df = df.query("AGEGROUP_CODE == 'All' & CASE_INFO.isin(['ILI', 'SARI', 'ARI'])")
+    df["date"] = pd.to_datetime(
+        df["ISO_WEEKSTARTDATE"], format="%Y-%m-%d", utc=True
+    ).dt.date
+    df = df[
+        [
+            "HEMISPHERE",
+            "COUNTRY/AREA/TERRITORY",
+            "date",
+            "REPORTED_CASES",
+            "OUTPATIENTS",
+            "INPATIENTS",
+            "CASE_INFO",
+        ]
+    ]
+    df = df.pivot(
+        index=[
+            "HEMISPHERE",
+            "COUNTRY/AREA/TERRITORY",
+            "date",
+            "OUTPATIENTS",
+            "INPATIENTS",
+        ],
+        columns="CASE_INFO",
+        values=[
+            "REPORTED_CASES",
+        ],
+    ).reset_index()
+
+    df.columns = list(map("".join, df.columns))
+
+    df = df.dropna(
+        subset=["REPORTED_CASESARI", "REPORTED_CASESILI", "REPORTED_CASESSARI"],
+        how="all",
+    )
+    df = df.rename(
+        columns={
+            "REPORTED_CASESARI": "ari_cases",
+            "REPORTED_CASESSARI": "sari_cases",
+            "REPORTED_CASESILI": "ili_cases",
+        }
+    )
+
+    df = df.rename(columns={"COUNTRY/AREA/TERRITORY": "Country"})
+    return df
+
+
+def calculate_fluid_rates(df: pd.DataFrame) -> pd.DataFrame:
+    df["ili_cases_per_thousand_inpatients"] = round(
+        (df["ili_cases"] / df["OUTPATIENTS"]) * 1000, 2
+    )
+    df["ari_cases_per_thousand_inpatients"] = round(
+        (df["ari_cases"] / df["OUTPATIENTS"]) * 1000, 2
+    )
+    df["sari_cases_per_hundred_inpatients"] = round(
+        (df["sari_cases"] / df["INPATIENTS"]) * 100, 2
+    )
 
     return df
