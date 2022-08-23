@@ -15,13 +15,13 @@ from functions.upload import upload_to_s3
 from create_dataset_functions import *
 
 # %%
-start_time = time.time()
 print('CAUTION: If a full update is needed, first you have to run relative_poverty.py and extract_percentiles.py')
 print('These codes take several hours to run, that\'s why they are not available here')
 question = "Do you want to continue?"
 query_yes_no(question)
 
 # %%
+start_time = time.time()
 # Here we define the poverty lines to query as cents
 poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
 povlines_count = len(poverty_lines_cents)
@@ -42,7 +42,12 @@ df_final = median_patch(df_final)
 df_final = standardise(df_final)
 
 # %%
-export(df_final, cols)
+df_inc_only, df_cons_only, df_inc_or_cons = export(df_final, cols)
+
+# %%
+include_metadata(df_inc_or_cons)
 end_time = time.time()
 elapsed_time = end_time - start_time
 print(f'The files were created in {elapsed_time} seconds :)')
+
+# %%

@@ -24,6 +24,9 @@ df = pip_query_country(
                     value = 1.9, 
                     fill_gaps="false")
 
+df = df.rename(columns={'country_name': 'Entity',
+                        'reporting_year': 'Year'})
+
 df_median = pd.read_csv('data/percentiles.csv')
 df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
@@ -31,8 +34,7 @@ df = pd.merge(df,
               df_median[['Entity', 'Year','reporting_level', 'welfare_type',
                          'poverty_line']], 
               how='left',
-              left_on=['country_name', 'reporting_year', 'reporting_level', 'welfare_type'],
-              right_on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
+              on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
               validate='one_to_one')
 
 #Create the column median2, a combination between the old and new median values
@@ -94,7 +96,7 @@ for i in range(len(df)):
     # Run 3 queries, one for each relative poverty line, to get the headcount (ratio)
     df_query_40 = pip_query_country(popshare_or_povline = "povline",
                                     country_code = df['country_code'][i],
-                                    year = df['reporting_year'][i],
+                                    year = df['Year'][i],
                                     welfare_type = df['welfare_type'][i],
                                     reporting_level = df['reporting_level'][i],
                                     value = df['median_40'][i],
@@ -102,7 +104,7 @@ for i in range(len(df)):
     
     df_query_50 = pip_query_country(popshare_or_povline = "povline",
                                     country_code = df['country_code'][i],
-                                    year = df['reporting_year'][i],
+                                    year = df['Year'][i],
                                     welfare_type = df['welfare_type'][i],
                                     reporting_level = df['reporting_level'][i],
                                     value = df['median_50'][i],
@@ -110,7 +112,7 @@ for i in range(len(df)):
     
     df_query_60 = pip_query_country(popshare_or_povline = "povline",
                                     country_code = df['country_code'][i],
-                                    year = df['reporting_year'][i],
+                                    year = df['Year'][i],
                                     welfare_type = df['welfare_type'][i],
                                     reporting_level = df['reporting_level'][i],
                                     value = df['median_60'][i],
@@ -189,9 +191,6 @@ for pct in relative_poverty_lines:
     df[f'headcount_ratio_{pct}_median'] = df[f'headcount_ratio_{pct}_median'] * 100
     df[f'income_gap_ratio_{pct}_median'] = df[f'income_gap_ratio_{pct}_median'] * 100
     df[f'poverty_gap_index_{pct}_median'] = df[f'poverty_gap_index_{pct}_median'] * 100
-
-df = df.rename(columns={'country_name': 'Entity',
-                        'reporting_year': 'Year'})
 
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -277,5 +276,3 @@ df = df[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_povlines + c
 
 # %%
 df.to_csv('data/relative_poverty.csv', index=False)
-
-# %%
