@@ -32,16 +32,23 @@ between_80_and_100_dollars = list(range(8000,10000, 5))
 
 between_100_and_150_dollars = list(range(10000,15000, 10))
 
+between_150_and_200_dollars = list(range(15000,20000, 10))
+
 # %%
+# povline_list_dict = {
+#     'under_5_dollars': under_5_dollars, 
+#     'between_5_and_10_dollars': between_5_and_10_dollars,
+#     'between_10_and_20_dollars': between_10_and_20_dollars,
+#     'between_20_and_30_dollars': between_20_and_30_dollars,
+#     'between_30_and_55_dollars': between_30_and_55_dollars,
+#     'between_55_and_80_dollars': between_55_and_80_dollars,
+#     'between_80_and_100_dollars': between_80_and_100_dollars,
+#     'between_100_and_150_dollars': between_100_and_150_dollars,
+#     'between_150_and_200_dollars': between_150_and_200_dollars
+#                    }
+
 povline_list_dict = {
-    'under_5_dollars': under_5_dollars, 
-    'between_5_and_10_dollars': between_5_and_10_dollars,
-    'between_10_and_20_dollars': between_10_and_20_dollars,
-    'between_20_and_30_dollars': between_20_and_30_dollars,
-    'between_30_and_55_dollars': between_30_and_55_dollars,
-    'between_55_and_80_dollars': between_55_and_80_dollars,
-    'between_80_and_100_dollars': between_80_and_100_dollars,
-    'between_100_and_150_dollars': between_100_and_150_dollars
+    'between_150_and_200_dollars': between_150_and_200_dollars
                    }
 
 # %%
@@ -136,11 +143,24 @@ fig = px.scatter(df_closest_complete, x="target_percentile", y="distance_to_p", 
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
 fig.write_image(f'graphics/target_p_vs_distance_percentiles.svg')
+fig.write_html(f'graphics/target_p_vs_distance_percentiles.html')
+
+# %%
+fig = px.scatter(df_closest_complete, x="poverty_line", y="distance_to_p", color="country_name",
+                 hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+                 title="<b>Poverty line vs. Distance to p</b><br>Percentiles",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+fig.write_image(f'graphics/povline_vs_distance_percentiles.svg')
+fig.write_html(f'graphics/povline_vs_distance_percentiles.html')
 
 # %%
 fig = px.histogram(df_closest_complete, x="distance_to_p", histnorm="percent", marginal="box")
 fig.show()
 fig.write_image(f'graphics/distance_percentiles_histogram.svg')
+fig.write_html(f'graphics/distance_percentiles_histogram.html')
 
 # %%
 deciles = []
@@ -158,13 +178,34 @@ fig = px.scatter(df_closest_deciles, x="target_percentile", y="distance_to_p", c
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
 fig.write_image(f'graphics/target_p_vs_distance_deciles.svg')
+fig.write_html(f'graphics/target_p_vs_distance_deciles.html')
+
+# %%
+deciles = []
+
+for i in range(10,100,10):
+    deciles.append(f'P{i}')
+    
+df_closest_deciles = df_closest_complete[df_closest_complete['target_percentile'].isin(deciles)].copy().reset_index(drop=True)
+
+fig = px.scatter(df_closest_deciles, x="poverty_line", y="distance_to_p", color="country_name",
+                 hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+                 title="<b>Poverty line vs. Distance to p</b><br>Deciles",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+fig.write_image(f'graphics/povline_vs_distance_deciles.svg')
+fig.write_html(f'graphics/povline_vs_distance_deciles.html')
 
 # %%
 fig = px.histogram(df_closest_deciles, x="distance_to_p", histnorm="percent", marginal="box")
 fig.show()
 fig.write_image(f'graphics/distance_deciles_histogram.svg')
+fig.write_html(f'graphics/distance_deciles_histogram.html')
 
 # %%
+
 df_closest_complete.to_csv('data/full_dist/percentiles_countries.csv', index=False)
 
 # %% [markdown]
@@ -291,11 +332,24 @@ fig = px.scatter(df_closest_complete_regions, x="target_percentile", y="distance
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
 fig.write_image(f'graphics/target_p_vs_distance_percentiles_regions.svg')
+fig.write_html(f'graphics/target_p_vs_distance_percentiles_regions.html')
+
+# %%
+fig = px.scatter(df_closest_complete_regions, x="poverty_line", y="distance_to_p", color="region_name",
+                 hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+                 title="<b>Poverty line vs. Distance to p for regions</b><br>Percentiles",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+fig.write_image(f'graphics/povline_vs_distance_percentiles_regions.svg')
+fig.write_html(f'graphics/povline_vs_distance_percentiles_regions.html')
 
 # %%
 fig = px.histogram(df_closest_complete_regions, x="distance_to_p", histnorm="percent", marginal="box")
 fig.show()
 fig.write_image(f'graphics/distance_percentiles_histogram_regions.svg')
+fig.write_html(f'graphics/distance_percentiles_histogram_regions.html')
 
 # %%
 deciles = []
@@ -313,11 +367,31 @@ fig = px.scatter(df_closest_deciles_regions, x="target_percentile", y="distance_
 fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
 fig.show()
 fig.write_image(f'graphics/target_p_vs_distance_deciles_regions.svg')
+fig.write_html(f'graphics/target_p_vs_distance_deciles_regions.html')
+
+# %%
+deciles = []
+
+for i in range(10,100,10):
+    deciles.append(f'P{i}')
+    
+df_closest_deciles_regions = df_closest_complete_regions[df_closest_complete_regions['target_percentile'].isin(deciles)].copy().reset_index(drop=True)
+
+fig = px.scatter(df_closest_deciles_regions, x="poverty_line", y="distance_to_p", color="region_name",
+                 hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+                 title="<b>Poverty line vs. Distance to p for regions</b><br>Deciles",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
+fig.write_image(f'graphics/povline_vs_distance_deciles_regions.svg')
+fig.write_html(f'graphics/povline_vs_distance_deciles_regions.html')
 
 # %%
 fig = px.histogram(df_closest_deciles_regions, x="distance_to_p", histnorm="percent", marginal="box")
 fig.show()
 fig.write_image(f'graphics/distance_deciles_histogram_regions.svg')
+fig.write_html(f'graphics/distance_deciles_histogram_regions.html')
 
 # %%
 df_closest_complete_regions.to_csv('data/full_dist_regions/percentiles_regions.csv', index=False)
@@ -340,5 +414,118 @@ df_percentiles.to_csv('data/percentiles.csv', index=False)
 # %%
 #To use it in PIP issues
 df_percentiles.to_csv('notebooks/percentiles.csv', index=False)
+
+# %%
+
+# %%
+df_complete.columns
+
+# %%
+df_complete[(df_complete['country_name']=='United States') & (df_complete['poverty_line']>148) & (df_complete['poverty_line']<150) & (df_complete['reporting_year']==2019)][['poverty_line', 'headcount']]
+
+# %% [markdown]
+# ## Increase precision of threshold values
+
+# %%
+df_countries = pd.read_csv('data/full_dist/percentiles_countries.csv')
+
+percentiles_list = ['P10']
+
+df_optimised = df_countries[df_countries['target_percentile'].isin(percentiles_list)].reset_index(drop=True)
+
+
+df_optimised[:10]
+
+# %%
+import numpy as np
+
+perc = 0.1
+tolerance = 0.001
+increment = 0.001
+
+perc_list = []
+
+for i in range(len(df_optimised)):
+    #Define the mean minus the mean adjustment as the median candidate. If difference is negative, select 0.1
+    perc_candidate = df_optimised['poverty_line'][i]
+    perc_candidate_previous = -100
+    headcount_ratio = df_optimised['headcount'][i]
+
+    #Run this while the estimated headcount ratio is not between the lower and upper limits
+    while abs(headcount_ratio - perc) > tolerance or abs(perc_candidate - perc_candidate_previous) > 0.2:
+        #Run a PIP query for each observation with null median, but using the median candidate as poverty line
+        df_candidate = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df_optimised['country_code'][i],
+                                        year = df_optimised['reporting_year'][i],
+                                        welfare_type = df_optimised['welfare_type'][i],
+                                        reporting_level = df_optimised['reporting_level'][i],
+                                        value = perc_candidate,
+                                        fill_gaps="false")
+
+        #The headcount ratio for the median candidate is taken
+        headcount_ratio = df_candidate['headcount'][0]
+
+        print(f'{i}, candidate ${perc_candidate}, headcount {headcount_ratio}')
+        
+
+        #Different increments are defined depending on the value of headcount_ratio
+        if headcount_ratio < perc:
+            perc_candidate_previous = perc_candidate
+            perc_candidate += increment
+            
+        else:
+            perc_candidate_previous = perc_candidate
+            perc_candidate -= increment
+        
+
+    #After the "while" cycle I get a median which generates a headcount ratio between the lower and upper limits
+    #Include this value into the median list
+    perc_list.append(perc_candidate)
+    perc_candidate_previous = -100
+               
+#Save the median list as a new column
+df_optimised[f'P{int(perc*100)}'] = perc_list
+
+# %%
+abs(perc_candidate - perc_candidate_previous) > 0.5
+
+# %%
+perc_candidate
+
+# %%
+deciles = ['P9', 'P10', 'P11',
+          'P49', 'P50', 'P51',
+          'P89', 'P90', 'P91']
+
+df_check = df_percentiles[df_percentiles['target_percentile'].isin(deciles)].reset_index(drop=True)
+df_check = pd.pivot(df_check, 
+                          index=['Entity', 'Year', 'reporting_level', 'welfare_type'], 
+                          columns='target_percentile', 
+                          values='poverty_line').reset_index()
+    
+df_check['check_10'] = df_check['P11'] - df_check['P9']
+df_check['check_50'] = df_check['P51'] - df_check['P49']
+df_check['check_90'] = df_check['P91'] - df_check['P89']
+
+# %%
+df_check
+
+# %%
+df_check = pd.melt(df_check, id_vars=['Entity', 'Year', 'reporting_level', 'welfare_type'], 
+                   value_vars=['check_10', 'check_50', 'check_90'], 
+                   var_name='check',
+                   ignore_index=False)
+
+# %%
+df_check
+
+# %%
+fig = px.scatter(df_check, x="check", y="value", color="check",
+                 hover_data=['Entity'], opacity=0.5,
+                 title="<b>Target p vs. Distance to p for regions</b><br>Percentiles",
+                 log_y=False,
+                 height=600)
+fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
+fig.show()
 
 # %%

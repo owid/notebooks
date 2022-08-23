@@ -615,3 +615,52 @@ def export(df_final, cols):
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
+    
+    return df_inc_only, df_cons_only, df_inc_or_cons
+
+
+def include_metadata(df_final):
+    print('Including metadata for to update Grapher\'s dataset...')
+    start_time = time.time()
+    
+    # Specify sheet id and sheet (tab) name for the metadata google sheet 
+    #sheet_id = '1bVOaDcnDoF0M_zK3uof0dIH-Z4OUDxqM7QO3B9jzRbk'
+    #sheet_name = 'admin_metadata_manual'
+    
+    sheet_id = '1ntYtYF0NqIW2oXuXl_ZJHvuI7n-bik94BEIOvWHrJAI'
+    sheet_name = 'Sheet1'
+
+    # Read in variable metadata as dataframe
+    url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+    df_variable_metadata = pd.read_csv(url, on_bad_lines='skip')
+    
+    # Keep only id vars (country and year) and vars with metadata
+    
+    # Select country, year and only those variables with metadata specified
+    # in the metadata folder.
+
+    id_vars = ['Entity', 'Year']
+
+    var_list = df_variable_metadata['slug'].tolist()
+
+    var_list = id_vars + var_list 
+
+    df_dataset = df_final[df_final.columns.intersection(var_list)].copy()
+    
+    # Replace var names with those defined in the variable metadata ('name')
+
+    # Make a dictionary of var code_names and names
+    keys_code_names = df_variable_metadata['slug'].tolist()
+    values_names = df_variable_metadata['name'].tolist()
+        #pair keys and values with zip
+    varnames_dict = dict(zip(keys_code_names, values_names))
+
+    # Rename the columns using the dictionary
+    df_dataset = df_dataset.rename(columns=varnames_dict)
+    
+    #Export the dataset
+    df_dataset.to_csv('data/pip_final.csv', index=False)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
