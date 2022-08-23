@@ -56,10 +56,33 @@ def combine_country_datasets(data_dir: str, country_codes: list) -> pd.DataFrame
     return combined_df
 
 
-def aggregate_surveillance_type(
-    combined_df: pd.DataFrame, sel_cols: list
-) -> pd.DataFrame:
-
+def aggregate_surveillance_type(combined_df: pd.DataFrame) -> pd.DataFrame:
+    sel_cols = [
+        "COUNTRY/AREA/TERRITORY",
+        "HEMISPHERE",
+        "ISO_WEEKSTARTDATE",
+        "ORIGIN_SOURCE",
+        "AH1N12009",
+        "AH1",
+        "AH3",
+        "AH5",
+        "AH7N9",
+        "ANOTSUBTYPED",
+        "ANOTSUBTYPABLE",
+        "AOTHER_SUBTYPE",
+        "INF_A",
+        "BVIC_2DEL",
+        "BVIC_3DEL",
+        "BVIC_NODEL",
+        "BVIC_DELUNK",
+        "BYAM",
+        "BNOTDETERMINED",
+        "INF_B",
+        "INF_ALL",
+        "INF_NEGATIVE",
+        "SPEC_PROCESSED_NB",
+        "SPEC_RECEIVED_NB",
+    ]
     df = combined_df[sel_cols]
     df = df.copy(deep=True)
     df["date"] = pd.to_datetime(
@@ -164,14 +187,19 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
 def standardise_countries(df: pd.DataFrame, path: str) -> pd.DataFrame:
     stan_countries = pd.read_csv(f"{path}/country_codes_country_standardized.csv")
     stan_dict = stan_countries.set_index("Country").squeeze().to_dict()
-    df["Country"] = df["Country"].map(stan_dict)
-    assert df["Country"].isna().sum() == 0, "Some countries are not standardised"
+
+    df["Country_stan"] = df["Country"].map(stan_dict)
+    missing_countries = (
+        df["Country"][df["Country_stan"].isna()].drop_duplicates().tolist()
+    )
+    assert (
+        df["Country_stan"].isna().sum() == 0
+    ), f"{missing_countries} are not standardised"
 
     return df
 
 
 def clean_fluid_data(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy(deep=True)
     df = df.query("AGEGROUP_CODE == 'All' & CASE_INFO.isin(['ILI', 'SARI', 'ARI'])")
     df["date"] = pd.to_datetime(
         df["ISO_WEEKSTARTDATE"], format="%Y-%m-%d", utc=True
@@ -209,13 +237,12 @@ def clean_fluid_data(df: pd.DataFrame) -> pd.DataFrame:
     )
     df = df.rename(
         columns={
+            "COUNTRY/AREA/TERRITORY": "Country",
             "REPORTED_CASESARI": "ari_cases",
             "REPORTED_CASESSARI": "sari_cases",
             "REPORTED_CASESILI": "ili_cases",
         }
     )
-
-    df = df.rename(columns={"COUNTRY/AREA/TERRITORY": "Country"})
     return df
 
 

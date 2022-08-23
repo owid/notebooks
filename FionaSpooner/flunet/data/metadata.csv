@@ -1,0 +1,134 @@
+DatasetName,TableName,FieldName,DataType,Description,Comments
+fluID,VIW_FID,WHOREGION,string,"WHO regions (AFR, AMR, EMR, EUR, SEAR, WPR)",see: https://www.who.int/about/structure
+fluID,VIW_FID,FLUSEASON,string,"Reporting season (NH=northern hemisphere, SH=southern hemisphere, YR=year-round reporting)",
+fluID,VIW_FID,HEMISPHERE,string,"Hemisphere (NH=northern hemisphere, SH=southern hemisphere)",
+fluID,VIW_FID,ITZ,string,Influenza transmission zone,see: https://cdn.who.int/media/docs/default-source/influenza/influenza-transmission-zones20180914.pdf
+fluID,VIW_FID,COUNTRY_CODE,string,ISO3 country codes,includes WHO defined codes if not ISO3 code available
+fluID,VIW_FID,COUNTRY/AREA/TERRITORY,string,"Country, area or territory name",
+fluID,VIW_FID,ISO2,string,ISO2 country code,includes WHO defined codes if not ISO3 code available
+fluID,VIW_FID,REPORTSITE_CODE,date,Reportsite code,
+fluID,VIW_FID,ISO_WEEKSTARTDATE,integer,Week start date (ISO 8601),
+fluID,VIW_FID,ISO_YEAR,integer,Year  (ISO 8601),
+fluID,VIW_FID,ISO_WEEK,integer,Week  (ISO 8601),
+fluID,VIW_FID,ISOYW,date,Year and week (ISO8601),
+fluID,VIW_FID,MMWR_WEEKSTARTDATE,integer,Week start date (MMWR),American calendar
+fluID,VIW_FID,MMWR_YEAR,integer,Year (MMWR),American calendar
+fluID,VIW_FID,MMWR_WEEK,integer,Week (MMWR),American calendar
+fluID,VIW_FID,MMWRYW,integer,Year and week (MMWR),American calendar
+fluID,VIW_FID,ORIGIN_SOURCE,string,Surveillance site type (NONSENTINEL/SENTINEL/NOTDEFINED),"Non-sentinel: Data obtained from non-sentinel systems as indicated by the reporting country. Data reported in this category may include outbreak investigation, universal testing, testing at point of care or other systems apart from sentinel surveillance. / 
+Sentinel: Data obtained from sentinel surveillance as indicated by the reporting country. Sentinel surveillance systems collect high-quality data in a timely manner systematically and routinely from sentinel surveillance sites representatives of the population under surveillance. / 
+Type not defined: Source of data not indicated by the reporting country neither as sentinel nor as non-sentinel surveillance. These data may include sentinel or non-sentinel surveillance sources or both."
+fluID,VIW_FID,AGEGROUP_CODE,string,Age group,Age classification as provided by the reporting country
+fluID,VIW_FID,CASE_INFO,string,"Type of data reported (ARI, ILI, MORTALITY, PNEU, PNEU_DEATHS, QLT_STATUS, SARI, SARI_DEATHS, SARI_ICU)",
+fluID,VIW_FID,REPORTED_CASES,integer,Number of cases reported,
+fluID,VIW_FID,OUTPATIENTS,integer,Number of outpatient visits,
+fluID,VIW_FID,INPATIENTS,integer,Number of inpatient visits,
+fluID,VIW_FID,POP_COV,integer,Catchment population,
+fluID,VIW_FID,INF_TESTED,integer,Number of specimens tested for influenza,
+fluID,VIW_FID,INF_POS,integer,Number of specimens positive for influenza,
+fluID,VIW_FID,INF_NEG,integer,Number of specimens negative for influenza,
+fluID,VIW_FID,INF_A,integer,Number of specimens positive for influenza A,
+fluID,VIW_FID,INF_B,integer,Number of specimens positive for influenza B,
+fluID,VIW_FID,INF_MIXED,integer,Number of specimens positive for more than one influenza subtype,
+fluID,VIW_FID,AH1,integer,Number of specimens positive for influenza A(H1),
+fluID,VIW_FID,AH1N12009,integer,Number of specimens positive for influenza A(H1N1)2009,
+fluID,VIW_FID,AH3,integer,Number of specimens positive for influenza A(H3),
+fluID,VIW_FID,AH5,integer,Number of specimens positive for influenza A(H5),
+fluID,VIW_FID,AH7,integer,Number of specimens positive for influenza A(H7),
+fluID,VIW_FID,ANOTSUBTYPED,integer,Number of specimens positive for influenza A (not subtyped),
+fluID,VIW_FID,AOTHERTYPES,integer,Number of specimens positive for influenza A (other subtypes),
+fluID,VIW_FID,BYAMAGATA,integer,Number of specimens positive for influenza B (Yamagata lineage),
+fluID,VIW_FID,BVICTORIA,integer,Number of specimens positive for influenza B (Victoria lineage),
+fluID,VIW_FID,BNOTDETERMINED,integer,Number of specimens positive for influenza B (lineage not determined),
+fluID,VIW_FID,OTHER,integer,Number of specimens postive for other respiratory specimens,
+fluID,VIW_FID,RSV,integer,Number of specimens positive for Respiratory Syncytial Virus (RSV),
+fluID,VIW_FID,ADENO,integer,Number of specimens positive for Adeno virus,
+fluID,VIW_FID,PARAINFLUENZA,integer,Number of specimens positive for Parainfluenza virus,
+fluID,VIW_FID,INF_RISK,float,Influenza risk,
+fluID,VIW_FID,GEOSPREAD,integer,Geographic spread (1=No activity; 2=Localized; 3=Regional; 4=Widespread; 0=No information available),"Qualitative indicator of the number and distribtuion of sites reporting influenza activity:
+1 No activity: no laboratory‐confirmed case(s) of influenza, or evidence of increased or unusual respiratory disease activity. 
+2 Localized: limited to one administrative unit of the country (or reporting site) only. 
+3 Regional: appearing in multiple but <50% of the administrative units of the country (or reporting sites).
+4 Widespread: appearing in ≥50% of the administrative units of the country (or reporting sites). 
+0 No information available: no information available for the previous 1‐week period."
+fluID,VIW_FID,GEOSPREAD_COMMENTS,string,Any comments for geographic spread,
+fluID,VIW_FID,IMPACT,integer,Impact (1=low; 2=moderate; 3=severe; 0=no information available),"Qualitative indicator of the degree of disruption of healthcare services as a result of ARI:
+1 Low: demands on health‐care services are not above usual levels. 
+2 Moderate: demands on health‐care services are above the usual demand levels but still below the maximum capacity of those services. 
+3 Severe: demands on health care services exceed the capacity of those services. 
+0 No information available."
+fluID,VIW_FID,INTENSITY,integer,Intensity (1=low or moderate; 2=high; 3=very high; 0=no information available),"Qualitative indicator of the proportion of the population with acute respiratory disease, covering the spectrum of disease from ILI to pneumonia:
+1 Low or moderate: a normal or slightly increased proportion of the population is currently affected by respiratory illness. 
+2 High: a large proportion of the population is currently affected by respiratory illness. 
+3 Very high: a very large proportion of the population is currently affected by respiratory illness. 
+0 No information available."
+fluID,VIW_FID,TREND,integer,Trend (1=decreasing; 2=unchanged; 3=increasing; 0=no information available),"Qualitative indicator of the level of respiratory disease activity compared to the previous week:
+1 Decreasing: evidence that the level of respiratory disease activity is decreasing compared with the previous week. 
+2 Unchanged: evidence that the level of respiratory disease activity is unchanged compared with the previous week. 
+3 Increasing: evidence that the level of respiratory disease activity is increasing compared with the previous week. 
+0 No information available."
+fluID,VIW_FID,COMMENTS,string,Comments,
+fluID,VIW_FID,NB_SITES,integer,Number of reporting sites,
+fluID,VIW_FID,MORTALITY_ALL,integer,All mortality cases,
+fluID,VIW_FID,MORTALITY_PNI,integer,Pneumonia-influenza mortality cases,
+FluNet,VIW_FNT,WHOREGION,string,"WHO regions (AFR, AMR, EMR, EUR, SEAR, WPR)",see: https://www.who.int/about/structure
+FluNet,VIW_FNT,FLUSEASON,string,"Reporting season (NH=northern hemisphere, SH=southern hemisphere, YR=year-round reporting)",
+FluNet,VIW_FNT,HEMISPHERE,string,"Hemisphere (NH=northern hemisphere, SH=southern hemisphere)",
+FluNet,VIW_FNT,ITZ,string,Influenza transmission zone,see: https://cdn.who.int/media/docs/default-source/influenza/influenza-transmission-zones20180914.pdf
+FluNet,VIW_FNT,COUNTRY_CODE,string,ISO3 country codes,includes WHO defined codes if not ISO3 code available
+FluNet,VIW_FNT,COUNTRY/AREA/TERRITORY,string,"Country, area or territory name",
+FluNet,VIW_FNT,ISO2,string,ISO2 country code,includes WHO defined codes if not ISO3 code available
+FluNet,VIW_FNT,ISO_WEEKSTARTDATE,date,Week start date (ISO 8601),
+FluNet,VIW_FNT,ISO_YEAR,integer,Year  (ISO 8601),
+FluNet,VIW_FNT,ISO_WEEK,integer,Week  (ISO 8601),
+FluNet,VIW_FNT,ISOYW,integer,Year and week (ISO8601),
+FluNet,VIW_FNT,MMWR_WEEKSTARTDATE,date,Week start date (MMWR),American calendar
+FluNet,VIW_FNT,MMWR_YEAR,integer,Year (MMWR),American calendar
+FluNet,VIW_FNT,MMWR_WEEK,integer,Week (MMWR),American calendar
+FluNet,VIW_FNT,MMWRYW,integer,Year and week (MMWR),American calendar
+FluNet,VIW_FNT,ORIGIN_SOURCE,string,Surveillance site type (NONSENTINEL/SENTINEL/NOTDEFINED),"Non-sentinel: Data obtained from non-sentinel systems as indicated by the reporting country. Data reported in this category may include outbreak investigation, universal testing, testing at point of care or other systems apart from sentinel surveillance. / 
+Sentinel: Data obtained from sentinel surveillance as indicated by the reporting country. Sentinel surveillance systems collect high-quality data in a timely manner systematically and routinely from sentinel surveillance sites representatives of the population under surveillance. / 
+Type not defined: Source of data not indicated by the reporting country neither as sentinel nor as non-sentinel surveillance. These data may include sentinel or non-sentinel surveillance sources or both."
+FluNet,VIW_FNT,SPEC_RECEIVED_NB,integer,Number of specimens received for influenza,Number of specimens received at the laboratory in the reporting week (can be different from the week in which the sample has been taken)
+FluNet,VIW_FNT,SPEC_PROCESSED_NB,integer,Number of specimens processed for influenza with any kind of method,Number of specimens processed at the laboratory in the reporting week (can be different from the week in which the sample has been taken)
+FluNet,VIW_FNT,AH1N12009,integer,Number of A(H1N1)pdm09 detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,AH1,integer,Number of A(H1) detections (other than A(H1N1)pdm09),Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,AH3,integer,Number of A(H3) detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,AH5,integer,Number of A(H5) detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,AH7N9,integer,Number of A(H7N9) detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,AOTHER_SUBTYPE,integer,Number of other influenza A subtype detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,AOTHER_SUBTYPE_DETAILS,string,Name for A other subtype(s) detected cases,
+FluNet,VIW_FNT,ANOTSUBTYPED,integer,Number of not subtyped influenza A detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,ANOTSUBTYPABLE,integer,Number of unsubtypable influenza A detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,INF_A,integer,Number of influenza A detections (all subtypes),Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,BVIC_2DEL,integer,Number of B (Victoria lineage) 2-deletion detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,BVIC_3DEL,integer,Number of B (Victoria lineage) 3-deletion detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,BVIC_DELUNK,integer,Number of B (Victoria lineage) detections (deletions unknown),Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,BVIC_NODEL,integer,Number of B (Victoria lineage) detections (deletions not specified),Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,BYAM,integer,Number of B (Yamagata lineage) detections,Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,BNOTDETERMINED,integer,Number of influenza B detections (lineage not determined),Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,INF_B,integer,Number of influenza B detections (all subtypes),Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,INF_ALL,integer,Number of influenza detections (all types),Number of specimens in which influenza virus antigen was detected with any kind of method; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,INF_NEGATIVE,integer,Number of influenza negatives,Number of specimens which tested negative for influenza; to be reported for year and week when the sample was taken.
+FluNet,VIW_FNT,ILI_ACTIVITY,integer,"ILI activity (1 - No report / 2 - No activity /
+3 - Sporadic acitivity / 4 - Local activity / 5 -  Regional activity / 6 - Widespread activity)","ILI activity:
+1 - No report /
+2 - No activity: No influenza viral isolates or clinical signs of influenza activity /
+3 - Sporadic acitivity: Isolated cases of ILI or laboratory/culture confirmed cases in a limited area /
+4 - Local activity: Activity of ILI above baseline values with laboratory confirmed cases in a limited area /
+5 -  Regional activity: Outbreaks of ILI or laboratory confirmed influenza in one or more regions with a population comprising less than 50% of the country's total population / 
+6 - Widespread activity: Outbreaks of ILI or laboratory confirmed influenza in one or more regions with a population comprising 50% or more of the country's population"
+FluNet,VIW_FNT,ADENO,integer,Number of Adeno virus detections,Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,BOCA,integer,Number of Boca virus detections,Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,HUMAN_CORONA,integer,Number of human corona virus detections (not SARS-CoV-2),Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,METAPNEUMO,integer,Number of Metapneumo virus detections,Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,PARAINFLUENZA,integer,Number of Parainfluenza virus detections,Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,RHINO,integer,Number of Rhino virus detections,Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,RSV,integer,Number of Respiratory Syncytial Virus (RSV) detections,Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,OTHERRESPVIRUS,integer,Number of other respiratory virus detections,Number of respiratory virus detections in specimens tested primarily for influenza
+FluNet,VIW_FNT,OTHER_RESPVIRUS_DETAILS,string,List of other respiratory viruses detected (if any),
+FluNet,VIW_FNT,LAB_RESULT_COMMENT,string,Laboratory result comments (if any),
+FluNet,VIW_FNT,WCR_COMMENT,string,Weekly country report (WCR),Summary of influenza activity and other relevant information.
+FluNet,VIW_FNT,RPT_INF,integer,Influenza data reported,
+FluNet,VIW_FNT,RPT_SC2,integer,SARS-CoV-2 data reported,
+FluNet,VIW_FNT,LastUpdated,datetime,Last updated,
