@@ -252,10 +252,10 @@ def clean_fluid_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def calculate_fluid_rates(df: pd.DataFrame) -> pd.DataFrame:
-    df["ili_cases_per_thousand_inpatients"] = round(
+    df["ili_cases_per_thousand_outpatients"] = round(
         (df["ili_cases"] / df["OUTPATIENTS"]) * 1000, 2
     )
-    df["ari_cases_per_thousand_inpatients"] = round(
+    df["ari_cases_per_thousand_outpatients"] = round(
         (df["ari_cases"] / df["OUTPATIENTS"]) * 1000, 2
     )
     df["sari_cases_per_hundred_inpatients"] = round(
