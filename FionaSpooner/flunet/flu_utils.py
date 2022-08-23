@@ -196,6 +196,11 @@ def standardise_countries(df: pd.DataFrame, path: str) -> pd.DataFrame:
         df["Country_stan"].isna().sum() == 0
     ), f"{missing_countries} are not standardised"
 
+    df = df.drop(columns=["Country"])
+    df = df.rename(columns={"Country_stan": "Country"})
+    cols = df.columns.tolist()
+    cols = cols[-1:] + cols[:-1]
+    df = df[cols]
     return df
 
 
