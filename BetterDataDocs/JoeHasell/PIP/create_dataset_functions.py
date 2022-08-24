@@ -632,7 +632,7 @@ def include_metadata(df_final):
 
     # Read in variable metadata as dataframe
     url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-    df_variable_metadata = pd.read_csv(url, on_bad_lines='skip')
+    df_variable_metadata = pd.read_csv(url)
     
     # Keep only id vars (country and year) and vars with metadata
     
