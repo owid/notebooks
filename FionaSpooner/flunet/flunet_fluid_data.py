@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import pandas as pd
 import click
+
 from flu_utils import (
     get_country_codes,
     download_country_flu_data,

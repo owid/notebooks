@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import numpy as np
 import time
+import logging
 
 
 def get_metadata(output_path) -> pd.DataFrame:
@@ -42,7 +43,7 @@ def download_country_flu_data(
     data_dir: str, base_url: str, country_codes: list
 ) -> None:
     for country_code in country_codes:
-        print(country_code, end=" ", flush=True)
+        logging.info(country_code)
         data_df = get_flu_data(base_url, country_code)
         data_df.to_csv(f"{data_dir}{country_code}.csv", index=False, escapechar="\\")
 
@@ -154,8 +155,8 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
 
     df_com["pcnt_pos"] = df_com["pcnt_pos"].round(2)
     over_100_pcnt = df_com[df_com["pcnt_pos"] > 100].shape[0]
-    print(
-        f"{over_100_pcnt} variables with a percentage positive over 100. We'll set these to NA."
+    logging.info(
+        f"{over_100_pcnt} rows with a percentage positive over 100. We'll set these to NA."
     )
     df_com.loc[df_com["pcnt_pos"] > 100, "pcnt_pos"] = np.nan
 
@@ -189,9 +190,11 @@ def standardise_countries(df: pd.DataFrame, path: str) -> pd.DataFrame:
     stan_dict = stan_countries.set_index("Country").squeeze().to_dict()
 
     df["Country_stan"] = df["Country"].map(stan_dict)
+    print(df["Country"][df["Country_stan"].isna()])
     missing_countries = (
         df["Country"][df["Country_stan"].isna()].drop_duplicates().tolist()
     )
+
     assert (
         df["Country_stan"].isna().sum() == 0
     ), f"{missing_countries} are not standardised"
@@ -248,6 +251,7 @@ def clean_fluid_data(df: pd.DataFrame) -> pd.DataFrame:
             "REPORTED_CASESILI": "ili_cases",
         }
     )
+    df = df.dropna(subset="Country")
     return df
 
 
@@ -261,5 +265,22 @@ def calculate_fluid_rates(df: pd.DataFrame) -> pd.DataFrame:
     df["sari_cases_per_hundred_inpatients"] = round(
         (df["sari_cases"] / df["INPATIENTS"]) * 100, 2
     )
+
+    over_1000_ili = df[df["ili_cases_per_thousand_outpatients"] >= 1000].shape[0]
+    over_1000_ari = df[df["ari_cases_per_thousand_outpatients"] >= 1000].shape[0]
+    over_100_sari = df[df["sari_cases_per_hundred_inpatients"] >= 100].shape[0]
+
+    logging.info(
+        f"{over_1000_ili} rows with ili_cases_per_thousand_outpatients over or equal to 1000. We'll set these to NA."
+    )
+    logging.info(
+        f"{over_1000_ari} rows with ari_cases_per_thousand_outpatients over or equal to 1000. We'll set these to NA."
+    )
+    logging.info(
+        f"{over_100_sari} rows with sari_cases_per_hundred_inpatients over or equal to 100. We'll set these to NA."
+    )
+    df[df["ili_cases_per_thousand_outpatients"] > 1000] = np.nan
+    df[df["ari_cases_per_thousand_outpatients"] > 1000] = np.nan
+    df[df["sari_cases_per_hundred_inpatients"] > 1000] = np.nan
 
     return df
