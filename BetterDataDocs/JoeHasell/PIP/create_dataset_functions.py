@@ -7,25 +7,6 @@ import sys
 from functions.PIP_API_query import pip_query_country, pip_query_region
 from functions.standardize_entities import standardize_entities
 from functions.upload import upload_to_s3
-# -
-
-query = pip_query_country(
-                    popshare_or_povline = "povline", 
-                    value = 1.9, 
-                    fill_gaps="false")
-
-min_year = query['reporting_year'].min()
-max_year = query['reporting_year'].max()
-year_list = list(range(min_year,max_year+1))
-entity_list = list(query['country_name'].unique())
-
-# +
-year_df = pd.DataFrame(year_list)
-entity_df = pd.DataFrame(entity_list)
-
-cross = pd.merge(entity_df, year_df, how='cross')
-cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
-cross
 
 
 # -
@@ -64,15 +45,6 @@ def query_yes_no(question, default="yes"):
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
-
-# +
-min_year = query['reporting_year'].min()
-max_year = query['reporting_year'].max()
-year_list = list(range(min_year,max_year+1))
-entity_list = list(query['country_name'].unique())
-
-
-# -
 
 # ## Querying poverty data from the PIP API
 
@@ -390,6 +362,8 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
         df_final[varname_pct] = (df_final['reporting_pop'] - df_final[f'headcount_{i}']) / df_final['reporting_pop']
         col_above_pct.append(varname_pct)
 
+    df_final.loc[:, col_above_pct] = df_final[col_above_pct] * 100
+    
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
@@ -675,8 +649,33 @@ def export(df_final, cols):
 
 
 def include_metadata(df_final):
-    print('Including metadata for to update Grapher\'s dataset...')
+    print('Including surveys by decade count and metadata to update Grapher\'s dataset...')
     start_time = time.time()
+    
+    #Generate a new varaible to count the surveys available for each entity
+    #Create a list of all the years and entities available
+    min_year = df_final['Year'].min()
+    max_year = df_final['Year'].max()
+    year_list = list(range(min_year,max_year+1))
+    entity_list = list(df_final['Entity'].unique())
+
+    #Create two dataframes with all the years and entities
+    year_df = pd.DataFrame(year_list)
+    entity_df = pd.DataFrame(entity_list)
+
+    #Make a cartesian product of both dataframes: join all the combinations between all the entities and all the years
+    cross = pd.merge(entity_df, year_df, how='cross')
+    cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
+    
+    #Merge cross and df_final, to include all the possible rows in the dataset
+    df_final = pd.merge(cross, df_final, on=['Entity', 'Year'], how='left', indicator=True)
+
+    #Mark with 1 if there are surveys available, 0 if not
+    df_final['survey_available'] = np.where(df_final['_merge'] == 'both', 1, 0)
+
+    #Sum for each entity the surveys available for the previous 9 years and the current year
+    df_final['surveys_past_decade'] = df_final['survey_available'].groupby(df_final['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
+    df_final = df_final.drop(columns=['survey_available', '_merge'])
     
     # Specify sheet id and sheet (tab) name for the metadata google sheet 
     #sheet_id = '1bVOaDcnDoF0M_zK3uof0dIH-Z4OUDxqM7QO3B9jzRbk'
