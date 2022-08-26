@@ -7,6 +7,25 @@ import sys
 from functions.PIP_API_query import pip_query_country, pip_query_region
 from functions.standardize_entities import standardize_entities
 from functions.upload import upload_to_s3
+# -
+
+query = pip_query_country(
+                    popshare_or_povline = "povline", 
+                    value = 1.9, 
+                    fill_gaps="false")
+
+min_year = query['reporting_year'].min()
+max_year = query['reporting_year'].max()
+year_list = list(range(min_year,max_year+1))
+entity_list = list(query['country_name'].unique())
+
+# +
+year_df = pd.DataFrame(year_list)
+entity_df = pd.DataFrame(entity_list)
+
+cross = pd.merge(entity_df, year_df, how='cross')
+cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
+cross
 
 
 # -
@@ -45,6 +64,15 @@ def query_yes_no(question, default="yes"):
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
+
+# +
+min_year = query['reporting_year'].min()
+max_year = query['reporting_year'].max()
+year_list = list(range(min_year,max_year+1))
+entity_list = list(query['country_name'].unique())
+
+
+# -
 
 # ## Querying poverty data from the PIP API
 
@@ -341,6 +369,33 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
     
     #///////////////////////////////////////////////////////////////////////////////
     #//////////////////////////////////////////////////////////////////////////////
+    #Above variables
+
+    print('Calculating number of people above poverty lines...')
+    start_time = time.time()
+
+    #Calculate numbers above poverty lines
+    
+    col_above_n = []
+    col_above_pct = []
+
+    #For each poverty line in poverty_lines_cents
+    for i in poverty_lines_cents:
+        
+        varname_n = f'headcount_above_{i}'
+        df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{i}']
+        col_above_n.append(varname_n)
+        
+        varname_pct = f'headcount_ratio_above_{i}'
+        df_final[varname_pct] = (df_final['reporting_pop'] - df_final[f'headcount_{i}']) / df_final['reporting_pop']
+        col_above_pct.append(varname_pct)
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+    
+    #///////////////////////////////////////////////////////////////////////////////
+    #//////////////////////////////////////////////////////////////////////////////
     #Decile thresholds
 
     print('Integrating decile thresholds...')
@@ -443,7 +498,7 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
     
     #Get all the columns to order the final output
     cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + \
-            col_avg_shortfall + col_incomegap + col_poverty_severity + col_watts + col_stacked_n + col_stacked_pct + \
+            col_avg_shortfall + col_incomegap + col_above_n + col_above_pct + col_poverty_severity + col_watts + col_stacked_n + col_stacked_pct + \
             col_relative +  \
             col_decile_share + col_decile_thr + col_decile_avg + col_inequality + \
             col_extra
