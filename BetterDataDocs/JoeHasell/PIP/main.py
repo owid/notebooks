@@ -24,10 +24,15 @@ query_yes_no(question)
 start_time = time.time()
 # Here we define the poverty lines to query as cents
 poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
-povlines_count = len(poverty_lines_cents)
+#Here we define the international poverty line
+extreme_povline = 190
 
+povlines_count = len(poverty_lines_cents)
 print(f'{povlines_count} poverty lines were defined (in cents):')
 print(f'{poverty_lines_cents}')
+
+print(f'The extreme poverty line is defined as (in cents):')
+print(f'{extreme_povline}')
 
 # %%
 df_final = query_all_and_merge(poverty_lines_cents)
@@ -46,8 +51,13 @@ df_inc_only, df_cons_only, df_inc_or_cons = export(df_final, cols)
 
 # %%
 include_metadata(df_inc_or_cons)
+
+# %%
+regional_headcount(extreme_povline/100)
+
+# %%
 end_time = time.time()
 elapsed_time = end_time - start_time
 print(f'The files were created in {elapsed_time} seconds :)')
-
-# %%
+print('Update the main PIP dataset with pip_final.csv')
+print('Update the regional headcount dataset with pip_regional_headcount.csv')

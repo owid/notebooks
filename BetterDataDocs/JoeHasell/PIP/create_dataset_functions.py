@@ -718,3 +718,105 @@ def include_metadata(df_final):
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+def regional_headcount(povline):
+    
+    print('Creating regional headcount dataset...')
+    start_time = time.time()
+
+    #Get regional headcount and make table wide
+    df_regions = pip_query_region(povline)
+    df_regions = df_regions.rename(columns={'region_name': 'Entity', 'reporting_year': 'Year'})
+
+    #Standardise entities
+    df_regions = standardize_entities(
+        orig_df = df_regions,
+        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+        mapping_varname_raw ='Original Name',
+        mapping_vaname_owid = 'Our World In Data Name',
+        data_varname_old = 'Entity',
+        data_varname_new = 'Entity'
+    )
+
+
+
+    df_regions['number_extreme_poverty'] = df_regions['headcount'] * df_regions['reporting_pop']
+    df_regions = df_regions[['Entity', 'Year', 'number_extreme_poverty']]
+    df_regions = df_regions.pivot(index='Year', columns='Entity', values='number_extreme_poverty')
+
+
+    #Drop rows with more than one region with null headcount
+    print(f'{len(df_regions)} rows before missing values check')
+    cols_to_check = [e for e in list(df_regions.columns) if e not in ['Year']]
+    df_regions['check_total'] = df_regions[cols_to_check].isnull().sum(1)
+    df_regions = df_regions[df_regions['check_total'] <= 1].reset_index()
+    df_regions = df_regions.drop(columns='check_total')
+    print(f'{len(df_regions)} rows after missing values check')
+
+
+    #Get difference between world and (total) regional headcount, to patch rows with one missing value
+    cols_to_sum = [e for e in list(df_regions.columns) if e not in ['Year', 'World']]
+    df_regions['incomplete_sum'] = df_regions[cols_to_sum].sum(1)
+    df_regions['difference_for_missing'] = df_regions['World'] - df_regions['incomplete_sum']
+
+    #Fill null values with the difference and drop aux variables
+    col_dictionary = dict.fromkeys(cols_to_sum, df_regions['difference_for_missing'])
+    df_regions.loc[:, cols_to_sum] = df_regions[cols_to_sum].fillna(col_dictionary)
+    df_regions = df_regions.drop(columns=['World', 'incomplete_sum', 'difference_for_missing'])
+
+    #Get headcounts values for China and India
+    df_chn_ind = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = "CHN&country=IND",
+                                    year = "all",
+                                    welfare_type = "all",
+                                    reporting_level = "national",
+                                    value = povline,
+                                    fill_gaps="true")
+
+    df_chn_ind = df_chn_ind.rename(columns={'country_name': 'Entity', 'reporting_year': 'Year'})
+
+    #Standardise entities
+    df_chn_ind = standardize_entities(
+        orig_df = df_chn_ind,
+        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+        mapping_varname_raw ='Original Name',
+        mapping_vaname_owid = 'Our World In Data Name',
+        data_varname_old = 'Entity',
+        data_varname_new = 'Entity'
+    )
+
+
+    df_chn_ind['number_extreme_poverty'] = df_chn_ind['headcount'] * df_chn_ind['reporting_pop']
+
+    # Flag duplicates – indicating multiple welfare_types
+    #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
+    df_chn_ind.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True)
+    df_chn_ind['duplicate_flag'] = df_chn_ind.duplicated(subset=['Entity', 'Year', 'reporting_level'])
+
+    print(f'Checking for years with both income and consumption in China and India. Before dropping duplicated, there were {len(df_chn_ind)} rows...')
+    # Drop income where income and consumption are available
+    df_chn_ind = df_chn_ind[(df_chn_ind['duplicate_flag']==False) | (df_chn_ind['welfare_type']=='consumption')]
+    df_chn_ind.drop(columns=['duplicate_flag'], inplace=True)
+
+    print(f'After dropping duplicates there were {len(df_chn_ind)} rows.')
+
+    df_chn_ind = df_chn_ind[['Entity', 'Year', 'number_extreme_poverty']]
+
+    #Make table wide and merge with regional data
+    df_chn_ind = df_chn_ind.pivot(index='Year', columns='Entity', values='number_extreme_poverty')
+
+    df_final = pd.merge(df_regions, df_chn_ind, on='Year', how='left')
+    df_final['East Asia and Pacific excluding China'] = df_final['East Asia and Pacific'] - df_final['China']
+    df_final['South Asia excluding India'] = df_final['South Asia'] - df_final['India']
+
+    df_final = pd.melt(df_final, id_vars=['Year'], value_name='number_extreme_poverty')
+
+    df_final = df_final.rename(columns={'number_extreme_poverty': 'Number of people living in extreme poverty, by world region'})
+
+    #Export the dataset
+    df_final.to_csv('data/pip_regional_headcount.csv', index=False)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
