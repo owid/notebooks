@@ -35,19 +35,15 @@ between_100_and_150_dollars = list(range(10000,15000, 10))
 between_150_and_175_dollars = list(range(15000,17500, 10))
 
 # %%
-# povline_list_dict = {
-#     'under_5_dollars': under_5_dollars, 
-#     'between_5_and_10_dollars': between_5_and_10_dollars,
-#     'between_10_and_20_dollars': between_10_and_20_dollars,
-#     'between_20_and_30_dollars': between_20_and_30_dollars,
-#     'between_30_and_55_dollars': between_30_and_55_dollars,
-#     'between_55_and_80_dollars': between_55_and_80_dollars,
-#     'between_80_and_100_dollars': between_80_and_100_dollars,
-#     'between_100_and_150_dollars': between_100_and_150_dollars,
-#     'between_150_and_175_dollars': between_150_and_175_dollars
-#                    }
-
 povline_list_dict = {
+    'under_5_dollars': under_5_dollars, 
+    'between_5_and_10_dollars': between_5_and_10_dollars,
+    'between_10_and_20_dollars': between_10_and_20_dollars,
+    'between_20_and_30_dollars': between_20_and_30_dollars,
+    'between_30_and_55_dollars': between_30_and_55_dollars,
+    'between_55_and_80_dollars': between_55_and_80_dollars,
+    'between_80_and_100_dollars': between_80_and_100_dollars,
+    'between_100_and_150_dollars': between_100_and_150_dollars,
     'between_150_and_175_dollars': between_150_and_175_dollars
                    }
 
