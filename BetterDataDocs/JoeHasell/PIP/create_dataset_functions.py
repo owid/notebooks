@@ -742,6 +742,7 @@ def regional_headcount(povline):
 
 
     df_regions['number_extreme_poverty'] = df_regions['headcount'] * df_regions['reporting_pop']
+    df_regions['number_extreme_poverty'] = df_regions['number_extreme_poverty'].round(0)
     df_regions = df_regions[['Entity', 'Year', 'number_extreme_poverty']]
     df_regions = df_regions.pivot(index='Year', columns='Entity', values='number_extreme_poverty')
 
@@ -788,6 +789,7 @@ def regional_headcount(povline):
 
 
     df_chn_ind['number_extreme_poverty'] = df_chn_ind['headcount'] * df_chn_ind['reporting_pop']
+    df_chn_ind['number_extreme_poverty'] = df_chn_ind['number_extreme_poverty'].round(0)
 
     # Flag duplicates – indicating multiple welfare_types
     #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
