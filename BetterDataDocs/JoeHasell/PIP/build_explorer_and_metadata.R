@@ -102,7 +102,10 @@ special_sheets[["table_stubs_sheetname"]]<- "table_stubs_main"
 special_sheets[["global_controls_sheetname"]]<- "global_controls_main"
 special_sheets[["tables_sheetname"]]<- "tables_main"
 
-special_sheets[["admin_sheetname"]]<- "admin_metadata_auto"
+special_sheets[["admin_stubs_sheetname"]]<- "admin_metadata_stubs"
+
+
+special_sheets[["admin_print_sheetname"]]<- "admin_metadata_auto"
 
 
 
@@ -157,7 +160,7 @@ build_OWID_controls<- function(gsheets_id){
   
   
   # For both grapher and table stubs...
-  for(stubs_sheet in c("graphers", "table")){
+  for(stubs_sheet in c("graphers", "table", "admin")){
     
     # Pull in the stubs from gsheets
     stubs<- read_sheet(gsheets_id, sheet = special_sheets[[paste0(stubs_sheet,"_stubs_sheetname")]])
@@ -312,10 +315,12 @@ build_OWID_controls<- function(gsheets_id){
       # Here I will use the 'both inc and expenditure' data. This is what we 
       # will add to the grapher database.
     
+    
+    
     range_write(
       ss = gsheets_id,
-      data = table_controls[["inc_or_cons"]],
-      sheet = special_sheets[["admin_sheetname"]],
+      data = stubs_multiplied[['admin']],
+      sheet = special_sheets[["admin_print_sheetname"]],
       range = cell_limits(c(NA, NA), c(NA, NA)),
       col_names = TRUE,
       reformat = FALSE
