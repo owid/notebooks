@@ -1,7 +1,7 @@
 # %% [markdown]
 # # World Bank Poverty and Inequality Platform dataset
 #
-# ***To get the most updated dataset it is required to run the `relative_poverty.py` and `extract_percentiles.py` codes first. They are not included here because it takes more than an hour to complete.***
+# ***To get the most updated dataset it is required to run the `relative_poverty.py` and `extract_percentiles.py` codes first. They are not included here because they take more than an hour to complete.***
 
 # %%
 import pandas as pd
