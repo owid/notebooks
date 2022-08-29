@@ -26,10 +26,10 @@ def process_usa(source: str):
         }
     )
 
-    df.loc[df.Entity == "all_ages_adj", "unvaccinated"] = df.age_adj_unvax_ir
-    df.loc[df.Entity == "all_ages_adj", "fully_vaccinated"] = df.age_adj_vax_ir
-    df.loc[df.Entity == "all_ages_adj", "one_booster"] = df.age_adj_one_booster_ir
-    df.loc[df.Entity == "all_ages_adj", "two_boosters"] = df.age_adj_two_booster_ir
+    df.loc[df.Entity == "all_ages", "unvaccinated"] = df.age_adj_unvax_ir
+    df.loc[df.Entity == "all_ages", "fully_vaccinated"] = df.age_adj_vax_ir
+    df.loc[df.Entity == "all_ages", "one_booster"] = df.age_adj_one_booster_ir
+    df.loc[df.Entity == "all_ages", "two_boosters"] = df.age_adj_two_booster_ir
 
     df = df.assign(Week=df.mmwr_week.mod(100), Year=df.mmwr_week.div(100).astype(int))
     df["Year"] = df.apply(epiweek_to_date, system="cdc", axis=1)
@@ -45,7 +45,7 @@ def process_usa(source: str):
         ]
     ]
 
-    df["Entity"] = df.Entity.replace({"all_ages_adj": "All ages"})
+    df["Entity"] = df.Entity.replace({"all_ages": "All ages"})
 
     df.to_csv(
         "output/COVID-19 - Deaths by vaccination status - United States.csv",
