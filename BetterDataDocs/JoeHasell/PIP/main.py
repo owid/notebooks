@@ -1,7 +1,7 @@
 # %% [markdown]
 # # World Bank Poverty and Inequality Platform dataset
 #
-# ***To get the most updated dataset it is required to run the `relative_poverty.py` and `extract_percentiles.py` codes first. They are not included here because it takes more than an hour to complete.***
+# ***To get the most updated dataset it is required to run the `relative_poverty.py` and `extract_percentiles.py` codes first. They are not included here because they take more than an hour to complete.***
 
 # %%
 import pandas as pd
@@ -25,17 +25,17 @@ start_time = time.time()
 # Here we define the poverty lines to query as cents
 poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
 #Here we define the international poverty line
-extreme_povline = 190
+extreme_povline_cents = 190
 
 povlines_count = len(poverty_lines_cents)
 print(f'{povlines_count} poverty lines were defined (in cents):')
 print(f'{poverty_lines_cents}')
 
 print(f'The extreme poverty line is defined as (in cents):')
-print(f'{extreme_povline}')
+print(f'{extreme_povline_cents}')
 
 # %%
-df_final = query_all_and_merge(poverty_lines_cents)
+df_final = query_all_and_merge(poverty_lines_cents, extreme_povline_cents)
 
 # %%
 df_final, cols = additional_variables_and_drop(df_final, poverty_lines_cents)
@@ -50,10 +50,10 @@ df_final = standardise(df_final)
 df_inc_only, df_cons_only, df_inc_or_cons = export(df_final, cols)
 
 # %%
-include_metadata(df_inc_or_cons)
+include_metadata(df_inc_or_cons, extreme_povline_cents)
 
 # %%
-regional_headcount(extreme_povline/100)
+regional_headcount(extreme_povline_cents)
 
 # %%
 end_time = time.time()

@@ -52,7 +52,7 @@ def query_yes_no(question, default="yes"):
 #Create a dataframe for each poverty line on the list, including and excluding interpolations and for countries and regions
 #Each of these combinations are concatenated in a larger data frame.
 
-def query_all_and_merge(poverty_lines_cents):
+def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
 
     print('Querying data from several poverty lines from the PIP API...')
     start_time = time.time()
@@ -194,13 +194,13 @@ def query_all_and_merge(poverty_lines_cents):
     #Country variables
     df_query_country = pip_query_country(
                         popshare_or_povline = "povline", 
-                        value = 1.9, 
+                        value = extreme_povline_cents/100, 
                         fill_gaps="false")
     df_query_country = df_query_country.rename(columns={'country_name': 'Entity',
                                                         'reporting_year': 'Year'})
 
     #Regional variables
-    df_query_regions = pip_query_region(1.9)
+    df_query_regions = pip_query_region(extreme_povline_cents/100)
     df_query_regions = df_query_regions.rename(columns={'region_name': 'Entity',
                                                         'reporting_year': 'Year'})
 
@@ -648,7 +648,7 @@ def export(df_final, cols):
     return df_inc_only, df_cons_only, df_inc_or_cons
 
 
-def include_metadata(df_final):
+def include_metadata(df_final, extreme_povline_cents):
     print('Including surveys by decade count and metadata to update Grapher\'s dataset...')
     start_time = time.time()
     
@@ -676,6 +676,12 @@ def include_metadata(df_final):
     #Sum for each entity the surveys available for the previous 9 years and the current year
     df_final['surveys_past_decade'] = df_final['survey_available'].groupby(df_final['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
     df_final = df_final.drop(columns=['survey_available', '_merge'])
+    
+    #Make regional survey count null, as the measure makes no sense beyond countries
+    regional_data = pip_query_region(extreme_povline_cents/100)
+    region_list = list(regional_data['region_name'].unique())
+    df_final.loc[df_final['Entity'].isin(region_list), ['surveys_past_decade']] = np.nan
+
     
     # Specify sheet id and sheet (tab) name for the metadata google sheet 
     #sheet_id = '1bVOaDcnDoF0M_zK3uof0dIH-Z4OUDxqM7QO3B9jzRbk'
@@ -720,13 +726,13 @@ def include_metadata(df_final):
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def regional_headcount(povline):
+def regional_headcount(extreme_povline_cents):
     
     print('Creating regional headcount dataset...')
     start_time = time.time()
 
     #Get regional headcount and make table wide
-    df_regions = pip_query_region(povline)
+    df_regions = pip_query_region(extreme_povline_cents/100)
     df_regions = df_regions.rename(columns={'region_name': 'Entity', 'reporting_year': 'Year'})
 
     #Standardise entities
@@ -772,7 +778,7 @@ def regional_headcount(povline):
                                     year = "all",
                                     welfare_type = "all",
                                     reporting_level = "national",
-                                    value = povline,
+                                    value = extreme_povline_cents/100,
                                     fill_gaps="true")
 
     df_chn_ind = df_chn_ind.rename(columns={'country_name': 'Entity', 'reporting_year': 'Year'})
@@ -813,8 +819,9 @@ def regional_headcount(povline):
     df_final['South Asia excluding India'] = df_final['South Asia'] - df_final['India']
 
     df_final = pd.melt(df_final, id_vars=['Year'], value_name='number_extreme_poverty')
+    df_final = df_final[['Entity', 'Year', 'number_extreme_poverty']]
 
-    df_final = df_final.rename(columns={'number_extreme_poverty': 'Number of people living in extreme poverty, by world region'})
+    df_final = df_final.rename(columns={'number_extreme_poverty': 'Number of people living in extreme poverty - by world region'})
 
     #Export the dataset
     df_final.to_csv('data/pip_regional_headcount.csv', index=False)
