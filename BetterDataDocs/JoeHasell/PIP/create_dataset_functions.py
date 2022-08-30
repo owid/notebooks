@@ -46,7 +46,7 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
-# ## Querying poverty data from the PIP API
+# ## Querying poverty and non-poverty data from the PIP API
 
 # +
 #Create a dataframe for each poverty line on the list, including and excluding interpolations and for countries and regions
@@ -159,9 +159,7 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
     
-    #///////////////////////////////////////////////////////////////////////////////
-    #//////////////////////////////////////////////////////////////////////////////
-    #Query the rest of the variables and merge
+
     
     print('Querying non poverty data and merging...')
     start_time = time.time()
@@ -188,7 +186,11 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
 
     #Concatenate country and regional wide datasets
     df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
-
+    
+    
+    #///////////////////////////////////////////////////////////////////////////////
+    #//////////////////////////////////////////////////////////////////////////////
+    #Query the rest of the variables and merge
 
     #Integrate variables not coming from multiple poverty lines
     #Country variables
@@ -255,7 +257,7 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
 
 # -
 
-# ## Query non poverty data and merge
+# ## Data transformations
 
 def additional_variables_and_drop(df_final, poverty_lines_cents):
 
@@ -631,8 +633,7 @@ def export(df_final, cols):
     df_inc_only.to_csv(f'data/poverty_inc_only.csv', index=False)
     df_cons_only.to_csv(f'data/poverty_cons_only.csv', index=False)
     df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons.csv', index=False)
-
-
+    
 
     #upload_to_s3(df_inc_only, 'PIP', f'poverty_inc_only_filled_{is_filled}.csv')
 
