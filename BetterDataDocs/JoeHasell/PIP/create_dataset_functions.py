@@ -46,6 +46,48 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
+def country_data(extreme_povline_cents, filled="false"):
+    #Query for all the countries and for the poverty line defined
+    df_country = pip_query_country(popshare_or_povline = "povline",
+                                    country_code = "all",
+                                    year = "all",
+                                    welfare_type = "all",
+                                    reporting_level = "all",
+                                    value = extreme_povline_cents/100,
+                                    fill_gaps=filled)
+
+    df_country = df_country.rename(columns={'country_name': 'Entity', 'reporting_year': 'Year'})
+
+    #Standardise entities
+    df_country = standardize_entities(
+        orig_df = df_country,
+        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+        mapping_varname_raw ='Original Name',
+        mapping_vaname_owid = 'Our World In Data Name',
+        data_varname_old = 'Entity',
+        data_varname_new = 'Entity'
+    )
+    return df_country
+
+
+def regional_data(extreme_povline_cents):
+    #Query for all the regions and for the poverty line defined
+    df_region = pip_query_region(extreme_povline_cents/100)
+
+    df_region = df_region.rename(columns={'region_name': 'Entity', 'reporting_year': 'Year'})
+
+    #Standardise entities
+    df_region = standardize_entities(
+        orig_df = df_region,
+        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+        mapping_varname_raw ='Original Name',
+        mapping_vaname_owid = 'Our World In Data Name',
+        data_varname_old = 'Entity',
+        data_varname_new = 'Entity'
+    )
+    return df_region
+
+
 # ## Querying poverty and non-poverty data from the PIP API
 
 # +
@@ -649,40 +691,9 @@ def export(df_final, cols):
     return df_inc_only, df_cons_only, df_inc_or_cons
 
 
-def include_metadata(df_final, extreme_povline_cents):
-    print('Including surveys by decade count and metadata to update Grapher\'s dataset...')
+def include_metadata(df_final):
+    print('Including metadata to update Grapher\'s dataset...')
     start_time = time.time()
-    
-    #Generate a new varaible to count the surveys available for each entity
-    #Create a list of all the years and entities available
-    min_year = df_final['Year'].min()
-    max_year = df_final['Year'].max()
-    year_list = list(range(min_year,max_year+1))
-    entity_list = list(df_final['Entity'].unique())
-
-    #Create two dataframes with all the years and entities
-    year_df = pd.DataFrame(year_list)
-    entity_df = pd.DataFrame(entity_list)
-
-    #Make a cartesian product of both dataframes: join all the combinations between all the entities and all the years
-    cross = pd.merge(entity_df, year_df, how='cross')
-    cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
-    
-    #Merge cross and df_final, to include all the possible rows in the dataset
-    df_final = pd.merge(cross, df_final, on=['Entity', 'Year'], how='left', indicator=True)
-
-    #Mark with 1 if there are surveys available, 0 if not
-    df_final['survey_available'] = np.where(df_final['_merge'] == 'both', 1, 0)
-
-    #Sum for each entity the surveys available for the previous 9 years and the current year
-    df_final['surveys_past_decade'] = df_final['survey_available'].groupby(df_final['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
-    df_final = df_final.drop(columns=['survey_available', '_merge'])
-    
-    #Make regional survey count null, as the measure makes no sense beyond countries
-    regional_data = pip_query_region(extreme_povline_cents/100)
-    region_list = list(regional_data['region_name'].unique())
-    df_final.loc[df_final['Entity'].isin(region_list), ['surveys_past_decade']] = np.nan
-
     
     # Specify sheet id and sheet (tab) name for the metadata google sheet 
     #sheet_id = '1bVOaDcnDoF0M_zK3uof0dIH-Z4OUDxqM7QO3B9jzRbk'
@@ -721,6 +732,48 @@ def include_metadata(df_final, extreme_povline_cents):
     
     #Export the dataset
     df_dataset.to_csv('data/pip_final.csv', index=False)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+def survey_count(df_final, extreme_povline_cents):
+    print('Creating dataset which counts the surveys in the recent decade...')
+    start_time = time.time()
+    
+    #Generate a new dataset to count the surveys available for each entity
+    #Create a list of all the years and entities available
+    min_year = df_final['Year'].min()
+    max_year = df_final['Year'].max()
+    year_list = list(range(min_year,max_year+1))
+    entity_list = list(df_final['Entity'].unique())
+
+    #Create two dataframes with all the years and entities
+    year_df = pd.DataFrame(year_list)
+    entity_df = pd.DataFrame(entity_list)
+
+    #Make a cartesian product of both dataframes: join all the combinations between all the entities and all the years
+    cross = pd.merge(entity_df, year_df, how='cross')
+    cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
+    
+    #Merge cross and df_final, to include all the possible rows in the dataset
+    df_final = pd.merge(cross, df_final[['Entity', 'Year']], on=['Entity', 'Year'], how='left', indicator=True)
+
+    #Mark with 1 if there are surveys available, 0 if not
+    df_final['survey_available'] = np.where(df_final['_merge'] == 'both', 1, 0)
+
+    #Sum for each entity the surveys available for the previous 9 years and the current year
+    df_final['surveys_past_decade'] = df_final['survey_available'].groupby(df_final['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
+    df_final = df_final.drop(columns=['survey_available', '_merge'])
+    
+    #Make regional survey count null, as the measure makes no sense beyond countries
+    regional_data = pip_query_region(extreme_povline_cents/100)
+    region_list = list(regional_data['region_name'].unique())
+    df_final.loc[df_final['Entity'].isin(region_list), ['surveys_past_decade']] = np.nan
+    
+    #Export the dataset
+    df_final.to_csv('data/pip_survey_count.csv', index=False)
     
     end_time = time.time()
     elapsed_time = end_time - start_time

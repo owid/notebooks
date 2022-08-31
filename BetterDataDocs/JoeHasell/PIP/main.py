@@ -35,6 +35,10 @@ print(f'The extreme poverty line is defined as (in cents):')
 print(f'{extreme_povline_cents}')
 
 # %%
+df_country = country_data(extreme_povline_cents)
+df_region = regional_data(extreme_povline_cents)
+
+# %%
 df_final = query_all_and_merge(poverty_lines_cents, extreme_povline_cents)
 
 # %%
