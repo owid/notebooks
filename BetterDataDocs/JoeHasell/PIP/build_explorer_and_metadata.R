@@ -239,38 +239,42 @@ build_OWID_controls<- function(gsheets_id){
     
     
     # Grab tables sheet from workbook
-    tables<- read_sheet(gsheets_id, sheet = special_sheets[["tables_sheetname"]])
+    table_list<- unique(stubs_multiplied[['table']]$tableSlug)
+    
+    
   
     # make a list of the table controls dataframes that the loop below will produce
-    table_controls<- list()
+    # table_controls<- list()
     
     # for each table
-    for (i in 1:nrow(tables)){
-      
-      this_tableSlug<- as.character(tables[i,"tableSlug"])
+    for (tab in table_list){
       
       
       # Print progress status
-      print(paste0("Overwriting explorer sheet - table controls: ", this_tableSlug))
+      print(paste0("Overwriting explorer sheet - table controls: ", tab))
       
       # Filter the controls for the rows matching this table slug and drop the tableSlug column from the table controls 
       df_table_controls_this_table<- stubs_multiplied[['table']] %>%
-            filter(tableSlug == this_tableSlug) %>%
-            select(-tableSlug)
+        filter(tableSlug == tab)
       
-    
+      #grab table link
+      table_link<- df_table_controls_this_table %>%
+        select(table_link) %>%
+        unique() %>%
+        as.character()
+      
+      #unselect the columns that aren't printed
+      df_table_controls_this_table<- df_table_controls_this_table %>%
+        select(-c(tableSlug, table_link))
+      
+      
       
       # table link and header for table cols
 
         # build a dataframe that contains the right text
-        table_header<- tables[i,]
-
-        table_header<- rbind(table_header, table_header) %>%
-                    mutate(first_col = c("table", "columns")) %>%
-                    select(first_col, links, tableSlug)
-
-        table_header[2,2]<- this_tableSlug
-        table_header[2,3]<- ""
+        table_header<- data.frame(col1 = c("table", "columns"),
+                                  col2 = c(table_link, tab),
+                                  col3 = c(tab, ""))
 
 
          # print the table link and header
@@ -305,7 +309,7 @@ build_OWID_controls<- function(gsheets_id){
          
       
       #Add controls to list   
-      table_controls[[this_tableSlug]]<- df_table_controls_this_table
+      # table_controls[[this_tableSlug]]<- df_table_controls_this_table
       
     }
     
@@ -328,10 +332,6 @@ build_OWID_controls<- function(gsheets_id){
     
 }
 
-  
-
-
-
 # Run main function
 
 # Load packages
@@ -339,7 +339,7 @@ library(tidyverse)
 library(googlesheets4)
 
 
-gsheets_id<- "1bVOaDcnDoF0M_zK3uof0dIH-Z4OUDxqM7QO3B9jzRbk"
+gsheets_id<- "1Tt4hSuNbFqeVq3m8JpCmK8xfRS8Vpx_LrQZssyJOLTU"
 
 return_list<- build_OWID_controls(gsheets_id)
 
