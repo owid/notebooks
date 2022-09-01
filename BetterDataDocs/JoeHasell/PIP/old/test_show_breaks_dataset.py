@@ -10,9 +10,6 @@ df_orig = pd.read_csv(fp)
 
 df = df_orig
 
-vars = [i for i in df.columns if i not in ["Entity", "Year", "reporting_pop"]]
-
-
 # %%
 # drop rows where survey coverage = nan (This is just regions)
 df = df[df['survey_comparability'].notna()]
@@ -28,8 +25,23 @@ df['survey_comparability'] = df['survey_comparability'] + 1
 df['survey_comparability'] = df['welfare_type'] + '_spell_' + df['survey_comparability'].astype(int).astype(str)
 
 # %%
+vars = [i for i in df.columns if i not in ["Entity",
+                                            "Year", 
+                                            "reporting_level",
+                                            "welfare_type", 
+                                            "reporting_pop",
+                                            "survey_year",
+                                            "survey_comparability",
+                                            "comparable_spell",
+                                            "distribution_type",
+                                            "estimation_type",
+                                            "cpi",
+                                            "ppp",
+                                            "reporting_gdp",
+                                            "reporting_pce"]]
 
-for select_var in ['headcount_ratio_100', 'headcount_ratio_190']:
+
+for select_var in vars:
 
     df_var = df[['Entity', 'Year', select_var, 'survey_comparability']]
 
