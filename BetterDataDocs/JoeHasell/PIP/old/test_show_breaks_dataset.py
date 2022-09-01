@@ -18,7 +18,7 @@ df = df_orig
 df = df[df['survey_comparability'].notna()]
 
 #%%
-df['survey_comparability'] = 'survey_group_' + df['survey_comparability'].astype(int).astype(str)
+df['survey_comparability'] = 'comparable_spell_' + df['survey_comparability'].astype(int).astype(str)
 
 # %%
 select_var = 'headcount_ratio_190'
