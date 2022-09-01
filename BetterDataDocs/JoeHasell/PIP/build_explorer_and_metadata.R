@@ -100,7 +100,6 @@ special_sheets[["explorer_sheetname"]]<- "explorer_sheet_main"
 special_sheets[["graphers_stubs_sheetname"]]<- "grapher_stubs_main"
 special_sheets[["table_stubs_sheetname"]]<- "table_stubs_main"
 special_sheets[["global_controls_sheetname"]]<- "global_controls_main"
-special_sheets[["tables_sheetname"]]<- "tables_main"
 
 special_sheets[["admin_stubs_sheetname"]]<- "admin_metadata_stubs"
 
@@ -339,7 +338,7 @@ library(tidyverse)
 library(googlesheets4)
 
 
-gsheets_id<- "1Tt4hSuNbFqeVq3m8JpCmK8xfRS8Vpx_LrQZssyJOLTU"
+gsheets_id<- "1bVOaDcnDoF0M_zK3uof0dIH-Z4OUDxqM7QO3B9jzRbk"
 
 return_list<- build_OWID_controls(gsheets_id)
 

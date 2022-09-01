@@ -1,0 +1,49 @@
+---
+title: "main_joe_draft"
+format: html
+editor: visual
+---
+
+## PIP pipeline
+
+
+```{python}
+import pandas as pd
+import numpy as np
+import time
+
+#from functions.PIP_API_query import pip_query_country, pip_query_region
+from functions.standardize_entities import standardize_entities
+from functions.upload import upload_to_s3
+
+from create_dataset_functions import *
+```
+
+
+We ask to confirm whether 
+JH Comment - Pablo, my feeling is that it would be better to run the relative_poverty.py and extract_percentiles.py scripts also from main.py, but where you ask for user input to determine whether they are run or not. 
+
+```{python}
+print('CAUTION: If a full update is needed, first you have to run relative_poverty.py and extract_percentiles.py')
+print('These codes take several hours to run, that\'s why they are not available here')
+question = "Do you want to continue?"
+query_yes_no(question)
+
+```
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
