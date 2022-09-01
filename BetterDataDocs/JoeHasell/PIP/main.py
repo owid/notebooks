@@ -36,7 +36,7 @@ print(f'{extreme_povline_cents}')
 
 # %%
 df_country = country_data(extreme_povline_cents)
-df_region = regional_data(extreme_povline_cents)
+df_regions = regional_data(extreme_povline_cents)
 
 # %%
 df_final = query_all_and_merge(poverty_lines_cents, extreme_povline_cents)
@@ -54,10 +54,13 @@ df_final = standardise(df_final)
 df_inc_only, df_cons_only, df_inc_or_cons = export(df_final, cols)
 
 # %%
-include_metadata(df_inc_or_cons, extreme_povline_cents)
+include_metadata(df_inc_or_cons)
 
 # %%
-regional_headcount(extreme_povline_cents)
+regional_headcount(df_regions, extreme_povline_cents)
+
+# %%
+survey_count(df_inc_or_cons)
 
 # %%
 end_time = time.time()
@@ -65,3 +68,4 @@ elapsed_time = end_time - start_time
 print(f'The files were created in {elapsed_time} seconds :)')
 print('Update the main PIP dataset with pip_final.csv')
 print('Update the regional headcount dataset with pip_regional_headcount.csv')
+print('Update the survey count dataset with pip_survey_count.csv')

@@ -378,6 +378,14 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
             col_stacked_pct.append(varname_pct)
 
     df_final.loc[:, col_stacked_pct] = df_final[col_stacked_pct] * 100
+    
+    df_final['headcount_stacked_between_190_1000'] = df_final['headcount_1000'] - df_final['headcount_190']
+    df_final['headcount_stacked_between_1000_3000'] = df_final['headcount_3000'] - df_final['headcount_1000']
+    col_stacked_n_extra = ['headcount_stacked_between_190_1000', 'headcount_stacked_between_1000_3000']
+    
+    df_final['headcount_ratio_stacked_between_190_1000'] = df_final['headcount_ratio_1000'] - df_final['headcount_ratio_190']
+    df_final['headcount_ratio_stacked_between_1000_3000'] = df_final['headcount_ratio_3000'] - df_final['headcount_ratio_1000']
+    col_stacked_pct_extra = ['headcount_ratio_stacked_between_190_1000', 'headcount_ratio_stacked_between_1000_3000']
 
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -516,7 +524,8 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
     
     #Get all the columns to order the final output
     cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + \
-            col_avg_shortfall + col_incomegap + col_above_n + col_above_pct + col_poverty_severity + col_watts + col_stacked_n + col_stacked_pct + \
+            col_avg_shortfall + col_incomegap + col_above_n + col_above_pct + col_poverty_severity + col_watts + \
+            col_stacked_n + col_stacked_n_extra + col_stacked_pct + col_stacked_pct_extra + \
             col_relative +  \
             col_decile_share + col_decile_thr + col_decile_avg + col_inequality + \
             col_extra
@@ -738,16 +747,16 @@ def include_metadata(df_final):
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def survey_count(df_final, extreme_povline_cents):
+def survey_count(df_country):
     print('Creating dataset which counts the surveys in the recent decade...')
     start_time = time.time()
     
     #Generate a new dataset to count the surveys available for each entity
     #Create a list of all the years and entities available
-    min_year = df_final['Year'].min()
-    max_year = df_final['Year'].max()
+    min_year = df_country['Year'].min()
+    max_year = df_country['Year'].max()
     year_list = list(range(min_year,max_year+1))
-    entity_list = list(df_final['Entity'].unique())
+    entity_list = list(df_country['Entity'].unique())
 
     #Create two dataframes with all the years and entities
     year_df = pd.DataFrame(year_list)
@@ -757,49 +766,29 @@ def survey_count(df_final, extreme_povline_cents):
     cross = pd.merge(entity_df, year_df, how='cross')
     cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
     
-    #Merge cross and df_final, to include all the possible rows in the dataset
-    df_final = pd.merge(cross, df_final[['Entity', 'Year']], on=['Entity', 'Year'], how='left', indicator=True)
+    #Merge cross and df_country, to include all the possible rows in the dataset
+    df_country = pd.merge(cross, df_country[['Entity', 'Year']], on=['Entity', 'Year'], how='left', indicator=True)
 
     #Mark with 1 if there are surveys available, 0 if not
-    df_final['survey_available'] = np.where(df_final['_merge'] == 'both', 1, 0)
+    df_country['survey_available'] = np.where(df_country['_merge'] == 'both', 1, 0)
 
     #Sum for each entity the surveys available for the previous 9 years and the current year
-    df_final['surveys_past_decade'] = df_final['survey_available'].groupby(df_final['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
-    df_final = df_final.drop(columns=['survey_available', '_merge'])
-    
-    #Make regional survey count null, as the measure makes no sense beyond countries
-    regional_data = pip_query_region(extreme_povline_cents/100)
-    region_list = list(regional_data['region_name'].unique())
-    df_final.loc[df_final['Entity'].isin(region_list), ['surveys_past_decade']] = np.nan
+    df_country['surveys_past_decade'] = df_country['survey_available'].groupby(df_country['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
+    df_country = df_country[['Entity', 'Year', 'surveys_past_decade']]
+    df_country = df_country.rename(columns={'surveys_past_decade': 'Number of surveys in the past decade'})
     
     #Export the dataset
-    df_final.to_csv('data/pip_survey_count.csv', index=False)
+    df_country.to_csv('data/pip_survey_count.csv', index=False)
     
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def regional_headcount(extreme_povline_cents):
+def regional_headcount(df_regions, extreme_povline_cents):
     
     print('Creating regional headcount dataset...')
     start_time = time.time()
-
-    #Get regional headcount and make table wide
-    df_regions = pip_query_region(extreme_povline_cents/100)
-    df_regions = df_regions.rename(columns={'region_name': 'Entity', 'reporting_year': 'Year'})
-
-    #Standardise entities
-    df_regions = standardize_entities(
-        orig_df = df_regions,
-        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
-        mapping_varname_raw ='Original Name',
-        mapping_vaname_owid = 'Our World In Data Name',
-        data_varname_old = 'Entity',
-        data_varname_new = 'Entity'
-    )
-
-
 
     df_regions['number_extreme_poverty'] = df_regions['headcount'] * df_regions['reporting_pop']
     df_regions['number_extreme_poverty'] = df_regions['number_extreme_poverty'].round(0)
