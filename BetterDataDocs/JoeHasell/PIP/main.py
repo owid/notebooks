@@ -35,7 +35,8 @@ print(f'The extreme poverty line is defined as (in cents):')
 print(f'{extreme_povline_cents}')
 
 # %%
-df_country = country_data(extreme_povline_cents)
+df_country, df_country_inc, df_country_cons, df_country_inc_or_cons = country_data(extreme_povline_cents, filled="false")
+df_country_filled, df_country_inc_filled, df_country_cons_filled, df_country_inc_or_cons_filled = country_data(extreme_povline_cents, filled="true")
 df_regions = regional_data(extreme_povline_cents)
 
 # %%
@@ -57,10 +58,10 @@ df_inc_only, df_cons_only, df_inc_or_cons = export(df_final, cols)
 include_metadata(df_inc_or_cons)
 
 # %%
-regional_headcount(df_regions, extreme_povline_cents)
+regional_headcount(df_regions, df_country_inc_or_cons_filled)
 
 # %%
-survey_count(df_inc_or_cons)
+survey_count(df_country_inc_or_cons)
 
 # %%
 end_time = time.time()

@@ -46,8 +46,8 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
-def country_data(extreme_povline_cents, filled="false"):
-    #Query for all the countries and for the poverty line defined
+def country_data(extreme_povline_cents, filled):
+    #Query for all the countries and for the poverty line defined (only non-filled data)
     df_country = pip_query_country(popshare_or_povline = "povline",
                                     country_code = "all",
                                     year = "all",
@@ -67,7 +67,42 @@ def country_data(extreme_povline_cents, filled="false"):
         data_varname_old = 'Entity',
         data_varname_new = 'Entity'
     )
-    return df_country
+    
+        # Amend the entity to reflect if data refers to urban or rural only
+    df_country.loc[(\
+        df_country['reporting_level'].isin(["urban", "rural"])),'Entity'] = \
+        df_country.loc[(\
+        df_country['reporting_level'].isin(["urban", "rural"])),'Entity'] + \
+            ' - ' + \
+        df_country.loc[(\
+        df_country['reporting_level'].isin(["urban", "rural"])),'reporting_level']
+    
+    df_country.to_csv(f'data/raw/country_filled_{filled}.csv', index=False)
+    
+    # Separate out consumption-only, income-only, and both dataframes
+    df_country_inc = df_country[df_country['welfare_type']=="income"].reset_index(drop=True).copy()
+    df_country_cons = df_country[df_country['welfare_type']=="consumption"].reset_index(drop=True).copy()
+
+    df_country_inc_or_cons = df_country.copy()
+    # If both inc and cons are available in a given year, drop inc
+
+    # Flag duplicates – indicating multiple welfare_types
+    #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
+    df_country_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True, inplace=True)
+    df_country_inc_or_cons['duplicate_flag'] = df_country_inc_or_cons.duplicated(subset=['Entity', 'Year', 'reporting_level'])
+
+    print(f'Checking the data for years with both income and consumption. Before dropping duplicated, there were {len(df_country_inc_or_cons)} rows...')
+    # Drop income where income and consumption are available
+    df_country_inc_or_cons = df_country_inc_or_cons[(df_country_inc_or_cons['duplicate_flag']==False) | (df_country_inc_or_cons['welfare_type']=='consumption')]
+    df_country_inc_or_cons.drop(columns=['duplicate_flag'], inplace=True)
+
+    print(f'After dropping duplicates there were {len(df_country_inc_or_cons)} rows.')
+    
+    df_country_inc.to_csv(f'data/raw/country_inc_filled_{filled}.csv', index=False)
+    df_country_cons.to_csv(f'data/raw/country_cons_filled_{filled}.csv', index=False)
+    df_country_inc_or_cons.to_csv(f'data/raw/country_inc_or_cons_filled_{filled}.csv', index=False)
+    
+    return df_country, df_country_inc, df_country_cons, df_country_inc_or_cons
 
 
 def regional_data(extreme_povline_cents):
@@ -666,7 +701,7 @@ def export(df_final, cols):
 
     # Flag duplicates – indicating multiple welfare_types
     #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
-    df_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True)
+    df_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True, inplace=True)
     df_inc_or_cons['duplicate_flag'] = df_inc_or_cons.duplicated(subset=['Entity', 'Year', 'reporting_level'])
 
     print(f'Checking the data for years with both income and consumption. Before dropping duplicated, there were {len(df_inc_or_cons)} rows...')
@@ -785,7 +820,7 @@ def survey_count(df_country):
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def regional_headcount(df_regions, extreme_povline_cents):
+def regional_headcount(df_regions, df_country_filled):
     
     print('Creating regional headcount dataset...')
     start_time = time.time()
@@ -815,42 +850,11 @@ def regional_headcount(df_regions, extreme_povline_cents):
     df_regions.loc[:, cols_to_sum] = df_regions[cols_to_sum].fillna(col_dictionary)
     df_regions = df_regions.drop(columns=['World', 'incomplete_sum', 'difference_for_missing'])
 
-    #Get headcounts values for China and India
-    df_chn_ind = pip_query_country(popshare_or_povline = "povline",
-                                    country_code = "CHN&country=IND",
-                                    year = "all",
-                                    welfare_type = "all",
-                                    reporting_level = "national",
-                                    value = extreme_povline_cents/100,
-                                    fill_gaps="true")
-
-    df_chn_ind = df_chn_ind.rename(columns={'country_name': 'Entity', 'reporting_year': 'Year'})
-
-    #Standardise entities
-    df_chn_ind = standardize_entities(
-        orig_df = df_chn_ind,
-        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
-        mapping_varname_raw ='Original Name',
-        mapping_vaname_owid = 'Our World In Data Name',
-        data_varname_old = 'Entity',
-        data_varname_new = 'Entity'
-    )
-
+    #Get headcount values for China and India
+    df_chn_ind = df_country_filled[df_country_filled['Entity'].isin(['China', 'India'])].reset_index(drop=True)
 
     df_chn_ind['number_extreme_poverty'] = df_chn_ind['headcount'] * df_chn_ind['reporting_pop']
     df_chn_ind['number_extreme_poverty'] = df_chn_ind['number_extreme_poverty'].round(0)
-
-    # Flag duplicates – indicating multiple welfare_types
-    #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
-    df_chn_ind.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True)
-    df_chn_ind['duplicate_flag'] = df_chn_ind.duplicated(subset=['Entity', 'Year', 'reporting_level'])
-
-    print(f'Checking for years with both income and consumption in China and India. Before dropping duplicated, there were {len(df_chn_ind)} rows...')
-    # Drop income where income and consumption are available
-    df_chn_ind = df_chn_ind[(df_chn_ind['duplicate_flag']==False) | (df_chn_ind['welfare_type']=='consumption')]
-    df_chn_ind.drop(columns=['duplicate_flag'], inplace=True)
-
-    print(f'After dropping duplicates there were {len(df_chn_ind)} rows.')
 
     df_chn_ind = df_chn_ind[['Entity', 'Year', 'number_extreme_poverty']]
 
