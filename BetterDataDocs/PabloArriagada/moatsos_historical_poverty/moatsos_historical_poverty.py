@@ -6,20 +6,44 @@ from functions.standardize_entities import standardize_entities
 import plotly.express as px
 import plotly.io as pio
 
+# ## Import the data and merge
+
+# +
+#Get the data
 global_oecd = pd.read_csv('data/input/GlobalOECD.csv')
 global_5 = pd.read_csv('data/input/Global5.csv')
 global_10 = pd.read_csv('data/input/Global10.csv')
 global_30 = pd.read_csv('data/input/Global30.csv')
 
+#Multiple merge
 data_frames = [global_oecd, global_5, global_10, global_30]
 df_final = reduce(lambda  left,right: pd.merge(left,right,on=['Region', 'Year'],
                                             how='outer'), data_frames)
 df_final = df_final.rename(columns={'Region': 'Entity'})
+#Keep data only up to 2018
+df_final = df_final[df_final['Year']<=2018].reset_index(drop=True)
 
+#Select columns and multiply by 100 (also keep a list of World Bank poverty method variables)
 cols = ['PovRate', 'PovRate1.9', 'PovRateAt5DAD', 'PovRateAt10DAD', 'PovRateAt30DAD']
+cols_wb = ['PovRate1.9', 'PovRateAt5DAD', 'PovRateAt10DAD', 'PovRateAt30DAD']
 df_final.loc[:, cols] = df_final[cols] * 100
+# -
 
-df_final
+# ## Create additional variables
+
+# +
+#Share of people above poverty lines
+for c in cols:
+    df_final[f'Above{c}'] = 100 - df_final[f'{c}']
+
+#Share of people in between poverty lines (World Bank)
+#For each poverty line in cols_wb
+for i in range(len(cols_wb)):
+    if i != 0:
+        df_final[f'Between{cols_wb[i-1]}_{cols_wb[i]}'] = df_final[f'{cols_wb[i]}'] - df_final[f'{cols_wb[i-1]}']
+# -
+
+# ## Standardise entities
 
 df_final = standardize_entities(df_final,
                         'data/input/entities_country_standardized.csv',
@@ -27,7 +51,8 @@ df_final = standardize_entities(df_final,
                         'Our World In Data Name',
                         'Entity',
                         'Entity')
-df_final
+
+# ## Include metadata
 
 # +
 # Specify sheet id and sheet (tab) name for the metadata google sheet 
@@ -67,7 +92,10 @@ df_dataset = df_dataset.rename(columns=varnames_dict)
 df_dataset.to_csv('data/output/moatsos_dataset.csv', index=False)
 # -
 
-df_long = pd.melt(df_final, id_vars=['Entity', 'Year'], value_vars=cols,
+# ## Plot the poverty lines
+
+#Make the dataframe long to be able to plot it easily
+df_long = pd.melt(df_final[['Entity', 'Year'] + cols], id_vars=['Entity', 'Year'], value_vars=cols,
         var_name='povline', value_name='headcount_ratio')
 
 fig = px.line(df_long, x="Year", y="headcount_ratio", 
@@ -86,7 +114,13 @@ fig.update_yaxes(matches=None)
 fig.show()
 fig.write_html(f'graphics/moatsos_povlines_2.html')
 
+# ## Sense checks
+
+#Descriptive statistics for the shares in poverty
 df_long[['headcount_ratio']].describe()
+
+# +
+#
 
 # +
 m_check_vars = []
@@ -100,6 +134,3 @@ for i in range(len(cols_to_check)):
 df_final['check_total'] = df_final[m_check_vars].all(1)
 df_check = df_final[df_final['check_total'] == False]
 df_check[['Entity', 'Year'] + cols_to_check]
-# -
-
-
