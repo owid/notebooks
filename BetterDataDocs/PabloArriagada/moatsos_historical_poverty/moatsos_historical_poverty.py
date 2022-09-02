@@ -120,9 +120,7 @@ fig.write_html(f'graphics/moatsos_povlines_2.html')
 df_long[['headcount_ratio']].describe()
 
 # +
-#
-
-# +
+#Monotonicity in World Bank extreme poverty measures
 m_check_vars = []
 cols_to_check = ['PovRate1.9', 'PovRateAt5DAD', 'PovRateAt10DAD', 'PovRateAt30DAD']
 for i in range(len(cols_to_check)):
