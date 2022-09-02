@@ -76,6 +76,16 @@ fig = px.line(df_long, x="Year", y="headcount_ratio",
 fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
 fig.update_yaxes(matches=None)
 fig.show()
-fig.write_html(f'graphics/moatsos_povlines.html')
+fig.write_html(f'graphics/moatsos_povlines_1.html')
+
+fig = px.line(df_long, x="Year", y="headcount_ratio", 
+              title=f"<b>Poverty - Headcount ratios from Moatsos (2021)</b><br>‘cost of basic needs’ approach and 1.90, 5, 10 and 30 USD poverty lines",
+              color='povline', facet_col="Entity", facet_col_wrap=3, markers=False, height=600)
+fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+fig.update_yaxes(matches=None)
+fig.show()
+fig.write_html(f'graphics/moatsos_povlines_2.html')
+
+df_long[['headcount_ratio']].describe()
 
 
