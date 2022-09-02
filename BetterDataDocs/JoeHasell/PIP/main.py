@@ -2,6 +2,10 @@
 # # World Bank Poverty and Inequality Platform dataset
 #
 # ***To get the most updated dataset it is required to run the `relative_poverty.py` and `extract_percentiles.py` Choosing "yes" will run the whole program (taking over a day).***
+#
+# The **Poverty and Inequality Platform (PIP)** is an interactive computational tool that offers users quick access to the World Bank’s estimates of poverty, inequality, and shared prosperity. PIP provides a comprehensive view of global, regional, and country-level trends for more than 150 economies around the world. Users can access to https://pip.worldbank.org/ to see country profiles and regional aggregations of poverty measures. This notebook makes use of the PIP API, which computes all poverty and inequality statistics available at PIP to allow users to set their own poverty lines and download several indicators on poverty and inequality. You can access to the API by clicking [here](https://pip.worldbank.org/api).
+#
+# World Bank Data are based on primary household survey data obtained from government statistical agencies and World Bank country departments.
 
 # %%
 import pandas as pd
