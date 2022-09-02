@@ -88,4 +88,18 @@ fig.write_html(f'graphics/moatsos_povlines_2.html')
 
 df_long[['headcount_ratio']].describe()
 
+# +
+m_check_vars = []
+cols_to_check = ['PovRate1.9', 'PovRateAt5DAD', 'PovRateAt10DAD', 'PovRateAt30DAD']
+for i in range(len(cols_to_check)):
+    if i > 0:
+        check_varname = f'm_check_{i}'
+        df_final[check_varname] = df_final[f'{cols_to_check[i]}'] >= df_final[f'{cols_to_check[i-1]}']
+        m_check_vars.append(check_varname)
+        
+df_final['check_total'] = df_final[m_check_vars].all(1)
+df_check = df_final[df_final['check_total'] == False]
+df_check[['Entity', 'Year'] + cols_to_check]
+# -
+
 
