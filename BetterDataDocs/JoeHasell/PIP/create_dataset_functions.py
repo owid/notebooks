@@ -11,6 +11,9 @@ from functions.upload import upload_to_s3
 
 # -
 
+# ## Yes/No query
+# This code is to ask if the user wants to continue or not (used as a warning to update codes which take hours)
+
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
 
@@ -41,11 +44,16 @@ def query_yes_no(question, default="yes"):
         elif choice in valid:
             return valid[choice]
         elif choice in not_valid:
-            sys.exit("Go run that code. Bye!")
+            #sys.exit("Go run that code. Bye!")
+            return not_valid[choice]
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
+# ## Get country data
+# This code is to query poverty data from a poverty line (filled or not). Entities are standardised and returns multiple outputs, one raw file with all the results, one only for consumption, one only for income and one for income and consumption dropping duplicates.
+
+# +
 def country_data(extreme_povline_cents, filled):
     #Query for all the countries and for the poverty line defined (only non-filled data)
     df_country = pip_query_country(popshare_or_povline = "povline",
@@ -57,27 +65,8 @@ def country_data(extreme_povline_cents, filled):
                                     fill_gaps=filled)
 
     df_country = df_country.rename(columns={'country_name': 'Entity', 'reporting_year': 'Year'})
-
-    #Standardise entities
-    df_country = standardize_entities(
-        orig_df = df_country,
-        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
-        mapping_varname_raw ='Original Name',
-        mapping_vaname_owid = 'Our World In Data Name',
-        data_varname_old = 'Entity',
-        data_varname_new = 'Entity'
-    )
     
-        # Amend the entity to reflect if data refers to urban or rural only
-    df_country.loc[(\
-        df_country['reporting_level'].isin(["urban", "rural"])),'Entity'] = \
-        df_country.loc[(\
-        df_country['reporting_level'].isin(["urban", "rural"])),'Entity'] + \
-            ' - ' + \
-        df_country.loc[(\
-        df_country['reporting_level'].isin(["urban", "rural"])),'reporting_level']
-    
-    df_country.to_csv(f'data/raw/country_filled_{filled}.csv', index=False)
+#     df_country.to_csv(f'data/raw/country_filled_{filled}.csv', index=False)
     
     # Separate out consumption-only, income-only, and both dataframes
     df_country_inc = df_country[df_country['welfare_type']=="income"].reset_index(drop=True).copy()
@@ -91,19 +80,24 @@ def country_data(extreme_povline_cents, filled):
     df_country_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True, inplace=True)
     df_country_inc_or_cons['duplicate_flag'] = df_country_inc_or_cons.duplicated(subset=['Entity', 'Year', 'reporting_level'])
 
-    print(f'Checking the data for years with both income and consumption. Before dropping duplicated, there were {len(df_country_inc_or_cons)} rows...')
+    #print(f'Checking the data for years with both income and consumption. Before dropping duplicated, there were {len(df_country_inc_or_cons)} rows...')
     # Drop income where income and consumption are available
     df_country_inc_or_cons = df_country_inc_or_cons[(df_country_inc_or_cons['duplicate_flag']==False) | (df_country_inc_or_cons['welfare_type']=='consumption')]
     df_country_inc_or_cons.drop(columns=['duplicate_flag'], inplace=True)
 
-    print(f'After dropping duplicates there were {len(df_country_inc_or_cons)} rows.')
+    #print(f'After dropping duplicates there were {len(df_country_inc_or_cons)} rows.')
     
-    df_country_inc.to_csv(f'data/raw/country_inc_filled_{filled}.csv', index=False)
-    df_country_cons.to_csv(f'data/raw/country_cons_filled_{filled}.csv', index=False)
-    df_country_inc_or_cons.to_csv(f'data/raw/country_inc_or_cons_filled_{filled}.csv', index=False)
+#     df_country_inc.to_csv(f'data/raw/country_inc_filled_{filled}.csv', index=False)
+#     df_country_cons.to_csv(f'data/raw/country_cons_filled_{filled}.csv', index=False)
+#     df_country_inc_or_cons.to_csv(f'data/raw/country_inc_or_cons_filled_{filled}.csv', index=False)
     
     return df_country, df_country_inc, df_country_cons, df_country_inc_or_cons
 
+
+# -
+
+# ## Regional data
+# Returns standardised regional data
 
 def regional_data(extreme_povline_cents):
     #Query for all the regions and for the poverty line defined
@@ -111,15 +105,6 @@ def regional_data(extreme_povline_cents):
 
     df_region = df_region.rename(columns={'region_name': 'Entity', 'reporting_year': 'Year'})
 
-    #Standardise entities
-    df_region = standardize_entities(
-        orig_df = df_region,
-        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
-        mapping_varname_raw ='Original Name',
-        mapping_vaname_owid = 'Our World In Data Name',
-        data_varname_old = 'Entity',
-        data_varname_new = 'Entity'
-    )
     return df_region
 
 
@@ -129,7 +114,7 @@ def regional_data(extreme_povline_cents):
 #Create a dataframe for each poverty line on the list, including and excluding interpolations and for countries and regions
 #Each of these combinations are concatenated in a larger data frame.
 
-def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
+def query_poverty(poverty_lines_cents, filled):
 
     print('Querying data from several poverty lines from the PIP API...')
     start_time = time.time()
@@ -139,7 +124,7 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
     # Run the API query and clean the response...
     #... for each poverty line
     for p in poverty_lines_cents:
-
+        
         p_dollar = p/100
 
         #.. and for both countries and WB regional aggregates
@@ -147,16 +132,8 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
 
             # Make the API query for country data
             if ent_type == 'country':
-
-                df = pip_query_country(
-                    popshare_or_povline = "povline", 
-                    value = p_dollar, 
-                    fill_gaps="false")
-
-                #"Entity" when is in titlecase is automatically recognised as EntityName
-                #Year is only recognised as a Year type when titlecase
-                df = df.rename(columns={'country_name': 'Entity',
-                                        'reporting_year': 'Year'})
+                
+                df = country_data(p, filled)[0]
 
                 # Keep only these variables:
                 keep_vars = [ 
@@ -175,11 +152,8 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
             # Note that the filled and not filled data is the same in this case .
             # The code runs it twice anyhow.
             if ent_type == 'region':
-
-                df = pip_query_region(p_dollar)
-
-                df = df.rename(columns={'region_name': 'Entity',
-                                       'reporting_year': 'Year'})
+                
+                df = regional_data(p)
 
                 keep_vars = [ 
                     'Entity',
@@ -231,15 +205,7 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
 
     #I drop 'reporting_pop' for now to avoid it to get multiplied by all the poverty lines in the next section
     df_complete = df_complete.drop(columns=['reporting_pop'])
-
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print('Done. Execution time:', elapsed_time, 'seconds')
-    
-
-    
-    print('Querying non poverty data and merging...')
-    start_time = time.time()
+    df_complete.to_csv('data/raw/multiple_povlines_long.csv', index=False)
 
     # Select data for countries 
     headcounts_country = df_complete[(df_complete['ent_type'] == 'country')].reset_index(drop=True)
@@ -264,27 +230,26 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
     #Concatenate country and regional wide datasets
     df_final = pd.concat([headcounts_country_wide, headcounts_region_wide], ignore_index=False)
     
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
     
-    #///////////////////////////////////////////////////////////////////////////////
-    #//////////////////////////////////////////////////////////////////////////////
+    return df_final
+
+
+# -
+
+def query_non_poverty(df_final, df_country, df_region):
+    
     #Query the rest of the variables and merge
+    
+    print('Querying non poverty data and merge...')
+    start_time = time.time()
 
     #Integrate variables not coming from multiple poverty lines
-    #Country variables
-    df_query_country = pip_query_country(
-                        popshare_or_povline = "povline", 
-                        value = extreme_povline_cents/100, 
-                        fill_gaps="false")
-    df_query_country = df_query_country.rename(columns={'country_name': 'Entity',
-                                                        'reporting_year': 'Year'})
-
-    #Regional variables
-    df_query_regions = pip_query_region(extreme_povline_cents/100)
-    df_query_regions = df_query_regions.rename(columns={'region_name': 'Entity',
-                                                        'reporting_year': 'Year'})
 
     #Keeping the non-poverty variables for countries
-    df_query_country = df_query_country[['Entity', 'Year', 'reporting_level', 'welfare_type',
+    df_country = df_country[['Entity', 'Year', 'reporting_level', 'welfare_type',
                                          'reporting_pop',
                                          'survey_year',
                                          'survey_comparability', 
@@ -301,20 +266,20 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
 
     #Changing the decile(i) variables for decile(i)_share
     for i in range(1,11):
-        df_query_country = df_query_country.rename(columns={f'decile{i}': f'decile{i}_share'})
+        df_country = df_country.rename(columns={f'decile{i}': f'decile{i}_share'})
 
 
     #Keeping the non-poverty variables for regions
-    df_query_regions = df_query_regions[['Entity', 'Year', 'reporting_pop', 'mean']]
+    df_region = df_region[['Entity', 'Year', 'reporting_pop', 'mean']]
 
     #Merge poverty variables with non-poverty country data
-    df_final = pd.merge(df_final, df_query_country,
+    df_final = pd.merge(df_final, df_country,
                         how='left', 
                         on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
                         validate='many_to_one')
 
     #Merge poverty variables with non-poverty regional data
-    df_final = pd.merge(df_final, df_query_regions,
+    df_final = pd.merge(df_final, df_region,
                         how='left', 
                         on=['Entity', 'Year'],
                         validate='many_to_one')
@@ -332,13 +297,11 @@ def query_all_and_merge(poverty_lines_cents, extreme_povline_cents):
     return df_final
 
 
-# -
-
-# ## Data transformations
-
-def additional_variables_and_drop(df_final, poverty_lines_cents):
-
-    #Relative poverty
+def relative_poverty(df_final, answer):
+    
+    if answer:
+        print("Running relative_poverty.py... (takes about 1 hour)")
+    
     print('Integrating relative poverty data...')
     start_time = time.time()
 
@@ -356,8 +319,49 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
     
-    #///////////////////////////////////////////////////////////////////////////////
-    #//////////////////////////////////////////////////////////////////////////////
+    
+    return df_final, col_relative
+
+
+def thresholds(df_final, answer):
+    #Decile thresholds
+
+    if answer:
+        print("Running extract_percentiles.py... (takes about 1 DAY)")
+
+    print('Integrating decile thresholds...')
+    start_time = time.time()
+    df_percentiles = pd.read_csv('data/percentiles.csv')
+    deciles = []
+
+    for i in range(10,100,10):
+        deciles.append(f'P{i}')
+
+    df_percentiles = df_percentiles[df_percentiles['target_percentile'].isin(deciles)].reset_index(drop=True)
+    df_percentiles = pd.pivot(df_percentiles, 
+                              index=['Entity', 'Year', 'reporting_level', 'welfare_type'], 
+                              columns='target_percentile', 
+                              values='poverty_line').reset_index()
+
+    for i in range(10,100,10):
+        df_percentiles = df_percentiles.rename(columns={f'P{i}': f'decile{int(i/10)}_thr'})
+
+    df_final = pd.merge(df_final, df_percentiles, 
+                        how='left', 
+                        on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
+                        validate='many_to_one')
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+    
+    return df_final
+
+
+# ## Data transformations
+
+def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
+
     #Stacked variables
 
     print('Calculating variables between poverty lines...')
@@ -454,37 +458,6 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
-    
-    #///////////////////////////////////////////////////////////////////////////////
-    #//////////////////////////////////////////////////////////////////////////////
-    #Decile thresholds
-
-    print('Integrating decile thresholds...')
-    start_time = time.time()
-    df_percentiles = pd.read_csv('data/percentiles.csv')
-    deciles = []
-
-    for i in range(10,100,10):
-        deciles.append(f'P{i}')
-
-    df_percentiles = df_percentiles[df_percentiles['target_percentile'].isin(deciles)].reset_index(drop=True)
-    df_percentiles = pd.pivot(df_percentiles, 
-                              index=['Entity', 'Year', 'reporting_level', 'welfare_type'], 
-                              columns='target_percentile', 
-                              values='poverty_line').reset_index()
-
-    for i in range(10,100,10):
-        df_percentiles = df_percentiles.rename(columns={f'P{i}': f'decile{int(i/10)}_thr'})
-
-    df_final = pd.merge(df_final, df_percentiles, 
-                        how='left', 
-                        on=['Entity', 'Year', 'welfare_type', 'reporting_level'],
-                        validate='many_to_one')
-
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print('Done. Execution time:', elapsed_time, 'seconds')
-
 
     #///////////////////////////////////////////////////////////////////////////////
     #//////////////////////////////////////////////////////////////////////////////
@@ -564,10 +537,9 @@ def additional_variables_and_drop(df_final, poverty_lines_cents):
             col_relative +  \
             col_decile_share + col_decile_thr + col_decile_avg + col_inequality + \
             col_extra
-
     
-    #///////////////////////////////////////////////////////////////////////////////
-    #//////////////////////////////////////////////////////////////////////////////
+    #######################################################################################
+    
     #Dropping errors
     
     print('Dropping rows with issues...')
@@ -782,48 +754,20 @@ def include_metadata(df_final):
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def survey_count(df_country):
-    print('Creating dataset which counts the surveys in the recent decade...')
-    start_time = time.time()
-    
-    #Generate a new dataset to count the surveys available for each entity
-    #Create a list of all the years and entities available
-    min_year = df_country['Year'].min()
-    max_year = df_country['Year'].max()
-    year_list = list(range(min_year,max_year+1))
-    entity_list = list(df_country['Entity'].unique())
-
-    #Create two dataframes with all the years and entities
-    year_df = pd.DataFrame(year_list)
-    entity_df = pd.DataFrame(entity_list)
-
-    #Make a cartesian product of both dataframes: join all the combinations between all the entities and all the years
-    cross = pd.merge(entity_df, year_df, how='cross')
-    cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
-    
-    #Merge cross and df_country, to include all the possible rows in the dataset
-    df_country = pd.merge(cross, df_country[['Entity', 'Year']], on=['Entity', 'Year'], how='left', indicator=True)
-
-    #Mark with 1 if there are surveys available, 0 if not
-    df_country['survey_available'] = np.where(df_country['_merge'] == 'both', 1, 0)
-
-    #Sum for each entity the surveys available for the previous 9 years and the current year
-    df_country['surveys_past_decade'] = df_country['survey_available'].groupby(df_country['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
-    df_country = df_country[['Entity', 'Year', 'surveys_past_decade']]
-    df_country = df_country.rename(columns={'surveys_past_decade': 'Number of surveys in the past decade'})
-    
-    #Export the dataset
-    df_country.to_csv('data/pip_survey_count.csv', index=False)
-    
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print('Done. Execution time:', elapsed_time, 'seconds')
-
-
 def regional_headcount(df_regions, df_country_filled):
     
     print('Creating regional headcount dataset...')
     start_time = time.time()
+    
+    # Standardize entity names
+    df_regions = standardize_entities(
+        orig_df = df_regions,
+        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
+        mapping_varname_raw ='Original Name',
+        mapping_vaname_owid = 'Our World In Data Name',
+        data_varname_old = 'Entity',
+        data_varname_new = 'Entity'
+    )
 
     df_regions['number_extreme_poverty'] = df_regions['headcount'] * df_regions['reporting_pop']
     df_regions['number_extreme_poverty'] = df_regions['number_extreme_poverty'].round(0)
@@ -851,7 +795,7 @@ def regional_headcount(df_regions, df_country_filled):
     df_regions = df_regions.drop(columns=['World', 'incomplete_sum', 'difference_for_missing'])
 
     #Get headcount values for China and India
-    df_chn_ind = df_country_filled[df_country_filled['Entity'].isin(['China', 'India'])].reset_index(drop=True)
+    df_chn_ind = df_country_filled[(df_country_filled['Entity'].isin(['China', 'India'])) & (df_country_filled['reporting_level'] == 'national')].reset_index(drop=True)
 
     df_chn_ind['number_extreme_poverty'] = df_chn_ind['headcount'] * df_chn_ind['reporting_pop']
     df_chn_ind['number_extreme_poverty'] = df_chn_ind['number_extreme_poverty'].round(0)
@@ -862,6 +806,8 @@ def regional_headcount(df_regions, df_country_filled):
     df_chn_ind = df_chn_ind.pivot(index='Year', columns='Entity', values='number_extreme_poverty')
 
     df_final = pd.merge(df_regions, df_chn_ind, on='Year', how='left')
+    
+    
     df_final['East Asia and Pacific excluding China'] = df_final['East Asia and Pacific'] - df_final['China']
     df_final['South Asia excluding India'] = df_final['South Asia'] - df_final['India']
 
@@ -869,9 +815,53 @@ def regional_headcount(df_regions, df_country_filled):
     df_final = df_final[['Entity', 'Year', 'number_extreme_poverty']]
 
     df_final = df_final.rename(columns={'number_extreme_poverty': 'Number of people living in extreme poverty - by world region'})
-
+    
+    
     #Export the dataset
     df_final.to_csv('data/pip_regional_headcount.csv', index=False)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+def survey_count(df_country):
+    print('Creating dataset which counts the surveys in the recent decade...')
+    start_time = time.time()
+    
+    df_country = standardise(df_country)
+    
+    #Generate a new dataset to count the surveys available for each entity
+    #Create a list of all the years and entities available
+    
+    min_year = df_country['Year'].min()
+    max_year = df_country['Year'].max()
+    year_list = list(range(min_year,max_year+1))
+    entity_list = list(df_country['Entity'].unique())
+
+    #Create two dataframes with all the years and entities
+    year_df = pd.DataFrame(year_list)
+    entity_df = pd.DataFrame(entity_list)
+
+    #Make a cartesian product of both dataframes: join all the combinations between all the entities and all the years
+    cross = pd.merge(entity_df, year_df, how='cross')
+    cross = cross.rename(columns={'0_x': 'Entity', '0_y': 'Year'})
+    
+    #Merge cross and df_country, to include all the possible rows in the dataset
+    df_country = pd.merge(cross, df_country[['Entity', 'Year', 'reporting_level']], on=['Entity', 'Year'], how='left', indicator=True)
+
+    #Mark with 1 if there are surveys available, 0 if not
+    df_country['survey_available'] = np.where(df_country['_merge'] == 'both', 1, 0)
+
+    #Sum for each entity the surveys available for the previous 9 years and the current year
+    df_country['surveys_past_decade'] = df_country['survey_available'].groupby(df_country['Entity'],sort=False).rolling(min_periods=1, window=10).sum().astype(int).values
+    df_country = df_country[['Entity', 'Year', 'surveys_past_decade']]
+    df_country = df_country.rename(columns={'surveys_past_decade': 'Number of surveys in the past decade'})
+    
+    df_country.sort_values(by=['Entity', 'Year'], ignore_index=True, inplace=True)
+    
+    #Export the dataset
+    df_country.to_csv('data/pip_survey_count.csv', index=False)
     
     end_time = time.time()
     elapsed_time = end_time - start_time
