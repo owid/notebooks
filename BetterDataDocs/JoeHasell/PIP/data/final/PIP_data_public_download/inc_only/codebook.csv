@@ -26,7 +26,7 @@ As countries frequently improve the questionnaire design of household surveys an
 
 In order to guide users about when poverty can be compared over time within a country, [the PIP database includes a 'Comparability over time' variable]. Within a country, comparability of poverty estimates over time is assumed unless there is a known change to the survey instrument, survey methodology, measurement, or data structure. The assessment of comparability is country-dependent and relies on the accumulation of knowledge from past and current World Bank staff, as well as close dialogue with national data producers with knowledge of survey design and methodology. The complete documentation of this dataset is available in Atamanov et al. (2019).
 
-Atamanov, Aziz, R. Andres Castaneda Aguilar, Carolina Diaz-Bonilla, Dean Jolliffe, Christoph Lakner, Daniel Gerszon Mahler, Jose Montes, et al. 2019. ‚ÄúSeptember 2019 PovcalNet Update: What‚Äôs New.‚Äù Global Poverty Monitoring Technical Note 10. https://openknowledge.worldbank.org/handle/10986/32478."
+Atamanov, Aziz, R. Andres Castaneda Aguilar, Carolina Diaz-Bonilla, Dean Jolliffe, Christoph Lakner, Daniel Gerszon Mahler, Jose Montes, et al. 2019. ìSeptember 2019 PovcalNet Update: Whatís New.î Global Poverty Monitoring Technical Note 10. https://openknowledge.worldbank.org/handle/10986/32478."
 "6","headcount_ratio_100","% of population living in households with an income per person below $1 a day"
 "7","headcount_ratio_190","% of population living in households with an income per person below $1.90 a day"
 "8","headcount_ratio_320","% of population living in households with an income per person below $3.20 a day"
@@ -256,226 +256,226 @@ This metric is sometimes called the 'income gap ratio'. It captures the depth of
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "104","poverty_gap_index_190","The poverty gap index calculated at a poverty line of $1.90 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "105","poverty_gap_index_320","The poverty gap index calculated at a poverty line of $3.20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "106","poverty_gap_index_550","The poverty gap index calculated at a poverty line of $5.50 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "107","poverty_gap_index_1000","The poverty gap index calculated at a poverty line of $10 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "108","poverty_gap_index_2000","The poverty gap index calculated at a poverty line of $20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "109","poverty_gap_index_3000","The poverty gap index calculated at a poverty line of $30 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "110","poverty_gap_index_4000","The poverty gap index calculated at a poverty line of $40 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "111","poverty_gap_index_100","The poverty gap index calculated at a poverty line of $1 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "112","poverty_gap_index_190","The poverty gap index calculated at a poverty line of $1.90 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "113","poverty_gap_index_320","The poverty gap index calculated at a poverty line of $3.20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "114","poverty_gap_index_550","The poverty gap index calculated at a poverty line of $5.50 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "115","poverty_gap_index_1000","The poverty gap index calculated at a poverty line of $10 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "116","poverty_gap_index_2000","The poverty gap index calculated at a poverty line of $20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "117","poverty_gap_index_3000","The poverty gap index calculated at a poverty line of $30 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "118","poverty_gap_index_4000","The poverty gap index calculated at a poverty line of $40 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "119","poverty_gap_index_100","The poverty gap index calculated at a poverty line of $1 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "120","poverty_gap_index_190","The poverty gap index calculated at a poverty line of $1.90 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "121","poverty_gap_index_320","The poverty gap index calculated at a poverty line of $3.20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "122","poverty_gap_index_550","The poverty gap index calculated at a poverty line of $5.50 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "123","poverty_gap_index_1000","The poverty gap index calculated at a poverty line of $10 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "124","poverty_gap_index_2000","The poverty gap index calculated at a poverty line of $20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "125","poverty_gap_index_3000","The poverty gap index calculated at a poverty line of $30 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "126","poverty_gap_index_4000","The poverty gap index calculated at a poverty line of $40 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "127","poverty_gap_index_100","The poverty gap index calculated at a poverty line of $1 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "128","poverty_gap_index_190","The poverty gap index calculated at a poverty line of $1.90 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "129","poverty_gap_index_320","The poverty gap index calculated at a poverty line of $3.20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "130","poverty_gap_index_550","The poverty gap index calculated at a poverty line of $5.50 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "131","poverty_gap_index_1000","The poverty gap index calculated at a poverty line of $10 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "132","poverty_gap_index_2000","The poverty gap index calculated at a poverty line of $20 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "133","poverty_gap_index_3000","The poverty gap index calculated at a poverty line of $30 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "134","poverty_gap_index_4000","The poverty gap index calculated at a poverty line of $40 a day.
 
 The poverty gap index is a measure that reflects both the depth and prevalence of poverty. It is defined as the mean shortfall of the total population from the poverty line counting the non-poor as having zero shortfall and expressed as a percentage of the poverty line. 
 
-It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ‚Äì both poor and non-poor ‚Äì and then expressed as a share of the poverty line.
+It is worth unpacking that definition a little. For those below the poverty line, the shortfall corresponds to the amount of money required in order to reach the poverty line. For those at or above the poverty line, the shortfall is counted as zero. The average shortfall is then calculated across the total population ñ both poor and non-poor ñ and then expressed as a share of the poverty line.
 
-Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a person‚Äôs income falls below the poverty line or not, but also by how much ‚Äì i.e. to the depth of poverty they experience."
+Unlike the more commonly-used metric of the headcount ratio, the poverty gap index is thus sensitive not only to whether a personís income falls below the poverty line or not, but also by how much ñ i.e. to the depth of poverty they experience."
 "135","mean","The mean level of income per day."
 "136","median","The level of income per day below which half of the population live."
 "137","decile1_avg","The mean income per day within the poorest decile (tenth of the population)."
@@ -509,11 +509,11 @@ Unlike the more commonly-used metric of the headcount ratio, the poverty gap ind
 "165","decile9_thr","The level of income per day below which 90% of the population falls."
 "166","gini","The Gini coefficient measures inequality on a scale between 0 and 1, where higher values indicate greater inequality."
 "167","mld","The mean log deviation (MLD) is a measure of inequality. An MLD of zero indicates perfect inequality and it takes on larger positive values as incomes become more unequal. The measure is also referred to as 'Theil L' or 'GE(0)', in reference to the wider families of inequality measures to which the MLD belongs."
-"168","polarization","The polarization index, also known as the Wolfson polarization index, measures the extent to which the distribution of income or expenditure is ‚Äúspread out‚Äù and bi-modal. Like the Gini coefficient, the polarization index ranges from 0 (no polarization) to 1 (complete polarization). The polarization index is based on Wolfson (1994) and Ravallion and Chen (1997).
+"168","polarization","The polarization index, also known as the Wolfson polarization index, measures the extent to which the distribution of income or expenditure is ìspread outî and bi-modal. Like the Gini coefficient, the polarization index ranges from 0 (no polarization) to 1 (complete polarization). The polarization index is based on Wolfson (1994) and Ravallion and Chen (1997).
 
-See Wolfson, Michael C. 1994. ‚ÄúWhen Inequalities Diverge.‚Äù The American Economic Review 84 (2): 353‚Äì58. https://www.jstor.org/stable/2117858 and Ravallion, Martin, and Shaohua Chen. 1997. ‚ÄúWhat Can New Survey Data Tell Us about Recent Changes in Distribution and Poverty?‚Äù The World Bank Economic Review 11 (2): 357‚Äì82. https://www.jstor.org/stable/3990232."
+See Wolfson, Michael C. 1994. ìWhen Inequalities Diverge.î The American Economic Review 84 (2): 353ñ58. https://www.jstor.org/stable/2117858 and Ravallion, Martin, and Shaohua Chen. 1997. ìWhat Can New Survey Data Tell Us about Recent Changes in Distribution and Poverty?î The World Bank Economic Review 11 (2): 357ñ82. https://www.jstor.org/stable/3990232."
 "169","palma_ratio","The Palma ratio is a measure of inequality: it is the share of total income (or expenditure) of the top 10% divided by the share of the bottom 40%."
 "170","s80_s20_ratio","The share of total income (or expenditure) of the top 20% divided by the share of the bottom 20%."
 "171","p90_p10_ratio","P90 is the the level of income below which 90% of the population lives. P10 is the level of income below which 10% of the population lives. This variable gives the ratio of the two. It is a measure of inequality that indicates the gap between the richest and poorest tenth of the population. It tells you how many times richer someone just in the the poorest tenth would need to be in order to be counted in the richest tenth."
-"172","p90_p50_ratio","P90 is the the level of income above which 10% of the population lives. P50 is the median ‚Äì the level of income below which 50% of the population lives. This variable gives the ratio of the two. It is a measure of inequality within the top half of the distribution. It tells you how many times richer someone in the middle of the distribution would need to be in order to be counted in the richest tenth."
-"173","p90_p10_ratio","P50 is the median ‚Äì the level of income below which 50% of the population lives. P10 is the the level of income below which 10% of the population lives. This variable gives the ratio of the two. It is a measure of inequality within the bottom half of the distribution. It tells you how many times richer someone just in the the poorest tenth would need to be in order to be reach the median."
+"172","p90_p50_ratio","P90 is the the level of income above which 10% of the population lives. P50 is the median ñ the level of income below which 50% of the population lives. This variable gives the ratio of the two. It is a measure of inequality within the top half of the distribution. It tells you how many times richer someone in the middle of the distribution would need to be in order to be counted in the richest tenth."
+"173","p90_p10_ratio","P50 is the median ñ the level of income below which 50% of the population lives. P10 is the the level of income below which 10% of the population lives. This variable gives the ratio of the two. It is a measure of inequality within the bottom half of the distribution. It tells you how many times richer someone just in the the poorest tenth would need to be in order to be reach the median."
