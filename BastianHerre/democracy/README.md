@@ -13,3 +13,5 @@ The data are used in Our World in Data's [Democracy Data Explorer](https://docs.
 - [The ‘Regimes of the World’ data: how do researchers identify which countries are democracies?](https://ourworldindata.org/regimes-of-the-world-data)
 - [In most countries, democracy is a recent achievement. Dictatorship is far from a distant memory](https://ourworldindata.org/democracies-age)
 - [Democracy data: how do researchers identify which countries are democratic?](https://ourworldindata.org/democracies-measurement)
+- [People around the world have gained democratic rights, but some have many more rights than others](https://ourworldindata.org/democratic-world)
+- [The world has recently become less democratic](https://ourworldindata.org/less-democratic)
