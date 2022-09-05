@@ -69,7 +69,7 @@ df.groupby(['measure_lab', 'area_lab'], as_index=False).agg({"country":"nunique"
 # %%
 # First year = first 4 characters of the year string
 df['year'] = df['year'].str[:4].astype(int)
-# df.head()
+df.head()
 
 # %% [markdown]
 # But it would be good to understand from OPHI what how best for us to handle this. Is there something better we could do than just taking the first year?
@@ -166,7 +166,7 @@ df_main_hot.head()
 
 # %%
 # Write to csv
-df_main_hot.to_csv("final/MPI (2021) – Harmonized over time estimates.csv")
+df_main_hot.to_csv("final/MPI (2021) – Harmonized over time estimates.csv", index=False)
 
 # %%
 # Plot HOT data
@@ -188,7 +188,7 @@ df_main_cme.head()
 
 # %%
 # Write to csv
-df_main_cme.to_csv("final/MPI (2021) – Current estimates.csv")
+df_main_cme.to_csv("final/MPI (2021) – Current estimates.csv", index=False)
 
 # %%
 # Plot CME data
