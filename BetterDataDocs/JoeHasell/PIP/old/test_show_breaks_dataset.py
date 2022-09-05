@@ -1,5 +1,6 @@
+# %%
 
-#%%
+# %%
 
 import pandas as pd
 
@@ -56,4 +57,4 @@ for welfare in ['inc_or_cons', "inc_only", "cons_only"]:
         # write to csv – one csv per variable in the main dataset
         df_var.to_csv(f'comparability_data/{welfare}/{select_var}.csv', index = False)
 
-#%%
+# %%

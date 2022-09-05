@@ -305,7 +305,7 @@ def relative_poverty(df_final, answer):
     print('Integrating relative poverty data...')
     start_time = time.time()
 
-    file = 'data/relative_poverty.csv'
+    file = 'data/final/OWID_internal_upload/additional_files/relative_poverty.csv'
     df_relative = pd.read_csv(file)
 
     df_final = pd.merge(df_final, df_relative, 
@@ -331,7 +331,7 @@ def thresholds(df_final, answer):
 
     print('Integrating decile thresholds...')
     start_time = time.time()
-    df_percentiles = pd.read_csv('data/percentiles.csv')
+    df_percentiles = pd.read_csv('data/final/OWID_internal_upload/additional_files/percentiles.csv')
     deciles = []
 
     for i in range(10,100,10):
@@ -491,7 +491,7 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
     df_final['s80_s20_ratio'] =  (df_final['decile9_share'] + df_final['decile10_share']) / (df_final['decile1_share'] + df_final['decile2_share'])
     df_final['p90_p10_ratio'] =  df_final['decile9_thr'] / df_final['decile1_thr']
     df_final['p90_p50_ratio'] =  df_final['decile9_thr'] / df_final['decile5_thr']
-    df_final['p90_p10_ratio'] =  df_final['decile5_thr'] / df_final['decile1_thr']
+    df_final['p50_p10_ratio'] =  df_final['decile5_thr'] / df_final['decile1_thr']
 
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -516,7 +516,7 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
     col_poverty_severity = []
     col_watts = []
     col_central = ['mean', 'median', 'reporting_pop']
-    col_inequality = ['mld', 'gini', 'polarization', 'palma_ratio', 's80_s20_ratio', 'p90_p10_ratio', 'p90_p50_ratio', 'p90_p10_ratio']
+    col_inequality = ['mld', 'gini', 'polarization', 'palma_ratio', 's80_s20_ratio', 'p90_p10_ratio', 'p90_p50_ratio', 'p50_p10_ratio']
     col_extra = ['survey_year', 'survey_comparability', 'comparable_spell', 'distribution_type', 'estimation_type',
                 'cpi', 'ppp', 'reporting_gdp', 'reporting_pce']
 
@@ -581,7 +581,7 @@ def median_patch(df_final):
     print('Patching missing median values...')
     start_time = time.time()
 
-    df_median = pd.read_csv('data/percentiles.csv')
+    df_median = pd.read_csv('data/final/OWID_internal_upload/additional_files/percentiles.csv')
     df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
     df_final = pd.merge(df_final, 
@@ -634,8 +634,8 @@ def standardise(df_final):
     # Standardize entity names
     df_final = standardize_entities(
         orig_df = df_final,
-        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
-        mapping_varname_raw ='Original Name',
+        entity_mapping_url = "data/final/OWID_internal_upload/additional_files/countries_standardized.csv",
+        mapping_varname_raw ='country',
         mapping_vaname_owid = 'Our World In Data Name',
         data_varname_old = 'Entity',
         data_varname_new = 'Entity'
@@ -688,16 +688,20 @@ def export(df_final, cols):
     # digital ocean so that the data can be picked up in the explorer. But I know how to do this
     # if it's stored in GitHub. So for now I write it as csvs to this folder.
     # Save as csv
-    df_inc_only.to_csv(f'data/poverty_inc_only.csv', index=False)
-    df_cons_only.to_csv(f'data/poverty_cons_only.csv', index=False)
-    df_inc_or_cons.to_csv(f'data/poverty_inc_or_cons.csv', index=False)
+    df_inc_only.to_csv(f'data/final/PIP_data_public_download/inc_only/poverty_inc_only.csv', index=False)
+    df_cons_only.to_csv(f'data/final/PIP_data_public_download/cons_only/poverty_cons_only.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/final/PIP_data_public_download/inc_or_cons/poverty_inc_or_cons.csv', index=False)
+    
+    df_inc_only.to_csv(f'data/final/OWID_internal_upload/inc_only/poverty_inc_only.csv', index=False)
+    df_cons_only.to_csv(f'data/final/OWID_internal_upload/cons_only/poverty_cons_only.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/final/OWID_internal_upload/inc_or_cons/poverty_inc_or_cons.csv', index=False)
     
 
-    #upload_to_s3(df_inc_only, 'PIP', f'poverty_inc_only_filled_{is_filled}.csv')
+    #upload_to_s3(df_inc_only, 'PIP/explorer_key_variables', f'poverty_inc_only.csv')
 
-    #upload_to_s3(df_cons_only, 'PIP', f'poverty_cons_only_filled_{is_filled}.csv')
+    #upload_to_s3(df_cons_only, 'PIP/explorer_key_variables', f'poverty_cons_only.csv')
 
-    #upload_to_s3(df_inc_or_cons, 'PIP', f'poverty_inc_or_cons_filled_{is_filled}.csv')
+    #upload_to_s3(df_inc_or_cons, 'PIP/explorer_key_variables', f'poverty_inc_or_cons.csv')
 
 
     end_time = time.time()
@@ -705,6 +709,66 @@ def export(df_final, cols):
     print('Done. Execution time:', elapsed_time, 'seconds')
     
     return df_inc_only, df_cons_only, df_inc_or_cons
+
+
+def show_breaks():
+    
+    print('Creating multiple variable files to show survey breaks...')
+    start_time = time.time()
+
+    fp = 'data/final/OWID_internal_upload/'
+
+
+    for welfare in ['inc_or_cons', "inc_only", "cons_only"]:
+
+        df_orig = pd.read_csv(f'{fp}{welfare}/poverty_{welfare}.csv')
+
+        df = df_orig
+
+
+        # drop rows where survey coverage = nan (This is just regions)
+        df = df[df['survey_comparability'].notna()]
+
+
+        # FORMAT COMPARABILTY VAR
+
+        # Add 1 to make comparability var run from 1, not from 0
+        df['survey_comparability'] = df['survey_comparability'] + 1
+
+        # Note the welfare type in the comparability spell 
+        df['survey_comparability'] = df['welfare_type'] + '_spell_' + df['survey_comparability'].astype(int).astype(str)
+
+
+        vars = [i for i in df.columns if i not in ["Entity",
+                                                "Year", 
+                                                "reporting_level",
+                                                "welfare_type", 
+                                                "reporting_pop",
+                                                "survey_year",
+                                                "survey_comparability",
+                                                "comparable_spell",
+                                                "distribution_type",
+                                                "estimation_type",
+                                                "cpi",
+                                                "ppp",
+                                                "reporting_gdp",
+                                                "reporting_pce"]]
+
+
+        for select_var in vars:
+
+            df_var = df[['Entity', 'Year', select_var, 'survey_comparability']]
+
+            # convert to wide
+            df_var = pd.pivot(df_var, index=['Entity', 'Year'], columns=['survey_comparability'], values=select_var).reset_index()
+
+
+            # write to csv – one csv per variable in the main dataset
+            df_var.to_csv(f'data/final/OWID_internal_upload/comparability_data/{welfare}/{select_var}.csv', index = False)
+            
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
 
 
 def include_metadata(df_final):
@@ -747,7 +811,10 @@ def include_metadata(df_final):
     df_dataset = df_dataset.rename(columns=varnames_dict)
     
     #Export the dataset
-    df_dataset.to_csv('data/pip_final.csv', index=False)
+    df_dataset.to_csv('data/final/OWID_internal_upload/datasets/pip_final.csv', index=False)
+    df_dataset.to_csv('data/final/PIP_data_public_download/datasets/pip_final.csv', index=False)
+    
+    #upload_to_s3(df_dataset, 'PIP/datasets', f'pip_final.csv')
     
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -762,8 +829,8 @@ def regional_headcount(df_regions, df_country_filled):
     # Standardize entity names
     df_regions = standardize_entities(
         orig_df = df_regions,
-        entity_mapping_url = "https://joeh.fra1.digitaloceanspaces.com/PIP/country_mapping.csv",
-        mapping_varname_raw ='Original Name',
+        entity_mapping_url = "data/final/OWID_internal_upload/additional_files/countries_standardized.csv",
+        mapping_varname_raw ='country',
         mapping_vaname_owid = 'Our World In Data Name',
         data_varname_old = 'Entity',
         data_varname_new = 'Entity'
@@ -818,7 +885,11 @@ def regional_headcount(df_regions, df_country_filled):
     
     
     #Export the dataset
-    df_final.to_csv('data/pip_regional_headcount.csv', index=False)
+    df_final.to_csv('data/final/OWID_internal_upload/datasets/pip_regional_headcount.csv', index=False)
+    df_final.to_csv('data/final/PIP_data_public_download/datasets/pip_regional_headcount.csv', index=False)
+    
+    
+    #upload_to_s3(df_final, 'PIP/datasets', f'pip_regional_headcount.csv')
     
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -861,7 +932,10 @@ def survey_count(df_country):
     df_country.sort_values(by=['Entity', 'Year'], ignore_index=True, inplace=True)
     
     #Export the dataset
-    df_country.to_csv('data/pip_survey_count.csv', index=False)
+    df_country.to_csv('data/final/OWID_internal_upload/datasets/pip_survey_count.csv', index=False)
+    df_country.to_csv('data/final/PIP_data_public_download/datasets/pip_survey_count.csv', index=False)
+    
+    #upload_to_s3(df_country, 'PIP/datasets', f'pip_survey_count.csv')
     
     end_time = time.time()
     elapsed_time = end_time - start_time

@@ -113,6 +113,12 @@ df_final = standardise(df_final)
 df_inc_only, df_cons_only, df_inc_or_cons = export(df_final, cols)
 
 # %% [markdown]
+# Also multiple files are created to show the breaks between different surveys in a country.
+
+# %%
+show_breaks()
+
+# %% [markdown]
 # ## Include metadata and export for main PIP dataset
 # The version including both income and consumption data is reprocessed to filter only the required variables for the main PIP dataset. The names of the variables are also reformatted for a more human-friendly reading.
 
