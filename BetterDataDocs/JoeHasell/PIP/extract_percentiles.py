@@ -4,6 +4,7 @@
 # %%
 import pandas as pd
 from functions.PIP_API_query import pip_query_country, pip_query_region
+from functions.standardize_entities import standardize_entities
 import time
 import plotly.express as px
 
@@ -418,16 +419,10 @@ df_closest_complete_regions = df_closest_complete_regions.rename(columns={'regio
                                                                           'reporting_year': 'Year'})
 
 df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
-df_percentiles.to_csv('data/percentiles.csv', index=False)
 
 # %%
+df_percentiles.to_csv('data/percentiles.csv', index=False)
 #To use it in PIP issues
 df_percentiles.to_csv('notebooks/percentiles.csv', index=False)
 
 # %%
-
-# %%
-df_complete.columns
-
-# %%
-df_complete[(df_complete['country_name']=='United States') & (df_complete['poverty_line']>148) & (df_complete['poverty_line']<150) & (df_complete['reporting_year']==2019)][['poverty_line', 'headcount']]
