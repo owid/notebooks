@@ -8,14 +8,8 @@
 # World Bank Data are based on primary household survey data obtained from government statistical agencies and World Bank country departments.
 
 # %%
-import pandas as pd
-import numpy as np
 import time
-
-#from functions.PIP_API_query import pip_query_country, pip_query_region
-from functions.standardize_entities import standardize_entities
-from functions.upload import upload_to_s3
-
+import shutil
 from create_dataset_functions import *
 
 # %% [markdown]
@@ -138,6 +132,14 @@ regional_headcount(df_region, df_country_inc_or_cons_filled)
 
 # %%
 survey_count(df_country_inc_or_cons)
+
+# %% [markdown]
+# ## Create public zip file and finish
+# A zip file is created for users to download the data loaded in the explorers.
+
+# %%
+print('Public files are zipped in:')
+shutil.make_archive('data/final/PIP_data_public_download', 'zip', 'data/final/PIP_data_public_download')
 
 # %%
 end_time = time.time()
