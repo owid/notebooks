@@ -101,10 +101,10 @@ special_sheets[["graphers_stubs_sheetname"]]<- "grapher_stubs_main"
 special_sheets[["table_stubs_sheetname"]]<- "table_stubs_main"
 special_sheets[["global_controls_sheetname"]]<- "global_controls_main"
 
-special_sheets[["admin_stubs_sheetname"]]<- "admin_metadata_stubs"
+special_sheets[["codebook_stubs_sheetname"]]<- "codebook_metadata_stubs"
 
 
-special_sheets[["admin_print_sheetname"]]<- "admin_metadata_auto"
+special_sheets[["codebook_print_sheetname"]]<- "codebook_metadata_auto"
 
 
 
@@ -159,7 +159,7 @@ build_OWID_controls<- function(gsheets_id){
   
   
   # For both grapher and table stubs...
-  for(stubs_sheet in c("graphers", "table", "admin")){
+  for(stubs_sheet in c("graphers", "table", "codebook")){
     
     # Pull in the stubs from gsheets
     stubs<- read_sheet(gsheets_id, sheet = special_sheets[[paste0(stubs_sheet,"_stubs_sheetname")]])
@@ -314,20 +314,34 @@ build_OWID_controls<- function(gsheets_id){
     
 
   
-  # Write database metadata
-      # Here I will use the 'both inc and expenditure' data. This is what we 
-      # will add to the grapher database.
+  # Write codebook(s) to directory
+  # Multiple codebooks -  one for each tableSlug
     
+    # Make list of table names used in the prepared codebook controls
+    table_list<- unique(stubs_multiplied[['codebook']]$tableSlug)
     
+    for (tab in table_list){
+      
+      # Filter for the rows matching this table slug 
+      df_codebook_controls_this_table<- stubs_multiplied[['codebook']] %>%
+        filter(tableSlug == tab) 
+        
+      # write admin metadata as csv
+      fp<- paste0("data/final/OWID_internal/", tab, "/variable_metadata.csv")
+      
+      write.csv(df_codebook_controls_this_table, fp)
+      
+      # keep only codebook vars and write to csv in public download folder
+      df_codebook_controls_this_table<- df_codebook_controls_this_table %>%
+        select(slug, description)
+      
+      # write codebook metadata to directory
+      fp<- paste0("data/final/public_download/", tab, "/codebook.csv")
+      
+      write.csv(df_codebook_controls_this_table, fp)
+      
+    }
     
-    range_write(
-      ss = gsheets_id,
-      data = stubs_multiplied[['admin']],
-      sheet = special_sheets[["admin_print_sheetname"]],
-      range = cell_limits(c(NA, NA), c(NA, NA)),
-      col_names = TRUE,
-      reformat = FALSE
-    )
     
 }
 
