@@ -421,7 +421,7 @@ df_closest_complete_regions = df_closest_complete_regions.rename(columns={'regio
 df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
 
 # %%
-df_percentiles.to_csv('data/final/OWID_internal_upload/additional_files/percentiles.csv', index=False)
+df_percentiles.to_csv('data/raw/percentiles.csv', index=False)
 #To use it in PIP issues
 df_percentiles.to_csv('notebooks/percentiles.csv', index=False)
 

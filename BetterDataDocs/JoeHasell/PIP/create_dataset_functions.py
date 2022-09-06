@@ -305,7 +305,7 @@ def relative_poverty(df_final, answer):
     print('Integrating relative poverty data...')
     start_time = time.time()
 
-    file = 'data/final/OWID_internal_upload/additional_files/relative_poverty.csv'
+    file = 'data/raw/relative_poverty.csv'
     df_relative = pd.read_csv(file)
 
     df_final = pd.merge(df_final, df_relative, 
@@ -331,7 +331,7 @@ def thresholds(df_final, answer):
 
     print('Integrating decile thresholds...')
     start_time = time.time()
-    df_percentiles = pd.read_csv('data/final/OWID_internal_upload/additional_files/percentiles.csv')
+    df_percentiles = pd.read_csv('data/raw/percentiles.csv')
     deciles = []
 
     for i in range(10,100,10):
@@ -581,7 +581,7 @@ def median_patch(df_final):
     print('Patching missing median values...')
     start_time = time.time()
 
-    df_median = pd.read_csv('data/final/OWID_internal_upload/additional_files/percentiles.csv')
+    df_median = pd.read_csv('data/raw/percentiles.csv')
     df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
     df_final = pd.merge(df_final, 
@@ -634,7 +634,7 @@ def standardise(df_final):
     # Standardize entity names
     df_final = standardize_entities(
         orig_df = df_final,
-        entity_mapping_url = "data/final/OWID_internal_upload/additional_files/countries_standardized.csv",
+        entity_mapping_url = "data/raw/countries_standardized.csv",
         mapping_varname_raw ='country',
         mapping_vaname_owid = 'Our World In Data Name',
         data_varname_old = 'Entity',
@@ -688,13 +688,13 @@ def export(df_final, cols):
     # digital ocean so that the data can be picked up in the explorer. But I know how to do this
     # if it's stored in GitHub. So for now I write it as csvs to this folder.
     # Save as csv
-    df_inc_only.to_csv(f'data/final/PIP_data_public_download/inc_only/poverty_inc_only.csv', index=False)
-    df_cons_only.to_csv(f'data/final/PIP_data_public_download/cons_only/poverty_cons_only.csv', index=False)
-    df_inc_or_cons.to_csv(f'data/final/PIP_data_public_download/inc_or_cons/poverty_inc_or_cons.csv', index=False)
+    df_inc_only.to_csv(f'data/final/PIP_data_public_download/explorer_database/inc_only/poverty_inc_only.csv', index=False)
+    df_cons_only.to_csv(f'data/final/PIP_data_public_download/explorer_database/cons_only/poverty_cons_only.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/final/PIP_data_public_download/explorer_database/inc_or_cons/poverty_inc_or_cons.csv', index=False)
     
-    df_inc_only.to_csv(f'data/final/OWID_internal_upload/inc_only/poverty_inc_only.csv', index=False)
-    df_cons_only.to_csv(f'data/final/OWID_internal_upload/cons_only/poverty_cons_only.csv', index=False)
-    df_inc_or_cons.to_csv(f'data/final/OWID_internal_upload/inc_or_cons/poverty_inc_or_cons.csv', index=False)
+    df_inc_only.to_csv(f'data/final/OWID_internal_upload/explorer_database/inc_only/poverty_inc_only.csv', index=False)
+    df_cons_only.to_csv(f'data/final/OWID_internal_upload/explorer_database/cons_only/poverty_cons_only.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/final/OWID_internal_upload/explorer_database/inc_or_cons/poverty_inc_or_cons.csv', index=False)
     
 
     #upload_to_s3(df_inc_only, 'PIP/explorer_key_variables', f'poverty_inc_only.csv')
@@ -716,7 +716,7 @@ def show_breaks():
     print('Creating multiple variable files to show survey breaks...')
     start_time = time.time()
 
-    fp = 'data/final/OWID_internal_upload/'
+    fp = 'data/final/OWID_internal_upload/explorer_database/'
 
 
     for welfare in ['inc_or_cons', "inc_only", "cons_only"]:
@@ -764,7 +764,7 @@ def show_breaks():
 
 
             # write to csv – one csv per variable in the main dataset
-            df_var.to_csv(f'data/final/OWID_internal_upload/comparability_data/{welfare}/{select_var}.csv', index = False)
+            df_var.to_csv(f'data/final/OWID_internal_upload/explorer_database/comparability_data/{welfare}/{select_var}.csv', index = False)
             
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -811,8 +811,7 @@ def include_metadata(df_final):
     df_dataset = df_dataset.rename(columns=varnames_dict)
     
     #Export the dataset
-    df_dataset.to_csv('data/final/OWID_internal_upload/datasets/pip_final.csv', index=False)
-    #df_dataset.to_csv('data/final/PIP_data_public_download/datasets/pip_final.csv', index=False)
+    df_dataset.to_csv('data/final/OWID_internal_upload/admin_database/pip_final.csv', index=False)
     
     #upload_to_s3(df_dataset, 'PIP/datasets', f'pip_final.csv')
     
@@ -829,7 +828,7 @@ def regional_headcount(df_regions, df_country_filled):
     # Standardize entity names
     df_regions = standardize_entities(
         orig_df = df_regions,
-        entity_mapping_url = "data/final/OWID_internal_upload/additional_files/countries_standardized.csv",
+        entity_mapping_url = "data/raw/countries_standardized.csv",
         mapping_varname_raw ='country',
         mapping_vaname_owid = 'Our World In Data Name',
         data_varname_old = 'Entity',
@@ -885,9 +884,7 @@ def regional_headcount(df_regions, df_country_filled):
     
     
     #Export the dataset
-    df_final.to_csv('data/final/OWID_internal_upload/datasets/pip_regional_headcount.csv', index=False)
-    #df_final.to_csv('data/final/PIP_data_public_download/datasets/pip_regional_headcount.csv', index=False)
-    
+    df_final.to_csv('data/final/OWID_internal_upload/admin_database/pip_regional_headcount.csv', index=False)    
     
     #upload_to_s3(df_final, 'PIP/datasets', f'pip_regional_headcount.csv')
     
@@ -932,8 +929,7 @@ def survey_count(df_country):
     df_country.sort_values(by=['Entity', 'Year'], ignore_index=True, inplace=True)
     
     #Export the dataset
-    df_country.to_csv('data/final/OWID_internal_upload/datasets/pip_survey_count.csv', index=False)
-    #df_country.to_csv('data/final/PIP_data_public_download/datasets/pip_survey_count.csv', index=False)
+    df_country.to_csv('data/final/OWID_internal_upload/admin_database/pip_survey_count.csv', index=False)
     
     #upload_to_s3(df_country, 'PIP/datasets', f'pip_survey_count.csv')
     
