@@ -147,9 +147,12 @@ df.groupby(["country","flav"]).agg({"year":["min", "max"]}).head(n=8)
 df_main = df.loc[(df['measure_lab'].isin(["MPI", "Intensity", "Headcount ratio"]))]
 
 # pivot to wide format
-df_main = df_main.pivot_table(index = ["year","country", "flav"],
+df_main = df_main.pivot_table(index = ["country", "year", "flav"],
                                            columns = ["measure_lab", "area_lab"],
                                            values = "b").reset_index()
+
+df_main = df_main.rename(columns={'country': 'Entity',
+                                 'year': 'Year'})
 
 # collapse multi-level index into single column names
 df_main.columns = [' '.join(col).strip() for col in df_main.columns.values]
@@ -174,10 +177,10 @@ df_main_hot.to_csv("final/MPI (2021) – Harmonized over time estimates.csv", in
 select_countries = ["Bolivia", "Indonesia", "Liberia"]
 
 # filter hot data
-chart_df = df_main_hot.loc[df_main_hot['country'].isin(select_countries)]
+chart_df = df_main_hot.loc[df_main_hot['Entity'].isin(select_countries)]
 
 # plot
-(ggplot(chart_df, aes(x='year', y='Headcount ratio National', color='country')) 
+(ggplot(chart_df, aes(x='Year', y='Headcount ratio National', color='Entity')) 
      + geom_point()
      + geom_line())
 
@@ -192,7 +195,7 @@ df_main_cme.to_csv("final/MPI (2021) – Current estimates.csv", index=False)
 
 # %%
 # Plot CME data
-(ggplot(df_main_cme, aes(x='Headcount ratio National', y='MPI National', color='year')) 
+(ggplot(df_main_cme, aes(x='Headcount ratio National', y='MPI National', color='Year')) 
      + geom_point())
 
 # %% [markdown]
