@@ -812,7 +812,7 @@ def include_metadata(df_final):
     
     #Export the dataset
     df_dataset.to_csv('data/final/OWID_internal_upload/datasets/pip_final.csv', index=False)
-    df_dataset.to_csv('data/final/PIP_data_public_download/datasets/pip_final.csv', index=False)
+    #df_dataset.to_csv('data/final/PIP_data_public_download/datasets/pip_final.csv', index=False)
     
     #upload_to_s3(df_dataset, 'PIP/datasets', f'pip_final.csv')
     
@@ -886,7 +886,7 @@ def regional_headcount(df_regions, df_country_filled):
     
     #Export the dataset
     df_final.to_csv('data/final/OWID_internal_upload/datasets/pip_regional_headcount.csv', index=False)
-    df_final.to_csv('data/final/PIP_data_public_download/datasets/pip_regional_headcount.csv', index=False)
+    #df_final.to_csv('data/final/PIP_data_public_download/datasets/pip_regional_headcount.csv', index=False)
     
     
     #upload_to_s3(df_final, 'PIP/datasets', f'pip_regional_headcount.csv')
@@ -933,7 +933,7 @@ def survey_count(df_country):
     
     #Export the dataset
     df_country.to_csv('data/final/OWID_internal_upload/datasets/pip_survey_count.csv', index=False)
-    df_country.to_csv('data/final/PIP_data_public_download/datasets/pip_survey_count.csv', index=False)
+    #df_country.to_csv('data/final/PIP_data_public_download/datasets/pip_survey_count.csv', index=False)
     
     #upload_to_s3(df_country, 'PIP/datasets', f'pip_survey_count.csv')
     
