@@ -7,6 +7,14 @@ import wbgapi as wb
 
 
 #%%
+
+wb.source.info()
+#%%
+wb.db = 62     # Database ID for ICP 2011
+wb.series = 110000 
+
+
+#%%
 def pip_query_country(popshare_or_povline, value, country_code="all", year="all", fill_gaps="true", welfare_type="all", reporting_level="all"):
 
     # Build query
@@ -25,7 +33,7 @@ df_PIP = pip_query_country("povline", 1.90,fill_gaps="false" )
 #%%
 
 
-df_WDI = wb.data.DataFrame({'PA.NUS.PRVT.PP': "PPP_PrivCons_WDI","FP.CPI.TOTL":"CPI_WDI"}, "all", time=range(2011, 2020)).reset_index()
+df_WDI = wb.data.DataFrame({'PA.NUS.PRVT.PP': "PPP_PrivCons_WDI","FP.CPI.TOTL":"CPI_WDI"}, "all", time=range(2011, 2020), columns='series').reset_index()
 
 # Pivot longer
 # %%

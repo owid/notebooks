@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.655">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>A quick look at PPPs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+<script src="PPPs_files/libs/clipboard/clipboard.min.js"></script>
+<script src="PPPs_files/libs/quarto-html/quarto.js"></script>
+<script src="PPPs_files/libs/quarto-html/popper.min.js"></script>
+<script src="PPPs_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="PPPs_files/libs/quarto-html/anchor.min.js"></script>
+<link href="PPPs_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="PPPs_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="PPPs_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="PPPs_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="PPPs_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">A quick look at PPPs</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>Note: There seems to have been a change in the standard aggregations used for private consumption between the 2011 and 2017 rounds.</p>
+<p>In the 2011 round the name of the series is ‘110000:INDIVIDUAL CONSUMPTION EXPENDITURE BY HOUSEHOLDS’.</p>
+<p>PIP is not especially explicit about the series it uses for the PPP conversions, but we can see that the data they provide matches this definition (except for X countries).</p>
+<p>In the 2017 round, the same aggregate is not available, and instead there is ‘9100000:HOUSEHOLDS AND NPISHS FINAL CONSUMPTION EXPENDITURE’. It looks like this is the closest, and the change just reflects a realignment with national accounting practices or something similar. Note that in the recently-published <a href="https://www.worldbank.org/en/programs/icp/brief/VC_Ch2_1#:~:text=International%20poverty%20lines,Final%20Consumption%20Expenditure">ICP guide it says</a> that that the PPPs used for WB poverty data relate to this HH and NPISH FCE category (even though, as noted above, for the 2011 PPPs that the poverty data uses, this aggregation doesn’t seem to be available as standard – perhaps things have just been relabelled?):</p>
+<blockquote class="blockquote">
+<p>International poverty lines identify the daily income or consumption level under which people struggle to provide for their basic subsistence needs. These levels are expressed in PPP dollars to enable a common measurement across all countries. The lowest of these, the extreme poverty line, is currently set at $1.90 a day in 2011 PPP terms using PPPs estimated at the level of <em>Households and Nonprofit Institutions Serving Households (NPISHs) Final Consumption Expenditure</em>.</p>
+</blockquote>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

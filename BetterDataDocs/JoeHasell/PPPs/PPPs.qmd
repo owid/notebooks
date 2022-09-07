@@ -1,0 +1,16 @@
+---
+title: "A quick look at PPPs"
+format: html
+---
+
+Note: There seems to have been a change in the standard aggregations used for private consumption between the 2011 and 2017 rounds.
+
+In the 2011 round the name of the series is '110000:INDIVIDUAL CONSUMPTION EXPENDITURE BY HOUSEHOLDS'.
+
+PIP is not especially explicit about the series it uses for the PPP conversions, but we can see that the data they provide matches this definition (except for X countries).
+
+
+
+In the 2017 round, the same aggregate is not available, and instead there is '9100000:HOUSEHOLDS AND NPISHS FINAL CONSUMPTION EXPENDITURE'. It looks like this is the closest, and the change just reflects a realignment with national accounting practices or something similar. Note that in the recently-published [ICP guide it says](https://www.worldbank.org/en/programs/icp/brief/VC_Ch2_1#:~:text=International%20poverty%20lines,Final%20Consumption%20Expenditure) that that the PPPs used for WB poverty data relate to this HH and NPISH FCE category (even though, as noted above, for the 2011 PPPs that the poverty data uses, this aggregation doesn't seem to be available as standard – perhaps things have just been relabelled?):
+
+> International poverty lines identify the daily income or consumption level under which people struggle to provide for their basic subsistence needs. These levels are expressed in PPP dollars to enable a common measurement across all countries. The lowest of these, the extreme poverty line, is currently set at $1.90 a day in 2011 PPP terms using PPPs estimated at the level of _Households and Nonprofit Institutions Serving Households (NPISHs) Final Consumption Expenditure_. 
