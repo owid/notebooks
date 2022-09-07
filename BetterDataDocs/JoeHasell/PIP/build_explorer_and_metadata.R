@@ -333,10 +333,11 @@ build_OWID_controls<- function(gsheets_id){
       
       # keep only codebook vars and write to csv in public download folder
       df_codebook_controls_this_table<- df_codebook_controls_this_table %>%
-        select(slug, description)
+        select(slug, description) %>%
+        rename(varname = slug)
       
       # write codebook metadata to directory
-      fp<- paste0("data/final/PIP_data_public_download/explorer_database/", tab, "/codebook.csv")
+      fp<- paste0("data/final/PIP_data_public_download/full_dataset/", tab, "/codebook.csv")
       
       write.csv(df_codebook_controls_this_table, fp)
       

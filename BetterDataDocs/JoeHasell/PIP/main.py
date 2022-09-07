@@ -139,8 +139,7 @@ survey_count(df_country_inc_or_cons)
 
 # %%
 print('Public files are zipped in:')
-shutil.make_archive('data/final/PIP_data_public_download/explorer_database', 'zip', 'data/final/PIP_data_public_download/explorer_database')
-
+shutil.make_archive('data/final/PIP_data_public_download', 'zip', 'data/final')
 # %%
 end_time = time.time()
 elapsed_time = end_time - start_time

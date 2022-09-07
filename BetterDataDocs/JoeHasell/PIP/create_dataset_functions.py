@@ -688,9 +688,9 @@ def export(df_final, cols):
     # digital ocean so that the data can be picked up in the explorer. But I know how to do this
     # if it's stored in GitHub. So for now I write it as csvs to this folder.
     # Save as csv
-    df_inc_only.to_csv(f'data/final/PIP_data_public_download/explorer_database/inc_only/poverty_inc_only.csv', index=False)
-    df_cons_only.to_csv(f'data/final/PIP_data_public_download/explorer_database/cons_only/poverty_cons_only.csv', index=False)
-    df_inc_or_cons.to_csv(f'data/final/PIP_data_public_download/explorer_database/inc_or_cons/poverty_inc_or_cons.csv', index=False)
+    df_inc_only.to_csv(f'data/final/PIP_data_public_download/full_dataset/inc_only/poverty_inc_only.csv', index=False)
+    df_cons_only.to_csv(f'data/final/PIP_data_public_download/full_dataset/cons_only/poverty_cons_only.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/final/PIP_data_public_download/full_dataset/inc_or_cons/poverty_inc_or_cons.csv', index=False)
     
     df_inc_only.to_csv(f'data/final/OWID_internal_upload/explorer_database/inc_only/poverty_inc_only.csv', index=False)
     df_cons_only.to_csv(f'data/final/OWID_internal_upload/explorer_database/cons_only/poverty_cons_only.csv', index=False)
