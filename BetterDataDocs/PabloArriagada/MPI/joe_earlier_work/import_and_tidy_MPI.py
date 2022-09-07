@@ -159,6 +159,45 @@ df_main.columns = [' '.join(col).strip() for col in df_main.columns.values]
 df_main_hot = df_main.loc[df_main.flav=="hot"].drop(columns = ['flav'])
 df_main_cme = df_main.loc[df_main.flav=="cme"].drop(columns = ['flav'])
 
+# %%
+# Specify sheet id and sheet (tab) name for the metadata google sheet 
+#sheet_id = '1bVOaDcnDoF0M_zK3uof0dIH-Z4OUDxqM7QO3B9jzRbk'
+#sheet_name = 'admin_metadata_manual'
+
+sheet_id = '1ntYtYF0NqIW2oXuXl_ZJHvuI7n-bik94BEIOvWHrJAI'
+sheet_name = 'mpi'
+
+# Read in variable metadata as dataframe
+url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+df_variable_metadata = pd.read_csv(url)
+
+# Keep only id vars (country and year) and vars with metadata
+
+# Select country, year and only those variables with metadata specified
+# in the metadata folder.
+
+id_vars = ['Entity', 'Year']
+
+var_list = df_variable_metadata['slug'].tolist()
+
+var_list = id_vars + var_list 
+
+df_main_hot = df_main_hot[df_main_hot.columns.intersection(var_list)].copy()
+df_main_cme = df_main_cme[df_main_hot.columns.intersection(var_list)].copy()
+
+
+# Replace var names with those defined in the variable metadata ('name')
+
+# Make a dictionary of var code_names and names
+keys_code_names = df_variable_metadata['slug'].tolist()
+values_names = df_variable_metadata['name'].tolist()
+    #pair keys and values with zip
+varnames_dict = dict(zip(keys_code_names, values_names))
+
+# Rename the columns using the dictionary
+df_main_hot = df_main_hot.rename(columns=varnames_dict)
+df_main_cme = df_main_cme.rename(columns=varnames_dict)
+
 # %% [markdown]
 # #### `hot` data
 
@@ -178,7 +217,7 @@ select_countries = ["Bolivia", "Indonesia", "Liberia"]
 chart_df = df_main_hot.loc[df_main_hot['Entity'].isin(select_countries)]
 
 # plot
-(ggplot(chart_df, aes(x='Year', y='Headcount ratio National', color='Entity')) 
+(ggplot(chart_df, aes(x='Year', y='Share of population multidimensionally poor (national)', color='Entity')) 
      + geom_point()
      + geom_line())
 
@@ -193,7 +232,7 @@ df_main_cme.to_csv("final/MPI (2021) – Current estimates.csv", index=False)
 
 # %%
 # Plot CME data
-(ggplot(df_main_cme, aes(x='Headcount ratio National', y='MPI National', color='Year')) 
+(ggplot(df_main_cme, aes(x='Share of population multidimensionally poor (national)', y='MPI (national)', color='Year')) 
      + geom_point())
 
 # %% [markdown]
