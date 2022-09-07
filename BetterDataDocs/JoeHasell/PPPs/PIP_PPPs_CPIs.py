@@ -11,9 +11,14 @@ import wbgapi as wb
 wb.source.info()
 #%%
 wb.db = 62     # Database ID for ICP 2011
-wb.series = 110000 
+wb.series.info('110000')
 
 
+#%%
+df = wb.data.DataFrame('SP.POP.TOTL', 'BRA').reset_index()
+
+#%%
+df = wb.data.DataFrame({'PA.NUS.PRVT.PP': "PPP_PrivCons_WDI","FP.CPI.TOTL":"CPI_WDI"}, "all", time=range(2011, 2020), columns='series').reset_index()
 #%%
 def pip_query_country(popshare_or_povline, value, country_code="all", year="all", fill_gaps="true", welfare_type="all", reporting_level="all"):
 
