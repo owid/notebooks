@@ -275,4 +275,4 @@ for pct in relative_poverty_lines:
 df = df[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_povlines + col_headcount + col_headcount_ratio + col_pgi + col_total_shortfall + col_avg_shortfall + col_income_gap_ratio + col_severity + col_watts + col_stacked_n + col_stacked_pct]
 
 # %%
-df.to_csv('data/final/OWID_internal_upload/additional_files/relative_poverty.csv', index=False)
+df.to_csv('data/raw/relative_poverty.csv', index=False)

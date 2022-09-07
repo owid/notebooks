@@ -327,7 +327,7 @@ build_OWID_controls<- function(gsheets_id){
         filter(tableSlug == tab) 
         
       # write admin metadata as csv
-      fp<- paste0("data/final/OWID_internal_upload/", tab, "/variable_metadata.csv")
+      fp<- paste0("data/final/OWID_internal_upload/explorer_database/", tab, "/variable_metadata.csv")
       
       write.csv(df_codebook_controls_this_table, fp)
       
@@ -336,7 +336,7 @@ build_OWID_controls<- function(gsheets_id){
         select(slug, description)
       
       # write codebook metadata to directory
-      fp<- paste0("data/final/PIP_data_public_download/", tab, "/codebook.csv")
+      fp<- paste0("data/final/PIP_data_public_download/explorer_database/", tab, "/codebook.csv")
       
       write.csv(df_codebook_controls_this_table, fp)
       
