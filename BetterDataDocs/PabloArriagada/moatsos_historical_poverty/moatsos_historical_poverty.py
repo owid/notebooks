@@ -92,6 +92,59 @@ df_dataset = df_dataset.rename(columns=varnames_dict)
 df_dataset.to_csv('data/output/moatsos_dataset.csv', index=False)
 # -
 
+# ## Compare Moatsos' regional number in poverty to Maddison Project Database population
+
+# +
+#Loading MPD 2020 - Regional data
+file = 'data/input/mpd2020.xlsx'
+mpd_regional = pd.read_excel(file, sheet_name='Regional data', header=1)
+mpd_regional = mpd_regional.iloc[1: , :]
+mpd_regional = mpd_regional.drop(mpd_regional.iloc[:, 1:9], axis=1)
+mpd_regional = mpd_regional.rename(columns={'Region': 'Year'})
+mpd_regional.columns = mpd_regional.columns.str.replace(".1","", regex=True)
+mpd_regional = mpd_regional.drop(columns=['World GDP pc'])
+mpd_regional.iloc[:,1:] = mpd_regional.iloc[:,1:] * 1000
+
+mpd_regional = pd.melt(mpd_regional, id_vars=['Year'], var_name='Entity', value_name='pop')
+
+mpd_world = mpd_regional[mpd_regional['Entity'] == 'World'].reset_index(drop=True)
+mpd_world
+# -
+
+df_final = pd.merge(df_final, mpd_world, on=['Entity', 'Year'], how='left')
+
+df_final['number_cbn'] = df_final['PovRate'] * df_final['pop'] / 100
+df_final['number_19'] = df_final['PovRate1.9'] * df_final['pop'] / 100
+
+# +
+file = 'data/input/how_was_life/number_extreme_poverty.xlsx'
+number_extreme_pov = pd.read_excel(file, sheet_name='g9-4', header=17)
+number_extreme_pov = number_extreme_pov.drop(columns=['Total1820'])
+number_extreme_pov = number_extreme_pov.rename(columns={'Unnamed: 0': 'Year'})
+
+number_extreme_pov.iloc[:,1:] = number_extreme_pov.iloc[:,1:] * 1000000
+
+number_extreme_pov['World'] = number_extreme_pov.iloc[:,1:].sum(1)
+number_extreme_pov = pd.melt(number_extreme_pov, id_vars=['Year'], var_name='Entity', value_name='number_moatsos')
+ex_pov_world = number_extreme_pov[number_extreme_pov['Entity'] == "World"].reset_index(drop=True)
+ex_pov_world
+# -
+
+pov_compare = pd.merge(df_final, ex_pov_world, on=['Year', 'Entity'])
+pov_compare = pov_compare[['Year', 'number_cbn', 'number_19', 'number_moatsos']]
+pov_compare['ratio'] = pov_compare['number_cbn'] / pov_compare['number_moatsos']
+pov_compare = pd.melt(pov_compare, id_vars=['Year'], var_name='estimation', value_name='number_poverty')
+
+fig = px.line(pov_compare[pov_compare['estimation'] != 'ratio'], x="Year", y="number_poverty", 
+              title=f"<b>Number in extreme poverty, World (1820 - 2018)</b><br>Maddison + Moatsos vs. Moatsos (green)",
+              color='estimation', markers=True, height=600)
+fig.show()
+
+fig = px.line(pov_compare[pov_compare['estimation'] == 'ratio'], x="Year", y="number_poverty", 
+              title=f'<b>Ratio between Moatsos + Maddison vs. Moatsos estimations</b>',
+              markers=True, height=600)
+fig.show()
+
 # ## Plot the poverty lines
 
 #Make the dataframe long to be able to plot it easily
