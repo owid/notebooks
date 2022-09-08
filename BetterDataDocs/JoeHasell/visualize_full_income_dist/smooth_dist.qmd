@@ -1,0 +1,199 @@
+---
+title: "Make a plot of the whole income distribution based on PIP data"
+format: html
+---
+
+
+
+
+```{r}
+library(tidyverse)
+library(knitr)
+
+```
+
+# Read in the data
+
+```{r}
+df_orig<- read.csv("https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/raw/percentiles.csv")
+
+```
+
+# Some cleaning and transformations
+
+For selecting data we will generate an ID unique to a survey: Entity-area-year. 
+```{r}
+
+df<- df_orig %>%
+mutate(survey_id = paste0(Entity, "-", reporting_level, "-", Year))
+```
+
+
+Sometimes multiple poverty_lines are associated with the same headcount.
+
+:::{.callout-caution collapse="true"}
+# Find repeated headcounts
+```{r}
+df<- df %>%
+  group_by(survey_id, headcount) %>%
+  summarize(min_povline = min(poverty_line), across())
+
+kable(df %>%
+  filter(poverty_line!=min_povline))
+
+```
+
+:::
+
+To clean these I will drop any rows with duplicate headcounts, keeping the min povline row.
+
+```{r}
+
+df<- df %>%
+  filter(poverty_line==min_povline)
+
+```
+
+:::{.callout-caution collapse="true"}
+# Calculate log densities to plot
+
+The classic Gapminder incomes plot is the density (y axis) of log income (x axis).
+
+To calculate (discrete) densities:
+
+- Find the width of the 'bin' (distance between the incomes of two adjacent percentiles). 
+
+```{r}
+df<- df %>%
+  group_by(survey_id) %>%
+  mutate(lag_poverty_line=lag(poverty_line)) %>%
+  mutate(bin_width = poverty_line - lag_poverty_line)
+```
+
+
+
+- The area of each bin is proportional to the 'step' in the percentiles. The percentiles are given as fractions so that the areas sum to 1. (If you wanted, you could scale by total population at this step).
+
+```{r}
+df<- df %>%group_by(survey_id) %>%
+  mutate(lag_headcount=lag(headcount)) %>%
+  mutate(percentile_step = headcount - lag_headcount,
+         bin_area = percentile_step/100)
+```
+
+
+- The chart will plot the density on the y axis. Plotted against incomes on a linear scale, this is just the area divided by the bin width.
+
+But plotted against incomes shown on a log scale requires a transformation: you need to multiply the density by income (think chain rule).
+
+```{r}
+df<- df %>%
+  group_by(survey_id) %>%
+  mutate(density = 1/bin_width) %>% # For linear scale
+  mutate(density_for_logs = density * poverty_line) # For log scale
+
+```
+
+These density values will be plotted at the midpoint between the income range of the bin.
+```{r}
+df<- df %>%
+  group_by(survey_id) %>%
+  mutate(midpoint_inc = (lag_poverty_line + poverty_line)/2)
+```
+
+
+:::
+
+
+## Select entity and year
+
+Make a list of the surveys you want to visualize, in the format "Somalia-national-2017" (For now, you have to check in the data to see what datapoints actually exist, but it'd be nice to add dropdowns).
+
+The middle part can be "national", "rural", "urban".
+
+To add multiple surveys, put them in list like this: 
+<c("Somalia-national-2017", "Argentina-urban-2018")>
+
+```{r}
+selected_surveys<- c("Somalia-national-2017", 
+                    "Bangladesh-national-2016",
+                    "Indonesia-national-2021",
+                    "Turkey-national-2019",
+                    "United States-national-2019")
+
+#selected_surveys<- c("United States-national-2019")
+
+```
+
+
+:::{.callout-caution collapse="true"}
+# Browse the filtered data
+
+```{r}
+
+kable(df %>% filter(survey_id %in% selected_surveys))
+
+```
+
+:::
+
+
+
+
+
+
+## Plot
+
+Specify X axis breaks and any income lines to mark (use log values as the break marks, but the actual values as labels).
+```{r}
+
+# tick marks
+x_axis_breaks<- log(c(0.5, 1, 2, 5, 10, 20, 50, 100))
+x_axis_labels<- c("$0.5", "$1", "$2", "$5", "$10", "$20", "$50", "$100")
+
+
+x_intercepts<- log(c(1.9, 22.38))
+```
+
+
+Plotted with underlying data points shown plus a smoothed line (using geom_smooth – a rolling local regression).
+
+```{r}
+
+ggplot(df %>% filter(survey_id %in% selected_surveys),
+       aes(x=log(midpoint_inc), y = density_for_logs, colour = as.factor(Year)))+
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_vline(xintercept=x_intercepts) +
+  scale_x_continuous(breaks=x_axis_breaks,
+                    labels = x_axis_labels) +
+  facet_wrap(~factor(survey_id,levels=selected_surveys), ncol = 1) +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+```
+
+Make the chart without datapoints shown, just the smoothed line, and save it:
+
+```{r}
+
+
+plot<- ggplot(df %>% filter(survey_id %in% selected_surveys),
+       aes(x=log(midpoint_inc), y = density_for_logs, colour = as.factor(Year)))+
+  geom_smooth(se=FALSE) +
+  scale_x_continuous(breaks=x_axis_breaks,
+                    labels = x_axis_labels) +
+  geom_vline(xintercept=x_intercepts) +
+  facet_wrap(~factor(survey_id,levels=selected_surveys), ncol = 1) +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+
+plot
+
+#Set height and width to get the right proportions of the output
+ggsave(file="income_dist_from_notebook.svg", plot=plot, width = 40, height = 10, units = "cm")
+
+```

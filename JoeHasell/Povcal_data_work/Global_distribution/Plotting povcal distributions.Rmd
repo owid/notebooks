@@ -166,7 +166,7 @@ axis_labels<- c("$0.5", "$1", "$2", "$5", "$10", "$20", "$50", "$100")
 ggplot(selected_data,
        aes(x=log(midpoint_inc), y = density_for_logs, colour = as.factor(CountryName)))+
   geom_point() +
-  geom_line() +
+  geom_smooth(se=FALSE) +
   facet_wrap(~RequestYear) +
   scale_x_continuous(breaks=axis_breaks,
                     labels = axis_labels) +
