@@ -94,7 +94,8 @@ for i in range(len(cols_wb)):
         cols_number_between.append(f'number_Between{cols_wb[i-1]}_{cols_wb[i]}')
 
 df_final.loc[:,cols_number + cols_number_above + cols_number_between] = df_final[cols_number + cols_number_above + cols_number_between].round(0)  
-        
+#df_final.loc[:,cols_number + cols_number_above + cols_number_between] = df_final[cols_number + cols_number_above + cols_number_between].astype(int)
+
 cols_final = ['Entity', 'Year'] + cols + cols_number + cols_above + cols_number_above + cols_between + cols_number_between
 df_final = df_final[cols_final]
 # -
