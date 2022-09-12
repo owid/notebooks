@@ -38,6 +38,24 @@ df_final = standardize_entities(df_final,
                         'Entity',
                         'Entity')
 
+# ## Add countries share in poverty data (CBN method)
+# Moatsos provides [a table](https://www.oecd-ilibrary.org/sites/3d96efc5-en/1/3/9/index.html?itemId=/content/publication/3d96efc5-en&_csp_=2c2e680562193998e9d20ed6a45a9242&itemIGO=oecd&itemContentType=book#tablegrp-d1e61890) with the extreme poverty calculated for the cost of basic needs method.
+
+# +
+file = 'data/input/how_was_life/share_countries_cbn.xlsx'
+countries_cbn = pd.read_excel(file, sheet_name='Sheet1', header=2)
+
+countries_cbn = pd.melt(countries_cbn, id_vars=['Year'], var_name='Entity', value_name='PovRate')
+countries_cbn = standardize_entities(countries_cbn,
+                        'data/input/entities_country_standardized_countries_cbn.csv',
+                        'Country',
+                        'Our World In Data Name',
+                        'Entity',
+                        'Entity')
+
+df_final = pd.concat([df_final, countries_cbn], ignore_index=True)
+# -
+
 # ## Integrate number in poverty (cost of basic needs approach)
 # The number of people in extreme poverty with the cost of basic needs approach is shown in [this chart](https://www.oecd-ilibrary.org/sites/3d96efc5-en/1/3/9/index.html?itemId=/content/publication/3d96efc5-en&_csp_=2c2e680562193998e9d20ed6a45a9242&itemIGO=oecd&itemContentType=book#figure-d1e61300) and the underlying data of Moatsos' paper. This data is integrated to the dataset to also get the population for each region and with that all the measures for the number in poverty for different 'dollar a day' poverty lines.
 
@@ -60,7 +78,7 @@ number_extreme_pov = standardize_entities(number_extreme_pov,
                         'Entity',
                         'Entity')
 
-df_final = pd.merge(df_final, number_extreme_pov, on=['Year', 'Entity'])
+df_final = pd.merge(df_final, number_extreme_pov, on=['Year', 'Entity'], how='left')
 df_final['pop'] = (df_final['number_PovRate'] / (df_final['PovRate'] / 100))
 # -
 
