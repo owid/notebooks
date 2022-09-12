@@ -115,9 +115,9 @@ To add multiple surveys, put them in list like this:
 <c("Somalia-national-2017", "Argentina-urban-2018")>
 
 ```{r}
-selected_surveys<- c("Somalia-national-2017", 
+selected_surveys<- c("Ethiopia-national-2015", 
                     "Bangladesh-national-2016",
-                    "Indonesia-national-2021",
+                    "Vietnam-national-2018",
                     "Turkey-national-2019",
                     "United States-national-2019")
 
@@ -152,7 +152,7 @@ x_axis_breaks<- log(c(0.5, 1, 2, 5, 10, 20, 50, 100))
 x_axis_labels<- c("$0.5", "$1", "$2", "$5", "$10", "$20", "$50", "$100")
 
 
-x_intercepts<- log(c(1.9, 22.38))
+x_intercepts<- log(c(1.75, 1.9, 2.24, 3.22, 6.60, 22.38))
 ```
 
 
@@ -194,6 +194,6 @@ plot<- ggplot(df %>% filter(survey_id %in% selected_surveys),
 plot
 
 #Set height and width to get the right proportions of the output
-ggsave(file="income_dist_from_notebook.svg", plot=plot, width = 40, height = 10, units = "cm")
+ggsave(file="income_dist_from_notebook.svg", plot=plot)
 
 ```

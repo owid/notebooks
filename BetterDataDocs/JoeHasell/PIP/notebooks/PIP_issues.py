@@ -16,6 +16,8 @@ import io
 pio.renderers.default='jupyterlab+png+colab+notebook_connected+vscode'
 
 
+# TO ADD:
+# Why can you make the popshare query for Indonesia in e.g. 2019, but not 2020 or 2021? (The same for China I think?)
 # %%
 def pip_query_country(popshare_or_povline, value, country_code="all", year="all", fill_gaps="true", welfare_type="all", reporting_level="all"):
 
