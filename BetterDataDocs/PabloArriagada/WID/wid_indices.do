@@ -85,13 +85,14 @@ gen p90_p50_ratio_pretax = p90p100_thr_pretax / p50p60_thr_pretax
 gen p90_p50_ratio_posttax_nat = p90p100_thr_posttax_nat / p50p60_thr_posttax_nat
 gen p90_p50_ratio_posttax_dis = p90p100_thr_posttax_dis / p50p60_thr_posttax_dis
 
-
+gen p50_p10_ratio_pretax = p50p60_thr_pretax / p10p20_thr_pretax
+gen p50_p10_ratio_posttax_nat = p50p60_thr_posttax_nat / p10p20_thr_posttax_nat
+gen p50_p10_ratio_posttax_dis = p50p60_thr_posttax_dis / p10p20_thr_posttax_dis
 
 order country year *gini_pretax *gini*dis *gini*nat *_ratio*pretax *_ratio*dis *_ratio*nat *share_pretax *share*dis *share*nat *avg_pretax *avg*dis *avg*nat *thr_pretax *thr*dis *thr*nat
 
 sort country year
 
-*export excel using "wid_indices.xlsx", firstrow(variables) replace
-export delimited using "wid_indices_992j.csv", replace
+export delimited using "data\raw\wid_indices_992j.csv", replace
 
-save wid_indices_992j, replace
+save "data\raw\wid_indices_992j.dta", replace
