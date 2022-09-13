@@ -24,7 +24,7 @@ answer = query_yes_no(question)
 
 # %% [markdown]
 # ## Inputs
-# In these section a set of poverty lines and the International Poverty Line are defined in cents
+# In this section a set of poverty lines and the International Poverty Line are defined in cents
 
 # %%
 start_time = time.time()
