@@ -41,7 +41,7 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
-def run_stata(dofile, answer):
+def run_stata(dofile, stata_dir, answer):
     
     if answer:
     
@@ -50,7 +50,7 @@ def run_stata(dofile, answer):
 
         #Set do-file information
         #Change Stata directory if necessary
-        cmd = ["C:\Program Files\Stata14\StataMP-64.exe", "/e", "do", dofile]
+        cmd = [stata_dir, "/e", "do", dofile]
 
         ## Run do-file
         subprocess.call(cmd)

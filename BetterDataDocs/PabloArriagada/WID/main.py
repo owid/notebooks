@@ -29,11 +29,12 @@ answer = query_yes_no(question)
 # -
 
 # ## Run the do file
-# This section runs the `wid_indices.do` file in Stata (if `yes` was selected).
+# This section runs the `wid_indices.do` file in Stata (if `yes` was selected). You can change Stata's directory if you have it installed somewhere else (just change the `stata_dir` path).
 
 start_time = time.time()
 dofile = "wid_indices.do"
-run_stata(dofile, answer)
+stata_dir = "C:\Program Files\Stata14\StataMP-64.exe"
+run_stata(dofile, stata_dir, answer)
 
 # ## Load Stata's output and standardize
 # This step takes Stata's output, changes entities names to OWID standard, renames `year` to `Year` and multiplies shares variables by 100
