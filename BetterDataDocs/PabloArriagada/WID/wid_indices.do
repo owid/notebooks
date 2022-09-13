@@ -96,3 +96,5 @@ sort country year
 export delimited using "data\raw\wid_indices_992j.csv", replace
 
 save "data\raw\wid_indices_992j.dta", replace
+
+exit, clear
