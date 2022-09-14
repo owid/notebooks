@@ -126,7 +126,7 @@ sort country year p
 
 order country year percentile p threshold average share inv_paretolorenz
 
-save "data\raw\wid_pretax_992j_dist.dta", replace
+*save "data\raw\wid_pretax_992j_dist.dta", replace
 export delimited using "data\raw\wid_pretax_992j_dist.csv", replace
 
 *wid_posttax_nat_992j_dist
@@ -172,7 +172,7 @@ sort country year p
 
 order country year percentile p threshold average share inv_paretolorenz
 
-save "data\raw\wid_posttax_nat_992j_dist.dta", replace
+*save "data\raw\wid_posttax_nat_992j_dist.dta", replace
 export delimited using "data\raw\wid_posttax_nat_992j_dist.csv", replace
 
 *wid_posttax_dis_992j_dist
@@ -218,7 +218,7 @@ sort country year p
 
 order country year percentile p threshold average share inv_paretolorenz
 
-save "data\raw\wid_posttax_dis_992j_dist.dta", replace
+*save "data\raw\wid_posttax_dis_992j_dist.dta", replace
 export delimited using "data\raw\wid_posttax_dis_992j_dist.csv", replace
 
 

@@ -71,6 +71,9 @@ def load_and_standardize(file):
                            na_values=['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A', '#N/A', 'N/A', 'n/a', '', '#NA', 
                                         'NULL', 'null', 'NaN', '-NaN', 'nan', '-nan', ''])
 
+    #Exclude 
+    
+    
     #Standardize entities and year
     df_final = standardize_entities(df_final,
                             'data/raw/countries_country_standardized.csv',
@@ -93,7 +96,7 @@ def load_and_standardize(file):
 
 def add_metadata_and_export(df_final, sheet):
     
-    print('Changing the names of variables and exporting Grapher\'s dataset...')
+    print(f'Changing the names of variables and exporting Grapher\'s dataset ({sheet})...')
     start_time = time.time()
     
     # Specify sheet id and sheet (tab) name for the metadata google sheet 
@@ -130,7 +133,7 @@ def add_metadata_and_export(df_final, sheet):
     df_dataset = df_dataset.rename(columns=varnames_dict)
 
     #Export the dataset
-    df_dataset.to_csv('data/final/wid_dataset.csv', index=False)
+    df_dataset.to_csv(f'data/final/{sheet}.csv', index=False)
     
     end_time = time.time()
     elapsed_time = end_time - start_time
