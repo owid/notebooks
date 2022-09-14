@@ -71,7 +71,8 @@ def load_and_standardize(file):
                            na_values=['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A', '#N/A', 'N/A', 'n/a', '', '#NA', 
                                         'NULL', 'null', 'NaN', '-NaN', 'nan', '-nan', ''])
 
-    #Exclude 
+    #Exclude market exchange values for regions
+    df_final = df_final[~df_final["country"].str.contains("MER")].reset_index(drop=True)
     
     
     #Standardize entities and year
