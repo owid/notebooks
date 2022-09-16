@@ -299,7 +299,7 @@ def query_non_poverty(df_final, df_country, df_region):
     return df_final
 
 
-def integrate_relative_poverty(df_final, df_country, ppp=2011, answer):
+def integrate_relative_poverty(df_final, df_country, answer, ppp=2011):
     
     relative_poverty_lines = [40, 50, 60]
     
@@ -539,7 +539,7 @@ def generate_relative_poverty(df, relative_poverty_lines, ppp):
     df.to_csv('data/raw/relative_poverty.csv', index=False)
 
 
-def thresholds(df_final, ppp=2011, answer):
+def thresholds(df_final, answer, ppp=2011):
     #Decile thresholds
 
     if answer:
@@ -628,7 +628,7 @@ def generate_percentiles_countries(povline_list_dict, ppp):
             povline_dollars = povline/100
             print(f'Fetching country headcounts for: ${povline_dollars} a day')
 
-            df = country_data(povline_dollars, filled="false", ppp)[0]
+            df = country_data(povline_dollars, filled="false", ppp=ppp)[0]
             df_complete = pd.concat([df_complete, df],ignore_index=True)
 
             end_time = time.time()

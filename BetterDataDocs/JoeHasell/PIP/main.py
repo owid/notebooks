@@ -73,14 +73,14 @@ df_final = query_non_poverty(df_final, df_country, df_region)
 # If `yes` was selected at the start, it will first generate percentile data for each country and region. It takes between 1 and 2 DAYS. If `no` is selected, the code goes straight to the next step, which is merging the data with the previously generated percentile output.
 
 # %%
-df_final = thresholds(df_final, ppp=ppp_version, answer=answer_perc)
+df_final = thresholds(df_final, answer=answer_perc, ppp=ppp_version)
 
 # %% [markdown]
 # ## Integrate relative poverty data
 # If `yes` was selected at the start, it will first generate relative poverty data from different queries for each country. It takes between 1 and 2 hours. If `no` is selected, the code goes straight to the next step, which is merging the data with the previously generated relative poverty output.
 
 # %%
-df_final, col_relative = integrate_relative_poverty(df_final, df_country, ppp=ppp_version, answer=answer_rel)
+df_final, col_relative = integrate_relative_poverty(df_final, df_country, answer=answer_rel, ppp=ppp_version)
 
 # %% [markdown]
 # ## Generate additional variables and check for errors
