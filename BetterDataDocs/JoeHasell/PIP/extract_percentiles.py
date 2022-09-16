@@ -419,6 +419,7 @@ df_closest_complete_regions = df_closest_complete_regions.rename(columns={'regio
                                                                           'reporting_year': 'Year'})
 
 df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
+df_percentiles = df_percentiles.rename(columns={'poverty_line': 'percentile_value'})
 
 # %%
 df_percentiles.to_csv('data/raw/percentiles.csv', index=False)

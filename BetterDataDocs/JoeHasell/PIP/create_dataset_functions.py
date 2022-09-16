@@ -128,6 +128,7 @@ def query_poverty(poverty_lines_cents, filled, ppp=2011):
     for p in poverty_lines_cents:
         
         p_dollar = p/100
+        print(p_dollar)
 
         #.. and for both countries and WB regional aggregates
         for ent_type in ['country', 'region']:
@@ -359,6 +360,8 @@ def generate_relative_poverty(df, relative_poverty_lines, ppp):
 
     # For each row of the dataset
     for i in range(len(df)):
+        
+        print(f'Generating relative poverty values for {df.country_code[i]} ({df.Year[i]})...')
 
         # Run 3 queries, one for each relative poverty line, to get the headcount (ratio)
         df_query_40 = pip_query_country(popshare_or_povline = "povline",
@@ -573,6 +576,7 @@ def thresholds(df_final, answer, ppp=2011):
         df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
         df_closest_complete_regions = generate_percentiles_regions(povline_list_dict, ppp)
         df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
+        df_percentiles = df_percentiles.rename(columns={'poverty_line': 'percentile_value'})
         
         #Export concatenation
         df_percentiles.to_csv('data/raw/percentiles.csv', index=False)
@@ -595,7 +599,7 @@ def thresholds(df_final, answer, ppp=2011):
     df_percentiles = pd.pivot(df_percentiles, 
                               index=['Entity', 'Year', 'reporting_level', 'welfare_type'], 
                               columns='target_percentile', 
-                              values='poverty_line').reset_index()
+                              values='percentile_value').reset_index()
 
     for i in range(10,100,10):
         df_percentiles = df_percentiles.rename(columns={f'P{i}': f'decile{int(i/10)}_thr'})
@@ -1067,13 +1071,13 @@ def median_patch(df_final):
 
     df_final = pd.merge(df_final, 
                         df_median[['Entity', 'Year', 'reporting_level', 'welfare_type',
-                                        'poverty_line']], 
+                                   'percentile_value']], 
                         how='left', 
                         on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
                         validate='many_to_one')
 
     #Create the column median2, a combination between the old and new median values
-    df_final['median2'] = np.where((df_final['median'].isnull()) & ~(df_final['poverty_line'].isnull()), df_final['poverty_line'], df_final['median'])
+    df_final['median2'] = np.where((df_final['median'].isnull()) & ~(df_final['percentile_value'].isnull()), df_final['percentile_value'], df_final['median'])
 
     #Median nulls in original and new columns
     null_median = (df_final['median'].isnull()).sum()
@@ -1097,7 +1101,7 @@ def median_patch(df_final):
         print(f'Ratio between old and new variable: Median = {median_ratio_median}, Min = {median_ratio_min}, Max = {median_ratio_max}')   
 
     #Drop the check and the old median and rename the new median
-    df_final.drop(columns=['median', 'median_ratio', 'poverty_line'], inplace=True)
+    df_final.drop(columns=['median', 'median_ratio', 'percentile_value'], inplace=True)
     df_final.rename(columns={'median2': 'median'}, inplace=True)
     
     end_time = time.time()
