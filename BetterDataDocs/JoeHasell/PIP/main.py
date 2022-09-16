@@ -47,16 +47,16 @@ print(f'{extreme_povline_cents}')
 # Here the code produces the output of PIP queries for countries (with and without inter/extrapolations), together with dataframes filter for only income data, only consumption or both (dropping duplicates). Also regional data is queried.
 
 # %%
-df_country, df_country_inc, df_country_cons, df_country_inc_or_cons = country_data(extreme_povline_cents, filled="false", ppp_version)
-df_country_filled, df_country_inc_filled, df_country_cons_filled, df_country_inc_or_cons_filled = country_data(extreme_povline_cents, filled="true", ppp_version)
-df_region = regional_data(extreme_povline_cents, ppp_version)
+df_country, df_country_inc, df_country_cons, df_country_inc_or_cons = country_data(extreme_povline_cents, filled="false", ppp=ppp_version)
+df_country_filled, df_country_inc_filled, df_country_cons_filled, df_country_inc_or_cons_filled = country_data(extreme_povline_cents, filled="true", ppp=ppp_version)
+df_region = regional_data(extreme_povline_cents, ppp=ppp_version)
 
 # %% [markdown]
 # ## Get poverty data for multiple poverty lines
 # The PIP data is queried multiple times for each poverty line set in the input section. This data is then made wide to get a `Entity`, `Year`, `reporting_level`, `welfare_type` structure for each row and multiple poverty measures by each poverty line in columns. The poverty measures include headcount, headcount ratio, poverty gap index, income gap ratio, average shortfall, total shortfall, poverty severity, and Watts index 
 
 # %%
-df_final = query_poverty(poverty_lines_cents, filled="false", ppp_version)
+df_final = query_poverty(poverty_lines_cents, filled="false", ppp=ppp_version)
 
 # %% [markdown]
 # ## Get non-poverty data
