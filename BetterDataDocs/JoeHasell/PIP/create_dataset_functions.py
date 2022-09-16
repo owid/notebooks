@@ -298,10 +298,23 @@ def query_non_poverty(df_final, df_country, df_region):
     return df_final
 
 
-def relative_poverty(df_final, answer):
+def integrate_relative_poverty(df_final, df_country, ppp=2011, answer):
+    
+    relative_poverty_lines = [40, 50, 60]
     
     if answer:
-        print("Running relative_poverty.py... (takes about 1 hour)")
+        print("Generating relative poverty values... (takes about 1.5 hours)")
+        start_time = time.time()
+        df = median_patch(df_country)
+        
+        for pct in relative_poverty_lines:
+            df[f'median_{pct}'] = df['median'] * pct/100
+            
+        generate_relative_poverty(df, relative_poverty_lines, ppp)
+        
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f'Done. Execution time: {elapsed_time/60} minutes')
     
     print('Integrating relative poverty data...')
     start_time = time.time()
@@ -322,6 +335,207 @@ def relative_poverty(df_final, answer):
     
     
     return df_final, col_relative
+
+
+def generate_relative_poverty(df, relative_poverty_lines, ppp=2011):
+
+    # Initialise list to fill with headcount (ratio) data for 40%, 50% and 60% of the median
+    headcount_40_list = []
+    headcount_50_list = []
+    headcount_60_list = []
+
+    pgi_40_list = []
+    pgi_50_list = []
+    pgi_60_list = []
+
+    pov_severity_40_list = []
+    pov_severity_50_list = []
+    pov_severity_60_list = []
+
+    watts_40_list = []
+    watts_50_list = []
+    watts_60_list = []
+
+    # For each row of the dataset
+    for i in range(len(df)):
+
+        # Run 3 queries, one for each relative poverty line, to get the headcount (ratio)
+        df_query_40 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['Year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_40'][i],
+                                        fill_gaps="false",
+                                        ppp_version=ppp)
+
+        df_query_50 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['Year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_50'][i],
+                                        fill_gaps="false",
+                                        ppp_version=ppp)
+
+        df_query_60 = pip_query_country(popshare_or_povline = "povline",
+                                        country_code = df['country_code'][i],
+                                        year = df['Year'][i],
+                                        welfare_type = df['welfare_type'][i],
+                                        reporting_level = df['reporting_level'][i],
+                                        value = df['median_60'][i],
+                                        fill_gaps="false",
+                                        ppp_version=ppp)
+
+        # If there is no error, get the headcount value and append it to a list
+        try:
+            headcount_40_value = df_query_40['headcount'][0]
+            headcount_40_list.append(headcount_40_value)
+            pgi_40_value = df_query_40['poverty_gap'][0]
+            pgi_40_list.append(pgi_40_value)
+            pov_severity_40_value = df_query_40['poverty_severity'][0]
+            pov_severity_40_list.append(pov_severity_40_value)
+            watts_40_value = df_query_40['watts'][0]
+            watts_40_list.append(watts_40_value)
+
+            headcount_50_value = df_query_50['headcount'][0]
+            headcount_50_list.append(headcount_50_value)
+            pgi_50_value = df_query_50['poverty_gap'][0]
+            pgi_50_list.append(pgi_50_value)
+            pov_severity_50_value = df_query_50['poverty_severity'][0]
+            pov_severity_50_list.append(pov_severity_50_value)
+            watts_50_value = df_query_50['watts'][0]
+            watts_50_list.append(watts_50_value)
+
+            headcount_60_value = df_query_60['headcount'][0]
+            headcount_60_list.append(headcount_60_value)
+            pgi_60_value = df_query_60['poverty_gap'][0]
+            pgi_60_list.append(pgi_60_value)
+            pov_severity_60_value = df_query_60['poverty_severity'][0]
+            pov_severity_60_list.append(pov_severity_60_value)
+            watts_60_value = df_query_60['watts'][0]
+            watts_60_list.append(watts_60_value)
+
+        # If there is an error, append a null value to the list
+        except:
+            headcount_40_list.append(np.nan)
+            pgi_40_list.append(np.nan)
+            pov_severity_40_list.append(np.nan)
+            watts_40_list.append(np.nan)
+
+            headcount_50_list.append(np.nan)
+            pgi_50_list.append(np.nan)
+            pov_severity_50_list.append(np.nan)
+            watts_50_list.append(np.nan)
+
+            headcount_60_list.append(np.nan)
+            pgi_60_list.append(np.nan)
+            pov_severity_60_list.append(np.nan)
+            watts_60_list.append(np.nan)
+
+
+    # The lists converted into new columns
+    df['headcount_ratio_40_median'] = headcount_40_list
+    df['headcount_ratio_50_median'] = headcount_50_list
+    df['headcount_ratio_60_median'] = headcount_60_list
+
+    df['poverty_gap_index_40_median'] = pgi_40_list
+    df['poverty_gap_index_50_median'] = pgi_50_list
+    df['poverty_gap_index_60_median'] = pgi_60_list
+
+    df['poverty_severity_40_median'] = pov_severity_40_list
+    df['poverty_severity_50_median'] = pov_severity_50_list
+    df['poverty_severity_60_median'] = pov_severity_60_list
+
+    df['watts_40_median'] = watts_40_list
+    df['watts_50_median'] = watts_50_list
+    df['watts_60_median'] = watts_60_list
+
+    for pct in relative_poverty_lines:
+        df[f'headcount_{pct}_median'] = df[f'headcount_ratio_{pct}_median'] * df['reporting_pop']
+        df[f'headcount_{pct}_median'] = df[f'headcount_{pct}_median'].round(0)
+        df[f'total_shortfall_{pct}_median'] = df[f'poverty_gap_index_{pct}_median'] * df[f'median_{pct}'] * df['reporting_pop']
+        df[f'avg_shortfall_{pct}_median'] = df[f'total_shortfall_{pct}_median'] / df[f'headcount_{pct}_median']
+        df[f'income_gap_ratio_{pct}_median'] = (df[f'total_shortfall_{pct}_median'] / df[f'headcount_{pct}_median']) / df[f'median_{pct}']
+        df[f'headcount_ratio_{pct}_median'] = df[f'headcount_ratio_{pct}_median'] * 100
+        df[f'income_gap_ratio_{pct}_median'] = df[f'income_gap_ratio_{pct}_median'] * 100
+        df[f'poverty_gap_index_{pct}_median'] = df[f'poverty_gap_index_{pct}_median'] * 100
+
+    #Calculate numbers in poverty between pov lines for stacked area charts
+    #Make sure the poverty lines are in order, lowest to highest
+    relative_poverty_lines.sort()
+
+    col_stacked_n = []
+    col_stacked_pct = []
+
+    #For each poverty line in relative_poverty_lines
+    for i in range(len(relative_poverty_lines)):
+        #if it's the first value only get people below this poverty line (and percentage)
+        if i == 0:
+            varname_n = f'headcount_stacked_below_{relative_poverty_lines[i]}_median'
+            df[varname_n] = df[f'headcount_{relative_poverty_lines[i]}_median']
+            col_stacked_n.append(varname_n)
+
+            varname_pct = f'headcount_ratio_stacked_below_{relative_poverty_lines[i]}_median'
+            df[varname_pct] = df[varname_n] / df['reporting_pop']
+            col_stacked_pct.append(varname_pct)
+
+        #If it's the last value calculate the people between this value and the previous 
+        #and also the people over this poverty line (and percentages)
+        elif i == len(relative_poverty_lines)-1:
+
+            varname_n = f'headcount_stacked_below_{relative_poverty_lines[i]}_median'
+            df[varname_n] = df[f'headcount_{relative_poverty_lines[i]}_median'] - df[f'headcount_{relative_poverty_lines[i-1]}_median']
+            col_stacked_n.append(varname_n)
+
+            varname_pct = f'headcount_ratio_stacked_below_{relative_poverty_lines[i]}_median'
+            df[varname_pct] = df[varname_n] / df['reporting_pop']
+            col_stacked_pct.append(varname_pct)
+
+            varname_n = f'headcount_stacked_above_{relative_poverty_lines[i]}_median'
+            df[varname_n] = df['reporting_pop'] - df[f'headcount_{relative_poverty_lines[i]}_median']
+            col_stacked_n.append(varname_n)
+
+            varname_pct = f'headcount_ratio_stacked_above_{relative_poverty_lines[i]}_median'
+            df[varname_pct] = df[varname_n] / df['reporting_pop']
+            col_stacked_pct.append(varname_pct)
+
+        #If it's any value between the first and the last calculate the people between this value and the previous (and percentage)
+        else:
+            varname_n = f'headcount_stacked_below_{relative_poverty_lines[i]}_median'
+            df[varname_n] = df[f'headcount_{relative_poverty_lines[i]}_median'] - df[f'headcount_{relative_poverty_lines[i-1]}_median']
+            col_stacked_n.append(varname_n)
+
+            varname_pct = f'headcount_ratio_stacked_below_{relative_poverty_lines[i]}_median'
+            df[varname_pct] = df[varname_n] / df['reporting_pop']
+            col_stacked_pct.append(varname_pct)
+
+    df.loc[:, col_stacked_pct] = df[col_stacked_pct] * 100
+    
+    
+    col_povlines = []
+    col_headcount = []
+    col_headcount_ratio = []
+    col_pgi = []
+    col_severity = []
+    col_watts = []
+    col_total_shortfall = []
+    col_avg_shortfall = []
+    col_income_gap_ratio = []
+
+    for pct in relative_poverty_lines:
+        col_povlines.append(f'median_{pct}')
+        col_headcount.append(f'headcount_{pct}_median')
+        col_headcount_ratio.append(f'headcount_ratio_{pct}_median')
+        col_pgi.append(f'poverty_gap_index_{pct}_median')
+        col_severity.append(f'poverty_severity_{pct}_median')
+        col_watts.append(f'watts_{pct}_median')
+        col_total_shortfall.append(f'total_shortfall_{pct}_median')
+        col_avg_shortfall.append(f'avg_shortfall_{pct}_median')
+        col_income_gap_ratio.append(f'income_gap_ratio_{pct}_median')
+
+    df = df[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_povlines + col_headcount + col_headcount_ratio + col_pgi + col_total_shortfall + col_avg_shortfall + col_income_gap_ratio + col_severity + col_watts + col_stacked_n + col_stacked_pct]
+    df.to_csv('data/raw/relative_poverty.csv', index=False)
 
 
 def thresholds(df_final, answer):
