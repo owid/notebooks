@@ -32,6 +32,8 @@ start_time = time.time()
 poverty_lines_cents = [100, 190, 320, 550, 1000, 2000, 3000, 4000]
 #Here we define the international poverty line
 extreme_povline_cents = 190
+#Here we define the PPPs between 2011 and 2017
+ppp_version = 2011
 
 povlines_count = len(poverty_lines_cents)
 print(f'{povlines_count} poverty lines were defined (in cents):')
