@@ -47,16 +47,16 @@ print(f'{extreme_povline_cents}')
 # Here the code produces the output of PIP queries for countries (with and without inter/extrapolations), together with dataframes filter for only income data, only consumption or both (dropping duplicates). Also regional data is queried.
 
 # %%
-df_country, df_country_inc, df_country_cons, df_country_inc_or_cons = country_data(extreme_povline_cents, filled="false")
-df_country_filled, df_country_inc_filled, df_country_cons_filled, df_country_inc_or_cons_filled = country_data(extreme_povline_cents, filled="true")
-df_region = regional_data(extreme_povline_cents)
+df_country, df_country_inc, df_country_cons, df_country_inc_or_cons = country_data(extreme_povline_cents, filled="false", ppp_version)
+df_country_filled, df_country_inc_filled, df_country_cons_filled, df_country_inc_or_cons_filled = country_data(extreme_povline_cents, filled="true", ppp_version)
+df_region = regional_data(extreme_povline_cents, ppp_version)
 
 # %% [markdown]
 # ## Get poverty data for multiple poverty lines
 # The PIP data is queried multiple times for each poverty line set in the input section. This data is then made wide to get a `Entity`, `Year`, `reporting_level`, `welfare_type` structure for each row and multiple poverty measures by each poverty line in columns. The poverty measures include headcount, headcount ratio, poverty gap index, income gap ratio, average shortfall, total shortfall, poverty severity, and Watts index 
 
 # %%
-df_final = query_poverty(poverty_lines_cents, filled="false")
+df_final = query_poverty(poverty_lines_cents, filled="false", ppp_version)
 
 # %% [markdown]
 # ## Get non-poverty data
@@ -66,18 +66,18 @@ df_final = query_poverty(poverty_lines_cents, filled="false")
 df_final = query_non_poverty(df_final, df_country, df_region)
 
 # %% [markdown]
-# ## Integrate relative poverty data
-# If `yes` was selected at the start, it will first generate relative poverty data from different queries for each country. It takes between 1 and 2 hours. If `no` is selected, the code goes straight to the next step, which is merging the data with the previously generated relative poverty output.
-
-# %%
-df_final, col_relative = relative_poverty(df_final, answer)
-
-# %% [markdown]
 # ## Integrate income thresholds
 # If `yes` was selected at the start, it will first generate percentile data for each country and region. It takes between 1 and 2 DAYS. If `no` is selected, the code goes straight to the next step, which is merging the data with the previously generated percentile output.
 
 # %%
 df_final = thresholds(df_final, answer)
+
+# %% [markdown]
+# ## Integrate relative poverty data
+# If `yes` was selected at the start, it will first generate relative poverty data from different queries for each country. It takes between 1 and 2 hours. If `no` is selected, the code goes straight to the next step, which is merging the data with the previously generated relative poverty output.
+
+# %%
+df_final, col_relative = relative_poverty(df_final, answer)
 
 # %% [markdown]
 # ## Generate additional variables and check for errors

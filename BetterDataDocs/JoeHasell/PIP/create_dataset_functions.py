@@ -54,7 +54,7 @@ def query_yes_no(question, default="yes"):
 # This code is to query poverty data from a poverty line (filled or not). Entities are standardised and returns multiple outputs, one raw file with all the results, one only for consumption, one only for income and one for income and consumption dropping duplicates.
 
 # +
-def country_data(extreme_povline_cents, filled):
+def country_data(extreme_povline_cents, filled, ppp=2011):
     #Query for all the countries and for the poverty line defined (only non-filled data)
     df_country = pip_query_country(popshare_or_povline = "povline",
                                     country_code = "all",
@@ -62,7 +62,8 @@ def country_data(extreme_povline_cents, filled):
                                     welfare_type = "all",
                                     reporting_level = "all",
                                     value = extreme_povline_cents/100,
-                                    fill_gaps=filled)
+                                    fill_gaps=filled,
+                                    ppp_version=ppp)
 
     df_country = df_country.rename(columns={'country_name': 'Entity', 'reporting_year': 'Year'})
     
@@ -99,9 +100,9 @@ def country_data(extreme_povline_cents, filled):
 # ## Regional data
 # Returns standardised regional data
 
-def regional_data(extreme_povline_cents):
+def regional_data(extreme_povline_cents, ppp=2011):
     #Query for all the regions and for the poverty line defined
-    df_region = pip_query_region(extreme_povline_cents/100)
+    df_region = pip_query_region(extreme_povline_cents/100, ppp_version=ppp)
 
     df_region = df_region.rename(columns={'region_name': 'Entity', 'reporting_year': 'Year'})
 
@@ -114,7 +115,7 @@ def regional_data(extreme_povline_cents):
 #Create a dataframe for each poverty line on the list, including and excluding interpolations and for countries and regions
 #Each of these combinations are concatenated in a larger data frame.
 
-def query_poverty(poverty_lines_cents, filled):
+def query_poverty(poverty_lines_cents, filled, ppp=2011):
 
     print('Querying data from several poverty lines from the PIP API...')
     start_time = time.time()
@@ -133,7 +134,7 @@ def query_poverty(poverty_lines_cents, filled):
             # Make the API query for country data
             if ent_type == 'country':
                 
-                df = country_data(p, filled)[0]
+                df = country_data(p, filled, ppp)[0]
 
                 # Keep only these variables:
                 keep_vars = [ 
@@ -153,7 +154,7 @@ def query_poverty(poverty_lines_cents, filled):
             # The code runs it twice anyhow.
             if ent_type == 'region':
                 
-                df = regional_data(p)
+                df = regional_data(p, ppp)
 
                 keep_vars = [ 
                     'Entity',
