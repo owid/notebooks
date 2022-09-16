@@ -67,7 +67,7 @@ for key in povline_list_dict:
 
         #For China, India and Indonesia use on the second line: CHN&country=IND&country=IDN
         df = pip_query_country("povline", povline_dollars, 
-                        "USA", 
+                        "all", 
                         "all", "false", "all", "all")
 
 
