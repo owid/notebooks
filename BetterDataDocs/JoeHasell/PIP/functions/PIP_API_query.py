@@ -11,7 +11,7 @@ def pip_query_country(popshare_or_povline, value, country_code="all", year="all"
     response = requests.get(request_url, timeout=200).content
     df = pd.read_csv(io.StringIO(response.decode('utf-8')))
 
-    return df, request_url
+    return df
 
 
 # For world regions, the popshare query is not available (or rather, it returns nonsense).
