@@ -19,11 +19,12 @@ from create_dataset_functions import *
 # %%
 print('CAUTION: If a full update is needed, first you have to run relative poverty and percentile extraction codes')
 print('Together, these codes take over a day to run')
-question = "Do you want to generate new relative poverty data (running time ~1.5 hours)?"
-answer_rel = query_yes_no(question)
 
 question = "Do you want to generate new percentiles data (running time ~1.5 DAYS)?"
 answer_perc = query_yes_no(question)
+
+question = "Do you want to generate new relative poverty data (running time ~1.5 hours)?"
+answer_rel = query_yes_no(question)
 
 # %% [markdown]
 # ## Inputs
