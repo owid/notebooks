@@ -77,7 +77,7 @@ cainc: 	post-tax disposable income
 
 */
 
-wid, indicators(xlcusp) year(2021) clear 
+wid, indicators(xlcusp) year(2017) clear 
 rename value ppp
 tempfile ppp
 save "`ppp'", replace

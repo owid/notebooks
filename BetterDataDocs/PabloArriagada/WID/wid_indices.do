@@ -3,7 +3,7 @@
 set more off
 
 *Gets ppp data to convert to USD
-wid, indicators(xlcusp) year(2021) clear 
+wid, indicators(xlcusp) year(2017) clear 
 rename value ppp
 tempfile ppp
 save "`ppp'"

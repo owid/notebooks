@@ -139,27 +139,3 @@ def add_metadata_and_export(df_final, sheet):
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
-
-
-def create_faceted_dataset(df_final):
-    
-    print(f'Creating a dataset to compare the evolution of the top 1% share in two groups...')
-    start_time = time.time()
-    
-    df_final = df_final[['Entity', 'Year', 'p99p100_share_pretax']]
-    english_countries = ['United States', 'United Kingdom', 'Canada', 'Ireland', 'Australia']
-    europe_japan = ['France', 'Spain', 'Netherlands', 'Denmark', 'Japan']
-    
-    df_english = df_final[df_final['Entity'].isin(english_countries)].reset_index(drop=True).copy()
-    df_europe_jp = df_final[df_final['Entity'].isin(europe_japan)].reset_index(drop=True).copy()
-    
-    df_english = df_english.rename(columns={'p99p100_share_pretax': 'Top 1% share in English speaking countries'})
-    df_europe_jp = df_europe_jp.rename(columns={'p99p100_share_pretax': 'Top 1% share in Continental Europe and Japan'})
-    
-    df_faceted = pd.merge(df_english, df_europe_jp, on=['Entity', 'Year'], how='outer')
-    
-    df_faceted.to_csv(f'data/final/wid_faceted.csv', index=False)
-    
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print('Done. Execution time:', elapsed_time, 'seconds')
