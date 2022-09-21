@@ -54,8 +54,7 @@ def query_yes_no(question, default="yes"):
 # ## Get country data
 # This code is to query poverty data from a poverty line (filled or not). Entities are standardised and returns multiple outputs, one raw file with all the results, one only for consumption, one only for income and one for income and consumption dropping duplicates.
 
-# +
-def country_data(extreme_povline_cents, filled, ppp=2011):
+def country_data(extreme_povline_cents, filled, ppp=2011, additional_dfs=True):
     #Query for all the countries and for the poverty line defined (only non-filled data)
     df_country = pip_query_country(popshare_or_povline = "povline",
                                     country_code = "all",
@@ -68,35 +67,32 @@ def country_data(extreme_povline_cents, filled, ppp=2011):
 
     df_country = df_country.rename(columns={'country_name': 'Entity', 'reporting_year': 'Year'})
     
-#     df_country.to_csv(f'data/raw/country_filled_{filled}.csv', index=False)
+    if additional_dfs:
+        
+        # Separate out consumption-only, income-only, and both dataframes
+        df_country_inc = df_country[df_country['welfare_type']=="income"].reset_index(drop=True).copy()
+        df_country_cons = df_country[df_country['welfare_type']=="consumption"].reset_index(drop=True).copy()
+
+        df_country_inc_or_cons = df_country.copy()
+        # If both inc and cons are available in a given year, drop inc
+
+        # Flag duplicates – indicating multiple welfare_types
+        #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
+        df_country_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True, inplace=True)
+        df_country_inc_or_cons['duplicate_flag'] = df_country_inc_or_cons.duplicated(subset=['Entity', 'Year', 'reporting_level'])
+
+        #print(f'Checking the data for years with both income and consumption. Before dropping duplicated, there were {len(df_country_inc_or_cons)} rows...')
+        # Drop income where income and consumption are available
+        df_country_inc_or_cons = df_country_inc_or_cons[(df_country_inc_or_cons['duplicate_flag']==False) | (df_country_inc_or_cons['welfare_type']=='consumption')]
+        df_country_inc_or_cons.drop(columns=['duplicate_flag'], inplace=True)
+
+        #print(f'After dropping duplicates there were {len(df_country_inc_or_cons)} rows.')
+        
+        return df_country, df_country_inc, df_country_cons, df_country_inc_or_cons
     
-    # Separate out consumption-only, income-only, and both dataframes
-    df_country_inc = df_country[df_country['welfare_type']=="income"].reset_index(drop=True).copy()
-    df_country_cons = df_country[df_country['welfare_type']=="consumption"].reset_index(drop=True).copy()
+    else:
+        return df_country
 
-    df_country_inc_or_cons = df_country.copy()
-    # If both inc and cons are available in a given year, drop inc
-
-    # Flag duplicates – indicating multiple welfare_types
-    #Sort values to ensure the welfare_type consumption is marked as False when there are multiple welfare types
-    df_country_inc_or_cons.sort_values(by=['Entity', 'Year', 'reporting_level', 'welfare_type'], ignore_index=True, inplace=True)
-    df_country_inc_or_cons['duplicate_flag'] = df_country_inc_or_cons.duplicated(subset=['Entity', 'Year', 'reporting_level'])
-
-    #print(f'Checking the data for years with both income and consumption. Before dropping duplicated, there were {len(df_country_inc_or_cons)} rows...')
-    # Drop income where income and consumption are available
-    df_country_inc_or_cons = df_country_inc_or_cons[(df_country_inc_or_cons['duplicate_flag']==False) | (df_country_inc_or_cons['welfare_type']=='consumption')]
-    df_country_inc_or_cons.drop(columns=['duplicate_flag'], inplace=True)
-
-    #print(f'After dropping duplicates there were {len(df_country_inc_or_cons)} rows.')
-    
-#     df_country_inc.to_csv(f'data/raw/country_inc_filled_{filled}.csv', index=False)
-#     df_country_cons.to_csv(f'data/raw/country_cons_filled_{filled}.csv', index=False)
-#     df_country_inc_or_cons.to_csv(f'data/raw/country_inc_or_cons_filled_{filled}.csv', index=False)
-    
-    return df_country, df_country_inc, df_country_cons, df_country_inc_or_cons
-
-
-# -
 
 # ## Regional data
 # Returns standardised regional data
@@ -136,7 +132,7 @@ def query_poverty(poverty_lines_cents, filled, ppp=2011):
             # Make the API query for country data
             if ent_type == 'country':
                 
-                df = country_data(p, filled, ppp)[0]
+                df = country_data(p, filled, ppp, additional_dfs=False)
 
                 # Keep only these variables:
                 keep_vars = [ 
@@ -542,6 +538,7 @@ def generate_relative_poverty(df, relative_poverty_lines, ppp):
     df.to_csv('data/raw/relative_poverty.csv', index=False)
 
 
+# +
 def thresholds(df_final, answer, ppp=2011):
     #Decile thresholds
 
@@ -550,6 +547,37 @@ def thresholds(df_final, answer, ppp=2011):
         start_time = time.time()
         # Define list of poverty lines to query (max 500 requests per category)
 
+#         under_5_dollars = list(range(1,500, 1))
+#         between_5_and_10_dollars = list(range(500,1000, 1))
+#         between_10_and_20_dollars = list(range(1000,2000, 2))
+#         between_20_and_30_dollars = list(range(2000,3000, 2))
+#         between_30_and_55_dollars = list(range(3000,5500, 5))
+#         between_55_and_80_dollars = list(range(5500,8000, 5))
+#         between_80_and_100_dollars = list(range(8000,10000, 5))
+        between_100_and_150_dollars = list(range(10000,15000, 10))
+        between_150_and_175_dollars = list(range(15000,17500, 10))
+
+        #Define dictionary to iterate with
+#         povline_list_dict = {
+#             'under_5_dollars': under_5_dollars, 
+#             'between_5_and_10_dollars': between_5_and_10_dollars,
+#             'between_10_and_20_dollars': between_10_and_20_dollars,
+#             'between_20_and_30_dollars': between_20_and_30_dollars,
+#             'between_30_and_55_dollars': between_30_and_55_dollars,
+#             'between_55_and_80_dollars': between_55_and_80_dollars,
+#             'between_80_and_100_dollars': between_80_and_100_dollars,
+#             'between_100_and_150_dollars': between_100_and_150_dollars,
+#             'between_150_and_175_dollars': between_150_and_175_dollars
+#                            }
+
+        povline_list_dict = {
+            'between_100_and_150_dollars': between_100_and_150_dollars,
+            'between_150_and_175_dollars': between_150_and_175_dollars
+                           }
+        
+        df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
+        
+        
         under_5_dollars = list(range(1,500, 1))
         between_5_and_10_dollars = list(range(500,1000, 1))
         between_10_and_20_dollars = list(range(1000,2000, 2))
@@ -559,7 +587,7 @@ def thresholds(df_final, answer, ppp=2011):
         between_80_and_100_dollars = list(range(8000,10000, 5))
         between_100_and_150_dollars = list(range(10000,15000, 10))
         between_150_and_175_dollars = list(range(15000,17500, 10))
-
+        
         #Define dictionary to iterate with
         povline_list_dict = {
             'under_5_dollars': under_5_dollars, 
@@ -571,9 +599,14 @@ def thresholds(df_final, answer, ppp=2011):
             'between_80_and_100_dollars': between_80_and_100_dollars,
             'between_100_and_150_dollars': between_100_and_150_dollars,
             'between_150_and_175_dollars': between_150_and_175_dollars
-                           }
+            }
         
-        df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
+        
+        
+        
+        
+        
+        
         df_closest_complete_regions = generate_percentiles_regions(povline_list_dict, ppp)
         df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
         df_percentiles = df_percentiles.rename(columns={'poverty_line': 'percentile_value'})
@@ -616,6 +649,8 @@ def thresholds(df_final, answer, ppp=2011):
     return df_final
 
 
+# -
+
 def generate_percentiles_countries(povline_list_dict, ppp):
 
     start_time_overall = time.time()
@@ -632,7 +667,7 @@ def generate_percentiles_countries(povline_list_dict, ppp):
             povline_dollars = povline/100
             print(f'Fetching country headcounts for: ${povline_dollars} a day')
 
-            df = country_data(povline_dollars, filled="false", ppp=ppp)[0]
+            df = country_data(povline, filled="false", ppp=ppp, additional_dfs=False)
             df_complete = pd.concat([df_complete, df],ignore_index=True)
 
             end_time = time.time()
@@ -652,6 +687,11 @@ def generate_percentiles_countries(povline_list_dict, ppp):
     fig = px.line(df_query_durations, x="povline", y="duration", title=f'Execution time for poverty line queries')
     fig.write_image(f'graphics/time_plot.svg')
 
+    df_complete = pd.DataFrame()
+    for key in povline_list_dict:
+        df = pd.read_csv(f'data/full_dist/{key}.csv')
+        df_complete = pd.concat([df_complete, df], ignore_index=True)
+
     # Find closest to percentiles
     print("Find closest to percentiles after the extraction")
     start_time = time.time()
@@ -661,17 +701,17 @@ def generate_percentiles_countries(povline_list_dict, ppp):
 
     for p in percentiles:
         df_complete['distance_to_p'] = abs(df_complete['headcount']-p/100)
-        df_closest = df_complete.sort_values("distance_to_p").groupby(['country_name', 'reporting_year','reporting_level','welfare_type'], as_index=False).first()
+        df_closest = df_complete.sort_values("distance_to_p").groupby(['Entity', 'Year','reporting_level','welfare_type'], as_index=False).first()
         df_closest['target_percentile'] = f'P{p}'
-        df_closest = df_closest[['country_name', 'reporting_year','reporting_level','welfare_type', 'target_percentile', 'poverty_line', 'headcount', 'distance_to_p']]
+        df_closest = df_closest[['Entity', 'Year','reporting_level','welfare_type', 'target_percentile', 'poverty_line', 'headcount', 'distance_to_p']]
         df_closest_complete = pd.concat([df_closest_complete, df_closest],ignore_index=True)
 
     end_time = time.time()
     print(f'Execution time: {(end_time - start_time)/60} minutes')
 
     #Charts to check results
-    fig = px.scatter(df_closest_complete, x="target_percentile", y="distance_to_p", color="country_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year'], opacity=0.5,
+    fig = px.scatter(df_closest_complete, x="target_percentile", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year'], opacity=0.5,
                      title="<b>Target p vs. Distance to p</b><br>Percentiles",
                      log_y=False,
                      height=600)
@@ -679,8 +719,8 @@ def generate_percentiles_countries(povline_list_dict, ppp):
     fig.write_image(f'graphics/target_p_vs_distance_percentiles.svg')
     fig.write_html(f'graphics/target_p_vs_distance_percentiles.html')
 
-    fig = px.scatter(df_closest_complete, x="poverty_line", y="distance_to_p", color="country_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+    fig = px.scatter(df_closest_complete, x="poverty_line", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
                      title="<b>Poverty line vs. Distance to p</b><br>Percentiles",
                      log_y=False,
                      height=600)
@@ -699,8 +739,8 @@ def generate_percentiles_countries(povline_list_dict, ppp):
 
     df_closest_deciles = df_closest_complete[df_closest_complete['target_percentile'].isin(deciles)].copy().reset_index(drop=True)
 
-    fig = px.scatter(df_closest_deciles, x="target_percentile", y="distance_to_p", color="country_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year'], opacity=0.5,
+    fig = px.scatter(df_closest_deciles, x="target_percentile", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year'], opacity=0.5,
                      title="<b>Target p vs. Distance to p</b><br>Deciles",
                      log_y=False,
                      height=600)
@@ -708,8 +748,8 @@ def generate_percentiles_countries(povline_list_dict, ppp):
     fig.write_image(f'graphics/target_p_vs_distance_deciles.svg')
     fig.write_html(f'graphics/target_p_vs_distance_deciles.html')
 
-    fig = px.scatter(df_closest_deciles, x="poverty_line", y="distance_to_p", color="country_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+    fig = px.scatter(df_closest_deciles, x="poverty_line", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
                      title="<b>Poverty line vs. Distance to p</b><br>Deciles",
                      log_y=False,
                      height=600)
@@ -729,7 +769,7 @@ def generate_percentiles_countries(povline_list_dict, ppp):
 def generate_percentiles_regions(povline_list_dict, ppp):
 
     start_time_overall = time.time()
-    query_durations = {"povline":[],"duration":[]}
+    query_durations_regions = {"povline":[],"duration":[]}
 
     for key in povline_list_dict:
 
@@ -742,7 +782,7 @@ def generate_percentiles_regions(povline_list_dict, ppp):
             povline_dollars = povline/100
             print(f'Fetching regional headcounts for: ${povline_dollars} a day')
 
-            df = regional_data(povline_dollars, ppp)
+            df = regional_data(povline, ppp)
             df_complete_regions = pd.concat([df_complete_regions, df],ignore_index=True)
 
             end_time = time.time()
@@ -763,6 +803,11 @@ def generate_percentiles_regions(povline_list_dict, ppp):
     fig = px.line(df_query_durations_regions, x="povline", y="duration", title=f'Execution time for poverty line queries (regions)')
 
     fig.write_image(f'graphics/time_plot_regions.svg')
+    
+    df_complete_regions = pd.DataFrame()
+    for key in povline_list_dict:
+        df = pd.read_csv(f'data/full_dist_regions/{key}_regions.csv')
+        df_complete_regions = pd.concat([df_complete_regions, df], ignore_index=True)
 
     # Find closest to percentiles
 
@@ -776,19 +821,19 @@ def generate_percentiles_regions(povline_list_dict, ppp):
 
         df_complete_regions['distance_to_p'] = abs(df_complete_regions['headcount']-p/100)
 
-        df_closest = df_complete_regions.sort_values("distance_to_p").groupby(['region_name', 'reporting_year'], as_index=False).first()
+        df_closest = df_complete_regions.sort_values("distance_to_p").groupby(['Entity', 'Year'], as_index=False).first()
 
         df_closest['target_percentile'] = f'P{p}'
 
-        df_closest = df_closest[['region_name', 'reporting_year', 'target_percentile', 'poverty_line', 'headcount', 'distance_to_p']]
+        df_closest = df_closest[['Entity', 'Year', 'target_percentile', 'poverty_line', 'headcount', 'distance_to_p']]
 
         df_closest_complete_regions = pd.concat([df_closest_complete_regions, df_closest],ignore_index=True)
 
     end_time = time.time()
     print(f'Execution time: {end_time - start_time} seconds')
 
-    fig = px.scatter(df_closest_complete_regions, x="target_percentile", y="distance_to_p", color="region_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year'], opacity=0.5,
+    fig = px.scatter(df_closest_complete_regions, x="target_percentile", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year'], opacity=0.5,
                      title="<b>Target p vs. Distance to p for regions</b><br>Percentiles",
                      log_y=False,
                      height=600)
@@ -796,8 +841,8 @@ def generate_percentiles_regions(povline_list_dict, ppp):
     fig.write_image(f'graphics/target_p_vs_distance_percentiles_regions.svg')
     fig.write_html(f'graphics/target_p_vs_distance_percentiles_regions.html')
 
-    fig = px.scatter(df_closest_complete_regions, x="poverty_line", y="distance_to_p", color="region_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+    fig = px.scatter(df_closest_complete_regions, x="poverty_line", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
                      title="<b>Poverty line vs. Distance to p for regions</b><br>Percentiles",
                      log_y=False,
                      height=600)
@@ -816,8 +861,8 @@ def generate_percentiles_regions(povline_list_dict, ppp):
 
     df_closest_deciles_regions = df_closest_complete_regions[df_closest_complete_regions['target_percentile'].isin(deciles)].copy().reset_index(drop=True)
 
-    fig = px.scatter(df_closest_deciles_regions, x="target_percentile", y="distance_to_p", color="region_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year'], opacity=0.5,
+    fig = px.scatter(df_closest_deciles_regions, x="target_percentile", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year'], opacity=0.5,
                      title="<b>Target p vs. Distance to p for regions</b><br>Deciles",
                      log_y=False,
                      height=600)
@@ -825,8 +870,8 @@ def generate_percentiles_regions(povline_list_dict, ppp):
     fig.write_image(f'graphics/target_p_vs_distance_deciles_regions.svg')
     fig.write_html(f'graphics/target_p_vs_distance_deciles_regions.html')
 
-    fig = px.scatter(df_closest_deciles_regions, x="poverty_line", y="distance_to_p", color="region_name",
-                     hover_data=['poverty_line', 'headcount', 'reporting_year', 'target_percentile'], opacity=0.5,
+    fig = px.scatter(df_closest_deciles_regions, x="poverty_line", y="distance_to_p", color="Entity",
+                     hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
                      title="<b>Poverty line vs. Distance to p for regions</b><br>Deciles",
                      log_y=False,
                      height=600)
@@ -970,6 +1015,14 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
 
     #Multiplies decile columns by 100
     df_final.loc[:, col_decile_share] = df_final[col_decile_share] * 100
+    
+    #Quintile shares
+    
+    col_quintile_share = []
+    for q in range(1,6):
+        varname_share = f'quintile{q}_share'
+        df_final[varname_share] = df_final[f'decile{2*q-1}_share'] + df_final[f'decile{2*q}_share']
+        col_quintile_share.append(varname_share)
 
     #Palma ratio and other average/share ratios
     df_final['palma_ratio'] = df_final['decile10_share'] / (df_final['decile1_share'] + df_final['decile2_share'] + df_final['decile3_share'] + df_final['decile4_share'])
@@ -1020,7 +1073,7 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
             col_avg_shortfall + col_incomegap + col_above_n + col_above_pct + col_poverty_severity + col_watts + \
             col_stacked_n + col_stacked_n_extra + col_stacked_pct + col_stacked_pct_extra + \
             col_relative +  \
-            col_decile_share + col_decile_thr + col_decile_avg + col_inequality + \
+            col_decile_share + col_quintile_share + col_decile_thr + col_decile_avg + col_inequality + \
             col_extra
     
     #######################################################################################
