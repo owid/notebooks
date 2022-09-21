@@ -77,7 +77,14 @@ cainc: 	post-tax disposable income
 
 */
 
-wid, indicators(xlcusp) year(2021) clear 
+set more off
+
+*Get maximum year value to have to correct PPP conversion
+qui wid, indicators(xlcusp) clear
+qui sum year
+global max_year = r(max)
+
+wid, indicators(xlcusp) year($max_year) clear 
 rename value ppp
 tempfile ppp
 save "`ppp'", replace
