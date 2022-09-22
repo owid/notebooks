@@ -157,8 +157,8 @@ survey_count(df_country_inc_or_cons, ppp=ppp_version)
 # A zip file is created for users to download the data loaded in the explorers.
 
 # %%
-print('Public files are zipped in:')
 shutil.make_archive(f'data/ppp_{ppp_version}/final/PIP_data_public_download', 'zip', f'data/ppp_{ppp_version}/final/PIP_data_public_download')
+print(f'Public files are zipped in: data/ppp_{ppp_version}/final/PIP_data_public_download')
 # %%
 end_time = time.time()
 elapsed_time = end_time - start_time
