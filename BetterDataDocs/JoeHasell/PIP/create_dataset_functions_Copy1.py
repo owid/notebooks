@@ -303,7 +303,7 @@ def integrate_relative_poverty(df_final, df_country, answer, ppp):
     if answer:
         print("Generating relative poverty values... (takes about 1.5 hours)")
         start_time = time.time()
-        df = median_patch(df_country)
+        df = median_patch(df_country, ppp)
         
         for pct in relative_poverty_lines:
             df[f'median_{pct}'] = df['median'] * pct/100
