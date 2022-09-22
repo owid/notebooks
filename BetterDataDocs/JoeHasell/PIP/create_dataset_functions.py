@@ -538,7 +538,6 @@ def generate_relative_poverty(df, relative_poverty_lines, ppp):
     df.to_csv('data/raw/relative_poverty.csv', index=False)
 
 
-# +
 def thresholds(df_final, answer, ppp=2011):
     #Decile thresholds
 
@@ -547,37 +546,6 @@ def thresholds(df_final, answer, ppp=2011):
         start_time = time.time()
         # Define list of poverty lines to query (max 500 requests per category)
 
-#         under_5_dollars = list(range(1,500, 1))
-#         between_5_and_10_dollars = list(range(500,1000, 1))
-#         between_10_and_20_dollars = list(range(1000,2000, 2))
-#         between_20_and_30_dollars = list(range(2000,3000, 2))
-#         between_30_and_55_dollars = list(range(3000,5500, 5))
-#         between_55_and_80_dollars = list(range(5500,8000, 5))
-#         between_80_and_100_dollars = list(range(8000,10000, 5))
-        between_100_and_150_dollars = list(range(10000,15000, 10))
-        between_150_and_175_dollars = list(range(15000,17500, 10))
-
-        #Define dictionary to iterate with
-#         povline_list_dict = {
-#             'under_5_dollars': under_5_dollars, 
-#             'between_5_and_10_dollars': between_5_and_10_dollars,
-#             'between_10_and_20_dollars': between_10_and_20_dollars,
-#             'between_20_and_30_dollars': between_20_and_30_dollars,
-#             'between_30_and_55_dollars': between_30_and_55_dollars,
-#             'between_55_and_80_dollars': between_55_and_80_dollars,
-#             'between_80_and_100_dollars': between_80_and_100_dollars,
-#             'between_100_and_150_dollars': between_100_and_150_dollars,
-#             'between_150_and_175_dollars': between_150_and_175_dollars
-#                            }
-
-        povline_list_dict = {
-            'between_100_and_150_dollars': between_100_and_150_dollars,
-            'between_150_and_175_dollars': between_150_and_175_dollars
-                           }
-        
-        df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
-        
-        
         under_5_dollars = list(range(1,500, 1))
         between_5_and_10_dollars = list(range(500,1000, 1))
         between_10_and_20_dollars = list(range(1000,2000, 2))
@@ -587,7 +555,7 @@ def thresholds(df_final, answer, ppp=2011):
         between_80_and_100_dollars = list(range(8000,10000, 5))
         between_100_and_150_dollars = list(range(10000,15000, 10))
         between_150_and_175_dollars = list(range(15000,17500, 10))
-        
+
         #Define dictionary to iterate with
         povline_list_dict = {
             'under_5_dollars': under_5_dollars, 
@@ -599,14 +567,24 @@ def thresholds(df_final, answer, ppp=2011):
             'between_80_and_100_dollars': between_80_and_100_dollars,
             'between_100_and_150_dollars': between_100_and_150_dollars,
             'between_150_and_175_dollars': between_150_and_175_dollars
+                           }
+        
+        df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
+        
+        
+        between_55_and_80_dollars = list(range(5500,8000, 5))
+        between_80_and_100_dollars = list(range(8000,10000, 5))
+        between_100_and_150_dollars = list(range(10000,15000, 10))
+        between_150_and_175_dollars = list(range(15000,17500, 10))
+        
+        #Define dictionary to iterate with
+        povline_list_dict = {
+            'between_55_and_80_dollars': between_55_and_80_dollars,
+            'between_80_and_100_dollars': between_80_and_100_dollars,
+            'between_100_and_150_dollars': between_100_and_150_dollars,
+            'between_150_and_175_dollars': between_150_and_175_dollars
             }
-        
-        
-        
-        
-        
-        
-        
+
         df_closest_complete_regions = generate_percentiles_regions(povline_list_dict, ppp)
         df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
         df_percentiles = df_percentiles.rename(columns={'poverty_line': 'percentile_value'})
@@ -649,43 +627,42 @@ def thresholds(df_final, answer, ppp=2011):
     return df_final
 
 
-# -
-
+# +
 def generate_percentiles_countries(povline_list_dict, ppp):
 
-    start_time_overall = time.time()
-    query_durations = {"povline":[],"duration":[]}
+#     start_time_overall = time.time()
+#     query_durations = {"povline":[],"duration":[]}
 
-    for key in povline_list_dict:
+#     for key in povline_list_dict:
 
-        df_complete = pd.DataFrame()
+#         df_complete = pd.DataFrame()
 
-        for povline in povline_list_dict[key]:
+#         for povline in povline_list_dict[key]:
 
-            start_time = time.time()
+#             start_time = time.time()
 
-            povline_dollars = povline/100
-            print(f'Fetching country headcounts for: ${povline_dollars} a day')
+#             povline_dollars = povline/100
+#             print(f'Fetching country headcounts for: ${povline_dollars} a day')
 
-            df = country_data(povline, filled="false", ppp=ppp, additional_dfs=False)
-            df_complete = pd.concat([df_complete, df],ignore_index=True)
+#             df = country_data(povline, filled="false", ppp=ppp, additional_dfs=False)
+#             df_complete = pd.concat([df_complete, df],ignore_index=True)
 
-            end_time = time.time()
-            query_durations["povline"].append(povline_dollars)
-            query_durations["duration"].append(end_time - start_time)
+#             end_time = time.time()
+#             query_durations["povline"].append(povline_dollars)
+#             query_durations["duration"].append(end_time - start_time)
 
 
-        #Write the complete data to csv
-        df_complete.to_csv(f'data/full_dist/{key}.csv', index=False)
+#         #Write the complete data to csv
+#         df_complete.to_csv(f'data/full_dist/{key}.csv', index=False)
 
-    end_time_overall = time.time()
-    elapsed_time_overall = end_time_overall - start_time_overall
-    print(f'Execution time: {elapsed_time_overall/3600} hours')
+#     end_time_overall = time.time()
+#     elapsed_time_overall = end_time_overall - start_time_overall
+#     print(f'Execution time: {elapsed_time_overall/3600} hours')
 
-    # Take a look at how long each query took
-    df_query_durations = pd.DataFrame.from_dict(query_durations)
-    fig = px.line(df_query_durations, x="povline", y="duration", title=f'Execution time for poverty line queries')
-    fig.write_image(f'graphics/time_plot.svg')
+#     # Take a look at how long each query took
+#     df_query_durations = pd.DataFrame.from_dict(query_durations)
+#     fig = px.line(df_query_durations, x="povline", y="duration", title=f'Execution time for poverty line queries')
+#     fig.write_image(f'graphics/time_plot.svg')
 
     df_complete = pd.DataFrame()
     for key in povline_list_dict:
@@ -765,6 +742,8 @@ def generate_percentiles_countries(povline_list_dict, ppp):
     
     return df_closest_complete
 
+
+# -
 
 def generate_percentiles_regions(povline_list_dict, ppp):
 
