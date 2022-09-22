@@ -163,3 +163,42 @@ def create_faceted_dataset(df_final):
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+def create_faceted_dataset_temp():
+    
+    print(f'Creating a dataset to compare the evolution of the top 1% share in two groups...')
+    start_time = time.time()
+    
+    df = pd.read_csv('data/raw/chartbook_all_data.csv')
+    df = df[(df['measure']=='Share of top 1%') & ((df['welfare_concept']=='Pre-tax national income (equal-split adults)') | (df['welfare_concept']=='Pre-tax national income (equal-split adult)'))]
+    df = df[['country', 'year', 'value']]
+    
+    #Standardize entities and year
+    df = standardize_entities(df,
+                            'data/raw/countries_country_standardized_chartbook.csv',
+                            'country',
+                            'Our World In Data Name',
+                            'country',
+                            'Entity')
+    df = df.rename(columns={'year': 'Year',
+                           'value': 'p99p100_share_pretax'})
+    
+    english_countries = ['United States', 'United Kingdom', 'Canada', 'Ireland', 'Australia']
+    europe_japan = ['France', 'Spain', 'Netherlands', 'Denmark', 'Japan']
+    
+    df_english = df[df['Entity'].isin(english_countries)].reset_index(drop=True).copy()
+    df_europe_jp = df[df['Entity'].isin(europe_japan)].reset_index(drop=True).copy()
+    
+    df_english = df_english.rename(columns={'p99p100_share_pretax': 'Top 1% share in English speaking countries'})
+    df_europe_jp = df_europe_jp.rename(columns={'p99p100_share_pretax': 'Top 1% share in Continental Europe and Japan'})
+    
+    df_faceted = pd.merge(df_english, df_europe_jp, on=['Entity', 'Year'], how='outer')
+    
+    df_faceted.to_csv(f'data/final/wid_faceted.csv', index=False)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+
+
