@@ -582,16 +582,6 @@ def thresholds(df_final, answer, ppp=2011):
             'between_100_and_150_dollars': between_100_and_150_dollars
                            }
         
-        df_closest_complete = pd.read_csv('data/full_dist/percentiles_countries.csv')
-        
-        
-        under_5_dollars = list(range(1,500, 1))
-        
-        #Define dictionary to iterate with
-        povline_list_dict = {
-            'under_5_dollars': under_5_dollars
-            }
-
         df_closest_complete_regions = generate_percentiles_regions(povline_list_dict, ppp)
         df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
         df_percentiles = df_percentiles.rename(columns={'poverty_line': 'percentile_value'})
