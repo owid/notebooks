@@ -61,9 +61,11 @@ countries_stan = pd.read_csv(
 df["Country"] = df["Country"].astype(str)
 countries_stan["Country"] = countries_stan["Country"].astype(str)
 df = df.merge(countries_stan, on="Country")
-
+# Year is estimate for annual data between 1999 and 2015, except for swine flu years
+df["year"] = 1999
 cols_clean = [
     "Our World In Data Name",
+    "year",
     "rate_median_lt65",
     "rate_median_65_74",
     "rate_median_gt_75",
@@ -72,4 +74,6 @@ cols_clean = [
     "number_median_gt_75",
 ]
 df = df[cols_clean].rename(columns={"Our World In Data Name": "Country"})
+
+
 df.to_csv("FionaSpooner/cdc_influenza/clean_cdc_influenza.csv", index=False)
