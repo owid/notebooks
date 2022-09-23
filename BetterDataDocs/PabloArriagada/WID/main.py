@@ -49,12 +49,6 @@ add_metadata_and_export(df_final, 'wid_pretax')
 #add_metadata_and_export(df_final, 'wid_posttax_dis')
 #add_metadata_and_export(df_final, 'wid_posttax_nat')
 
-# ## Create special dataset to compare long-run share of top 1%
-# This is a to create a faceted chart to compare the evolution of the income share for the top 1% in English-speaking countries vs. Continental Europe + Japan.
-
-create_faceted_dataset(df_final)
-#create_faceted_dataset_temp() #Until WID updates long-run data
-
 end_time = time.time()
 elapsed_time = end_time - start_time
 print(f'The files were created in {elapsed_time} seconds :)')
