@@ -19,7 +19,7 @@ df = df.merge(country_stan, on="Country")
 df = df[["Our World In Data Name", "TIME", "Value"]].rename(
     columns={
         "Our World In Data Name": "Country",
-        "Time": "Year",
+        "TIME": "Year",
         "Value": "Vaccination_rate_gt_65",
     }
 )
