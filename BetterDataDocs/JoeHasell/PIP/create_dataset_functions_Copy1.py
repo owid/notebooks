@@ -303,7 +303,7 @@ def integrate_relative_poverty(df_final, df_country, answer, ppp):
     if answer:
         print("Generating relative poverty values... (takes about 1.5 hours)")
         start_time = time.time()
-        df = median_patch(df_country)
+        df = median_patch(df_country, ppp)
         
         for pct in relative_poverty_lines:
             df[f'median_{pct}'] = df['median'] * pct/100
@@ -865,6 +865,7 @@ def generate_percentiles_regions(povline_list_dict, ppp):
 
 # ## Data transformations
 
+# +
 def additional_variables_and_check(df_final, poverty_lines_cents, col_relative, ppp):
 
     #Stacked variables
@@ -923,13 +924,25 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative, 
 
     df_final.loc[:, col_stacked_pct] = df_final[col_stacked_pct] * 100
     
-    df_final['headcount_stacked_between_190_1000'] = df_final['headcount_1000'] - df_final['headcount_190']
-    df_final['headcount_stacked_between_1000_3000'] = df_final['headcount_3000'] - df_final['headcount_1000']
-    col_stacked_n_extra = ['headcount_stacked_between_190_1000', 'headcount_stacked_between_1000_3000']
+    #Calculate stacked variables which "jump" the original order
     
-    df_final['headcount_ratio_stacked_between_190_1000'] = df_final['headcount_ratio_1000'] - df_final['headcount_ratio_190']
-    df_final['headcount_ratio_stacked_between_1000_3000'] = df_final['headcount_ratio_3000'] - df_final['headcount_ratio_1000']
-    col_stacked_pct_extra = ['headcount_ratio_stacked_between_190_1000', 'headcount_ratio_stacked_between_1000_3000']
+    df_final[f'headcount_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}'] = df_final[f'headcount_{poverty_lines_cents[4]}'] - df_final[f'headcount_{poverty_lines_cents[1]}']
+    df_final[f'headcount_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}'] = df_final[f'headcount_{poverty_lines_cents[6]}'] - df_final[f'headcount_{poverty_lines_cents[4]}']
+    col_stacked_n_extra = [f'headcount_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}', f'headcount_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}']
+    
+    df_final[f'headcount_ratio_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}'] = df_final[f'headcount_ratio_{poverty_lines_cents[4]}'] - df_final[f'headcount_ratio_{poverty_lines_cents[1]}']
+    df_final[f'headcount_ratio_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}'] = df_final[f'headcount_ratio_{poverty_lines_cents[6]}'] - df_final[f'headcount_ratio_{poverty_lines_cents[4]}']
+    col_stacked_pct_extra = [f'headcount_ratio_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}', f'headcount_ratio_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}']
+    
+    
+    
+#     df_final['headcount_stacked_between_190_1000'] = df_final['headcount_1000'] - df_final['headcount_190']
+#     df_final['headcount_stacked_between_1000_3000'] = df_final['headcount_3000'] - df_final['headcount_1000']
+#     col_stacked_n_extra = ['headcount_stacked_between_190_1000', 'headcount_stacked_between_1000_3000']
+    
+#     df_final['headcount_ratio_stacked_between_190_1000'] = df_final['headcount_ratio_1000'] - df_final['headcount_ratio_190']
+#     df_final['headcount_ratio_stacked_between_1000_3000'] = df_final['headcount_ratio_3000'] - df_final['headcount_ratio_1000']
+#     col_stacked_pct_extra = ['headcount_ratio_stacked_between_190_1000', 'headcount_ratio_stacked_between_1000_3000']
 
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -1087,6 +1100,8 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative, 
     
     return df_final, cols
 
+
+# -
 
 def median_patch(df_final, ppp):
     
@@ -1292,7 +1307,12 @@ def include_metadata(df_final, ppp):
     #sheet_name = 'admin_metadata_manual'
     
     sheet_id = '1ntYtYF0NqIW2oXuXl_ZJHvuI7n-bik94BEIOvWHrJAI'
-    sheet_name = 'Sheet1'
+    
+    if ppp == 2011:
+        sheet_name = 'pip_ppp_2011'
+        
+    elif ppp == 2017:
+        sheet_name = 'pip_ppp_2017'
 
     # Read in variable metadata as dataframe
     url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
@@ -1409,7 +1429,7 @@ def survey_count(df_country, ppp):
     print('Creating dataset which counts the surveys in the recent decade...')
     start_time = time.time()
     
-    df_country = standardise(df_country)
+    df_country = standardise(df_country, ppp)
     
     #Generate a new dataset to count the surveys available for each entity
     #Create a list of all the years and entities available
