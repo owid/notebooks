@@ -569,16 +569,15 @@ def thresholds(df_final, answer, ppp=2011):
             'between_150_and_175_dollars': between_150_and_175_dollars
                            }
         
-        df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
+        #df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
+        df_closest_complete = pd.read_csv('data/full_dist/percentiles_countries.csv')
         
         
-        between_80_and_100_dollars = list(range(8000,10000, 5))
-        between_100_and_150_dollars = list(range(10000,15000, 10))
+        under_5_dollars = list(range(1,500, 1))
         
         #Define dictionary to iterate with
         povline_list_dict = {
-            'between_80_and_100_dollars': between_80_and_100_dollars,
-            'between_100_and_150_dollars': between_100_and_150_dollars,
+            'under_5_dollars': under_5_dollars
             }
 
         df_closest_complete_regions = generate_percentiles_regions(povline_list_dict, ppp)
@@ -778,6 +777,29 @@ def generate_percentiles_regions(povline_list_dict, ppp):
     fig = px.line(df_query_durations_regions, x="povline", y="duration", title=f'Execution time for poverty line queries (regions)')
 
     fig.write_image(f'graphics/time_plot_regions.svg')
+
+    # Define list of poverty lines to query (max 500 requests per category)
+
+    under_5_dollars = list(range(1,500, 1))
+    between_5_and_10_dollars = list(range(500,1000, 1))
+    between_10_and_20_dollars = list(range(1000,2000, 2))
+    between_20_and_30_dollars = list(range(2000,3000, 2))
+    between_30_and_55_dollars = list(range(3000,5500, 5))
+    between_55_and_80_dollars = list(range(5500,8000, 5))
+    between_80_and_100_dollars = list(range(8000,10000, 5))
+    between_100_and_150_dollars = list(range(10000,15000, 10))
+
+    #Define dictionary to iterate with
+    povline_list_dict = {
+        'under_5_dollars': under_5_dollars, 
+        'between_5_and_10_dollars': between_5_and_10_dollars,
+        'between_10_and_20_dollars': between_10_and_20_dollars,
+        'between_20_and_30_dollars': between_20_and_30_dollars,
+        'between_30_and_55_dollars': between_30_and_55_dollars,
+        'between_55_and_80_dollars': between_55_and_80_dollars,
+        'between_80_and_100_dollars': between_80_and_100_dollars,
+        'between_100_and_150_dollars': between_100_and_150_dollars
+                       }
     
     df_complete_regions = pd.DataFrame()
     for key in povline_list_dict:
