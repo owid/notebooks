@@ -2,8 +2,13 @@
 
 set more off
 
+*Get maximum year value to have to correct PPP conversion
+qui wid, indicators(xlcusp) clear
+qui sum year
+global max_year = r(max)
+
 *Gets ppp data to convert to USD
-wid, indicators(xlcusp) year(2017) clear 
+wid, indicators(xlcusp) year($max_year) clear 
 rename value ppp
 tempfile ppp
 save "`ppp'"

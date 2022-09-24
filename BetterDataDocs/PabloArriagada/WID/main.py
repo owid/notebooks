@@ -46,12 +46,13 @@ df_final = load_and_standardize(file)
 # Variables are renamed for more human-readable columns to be uploaded in Grapher as a dataset.
 
 add_metadata_and_export(df_final, 'wid_pretax')
-add_metadata_and_export(df_final, 'wid_posttax_dis')
-add_metadata_and_export(df_final, 'wid_posttax_nat')
+#add_metadata_and_export(df_final, 'wid_posttax_dis')
+#add_metadata_and_export(df_final, 'wid_posttax_nat')
 
 end_time = time.time()
 elapsed_time = end_time - start_time
 print(f'The files were created in {elapsed_time} seconds :)')
 print('Update the pretax WID dataset with data/final/wid_pretax.csv')
-print('Update the post-tax disposable WID dataset with data/final/wid_posttax_dis.csv')
-print('Update the post-tax national WID dataset with data/final/wid_posttax_nat.csv')
+#print('Update the post-tax disposable WID dataset with data/final/wid_posttax_dis.csv')
+#print('Update the post-tax national WID dataset with data/final/wid_posttax_nat.csv')
+print('Update the English vs. Europe/Japan dataset with data/final/wid_faceted.csv')
