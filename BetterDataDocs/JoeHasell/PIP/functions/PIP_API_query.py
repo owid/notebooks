@@ -18,7 +18,7 @@ def pip_query_country(popshare_or_povline, value, country_code="all", year="all"
 def pip_query_region(povline, year="all", ppp_version=2011):
 
     # Build query
-    request_url = f'https://api.worldbank.org/pip/v1/pip-grp?povline={povline}&year={year}&ppp_version={ppp_version}&group_by=wb&format=csv'
+    request_url = f'https://api.worldbank.org/pip/v1/pip-grp?country=all&povline={povline}&year={year}&ppp_version={ppp_version}&group_by=wb&format=csv'
 
     #df = pd.read_csv(request_url)
     response = requests.get(request_url, timeout=500).content
