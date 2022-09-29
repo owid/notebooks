@@ -34,7 +34,7 @@ answer_rel = query_yes_no(question)
 start_time = time.time()
 
 #Define PPP version, which will change the poverty lines to query
-ppp_version = 2011
+ppp_version = 2017
 
 if ppp_version == 2011:
     
