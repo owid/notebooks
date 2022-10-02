@@ -31,7 +31,7 @@ def load_and_clean_data() -> pd.DataFrame:
     df["VALUE"] = df["VALUE"].replace(
         {
             "Yes": "Entire country",
-            "No": "Not administered",
+            "No": "Not routinely administered",
             "Yes (P)": "Regions of the country",
             "Yes (R)": "Specific risk groups",
             "Yes (A)": "Adolescents",
