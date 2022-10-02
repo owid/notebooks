@@ -96,3 +96,38 @@ request_url = f'https://api.worldbank.org/pip/v1/pip?{popshare_or_povline}={valu
 
 df_popshare =  pd.read_csv(request_url)
 # %%
+popshare = 0.235
+country_code = 'ETH'
+year = 2016
+
+
+ # Build query
+request_url = 'https://api.worldbank.org/pip/v1/pip?' + \
+      'country=' + country_code + \
+      '&year=' + str(year) + \
+      '&popshare=' + str(popshare) + \
+      'version=20220909_2017_01_02_PROD' + \
+      '&fill_gaps=true' + \
+      '&welfare_type=all' + \
+      '&reporting_level=national' + \
+      '&format=csv'
+
+#%%
+country_code = 'ETH'
+year = 2016
+povline = 10
+ # Build query
+request_url = 'https://api.worldbank.org/pip/v1/pip?' + \
+      'country=' + country_code + \
+      '&year=' + 'all' + \
+      '&povline=' + str(povline) + \
+      'version=20220909_2017_01_02_PROD' + \
+      '&fill_gaps=false' + \
+      '&welfare_type=all' + \
+      '&reporting_level=national' + \
+      '&format=csv'
+
+df =  pd.read_csv(request_url)
+
+
+# %%
