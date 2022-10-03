@@ -1,9 +1,7 @@
 #%%
-from heapq import merge
 import pandas as pd
 from plotnine import *
-import requests
-import io
+
 
 
 #%%
@@ -144,34 +142,40 @@ df4 =  pd.read_csv(request_url)
 request_url = f'https://api.worldbank.org/pip/v1/pip?povline=10&country=ETH&year=all&fill_gaps=false&welfare_type=all&reporting_level=national&version=20220909_2017_01_02_PROD&format=csv'
 df3 =  pd.read_csv(request_url)
 
-# %%
-status = 0
-
-response = requests.get(request_url, timeout=500)
-content = response.content
-status = response.status_code
-    
-df = pd.read_csv(io.StringIO(content.decode('utf-8')))
 
 # %%
+fp = 'https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/PIP_data_public_download/full_dataset/inc_only/poverty_inc_only.csv'
+df_inc = pd.read_csv(fp)
+
+# %%
+fp = 'https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/PIP_data_public_download/full_dataset/cons_only/poverty_cons_only.csv'
+df_cons = pd.read_csv(fp)
+
+# %%
+df_compare = pd.merge(df_inc, df_cons, on=['Entity', 'Year', 'reporting_level'], suffixes=("_inc", "_cons"))
 
 
-# For world regions, the popshare query is not available (or rather, it returns nonsense).
-def pip_query_region(povline, year="all", ppp_version=2011):
+# %%
 
-    if ppp_version == 2011:
-        version = "20220909_2011_02_02_PROD"
-        
-    elif ppp_version == 2017:
-        version = "20220909_2017_01_02_PROD"
-    
+# %%
+df_plot = df_compare[['Entity', 'Year', 'reporting_level','headcount_ratio_1000_inc', 'headcount_ratio_1000_cons' ]]
 
-    # Build query
-    request_url = f'https://api.worldbank.org/pip/v1/pip-grp?country=all&povline={povline}&year={year}&ppp_version={ppp_version}&version={version}&group_by=wb&format=csv'
-    status = 0
-    
-    while status != 200:
-        #df = pd.read_csv(request_url)
-        response = requests.get(request_url, timeout=500)
-        content = response.content
-        status = response.status_code
+df_plot = pd.wide_to_long(df_compare, suffix=["_inc", "_cons"])
+# %%
+
+(
+    ggplot(df_compare)  # What data to use
+    + geom_line(aes(y='Year'))
+    + aes(x='headcount_ratio_1000_inc')
+    + aes(x='headcount_ratio_1000_cons')
+    + facet_wrap('Entity')
+ )
+(
+    ggplot(df_compare)  # What data to use
+    + geom_line(aes(y='Year'))
+    + aes(x='headcount_ratio_1000_inc')
+    + aes(x='headcount_ratio_1000_cons')
+    + facet_wrap('Entity')
+ )
+
+# %%
