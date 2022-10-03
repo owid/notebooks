@@ -646,7 +646,7 @@ def generate_percentiles_countries(povline_list_dict, ppp):
     df_query_durations = pd.DataFrame.from_dict(query_durations)
     fig = px.line(df_query_durations, x="povline", y="duration", title=f'Execution time for poverty line queries')
     fig.write_image(f'graphics/ppp_{ppp}/time_plot.svg')
-
+    
     df_complete = pd.DataFrame()
     for key in povline_list_dict:
         df = pd.read_csv(f'data/ppp_{ppp}/full_dist/{key}.csv')
