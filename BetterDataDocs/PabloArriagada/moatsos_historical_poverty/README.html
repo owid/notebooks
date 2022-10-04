@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>About this data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="README_files/libs/clipboard/clipboard.min.js"></script>
+<script src="README_files/libs/quarto-html/quarto.js"></script>
+<script src="README_files/libs/quarto-html/popper.min.js"></script>
+<script src="README_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="README_files/libs/quarto-html/anchor.min.js"></script>
+<link href="README_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="README_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="README_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="README_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="README_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">About this data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>A global dataset of historical poverty measures (1820 - 2018) prepared by Our World in Data from Moatsos (2021).</p>
+<section id="about-this-data" class="level3">
+<h3 class="anchored" data-anchor-id="about-this-data">About this data</h3>
+<section id="where-is-this-data-sourced-from" class="level4">
+<h4 class="anchored" data-anchor-id="where-is-this-data-sourced-from">Where is this data sourced from?</h4>
+<p>This dataset is collated and adapted from the work “Global Absolute Poverty, Present and Past since 1820”, by Michalis Moatsos (2021), available in the OECD publication <a href="https://www.oecd-ilibrary.org/sites/e20f2f1a-en/index.html?itemId=/content/component/e20f2f1a-en">How Was Life? Volume II. New Perspectives on Well-being and Global Inequality since 1820</a> and expanded from the <a href="https://public.yoda.uu.nl/i-lab/UU01/UOJSYN.html">Data publication platform from Utrecht University</a> for higher poverty lines.</p>
+<p>The dataset contains estimates of global poverty on the long run in two different methods: a “cost of basic needs” approach and a “dollar a day” approach for four different international poverty lines: $1.90, $5, $10 and $30 a day (2011 PPPs).</p>
+<p>You can find all the code Our World in Data used to prepare this dataset in <a href="https://github.com/owid/notebooks/tree/main/BetterDataDocs/PabloArriagada/moatsos_historical_poverty">GitHub</a>.</p>
+</section>
+<section id="download-structure" class="level4">
+<h4 class="anchored" data-anchor-id="download-structure">Download structure</h4>
+<p>The files in the <a href="https://github.com/owid/notebooks/blob/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/PIP_data_public_download.zip?raw=true">full_dataset</a> folder are distributed in three subfolders: <strong>cons_only, inc_only and inc_or_cons</strong>. The <em>cons_only</em> folder only contains World Bank’s PIP data related to consumption expenditure, <em>inc_only</em> exclusively refers to data coming from income surveys and the <em>inc_or_cons</em> folder combines both consumption and income surveys data. When both consumption and income data is available for a country in the same year, the income data is dropped. Each of these three folders contain two files each: the <em>poverty_</em> dataset and a codebook with the description for each variable.</p>
+</section>
+<section id="about-the-cost-of-basic-needs-approach" class="level4">
+<h4 class="anchored" data-anchor-id="about-the-cost-of-basic-needs-approach">About the <em>cost of basic needs</em> approach</h4>
+<p>The ‘cost of basic needs’ approach represents the share of the population unable to meet basic needs according to prices of locally-available goods and services at the time. It was recommended by the ‘World Bank Commission on Global Poverty’, headed by Tony Atkinson, as a complementary method in measuring poverty.</p>
+<p>Tony Atkinson – and after his death his colleagues – turned this report into a book that was published as Anthony B. Atkinson (2019) – Measuring Poverty around the World. You find more information on <a href="https://www.tony-atkinson.com/book-measuring-poverty-around-the-world/">Atkinson’s website</a>.</p>
+<p>The CBN-approach Moatsos’ work is based on was suggested by Allen in Robert Allen (2017) – Absolute poverty: When necessity displaces desire. In American Economic Review, Vol. 107/12, pp.&nbsp;3690-3721, https://doi.org/10.1257/aer.20161080</p>
+<p>Moatsos describes the methodology as follows: “In this approach, poverty lines are calculated for every year and country separately, rather than using a single global line. The second step is to gather the necessary data to operationalise this approach, alongside imputation methods in cases where not all the necessary data are available. The third step is to devise a method for aggregating countries’ poverty estimates on a global scale to account for countries that lack some of the relevant data.” In his publication – linked above – you find much more detail on all of the shown poverty data.</p>
+<p><strong>Income vs expenditure surveys</strong></p>
+<p>One important issue is that the survey data included within the <a href="https://pip.worldbank.org/home">PIP</a> database tends to measure people’s income in high-income countries, and people’s consumption expenditure in poorer countries. The two concepts are closely related: the income of a household equals their consumption plus any saving (or minus any borrowing). But they can nonetheless give quite different indications of households’ welfare, especially among richer households who tend to save more, or older households that are dissaving in retirement.</p>
+<p>In our Data Explorer of this data there is the option to view income and consumption data for individual countries separately, or instead to pool the data available from both types of survey – which yields greater coverage.</p>
+<p><strong>Other comparability issues</strong></p>
+<p>There are a number of other ways in which comparability across surveys can be limited. The PIP <a href="https://worldbank.github.io/PIP-Methodology/index.html">Methodology Handbook</a> provides a good summary of the comparability and data quality issues affecting this data and how it tries to address them.</p>
+<p>In collating this survey data the World Bank takes a range of steps to harmonize it where possible, but comparability issues remain. These affect comparisons both across countries and within individual countries over time.</p>
+<p>To help communicate the latter, the World Bank produces a variable that groups surveys within each individual country into more comparable ‘spells’ (which we include in our data <a href="https://joeh.fra1.digitaloceanspaces.com/PIP/PIP_data_public_download.zip">download</a>). Our Data Explorer provides the option of viewing the data with these breaks in comparability indicated.&nbsp;</p>
+<p><br>
+</p>
+</section>
+<section id="global-and-regional-poverty-estimates" class="level4">
+<h4 class="anchored" data-anchor-id="global-and-regional-poverty-estimates">Global and regional poverty estimates</h4>
+<p>Along with data for individual countries derived from household surveys, the World Bank also provides global and regional poverty estimates. Since surveys are not conducted annually in every country, in order to produce these aggregate estimates for a given year, the World Bank takes the surveys falling closest to that year for each country and ‘lines-up’ the data to the year being estimated by projecting it forwards or backwards.</p>
+<p>This lining-up is generally done on the assumption that household incomes or expenditure grow in line with the growth rates observed in national accounts data. You can read more about the interpolation methods used by the World Bank in <a href="https://worldbank.github.io/PIP-Methodology/lineupestimates.html">Chapter 5</a> of the Poverty and Inequality Platform Methodology Handbook.</p>
+<p><br>
+</p>
+</section>
+<section id="how-does-the-data-account-for-inflation-and-for-differences-in-the-cost-of-living-across-countries" class="level4">
+<h4 class="anchored" data-anchor-id="how-does-the-data-account-for-inflation-and-for-differences-in-the-cost-of-living-across-countries">How does the data account for inflation and for differences in the cost of living across countries?</h4>
+<p>To account for inflation and price differences across countries, the data is measured in 2017 international-$.</p>
+<p>The international-$ is a hypothetical currency that results from price adjustments across time and place. It is defined as having the same purchasing power as one US-$ would in the United States in a given base year – in this case 2017. One int.-$ buys the same quantity of goods and services no matter where or when it is spent.</p>
+<p>There are many challenges to making such adjustments and they are far from perfect. Angus Deaton (<a href="https://rpds.princeton.edu/sites/g/files/toruqf1956/files/media/deaton_price_indexes_inequality_and_the_measurement_of_world_poverty_aer.pdf">Deaton, 2010</a>) provides a good discussion of the difficulties involved in price adjustments and how this relates to global poverty measurement.</p>
+<p>But in a world where price differences across countries and over time are large it is important to attempt to account for these differences as well as possible, and this is what these adjustments do.</p>
+<p><br>
+</p>
+</section>
+<section id="absolute-vs-relative-poverty-lines" class="level4">
+<h4 class="anchored" data-anchor-id="absolute-vs-relative-poverty-lines">Absolute vs relative poverty lines</h4>
+<p>This dataset provides poverty estimates for a range of absolute and relative poverty lines.</p>
+<p>An absolute poverty line represents a fixed standard of living; a threshold that is held constant across time. Within the World Bank’s poverty data, absolute poverty lines also aim to represent a standard of living that is fixed across countries (by converting local currencies to international-$). The International Poverty Line of $1.90 per day is the best known absolute poverty line and is used by the World Bank and the UN to measure extreme poverty around the world.</p>
+<p>Relative poverty lines instead rise and fall in absolute terms as average incomes change within a given country. In most cases they are set at a certain fraction of the median income. Because of this, relative poverty can be considered a metric of inequality – it measures how spread out the bottom half of the income distribution is.</p>
+<p>The idea behind measuring poverty in relative terms is that a person’s well-being depends not on their own absolute standard of living but on how that standard compares with some reference group, or whether it enables them to participate in the norms and customs of their society. For instance, joining a friend’s birthday celebration without shame might require more resources in a rich society if the norm is to go for an expensive meal out, or give costly presents.</p>
+<p>Our dataset includes three commonly-used relative poverty lines: 40%, 50%, and 60% of the median.</p>
+<p>Such lines are most commonly used in rich countries, and are the main way poverty is measured by the <a href="https://data.oecd.org/inequality/poverty-rate.htm">OECD</a> and the <a href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:At-risk-of-poverty_rate">European Union</a>.<br>
+<br>
+More recently, relative poverty measures have come to be applied in a global context. The share of people living below 50 per cent of median income is, for instance, one of the UN’s <a href="https://sdg-tracker.org/inequality#10.2">Sustainable Development Goal indicators</a>. And the World Bank now produces estimates of global poverty using a <a href="https://datatopics.worldbank.org/world-development-indicators/stories/societal-poverty-a-global-measure-of-relative-poverty.html">Societal Poverty Line</a> that combines absolute and relative components.</p>
+<p>When comparing relative poverty rates around the world, however, it is important to keep in mind that – since <a href="https://ourworldindata.org/explorers/poverty-explorer?tab=map&amp;facet=none&amp;hideControls=false&amp;Metric=Median&amp;Poverty+line=%241.90+a+day&amp;Household+survey+data+type=Show+data+from+both+income+and+expenditure+surveys&amp;country=IND~MOZ~BRA~MDG~GHA">average incomes</a> are so far apart – such relative poverty lines relate to very different standards of living in rich and poor countries.</p>
+<p><br>
+</p>
+</section>
+<section id="does-the-data-account-for-non-market-income-such-as-food-grown-by-subsistence-farmers" class="level4">
+<h4 class="anchored" data-anchor-id="does-the-data-account-for-non-market-income-such-as-food-grown-by-subsistence-farmers">Does the data account for non-market income, such as food grown by subsistence farmers?</h4>
+<p>Many poor people today, as in the past, rely on subsistence farming rather than a monetary income gained from selling goods or their labor on the market. To take this into account and make a fair comparison of their living standards, the statisticians that produce these figures estimate the monetary value of their home production and add it to their income/expenditure.</p>
+<p><br>
+<br>
+</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
