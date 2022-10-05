@@ -1,0 +1,34 @@
+varname,varlabel
+country_name,Country name
+year,Year
+bioweapons_status_current,"Current country position towards bioweapons (OWID based on ACA, NTI, and CNS)"
+bioweapons_status_current_num,Current country position towards bioweapons (numerical)
+bioweapons_status_hist,"Past country position towards bioweapons (OWID based on ACA, NTI, and CNS)"
+bioweapons_status_hist_num,Past country position towards bioweapons (numerical)
+bioweapons_convention,Position on Biological Weapons Convention (United Nations)
+bioweapons_convention_num,Position on Biological Weapons Convention (numerical)
+chemweapons_status_current,"Current country pos. towards chemical weapons (OWID based on ACA, NTI, and CNS)"
+chemweapons_status_current_num,Current country position towards chemical weapons (numerical)
+chemweapons_status_hist,"Past country position towards chemical weapons (OWID based on ACA, NTI, and CNS)"
+chemweapons_status_hist_num,Past country position towards chemical weapons (numerical)
+chemweapons_convention,chemweapons_convention
+chemweapons_convention_num,Position on Chemical Weapons Convention (numerical)
+num_bioweapons_curr_neither,Number of countries neither pursuing nor possessing bioweapons
+num_bioweapons_curr_allepur,Number of countries allegedly pursuing bioweapons
+num_bioweapons_hist_neither,Number of countries that neither pursued nor possessed bioweapons
+num_bioweapons_hist_allepur,Number of countries that allegedly pursued bioweapons
+num_bioweapons_hist_pur,Number of countries that pursued bioweapons
+num_bioweapons_hist_alleposs,Number of countries that allegedly possessed bioweapons
+num_bioweapons_hist_poss,Number of countries that possessed bioweapons
+num_bioweapons_hist_use,Number of countries that used bioweapons in the past
+num_chemweapons_curr_neither,Number of countries neither pursuing nor possessing chemical weapons
+num_chemweapons_curr_allepur,Number of countries allegedly pursuing chemical weapons
+num_chemweapons_curr_poss,Number of countries possessing chemical weapons
+num_chemweapons_curr_alleuse,Number of countries that recently allegedly used chemical weapons
+num_chemweapons_curr_use,Number of countries that recently used chemical weapons
+num_chemweapons_hist_neither,Number of countries that neither pursued nor possessed chemical weapons
+num_chemweapons_hist_pur,Number of countries that pursued chemical weapons
+num_chemweapons_hist_alleposs,Number of countries that allegedly possessed chemical weapons
+num_chemweapons_hist_poss,Number of countries that possessed chemical weapons
+num_chemweapons_hist_alleuse,Number of countries that allegedly used chemical weapons
+num_chemweapons_hist_use,Number of countries that used chemical weapons
