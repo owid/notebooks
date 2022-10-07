@@ -1234,6 +1234,62 @@ def export(df_final, cols, ppp):
     return df_inc_only, df_cons_only, df_inc_or_cons
 
 
+# +
+def ppp_comparison():
+    
+    #Create files that merge poverty indices for different reference poverty lines in 2011 and 2017 PPPs
+    #This data is used for the 2011 vs 2017 PPP explorer
+    
+    print('Creating files to compare PPP versions...')
+    start_time = time.time()
+    
+    #List of welfare types to read and write
+    welfare = ['inc_only', 'cons_only', 'inc_or_cons']
+
+    #For each welfare type
+    for w in welfare:
+
+        #Read the respective 2011 and 2017 PPP file
+        df_2011 = pd.read_csv(f'data/ppp_2011/final/OWID_internal_upload/explorer_database/{w}/poverty_{w}.csv')
+        df_2017 = pd.read_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/{w}/poverty_{w}.csv')
+
+        #Define columns to keep
+        
+        #Columns with basic IDs
+        col_id = ['Entity', 'Year', 'welfare_type', 'reporting_level']
+
+#         #Columns with reference 2011 PPPs poverty lines
+#         col_190 = list(df_2011.filter(like="190", axis=1).columns)
+#         col_320 = list(df_2011.filter(like="320", axis=1).columns)
+#         col_550 = list(df_2011.filter(like="550", axis=1).columns)
+#         col_2170 = list(df_2011.filter(like="2170", axis=1).columns)
+
+#         #Columns with reference 2017 PPPs poverty lines
+#         col_215 = list(df_2017.filter(like="215", axis=1).columns)
+#         col_365 = list(df_2017.filter(like="365", axis=1).columns)
+#         col_685 = list(df_2017.filter(like="685", axis=1).columns)
+#         col_2435 = list(df_2017.filter(like="2435", axis=1).columns)
+        
+#         #Select only id and reference poverty lines by PPP
+#         df_2011 = df_2011[col_id + col_190 + col_320 + col_550 + col_2170]
+#         df_2017 = df_2017[col_id + col_215 + col_365 + col_685 + col_2435]
+
+        #Rename all the non-id columns with the suffix _ppp(year)
+        #(the suffix option in merge only adds suffix when columns coincide)
+        df_2011 = df_2011.rename(columns={c: c+'_ppp2011' for c in df_2011.columns if c not in col_id})
+        df_2017 = df_2017.rename(columns={c: c+'_ppp2017' for c in df_2017.columns if c not in col_id})
+        
+        #Merge the two files and save
+        df = pd.merge(df_2011, df_2017, on=col_id, validate='one_to_one')
+        df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_database/{w}/poverty_{w}.csv', index=False)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+# -
+
 def show_breaks(ppp):
     
     print('Creating multiple variable files to show survey breaks...')

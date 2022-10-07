@@ -153,6 +153,13 @@ regional_headcount(df_region, df_country_inc_or_cons_filled, ppp=ppp_version)
 survey_count(df_country_inc_or_cons, ppp=ppp_version)
 
 # %% [markdown]
+# ## Create 2011 vs 2017 PPPs comparison files
+# Data from 2011 and 2017 PPPs is merged to be compared in a 2011 vs 2017 PPPs explorer.
+
+# %%
+ppp_comparison()
+
+# %% [markdown]
 # ## Create public zip file and finish
 # A zip file is created for users to download the data loaded in the explorers.
 
