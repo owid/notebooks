@@ -515,7 +515,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -537,7 +537,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -559,7 +559,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -581,7 +581,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -647,7 +647,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -669,7 +669,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -691,7 +691,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -713,7 +713,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'yAxisMin'] = 0
         df.loc[j, 'facet'] = np.nan
         df.loc[j, 'selectedFacetStrategy'] = np.nan
-        df.loc[j, 'hasMapTab'] = "true"
+        df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
@@ -777,7 +777,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
@@ -797,7 +797,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
@@ -837,7 +837,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
@@ -857,7 +857,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
@@ -897,7 +897,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
@@ -917,7 +917,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
@@ -957,7 +957,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
@@ -977,7 +977,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'yAxisMin'] = 0
     df.loc[j, 'facet'] = np.nan
     df.loc[j, 'selectedFacetStrategy'] = np.nan
-    df.loc[j, 'hasMapTab'] = "true"
+    df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
     j += 1
