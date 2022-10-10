@@ -1011,7 +1011,7 @@ for survey in range(len(survey_type)):
     
     
 #Reorder dropdown menus
-df = df.sort_values(by='Poverty line Dropdown')
+#df = df.sort_values(by='Poverty line Dropdown')
     
 #Select one default view
 df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") & (df['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
