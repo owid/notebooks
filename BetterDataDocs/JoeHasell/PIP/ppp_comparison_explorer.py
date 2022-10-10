@@ -195,6 +195,7 @@ for key in range(len(table_base)):
 # -
 
 # ## Long method
+# ### Tables with variable definitions
 
 # +
 #Table generation
@@ -489,6 +490,8 @@ for i in survey_list:
     table_export = df[df['survey_type'] == i].copy().reset_index(drop=True)
     table_export = table_export.drop(columns=['survey_type'])
     table_export.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/table_{i}.csv', index=False)
+
+# ### Grapher views
 
 # +
 #Grapher table generation
