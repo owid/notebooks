@@ -721,6 +721,8 @@ for survey in range(len(survey_type)):
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
         
+        #####
+        
     for pct in range(len(povlines_rel)):
 
         df.loc[j, 'title'] = f'{povlines_rel.title_share_vs[pct]}'
@@ -764,6 +766,8 @@ for survey in range(len(survey_type)):
         df.loc[j, 'tab'] = np.nan
         df.loc[j, 'mapTargetTime'] = np.nan
         j += 1
+
+#####
 
     df.loc[j, 'title'] = "Mean income or expenditure per day (2011 prices)"
     df.loc[j, 'ySlugs'] = "mean_ppp2011"
@@ -1005,6 +1009,9 @@ for survey in range(len(survey_type)):
     df.loc[j, 'mapTargetTime'] = np.nan
     j += 1
     
+    
+#Reorder dropdown menus
+df = df.sort_values(by='Poverty line Dropdown')
     
 #Select one default view
 df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") & (df['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
