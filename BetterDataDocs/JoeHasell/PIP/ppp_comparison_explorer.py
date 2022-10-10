@@ -9,9 +9,9 @@ sheet_id = '1mR0LPEGlY-wCp1q9lNTlDbVIG65JazKvHL16my9tH8Y'
 # url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 # table_base = pd.read_csv(url)
 
-sheet_name = 'grapher_base'
-url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-grapher_base = pd.read_csv(url)
+# sheet_name = 'grapher_base'
+# url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+# grapher_base = pd.read_csv(url)
 
 sheet_name = 'povlines_ppp2011'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
@@ -777,7 +777,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2011 prices."
+    df.loc[j, 'note'] = "This data is expressed in international-$ at 2011 prices."
     df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df.loc[j, 'relatedQuestionUrl'] = np.nan
     df.loc[j, 'type'] = np.nan
@@ -797,7 +797,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
+    df.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
     df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df.loc[j, 'relatedQuestionUrl'] = np.nan
     df.loc[j, 'type'] = np.nan
@@ -817,7 +817,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
+    df.loc[j, 'note'] = np.nan
     df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df.loc[j, 'relatedQuestionUrl'] = np.nan
     df.loc[j, 'type'] = np.nan
@@ -837,7 +837,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2011 prices."
+    df.loc[j, 'note'] = "This data is expressed in international-$ at 2011 prices."
     df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df.loc[j, 'relatedQuestionUrl'] = np.nan
     df.loc[j, 'type'] = np.nan
@@ -857,7 +857,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
+    df.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
     df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df.loc[j, 'relatedQuestionUrl'] = np.nan
     df.loc[j, 'type'] = np.nan
@@ -877,7 +877,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
+    df.loc[j, 'note'] = np.nan
     df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df.loc[j, 'relatedQuestionUrl'] = np.nan
     df.loc[j, 'type'] = np.nan
