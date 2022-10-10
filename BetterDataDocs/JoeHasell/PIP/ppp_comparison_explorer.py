@@ -1003,7 +1003,7 @@ for survey in range(len(survey_type)):
     
     
 #Select one default view
-df.loc[df['ySlugs'] == <condition>, [<another_column_name>]] = <value_to_add>
+df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") & (df['tableSlug'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017"), ['defaultView']] = "true"
     
 df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/grapher.csv', index=False)
 # -
