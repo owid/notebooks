@@ -494,6 +494,7 @@ for i in survey_list:
 #Grapher table generation
 
 df = pd.DataFrame()
+
 j=0
 
 for survey in range(len(survey_type)):
@@ -1003,7 +1004,7 @@ for survey in range(len(survey_type)):
     
     
 #Select one default view
-df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") & (df['tableSlug'] == "inc_or_cons"), ['defaultView']] = "true"
+df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") & (df['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
     
 df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/grapher.csv', index=False)
 # -
