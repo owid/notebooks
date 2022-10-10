@@ -1001,6 +1001,10 @@ for survey in range(len(survey_type)):
     df.loc[j, 'mapTargetTime'] = np.nan
     j += 1
     
+    
+#Select one default view
+df.loc[df['ySlugs'] == <condition>, [<another_column_name>]] = <value_to_add>
+    
 df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/grapher.csv', index=False)
 # -
 
