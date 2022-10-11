@@ -1009,14 +1009,38 @@ for survey in range(len(survey_type)):
     df.loc[j, 'mapTargetTime'] = np.nan
     j += 1
     
+#Select one default view
+df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") 
+       & (df['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
+    
     
 #Reorder dropdown menus
-#df = df.sort_values(by='Poverty line Dropdown')
-    
-#Select one default view
-df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") & (df['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
+povline_dropdown_list = ['$1 per day',
+                         '$1.9 per day: International Poverty Line',
+                         '$2.15 per day: International Poverty Line',
+                         '$3.2 per day: Lower-middle income poverty line',
+                         '$3.65 per day: Lower-middle income poverty line',
+                         '$5.5 per day: Upper-middle income poverty line',
+                         '$6.85 per day: Upper-middle income poverty line',
+                         '$10 per day',
+                         '$20 per day',
+                         '$30 per day',
+                         '$40 per day',
+                         'International Poverty Line',
+                         'Lower-middle income poverty line',
+                         'Upper-middle income poverty line',
+                         'Relative poverty: 40% of median',
+                         'Relative poverty: 50% of median',
+                         'Relative poverty: 60% of median']
+
+
+df_mapping = pd.DataFrame({'povline_dropdown': povline_dropdown_list,})
+df_mapping = df_mapping.reset_index().set_index('povline_dropdown')
+
+df['povline_dropdown_aux'] = df['Poverty line Dropdown'].map(df_mapping['index'])
+df = df.sort_values('povline_dropdown_aux', ignore_index=True)
+df = df.drop(columns=['povline_dropdown_aux'])
     
 df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/grapher.csv', index=False)
 # -
-
 
