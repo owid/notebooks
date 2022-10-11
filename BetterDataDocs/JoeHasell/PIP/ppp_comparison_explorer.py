@@ -721,53 +721,47 @@ for survey in range(len(survey_type)):
         df.loc[j, 'mapTargetTime'] = 2019
         j += 1
         
-        #####
-        
-    for pct in range(len(povlines_rel)):
 
-        df.loc[j, 'title'] = f'{povlines_rel.title_share_vs[pct]}'
-        df.loc[j, 'ySlugs'] = f'headcount_ratio_{povlines_rel.slug_suffix[pct]}_ppp2011 headcount_ratio_{povlines_rel.slug_suffix[pct]}_ppp2017'
-        df.loc[j, 'Metric Dropdown'] = "Share in poverty"
-        df.loc[j, 'International-$ Dropdown'] = "Compare 2017 and 2011 prices"
-        df.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
-        df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
-        df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-        df.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
-        df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-        df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'relatedQuestionUrl'] = np.nan
-        df.loc[j, 'type'] = np.nan
-        df.loc[j, 'yAxisMin'] = 0
-        df.loc[j, 'facet'] = "entity"
-        df.loc[j, 'selectedFacetStrategy'] = "entity"
-        df.loc[j, 'hasMapTab'] = np.nan
-        df.loc[j, 'tab'] = np.nan
-        df.loc[j, 'mapTargetTime'] = np.nan
-        j += 1
-        
-    for pct in range(len(povlines_rel)):
+    df.loc[j, 'title'] = f'Relative poverty: Share of people below 60% of the median (2011 vs. 2017 prices)'
+    df.loc[j, 'ySlugs'] = f'headcount_ratio_60_median_ppp2011 headcount_ratio_60_median_ppp2017'
+    df.loc[j, 'Metric Dropdown'] = "Share in poverty"
+    df.loc[j, 'International-$ Dropdown'] = "Compare 2017 and 2011 prices"
+    df.loc[j, 'Poverty line Dropdown'] = f'Relative poverty: 60% of median'
+    df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+    df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+    df.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at 60% of the median {survey_type.text[survey]}.'
+    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
+    df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+    df.loc[j, 'relatedQuestionUrl'] = np.nan
+    df.loc[j, 'type'] = np.nan
+    df.loc[j, 'yAxisMin'] = 0
+    df.loc[j, 'facet'] = "entity"
+    df.loc[j, 'selectedFacetStrategy'] = "entity"
+    df.loc[j, 'hasMapTab'] = np.nan
+    df.loc[j, 'tab'] = np.nan
+    df.loc[j, 'mapTargetTime'] = np.nan
+    j += 1
 
-        df.loc[j, 'title'] = f'{povlines_rel.title_number_vs[pct]}'
-        df.loc[j, 'ySlugs'] = f'headcount_{povlines_rel.slug_suffix[pct]}_ppp2011 headcount_{povlines_rel.slug_suffix[pct]}_ppp2017'
-        df.loc[j, 'Metric Dropdown'] = "Number in poverty"
-        df.loc[j, 'International-$ Dropdown'] = "Compare 2017 and 2011 prices"
-        df.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
-        df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
-        df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-        df.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
-        df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-        df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'relatedQuestionUrl'] = np.nan
-        df.loc[j, 'type'] = np.nan
-        df.loc[j, 'yAxisMin'] = 0
-        df.loc[j, 'facet'] = "entity"
-        df.loc[j, 'selectedFacetStrategy'] = "entity"
-        df.loc[j, 'hasMapTab'] = np.nan
-        df.loc[j, 'tab'] = np.nan
-        df.loc[j, 'mapTargetTime'] = np.nan
-        j += 1
+    df.loc[j, 'title'] = f'Relative poverty: Number of people below 60% of the median (2011 vs. 2017 prices)'
+    df.loc[j, 'ySlugs'] = f'headcount_60_median_ppp2011 headcount_60_median_ppp2017'
+    df.loc[j, 'Metric Dropdown'] = "Number in poverty"
+    df.loc[j, 'International-$ Dropdown'] = "Compare 2017 and 2011 prices"
+    df.loc[j, 'Poverty line Dropdown'] = f'Relative poverty: 60% of median'
+    df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+    df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+    df.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at 60% of the median {survey_type.text[survey]}.'
+    df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
+    df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+    df.loc[j, 'relatedQuestionUrl'] = np.nan
+    df.loc[j, 'type'] = np.nan
+    df.loc[j, 'yAxisMin'] = 0
+    df.loc[j, 'facet'] = "entity"
+    df.loc[j, 'selectedFacetStrategy'] = "entity"
+    df.loc[j, 'hasMapTab'] = np.nan
+    df.loc[j, 'tab'] = np.nan
+    df.loc[j, 'mapTargetTime'] = np.nan
+    j += 1
 
-#####
 
     df.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day (2011 prices)"
     df.loc[j, 'ySlugs'] = "mean_ppp2011"
@@ -787,6 +781,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day (2017 prices)"
@@ -807,6 +802,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day: 2011 vs. 2017 prices"
@@ -827,6 +823,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = np.nan
     df.loc[j, 'tab'] = np.nan
     df.loc[j, 'mapTargetTime'] = np.nan
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"Median {survey_type.text[survey]} per day (2011 prices)"
@@ -847,6 +844,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"Median {survey_type.text[survey]} per day (2017 prices)"
@@ -867,6 +865,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"Median {survey_type.text[survey]} per day: 2011 vs. 2017 prices"
@@ -887,6 +886,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = np.nan
     df.loc[j, 'tab'] = np.nan
     df.loc[j, 'mapTargetTime'] = np.nan
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"P10: The {survey_type.text[survey]} of the poorest tenth (2011 prices)"
@@ -907,6 +907,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"P10: The {survey_type.text[survey]} of the poorest tenth (2017 prices)"
@@ -927,6 +928,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"P10: The {survey_type.text[survey]} of the poorest tenth (2011 vs. 2017 prices)"
@@ -947,6 +949,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = np.nan
     df.loc[j, 'tab'] = np.nan
     df.loc[j, 'mapTargetTime'] = np.nan
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"P90: The {survey_type.text[survey]} of the richest tenth (2011 prices)"
@@ -967,6 +970,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"P90: The {survey_type.text[survey]} of the richest tenth (2017 prices)"
@@ -987,6 +991,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = "'true"
     df.loc[j, 'tab'] = "map"
     df.loc[j, 'mapTargetTime'] = 2019
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
 
     df.loc[j, 'title'] = f"P90: The {survey_type.text[survey]} of the richest tenth (2011 vs. 2017 prices)"
@@ -1007,6 +1012,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'hasMapTab'] = np.nan
     df.loc[j, 'tab'] = np.nan
     df.loc[j, 'mapTargetTime'] = np.nan
+    df.loc[j, 'yScaleToggle'] = "'true"
     j += 1
     
 #Select one default view
@@ -1016,11 +1022,11 @@ df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017
     
 #Reorder dropdown menus
 povline_dropdown_list = ['$1 per day',
-                         '$1.9 per day: International Poverty Line',
+                         '$1.90 per day: International Poverty Line',
                          '$2.15 per day: International Poverty Line',
-                         '$3.2 per day: Lower-middle income poverty line',
+                         '$3.20 per day: Lower-middle income poverty line',
                          '$3.65 per day: Lower-middle income poverty line',
-                         '$5.5 per day: Upper-middle income poverty line',
+                         '$5.50 per day: Upper-middle income poverty line',
                          '$6.85 per day: Upper-middle income poverty line',
                          '$10 per day',
                          '$20 per day',
@@ -1040,7 +1046,8 @@ df_mapping = df_mapping.reset_index().set_index('povline_dropdown')
 df['povline_dropdown_aux'] = df['Poverty line Dropdown'].map(df_mapping['index'])
 df = df.sort_values('povline_dropdown_aux', ignore_index=True)
 df = df.drop(columns=['povline_dropdown_aux'])
-    
+
+#Export Grapher table    
 df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/grapher.csv', index=False)
 # -
 
