@@ -207,7 +207,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
         df.loc[j, 'slug'] = f'headcount_ratio_{povlines_ppp2011.cents[p_2011]}_ppp2011'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'% of population living in households with an income or expenditure per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).'
+        df.loc[j, 'description'] = f'% of population living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
         df.loc[j, 'unit'] = "%"
@@ -225,7 +225,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
         df.loc[j, 'slug'] = f'headcount_ratio_{povlines_ppp2017.cents[p_2017]}_ppp2017'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'% of population living in households with an income or expenditure per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).'
+        df.loc[j, 'description'] = f'% of population living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
         df.loc[j, 'unit'] = "%"
@@ -243,7 +243,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
         df.loc[j, 'slug'] = f'headcount_{povlines_ppp2011.cents[p_2011]}_ppp2011'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'Number of people living in households with an income or expenditure per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).'
+        df.loc[j, 'description'] = f'Number of people living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
         df.loc[j, 'unit'] = np.nan
@@ -261,7 +261,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
         df.loc[j, 'slug'] = f'headcount_{povlines_ppp2017.cents[p_2017]}_ppp2017'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'Number of people living in households with an income or expenditure per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).'
+        df.loc[j, 'description'] = f'Number of people living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
         df.loc[j, 'unit'] = np.nan
@@ -279,7 +279,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - share of population below poverty line (2011 prices)'
         df.loc[j, 'slug'] = f'headcount_ratio_{povlines_rel.slug_suffix[pct]}_ppp2011'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'% of population living in households with an income or expenditure per person below {povlines_rel.percent[pct]} of the median (2011 prices).'
+        df.loc[j, 'description'] = f'% of population living in households with an {survey_type.text[survey]} per person below {povlines_rel.percent[pct]} of the median (2011 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP), adapted by Our World in Data."
         df.loc[j, 'unit'] = "%"
@@ -297,7 +297,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - share of population below poverty line (2017 prices)'
         df.loc[j, 'slug'] = f'headcount_ratio_{povlines_rel.slug_suffix[pct]}_ppp2017'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'% of population living in households with an income or expenditure per person below {povlines_rel.percent[pct]} of the median (2017 prices).'
+        df.loc[j, 'description'] = f'% of population living in households with an {survey_type.text[survey]} per person below {povlines_rel.percent[pct]} of the median (2017 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP), adapted by Our World in Data."
         df.loc[j, 'unit'] = "%"
@@ -315,7 +315,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - total number of people below poverty line (2011 prices)'
         df.loc[j, 'slug'] = f'headcount_{povlines_rel.slug_suffix[pct]}_ppp2011'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'Number of people living in households with an income or expenditure per person below {povlines_rel.percent[pct]} of the median (2011 prices).'
+        df.loc[j, 'description'] = f'Number of people living in households with an {survey_type.text[survey]} per person below {povlines_rel.percent[pct]} of the median (2011 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP), adapted by Our World in Data."
         df.loc[j, 'unit'] = np.nan
@@ -333,7 +333,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - total number of people below poverty line (2017 prices)'
         df.loc[j, 'slug'] = f'headcount_{povlines_rel.slug_suffix[pct]}_ppp2017'
         df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df.loc[j, 'description'] = f'Number of people living in households with an income or expenditure per person below {povlines_rel.percent[pct]} of the median (2017 prices).'
+        df.loc[j, 'description'] = f'Number of people living in households with an {survey_type.text[survey]} per person below {povlines_rel.percent[pct]} of the median (2017 prices).'
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP), adapted by Our World in Data."
         df.loc[j, 'unit'] = np.nan
@@ -348,10 +348,10 @@ for survey in range(len(survey_type)):
         j += 1
         
 
-    df.loc[j, 'name'] = "Mean income or expenditure per day (2011 prices)"
+    df.loc[j, 'name'] = f"Mean {survey_type.text[survey]} per day (2011 prices)"
     df.loc[j, 'slug'] = "mean_ppp2011"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The mean level of income or expenditure per day (2011 prices)."
+    df.loc[j, 'description'] = f"The mean level of {survey_type.text[survey]} per day (2011 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2011 prices"
@@ -365,10 +365,10 @@ for survey in range(len(survey_type)):
     df.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
-    df.loc[j, 'name'] = "Mean income or expenditure per day (2017 prices)"
+    df.loc[j, 'name'] = f"Mean {survey_type.text[survey]} per day (2017 prices)"
     df.loc[j, 'slug'] = "mean_ppp2017"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The mean level of income or expenditure per day (2017 prices)."
+    df.loc[j, 'description'] = f"The mean level of {survey_type.text[survey]} per day (2017 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2017 prices"
@@ -382,10 +382,10 @@ for survey in range(len(survey_type)):
     df.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
-    df.loc[j, 'name'] = "Median income or expenditure per day (2011 prices)"
+    df.loc[j, 'name'] = f"Median {survey_type.text[survey]} per day (2011 prices)"
     df.loc[j, 'slug'] = "median_ppp2011"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The level of income or expenditure per day below which half of the population live (2011 prices)."
+    df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per day below which half of the population live (2011 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2011 prices"
@@ -399,10 +399,10 @@ for survey in range(len(survey_type)):
     df.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
-    df.loc[j, 'name'] = "Median income or expenditure per day (2017 prices)"
+    df.loc[j, 'name'] = f"Median {survey_type.text[survey]} per day (2017 prices)"
     df.loc[j, 'slug'] = "median_ppp2017"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The level of income or expenditure per day below which half of the population live (2017 prices)."
+    df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per day below which half of the population live (2017 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2017 prices"
@@ -419,7 +419,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'name'] = "P10 (2011 prices)"
     df.loc[j, 'slug'] = "decile1_thr_ppp2011"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The level of income or expenditure per day below which 10% of the population falls (2011 prices)."
+    df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per day below which 10% of the population falls (2011 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2011 prices"
@@ -436,7 +436,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'name'] = "P10 (2017 prices)"
     df.loc[j, 'slug'] = "decile1_thr_ppp2017"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The level of income or expenditure per day below which 10% of the population falls (2017 prices)."
+    df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per day below which 10% of the population falls (2017 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2017 prices"
@@ -453,7 +453,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'name'] = "P90 (2011 prices)"
     df.loc[j, 'slug'] = "decile9_thr_ppp2011"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The level of income or expenditure per day above which 10% of the population falls (2011 prices)."
+    df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per day above which 10% of the population falls (2011 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2011 prices"
@@ -470,7 +470,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'name'] = "P90 (2017 prices)"
     df.loc[j, 'slug'] = "decile9_thr_ppp2017"
     df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-    df.loc[j, 'description'] = "The level of income or expenditure per day above which 10% of the population falls (2017 prices)."
+    df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per day above which 10% of the population falls (2017 prices)."
     df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
     df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
     df.loc[j, 'unit'] = "international-$ at 2017 prices"
