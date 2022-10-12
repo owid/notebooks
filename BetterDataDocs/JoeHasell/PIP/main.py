@@ -160,6 +160,13 @@ survey_count(df_country_inc_or_cons, ppp=ppp_version)
 ppp_comparison()
 
 # %% [markdown]
+# ## Create national poverty lines dataset from Jolliffe et al (2022)
+# This is the data of the paper which defined new international poverty lines
+
+# %%
+national_povlines()
+
+# %% [markdown]
 # ## Create public zip file and finish
 # A zip file is created for users to download the data loaded in the explorers.
 
@@ -173,3 +180,4 @@ print(f'The files were created in {elapsed_time} seconds :)')
 print('Update the main PIP dataset with pip_final.csv')
 print('Update the regional headcount dataset with pip_regional_headcount.csv')
 print('Update the survey count dataset with pip_survey_count.csv')
+print('Update the national poverty lines dataset with pip_national_povlines.csv')

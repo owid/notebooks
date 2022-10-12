@@ -1520,3 +1520,34 @@ def survey_count(df_country, ppp):
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+def national_povlines():
+    
+    print('Creating dataset with national poverty lines (used to generate international poverty lines)...')
+    start_time = time.time()
+
+    national_povlines = pd.read_stata(f'data/ppp_2017/raw/harmonized_npl_owid.dta')
+
+    national_povlines = standardize_entities(
+        orig_df = national_povlines,
+        entity_mapping_url = f"data/ppp_2017/raw/countries_natpovlines_standardized.csv",
+        mapping_varname_raw ='country',
+        mapping_vaname_owid = 'Our World In Data Name',
+        data_varname_old = 'countrycode',
+        data_varname_new = 'Entity'
+    )
+
+    national_povlines = national_povlines.rename(columns={'year': 'Year',
+                                                         'incgroup_historical': 'Income group',
+                                                         'harm_npl': 'Harmonized national poverty line'})
+    national_povlines = national_povlines.drop(columns=['gdp_2017_ppp_pc'])
+
+    national_povlines = national_povlines.sort_values(by=['Year', 'Entity'])
+    national_povlines.to_csv(f'data/ppp_2017/final/OWID_internal_upload/admin_database/pip_national_povlines.csv', index=False)
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+
+

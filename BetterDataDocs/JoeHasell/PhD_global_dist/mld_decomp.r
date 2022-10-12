@@ -5,8 +5,6 @@ library(dineq)
 
 
 
-
-
 df<- read.csv('https://joeh.fra1.digitaloceanspaces.com/phd_global_dist/percentiles_from_PIP.csv')
 
 head(df)
