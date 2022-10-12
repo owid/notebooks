@@ -15,15 +15,15 @@ sheet_id = '1mR0LPEGlY-wCp1q9lNTlDbVIG65JazKvHL16my9tH8Y'
 
 sheet_name = 'povlines_ppp2011'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-povlines_ppp2011 = pd.read_csv(url)
+povlines_ppp2011 = pd.read_csv(url, dtype={'dollars_text':'str'})
 
 sheet_name = 'povlines_ppp2017'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-povlines_ppp2017 = pd.read_csv(url)
+povlines_ppp2017 = pd.read_csv(url, dtype={'dollars_text':'str'})
 
 sheet_name = 'povlines_both'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-povlines_both = pd.read_csv(url)
+povlines_both = pd.read_csv(url, dtype={'dollars_2011_text':'str', 'dollars_2017_text':'str'})
 
 sheet_name = 'povlines_rel'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
@@ -196,6 +196,8 @@ for key in range(len(table_base)):
 
 # ## Long method
 # ### Tables with variable definitions
+
+povlines_ppp2011
 
 # +
 #Table generation
