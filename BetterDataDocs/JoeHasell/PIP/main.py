@@ -161,7 +161,7 @@ ppp_comparison()
 
 # %% [markdown]
 # ## Create national poverty lines dataset from Jolliffe et al (2022)
-# This is the data of the paper which defined new international poverty lines
+# This is the data of the paper which defined new international poverty lines, [here](https://openknowledge.worldbank.org/handle/10986/37061)
 
 # %%
 national_povlines()

@@ -466,12 +466,12 @@ fig.show()
 # If the percentile thresholds are iteratively obtained with the povline command (see `extract_percentiles.py`), the medians can be properly obtained
 
 # %%
-df_median = pd.read_csv('percentiles.csv')
+df_median = pd.read_csv('percentiles_ppp_2017.csv')
 df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
 df_median_merge = pd.merge(df_final, 
                     df_median[['Entity', 'Year', 'reporting_level', 'welfare_type',
-                                    'poverty_line']], 
+                                    'percentile_value']], 
                     how='left', 
                     on=['Entity', 'Year', 'reporting_level', 'welfare_type'],
                     validate='many_to_one')
@@ -505,7 +505,7 @@ df_median_merge = pd.merge(df_median_merge,
 df_median_merge
 
 # %% [markdown]
-# The missing medians for the countries which are not China, India or Indonesia are fairly similar. The difference seems to be related more with less presition in the brute force method (2 decimals)
+# The missing medians for the countries which are not China, India or Indonesia are fairly similar. The difference seems to be related more with less precision in the brute force method (2 decimals)
 
 # %%
 df_median_merge['median_ratio'] = df_median_merge['median2'] / df_median_merge['poverty_line_y']
