@@ -46,5 +46,6 @@ def pip_query_region(povline, year="all", ppp_version=2011):
         status = response.status_code
     
     df = pd.read_csv(io.StringIO(content.decode('utf-8')))
+    df = df[df['reporting_year']>=1990].reset_index(drop=True)
 
     return df

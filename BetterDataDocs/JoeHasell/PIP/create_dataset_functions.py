@@ -1186,7 +1186,6 @@ def export(df_final, cols, ppp):
     #Reorder columns according to cols
     df_final = df_final[cols]
 
-
     # Separate out consumption-only, income-only, and both dataframes
     df_inc_only = df_final[df_final['welfare_type']=="income"].reset_index(drop=True).copy()
     df_cons_only = df_final[df_final['welfare_type']=="consumption"].reset_index(drop=True).copy()
