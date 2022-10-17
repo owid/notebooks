@@ -2,7 +2,11 @@
 import pandas as pd
 from plotnine import *
 
+#%%
 
+fp = 'https://api.worldbank.org/pip/v1/pip?country=all&year=all&povline=1.9&fill_gaps=false&welfare_type=all&reporting_level=all&version=20220909_2017_01_02_PROD'
+
+df_test = pd.read_csv(fp)
 
 #%%
 fp = 'https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2011/final/OWID_internal_upload/admin_database/pip_final.csv'
@@ -85,17 +89,17 @@ df_pip_2011 = pd.read_csv(request_url)
 # %%
 
 popshare_or_povline = "popshare"
-value = 0.235
-country_code="ETH"
+value = 0.243
+country_code="BGD"
 year="all",
 fill_gaps="false"
 welfare_type="all"
 reporting_level="national"
-version= '20220909_2011_02_02_PROD'
+version= '20220909_2017_01_02_PROD'
 
 request_url = f'https://api.worldbank.org/pip/v1/pip?{popshare_or_povline}={value}&country={country_code}&year={year}&fill_gaps={fill_gaps}&welfare_type={welfare_type}&reporting_level={reporting_level}&version={version}&format=csv'
 
-df_popshare =  pd.read_csv(request_url)
+df_result =  pd.read_csv(request_url)
 # %%
 popshare = 0.235
 country_code = 'ETH'
@@ -108,7 +112,7 @@ request_url = 'https://api.worldbank.org/pip/v1/pip?' + \
       '&year=' + str(year) + \
       '&popshare=' + str(popshare) + \
       'version=20220909_2017_01_02_PROD' + \
-      '&fill_gaps=true' + \
+      '&fill_gaps=false' + \
       '&welfare_type=all' + \
       '&reporting_level=national' + \
       '&format=csv'
