@@ -4,9 +4,9 @@ This repository contains the scripts written and datasets created for my project
 
 The repository includes scripts that clean the datasets, impute values, refine variables, and aggregate some variables across the datasets.
 
-The repository also includes the final versions of the datasets, and intermediate versions of the datasets. Those may be useful to some users who do not want certain variable transformations.
+The repository also includes the final versions of the datasets and intermediate versions of the datasets. Those may be useful to some users who do not want certain variable transformations.
 
-Finally, the repository includes the metadata of the final versions of the datasets, comprising of variable names and variable labels.
+Finally, the repository includes the metadata of the final versions of the datasets, comprising variable names and variable labels.
 
 The data are used in Our World in Data's [Democracy Data Explorer](https://ourworldindata.org/explorers/democracy) and in the following articles:
 - [200 years ago, everyone lacked democratic rights. Now, more than a billion people have them.](https://ourworldindata.org/democratic-rights)
