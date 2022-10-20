@@ -1,4 +1,4 @@
-Entity,Year,Imagenet_extra_training_data,Top1_accuracy,Top5_accuracy
+Entity,Year,imagenet_extra_training_data,top1_accuracy,top5_accuracy
 Advprop (efficientnet-b8),2019,Without Extra Training Data,0.855,0.973
 Alexnet,2012,Without Extra Training Data,0.633,0.846
 Alexnet - 7cnns + imagenet 2011 pretrain,2012,With Extra Training Data,0.633,0.846

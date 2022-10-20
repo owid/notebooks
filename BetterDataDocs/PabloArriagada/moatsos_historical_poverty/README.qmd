@@ -1,0 +1,46 @@
+---
+title: "About this data"
+format: html
+editor: visual
+---
+
+A global dataset of historical poverty measures (1820 - 2018) prepared by Our World in Data from Moatsos (2021).
+
+### About this data
+
+#### Where is this data sourced from?
+
+This dataset is collated and adapted from the work "Global Absolute Poverty, Present and Past since 1820", by Michalis Moatsos (2021), available in the OECD publication [How Was Life? Volume II. New Perspectives on Well-being and Global Inequality since 1820](https://www.oecd-ilibrary.org/sites/e20f2f1a-en/index.html?itemId=/content/component/e20f2f1a-en) and expanded from the [Data publication platform from Utrecht University](https://public.yoda.uu.nl/i-lab/UU01/UOJSYN.html) for higher poverty lines.
+
+The dataset contains estimates of global poverty on the long run in two different methods: a "cost of basic needs" approach and a "dollar a day" approach for four different international poverty lines: $1.90, $5, $10 and $30 a day (2011 PPPs).
+
+You can find all the code Our World in Data used to prepare this dataset in [GitHub](https://github.com/owid/notebooks/tree/main/BetterDataDocs/PabloArriagada/moatsos_historical_poverty).
+
+#### About the *cost of basic needs* approach
+
+The ‘cost of basic needs’ poverty measurement represents the population unable to meet basic needs (including minimal nutrition and adequately heated shelter) according to prices of locally-available goods and services at the time. It was recommended by the ‘World Bank Commission on Global Poverty’, headed by Tony Atkinson, as a complementary method in measuring poverty.
+
+Tony Atkinson – and after his death his colleagues – turned this report into a book that was published as Anthony B. Atkinson (2019) – Measuring Poverty around the World. You find more information on [Atkinson’s website](https://www.tony-atkinson.com/book-measuring-poverty-around-the-world/).
+
+The CBN-approach Moatsos’ work is based on was suggested by Allen in Robert Allen (2017) – Absolute poverty: When necessity displaces desire. In American Economic Review, Vol. 107/12, pp. 3690-3721, https://doi.org/10.1257/aer.20161080 
+
+Moatsos describes the methodology as follows: “In this approach, poverty lines are calculated for every year and country separately, rather than using a single global line. The second step is to gather the necessary data to operationalise this approach, alongside imputation methods in cases where not all the necessary data are available. The third step is to devise a method for aggregating countries’ poverty estimates on a global scale to account for countries that lack some of the relevant data.” In his publication – linked above – you find much more detail on all of the shown poverty data.
+
+#### About World Bank's *dollar a day* approach
+
+The most common approach to measure poverty, the "dollar a day" method, fixes a common global line to count the population living below this number. The extreme poverty was originally conceived as living below the international poverty line of $1 a day and it has been updated subsequentially to address inflation and differences in the vost of living between countries. This data is estimated using the 2011 version of the purchasing power parities (PPP), where the extreme poverty is measured using a line of $1.90 dollars a day. This dataset also includes higher poverty lines: $5, $10 and $30 a day.  
+
+Data after 1981 relates to household income or expenditure surveys collated by the World Bank (see World Bank Poverty and Inequality Platform in this very same document). Before 1981 it is based on historical reconstructions of GDP per capita and inequality data up until 1820.
+
+#### Variables included in this dataset
+
+For each of the methods and poverty lines discussed above, this dataset includes:
+
+    - Share of population below poverty line
+    - Number of people below poverty line
+    - Share of population above poverty line
+    - Number of people above poverty line
+
+There is also a series of variables for share and number of people between poverty lines ($1.90-$5, $5-$10 and $10-$30 a day).
+
+The data covers the 1820-2018 period for global regions. For the cost of basic needs approach the share of the population below and above the poverty line is included for selected countries as well.

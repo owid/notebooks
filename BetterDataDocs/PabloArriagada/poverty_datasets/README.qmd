@@ -1,0 +1,15 @@
+---
+title: "About this file"
+format: html
+editor: visual
+---
+
+Datasets on poverty in Our World in Data.
+
+### About this data
+This file contains two datasets:
+
+ - World Bank Poverty and Inequality Platform (PIP)
+ - Michalis Moatsos estimations on historical poverty between 1820 and 2018 (2021).
+
+Each dataset has its own dedicated folder with details on the methodology and the variables included. Please check the respective README files for more information on this.

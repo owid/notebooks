@@ -54,7 +54,7 @@ def query_yes_no(question, default="yes"):
 # ## Get country data
 # This code is to query poverty data from a poverty line (filled or not). Entities are standardised and returns multiple outputs, one raw file with all the results, one only for consumption, one only for income and one for income and consumption dropping duplicates.
 
-def country_data(extreme_povline_cents, filled, ppp=2011, additional_dfs=True):
+def country_data(extreme_povline_cents, filled, ppp, additional_dfs=True):
     #Query for all the countries and for the poverty line defined (only non-filled data)
     df_country = pip_query_country(popshare_or_povline = "povline",
                                     country_code = "all",
@@ -97,7 +97,7 @@ def country_data(extreme_povline_cents, filled, ppp=2011, additional_dfs=True):
 # ## Regional data
 # Returns standardised regional data
 
-def regional_data(extreme_povline_cents, ppp=2011):
+def regional_data(extreme_povline_cents, ppp):
     #Query for all the regions and for the poverty line defined
     df_region = pip_query_region(extreme_povline_cents/100, ppp_version=ppp)
 
@@ -112,7 +112,7 @@ def regional_data(extreme_povline_cents, ppp=2011):
 #Create a dataframe for each poverty line on the list, including and excluding interpolations and for countries and regions
 #Each of these combinations are concatenated in a larger data frame.
 
-def query_poverty(poverty_lines_cents, filled, ppp=2011):
+def query_poverty(poverty_lines_cents, filled, ppp):
 
     print('Querying data from several poverty lines from the PIP API...')
     start_time = time.time()
@@ -204,7 +204,7 @@ def query_poverty(poverty_lines_cents, filled, ppp=2011):
 
     #I drop 'reporting_pop' for now to avoid it to get multiplied by all the poverty lines in the next section
     df_complete = df_complete.drop(columns=['reporting_pop'])
-    df_complete.to_csv('data/raw/multiple_povlines_long.csv', index=False)
+    df_complete.to_csv(f'data/ppp_{ppp}/raw/multiple_povlines_long.csv', index=False)
 
     # Select data for countries 
     headcounts_country = df_complete[(df_complete['ent_type'] == 'country')].reset_index(drop=True)
@@ -296,14 +296,14 @@ def query_non_poverty(df_final, df_country, df_region):
     return df_final
 
 
-def integrate_relative_poverty(df_final, df_country, answer, ppp=2011):
+def integrate_relative_poverty(df_final, df_country, answer, ppp):
     
     relative_poverty_lines = [40, 50, 60]
     
     if answer:
         print("Generating relative poverty values... (takes about 1.5 hours)")
         start_time = time.time()
-        df = median_patch(df_country)
+        df = median_patch(df_country, ppp)
         
         for pct in relative_poverty_lines:
             df[f'median_{pct}'] = df['median'] * pct/100
@@ -317,8 +317,7 @@ def integrate_relative_poverty(df_final, df_country, answer, ppp=2011):
     print('Integrating relative poverty data...')
     start_time = time.time()
 
-    file = 'data/raw/relative_poverty.csv'
-    df_relative = pd.read_csv(file)
+    df_relative = pd.read_csv(f'data/ppp_{ppp}/raw/relative_poverty.csv')
 
     df_final = pd.merge(df_final, df_relative, 
                         how='left', on=['Entity', 'Year', 'reporting_level', 'welfare_type'])
@@ -535,10 +534,10 @@ def generate_relative_poverty(df, relative_poverty_lines, ppp):
         col_income_gap_ratio.append(f'income_gap_ratio_{pct}_median')
 
     df = df[['Entity', 'Year', 'reporting_level', 'welfare_type'] + col_povlines + col_headcount + col_headcount_ratio + col_pgi + col_total_shortfall + col_avg_shortfall + col_income_gap_ratio + col_severity + col_watts + col_stacked_n + col_stacked_pct]
-    df.to_csv('data/raw/relative_poverty.csv', index=False)
+    df.to_csv(f'data/ppp_{ppp}/raw/relative_poverty.csv', index=False)
 
 
-def thresholds(df_final, answer, ppp=2011):
+def thresholds(df_final, answer, ppp):
     #Decile thresholds
 
     if answer:
@@ -570,26 +569,14 @@ def thresholds(df_final, answer, ppp=2011):
                            }
         
         df_closest_complete = generate_percentiles_countries(povline_list_dict, ppp)
-        
-        povline_list_dict = {
-            'under_5_dollars': under_5_dollars, 
-            'between_5_and_10_dollars': between_5_and_10_dollars,
-            'between_10_and_20_dollars': between_10_and_20_dollars,
-            'between_20_and_30_dollars': between_20_and_30_dollars,
-            'between_30_and_55_dollars': between_30_and_55_dollars,
-            'between_55_and_80_dollars': between_55_and_80_dollars,
-            'between_80_and_100_dollars': between_80_and_100_dollars,
-            'between_100_and_150_dollars': between_100_and_150_dollars
-                           }
-        
         df_closest_complete_regions = generate_percentiles_regions(povline_list_dict, ppp)
         df_percentiles = pd.concat([df_closest_complete, df_closest_complete_regions], ignore_index=True)
         df_percentiles = df_percentiles.rename(columns={'poverty_line': 'percentile_value'})
         
         #Export concatenation
-        df_percentiles.to_csv('data/raw/percentiles.csv', index=False)
+        df_percentiles.to_csv(f'data/ppp_{ppp}/raw/percentiles.csv', index=False)
         #To use it in PIP issues
-        df_percentiles.to_csv('notebooks/percentiles.csv', index=False)
+        df_percentiles.to_csv(f'notebooks/percentiles_ppp_{ppp}.csv', index=False)
 
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -597,7 +584,7 @@ def thresholds(df_final, answer, ppp=2011):
 
     print('Integrating decile thresholds...')
     start_time = time.time()
-    df_percentiles = pd.read_csv('data/raw/percentiles.csv')
+    df_percentiles = pd.read_csv(f'data/ppp_{ppp}/raw/percentiles.csv')
     deciles = []
 
     for i in range(10,100,10):
@@ -624,46 +611,45 @@ def thresholds(df_final, answer, ppp=2011):
     return df_final
 
 
-# +
 def generate_percentiles_countries(povline_list_dict, ppp):
 
-#     start_time_overall = time.time()
-#     query_durations = {"povline":[],"duration":[]}
+    start_time_overall = time.time()
+    query_durations = {"povline":[],"duration":[]}
 
-#     for key in povline_list_dict:
+    for key in povline_list_dict:
 
-#         df_complete = pd.DataFrame()
+        df_complete = pd.DataFrame()
 
-#         for povline in povline_list_dict[key]:
+        for povline in povline_list_dict[key]:
 
-#             start_time = time.time()
+            start_time = time.time()
 
-#             povline_dollars = povline/100
-#             print(f'Fetching country headcounts for: ${povline_dollars} a day')
+            povline_dollars = povline/100
+            print(f'Fetching country headcounts for: ${povline_dollars} a day')
 
-#             df = country_data(povline, filled="false", ppp=ppp, additional_dfs=False)
-#             df_complete = pd.concat([df_complete, df],ignore_index=True)
+            df = country_data(povline, filled="false", ppp=ppp, additional_dfs=False)
+            df_complete = pd.concat([df_complete, df],ignore_index=True)
 
-#             end_time = time.time()
-#             query_durations["povline"].append(povline_dollars)
-#             query_durations["duration"].append(end_time - start_time)
+            end_time = time.time()
+            query_durations["povline"].append(povline_dollars)
+            query_durations["duration"].append(end_time - start_time)
 
 
-#         #Write the complete data to csv
-#         df_complete.to_csv(f'data/full_dist/{key}.csv', index=False)
+        #Write the complete data to csv
+        df_complete.to_csv(f'data/ppp_{ppp}/full_dist/{key}.csv', index=False)
 
-#     end_time_overall = time.time()
-#     elapsed_time_overall = end_time_overall - start_time_overall
-#     print(f'Execution time: {elapsed_time_overall/3600} hours')
+    end_time_overall = time.time()
+    elapsed_time_overall = end_time_overall - start_time_overall
+    print(f'Execution time: {elapsed_time_overall/3600} hours')
 
-#     # Take a look at how long each query took
-#     df_query_durations = pd.DataFrame.from_dict(query_durations)
-#     fig = px.line(df_query_durations, x="povline", y="duration", title=f'Execution time for poverty line queries')
-#     fig.write_image(f'graphics/time_plot.svg')
-
+    # Take a look at how long each query took
+    df_query_durations = pd.DataFrame.from_dict(query_durations)
+    fig = px.line(df_query_durations, x="povline", y="duration", title=f'Execution time for poverty line queries')
+    fig.write_image(f'graphics/ppp_{ppp}/time_plot.svg')
+    
     df_complete = pd.DataFrame()
     for key in povline_list_dict:
-        df = pd.read_csv(f'data/full_dist/{key}.csv')
+        df = pd.read_csv(f'data/ppp_{ppp}/full_dist/{key}.csv')
         df_complete = pd.concat([df_complete, df], ignore_index=True)
 
     # Find closest to percentiles
@@ -690,8 +676,8 @@ def generate_percentiles_countries(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/target_p_vs_distance_percentiles.svg')
-    fig.write_html(f'graphics/target_p_vs_distance_percentiles.html')
+    fig.write_image(f'graphics/ppp_{ppp}/target_p_vs_distance_percentiles.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/target_p_vs_distance_percentiles.html')
 
     fig = px.scatter(df_closest_complete, x="poverty_line", y="distance_to_p", color="Entity",
                      hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
@@ -699,12 +685,12 @@ def generate_percentiles_countries(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/povline_vs_distance_percentiles.svg')
-    fig.write_html(f'graphics/povline_vs_distance_percentiles.html')
+    fig.write_image(f'graphics/ppp_{ppp}/povline_vs_distance_percentiles.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/povline_vs_distance_percentiles.html')
 
     fig = px.histogram(df_closest_complete, x="distance_to_p", histnorm="percent", marginal="box")
-    fig.write_image(f'graphics/distance_percentiles_histogram.svg')
-    fig.write_html(f'graphics/distance_percentiles_histogram.html')
+    fig.write_image(f'graphics/ppp_{ppp}/distance_percentiles_histogram.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/distance_percentiles_histogram.html')
 
     deciles = []
 
@@ -719,8 +705,8 @@ def generate_percentiles_countries(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/target_p_vs_distance_deciles.svg')
-    fig.write_html(f'graphics/target_p_vs_distance_deciles.html')
+    fig.write_image(f'graphics/ppp_{ppp}/target_p_vs_distance_deciles.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/target_p_vs_distance_deciles.html')
 
     fig = px.scatter(df_closest_deciles, x="poverty_line", y="distance_to_p", color="Entity",
                      hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
@@ -728,60 +714,59 @@ def generate_percentiles_countries(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/povline_vs_distance_deciles.svg')
-    fig.write_html(f'graphics/povline_vs_distance_deciles.html')
+    fig.write_image(f'graphics/ppp_{ppp}/povline_vs_distance_deciles.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/povline_vs_distance_deciles.html')
 
     fig = px.histogram(df_closest_deciles, x="distance_to_p", histnorm="percent", marginal="box")
-    fig.write_image(f'graphics/distance_deciles_histogram.svg')
-    fig.write_html(f'graphics/distance_deciles_histogram.html')
+    fig.write_image(f'graphics/ppp_{ppp}/distance_deciles_histogram.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/distance_deciles_histogram.html')
 
-    df_closest_complete.to_csv('data/full_dist/percentiles_countries.csv', index=False)
+    df_closest_complete.to_csv(f'data/ppp_{ppp}/full_dist/percentiles_countries.csv', index=False)
     
     return df_closest_complete
 
 
-# +
 def generate_percentiles_regions(povline_list_dict, ppp):
 
-#     start_time_overall = time.time()
-#     query_durations_regions = {"povline":[],"duration":[]}
+    start_time_overall = time.time()
+    query_durations_regions = {"povline":[],"duration":[]}
 
-#     for key in povline_list_dict:
+    for key in povline_list_dict:
 
-#         df_complete_regions = pd.DataFrame()
+        df_complete_regions = pd.DataFrame()
 
-#         for povline in povline_list_dict[key]:
+        for povline in povline_list_dict[key]:
 
-#             start_time = time.time()
+            start_time = time.time()
 
-#             povline_dollars = povline/100
-#             print(f'Fetching regional headcounts for: ${povline_dollars} a day')
+            povline_dollars = povline/100
+            print(f'Fetching regional headcounts for: ${povline_dollars} a day')
 
-#             df = regional_data(povline, ppp)
-#             df_complete_regions = pd.concat([df_complete_regions, df],ignore_index=True)
+            df = regional_data(povline, ppp)
+            df_complete_regions = pd.concat([df_complete_regions, df],ignore_index=True)
 
-#             end_time = time.time()
-#             query_durations_regions["povline"].append(povline_dollars)
-#             query_durations_regions["duration"].append(end_time - start_time)
+            end_time = time.time()
+            query_durations_regions["povline"].append(povline_dollars)
+            query_durations_regions["duration"].append(end_time - start_time)
 
 
-#         #Write the complete data to csv
-#         df_complete_regions.to_csv(f'data/full_dist_regions/{key}_regions.csv', index=False)
+        #Write the complete data to csv
+        df_complete_regions.to_csv(f'data/ppp_{ppp}/full_dist_regions/{key}_regions.csv', index=False)
 
-#     end_time_overall = time.time()
-#     elapsed_time_overall = end_time_overall - start_time_overall
-#     print(f'Execution time: {elapsed_time_overall/3600} hours')
+    end_time_overall = time.time()
+    elapsed_time_overall = end_time_overall - start_time_overall
+    print(f'Execution time: {elapsed_time_overall/3600} hours')
 
-#     # Take a look at how long each query took
-#     df_query_durations_regions = pd.DataFrame.from_dict(query_durations_regions)
+    # Take a look at how long each query took
+    df_query_durations_regions = pd.DataFrame.from_dict(query_durations_regions)
 
-#     fig = px.line(df_query_durations_regions, x="povline", y="duration", title=f'Execution time for poverty line queries (regions)')
+    fig = px.line(df_query_durations_regions, x="povline", y="duration", title=f'Execution time for poverty line queries (regions)')
 
-#     fig.write_image(f'graphics/time_plot_regions.svg')
+    fig.write_image(f'graphics/ppp_{ppp}/time_plot_regions.svg')
     
     df_complete_regions = pd.DataFrame()
     for key in povline_list_dict:
-        df = pd.read_csv(f'data/full_dist_regions/{key}_regions.csv')
+        df = pd.read_csv(f'data/ppp_{ppp}/full_dist_regions/{key}_regions.csv')
         df_complete_regions = pd.concat([df_complete_regions, df], ignore_index=True)
 
     # Find closest to percentiles
@@ -813,8 +798,8 @@ def generate_percentiles_regions(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/target_p_vs_distance_percentiles_regions.svg')
-    fig.write_html(f'graphics/target_p_vs_distance_percentiles_regions.html')
+    fig.write_image(f'graphics/ppp_{ppp}/target_p_vs_distance_percentiles_regions.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/target_p_vs_distance_percentiles_regions.html')
 
     fig = px.scatter(df_closest_complete_regions, x="poverty_line", y="distance_to_p", color="Entity",
                      hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
@@ -822,12 +807,12 @@ def generate_percentiles_regions(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/povline_vs_distance_percentiles_regions.svg')
-    fig.write_html(f'graphics/povline_vs_distance_percentiles_regions.html')
+    fig.write_image(f'graphics/ppp_{ppp}/povline_vs_distance_percentiles_regions.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/povline_vs_distance_percentiles_regions.html')
 
     fig = px.histogram(df_closest_complete_regions, x="distance_to_p", histnorm="percent", marginal="box")
-    fig.write_image(f'graphics/distance_percentiles_histogram_regions.svg')
-    fig.write_html(f'graphics/distance_percentiles_histogram_regions.html')
+    fig.write_image(f'graphics/ppp_{ppp}/distance_percentiles_histogram_regions.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/distance_percentiles_histogram_regions.html')
 
     deciles = []
 
@@ -842,8 +827,8 @@ def generate_percentiles_regions(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/target_p_vs_distance_deciles_regions.svg')
-    fig.write_html(f'graphics/target_p_vs_distance_deciles_regions.html')
+    fig.write_image(f'graphics/ppp_{ppp}/target_p_vs_distance_deciles_regions.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/target_p_vs_distance_deciles_regions.html')
 
     fig = px.scatter(df_closest_deciles_regions, x="poverty_line", y="distance_to_p", color="Entity",
                      hover_data=['poverty_line', 'headcount', 'Year', 'target_percentile'], opacity=0.5,
@@ -851,23 +836,77 @@ def generate_percentiles_regions(povline_list_dict, ppp):
                      log_y=False,
                      height=600)
     fig.update_traces(marker=dict(size=10, line=dict(width=0, color='blue')))
-    fig.write_image(f'graphics/povline_vs_distance_deciles_regions.svg')
-    fig.write_html(f'graphics/povline_vs_distance_deciles_regions.html')
+    fig.write_image(f'graphics/ppp_{ppp}/povline_vs_distance_deciles_regions.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/povline_vs_distance_deciles_regions.html')
 
     fig = px.histogram(df_closest_deciles_regions, x="distance_to_p", histnorm="percent", marginal="box")
-    fig.write_image(f'graphics/distance_deciles_histogram_regions.svg')
-    fig.write_html(f'graphics/distance_deciles_histogram_regions.html')
+    fig.write_image(f'graphics/ppp_{ppp}/distance_deciles_histogram_regions.svg')
+    fig.write_html(f'graphics/ppp_{ppp}/distance_deciles_histogram_regions.html')
 
-    df_closest_complete_regions.to_csv('data/full_dist_regions/percentiles_regions.csv', index=False)
+    df_closest_complete_regions.to_csv(f'data/ppp_{ppp}/full_dist_regions/percentiles_regions.csv', index=False)
     
     return df_closest_complete_regions
 
 
-# -
-
 # ## Data transformations
 
-def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
+# +
+def additional_variables_and_check(df_final, poverty_lines_cents, col_relative, ppp):
+    
+    #Define groups of columns
+    col_ids = ['Entity', 'Year', 'reporting_level', 'welfare_type']
+    col_avg_shortfall = []
+    col_headcount = []
+    col_headcount_ratio = []
+    col_incomegap = []
+    col_povertygap = []
+    col_tot_shortfall = []
+    col_poverty_severity = []
+    col_watts = []
+    col_central = ['mean', 'median', 'reporting_pop']
+    col_extra = ['survey_year', 'survey_comparability', 'comparable_spell', 'distribution_type', 'estimation_type',
+                'cpi', 'ppp', 'reporting_gdp', 'reporting_pce']
+
+    for i in range(len(poverty_lines_cents)):
+        col_avg_shortfall.append(f'avg_shortfall_{poverty_lines_cents[i]}')
+        col_headcount.append(f'headcount_{poverty_lines_cents[i]}')
+        col_headcount_ratio.append(f'headcount_ratio_{poverty_lines_cents[i]}')
+        col_incomegap.append(f'income_gap_ratio_{poverty_lines_cents[i]}')
+        col_povertygap.append(f'poverty_gap_index_{poverty_lines_cents[i]}')
+        col_tot_shortfall.append(f'total_shortfall_{poverty_lines_cents[i]}')
+        col_poverty_severity.append(f'poverty_severity_{poverty_lines_cents[i]}')
+        col_watts.append(f'watts_{poverty_lines_cents[i]}')
+        
+    #///////////////////////////////////////////////////////////////////////////////
+    #//////////////////////////////////////////////////////////////////////////////
+    
+    #Above variables
+
+    print('Calculating number of people above poverty lines...')
+    start_time = time.time()
+    
+    col_above_n = []
+    col_above_pct = []
+
+    #For each poverty line in poverty_lines_cents
+    for i in poverty_lines_cents:
+        
+        varname_n = f'headcount_above_{i}'
+        df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{i}']
+        col_above_n.append(varname_n)
+        
+        varname_pct = f'headcount_ratio_above_{i}'
+        df_final[varname_pct] = (df_final['reporting_pop'] - df_final[f'headcount_{i}']) / df_final['reporting_pop']
+        col_above_pct.append(varname_pct)
+
+    df_final.loc[:, col_above_pct] = df_final[col_above_pct] * 100
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+    
+    #///////////////////////////////////////////////////////////////////////////////
+    #//////////////////////////////////////////////////////////////////////////////
 
     #Stacked variables
 
@@ -875,6 +914,13 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
     start_time = time.time()
 
     #Calculate numbers in poverty between pov lines for stacked area charts
+    
+    #Remove the high income countries poverty line to the in-between calculations
+    if ppp == 2011:
+        poverty_lines_cents = [e for e in poverty_lines_cents if e not in [2170]]
+    elif ppp == 2017:
+        poverty_lines_cents = [e for e in poverty_lines_cents if e not in [2435]]
+    
     #Make sure the poverty lines are in order, lowest to highest
     poverty_lines_cents.sort()
 
@@ -925,46 +971,30 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
 
     df_final.loc[:, col_stacked_pct] = df_final[col_stacked_pct] * 100
     
-    df_final['headcount_stacked_between_190_1000'] = df_final['headcount_1000'] - df_final['headcount_190']
-    df_final['headcount_stacked_between_1000_3000'] = df_final['headcount_3000'] - df_final['headcount_1000']
-    col_stacked_n_extra = ['headcount_stacked_between_190_1000', 'headcount_stacked_between_1000_3000']
+    #Calculate stacked variables which "jump" the original order
     
-    df_final['headcount_ratio_stacked_between_190_1000'] = df_final['headcount_ratio_1000'] - df_final['headcount_ratio_190']
-    df_final['headcount_ratio_stacked_between_1000_3000'] = df_final['headcount_ratio_3000'] - df_final['headcount_ratio_1000']
-    col_stacked_pct_extra = ['headcount_ratio_stacked_between_190_1000', 'headcount_ratio_stacked_between_1000_3000']
+    df_final[f'headcount_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}'] = df_final[f'headcount_{poverty_lines_cents[4]}'] - df_final[f'headcount_{poverty_lines_cents[1]}']
+    df_final[f'headcount_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}'] = df_final[f'headcount_{poverty_lines_cents[6]}'] - df_final[f'headcount_{poverty_lines_cents[4]}']
+    col_stacked_n_extra = [f'headcount_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}', f'headcount_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}']
+    
+    df_final[f'headcount_ratio_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}'] = df_final[f'headcount_ratio_{poverty_lines_cents[4]}'] - df_final[f'headcount_ratio_{poverty_lines_cents[1]}']
+    df_final[f'headcount_ratio_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}'] = df_final[f'headcount_ratio_{poverty_lines_cents[6]}'] - df_final[f'headcount_ratio_{poverty_lines_cents[4]}']
+    col_stacked_pct_extra = [f'headcount_ratio_stacked_between_{poverty_lines_cents[1]}_{poverty_lines_cents[4]}', f'headcount_ratio_stacked_between_{poverty_lines_cents[4]}_{poverty_lines_cents[6]}']
+    
+    
+    
+#     df_final['headcount_stacked_between_190_1000'] = df_final['headcount_1000'] - df_final['headcount_190']
+#     df_final['headcount_stacked_between_1000_3000'] = df_final['headcount_3000'] - df_final['headcount_1000']
+#     col_stacked_n_extra = ['headcount_stacked_between_190_1000', 'headcount_stacked_between_1000_3000']
+    
+#     df_final['headcount_ratio_stacked_between_190_1000'] = df_final['headcount_ratio_1000'] - df_final['headcount_ratio_190']
+#     df_final['headcount_ratio_stacked_between_1000_3000'] = df_final['headcount_ratio_3000'] - df_final['headcount_ratio_1000']
+#     col_stacked_pct_extra = ['headcount_ratio_stacked_between_190_1000', 'headcount_ratio_stacked_between_1000_3000']
 
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
-    
-    #///////////////////////////////////////////////////////////////////////////////
-    #//////////////////////////////////////////////////////////////////////////////
-    #Above variables
 
-    print('Calculating number of people above poverty lines...')
-    start_time = time.time()
-
-    #Calculate numbers above poverty lines
-    
-    col_above_n = []
-    col_above_pct = []
-
-    #For each poverty line in poverty_lines_cents
-    for i in poverty_lines_cents:
-        
-        varname_n = f'headcount_above_{i}'
-        df_final[varname_n] = df_final['reporting_pop'] - df_final[f'headcount_{i}']
-        col_above_n.append(varname_n)
-        
-        varname_pct = f'headcount_ratio_above_{i}'
-        df_final[varname_pct] = (df_final['reporting_pop'] - df_final[f'headcount_{i}']) / df_final['reporting_pop']
-        col_above_pct.append(varname_pct)
-
-    df_final.loc[:, col_above_pct] = df_final[col_above_pct] * 100
-    
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print('Done. Execution time:', elapsed_time, 'seconds')
 
     #///////////////////////////////////////////////////////////////////////////////
     #//////////////////////////////////////////////////////////////////////////////
@@ -1007,6 +1037,9 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
     df_final['p90_p10_ratio'] =  df_final['decile9_thr'] / df_final['decile1_thr']
     df_final['p90_p50_ratio'] =  df_final['decile9_thr'] / df_final['decile5_thr']
     df_final['p50_p10_ratio'] =  df_final['decile5_thr'] / df_final['decile1_thr']
+    
+    col_inequality = ['mld', 'gini', 'polarization', 'palma_ratio', 's80_s20_ratio', 'p90_p10_ratio', 'p90_p50_ratio', 'p50_p10_ratio']
+
 
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -1014,36 +1047,6 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
     
     #///////////////////////////////////////////////////////////////////////////////
     #//////////////////////////////////////////////////////////////////////////////
-    #Define the rest of columns
-
-    #Export all the data to use it in PIP_issues
-    df_final.to_csv('notebooks/allthedata.csv', index=False)
-    
-    
-    #Order columns by categorising them
-    col_ids = ['Entity', 'Year', 'reporting_level', 'welfare_type']
-    col_avg_shortfall = []
-    col_headcount = []
-    col_headcount_ratio = []
-    col_incomegap = []
-    col_povertygap = []
-    col_tot_shortfall = []
-    col_poverty_severity = []
-    col_watts = []
-    col_central = ['mean', 'median', 'reporting_pop']
-    col_inequality = ['mld', 'gini', 'polarization', 'palma_ratio', 's80_s20_ratio', 'p90_p10_ratio', 'p90_p50_ratio', 'p50_p10_ratio']
-    col_extra = ['survey_year', 'survey_comparability', 'comparable_spell', 'distribution_type', 'estimation_type',
-                'cpi', 'ppp', 'reporting_gdp', 'reporting_pce']
-
-    for i in range(len(poverty_lines_cents)):
-        col_avg_shortfall.append(f'avg_shortfall_{poverty_lines_cents[i]}')
-        col_headcount.append(f'headcount_{poverty_lines_cents[i]}')
-        col_headcount_ratio.append(f'headcount_ratio_{poverty_lines_cents[i]}')
-        col_incomegap.append(f'income_gap_ratio_{poverty_lines_cents[i]}')
-        col_povertygap.append(f'poverty_gap_index_{poverty_lines_cents[i]}')
-        col_tot_shortfall.append(f'total_shortfall_{poverty_lines_cents[i]}')
-        col_poverty_severity.append(f'poverty_severity_{poverty_lines_cents[i]}')
-        col_watts.append(f'watts_{poverty_lines_cents[i]}')
     
     #Get all the columns to order the final output
     cols = col_ids + col_central + col_headcount + col_headcount_ratio + col_povertygap + col_tot_shortfall + \
@@ -1052,6 +1055,9 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
             col_relative +  \
             col_decile_share + col_quintile_share + col_decile_thr + col_decile_avg + col_inequality + \
             col_extra
+    
+    #Export all the data to use it in PIP_issues
+    df_final.to_csv(f'notebooks/allthedata_ppp_{ppp}.csv', index=False)
     
     #######################################################################################
     
@@ -1082,7 +1088,7 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
             m_check_vars.append(check_varname)       
     df_final['check_total'] = df_final[m_check_vars].all(1)
     df_final = df_final[df_final['check_total'] == True].reset_index(drop=True)
-    print(f'{len(df_final)} rows after headcount monotonicity  check')
+    print(f'{len(df_final)} rows after headcount monotonicity check')
 
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -1091,12 +1097,14 @@ def additional_variables_and_check(df_final, poverty_lines_cents, col_relative):
     return df_final, cols
 
 
-def median_patch(df_final):
+# -
+
+def median_patch(df_final, ppp):
     
     print('Patching missing median values...')
     start_time = time.time()
 
-    df_median = pd.read_csv('data/raw/percentiles.csv')
+    df_median = pd.read_csv(f'data/ppp_{ppp}/raw/percentiles.csv')
     df_median = df_median[df_median['target_percentile'] == "P50"].reset_index(drop=True)
 
     df_final = pd.merge(df_final, 
@@ -1141,7 +1149,7 @@ def median_patch(df_final):
     return df_final
 
 
-def standardise(df_final):
+def standardise(df_final, ppp):
     
     print('Standardising entities and integrating reporting level...')
     start_time = time.time()
@@ -1149,7 +1157,7 @@ def standardise(df_final):
     # Standardize entity names
     df_final = standardize_entities(
         orig_df = df_final,
-        entity_mapping_url = "data/raw/countries_standardized.csv",
+        entity_mapping_url = f"data/ppp_{ppp}/raw/countries_standardized.csv",
         mapping_varname_raw ='country',
         mapping_vaname_owid = 'Our World In Data Name',
         data_varname_old = 'Entity',
@@ -1172,12 +1180,11 @@ def standardise(df_final):
     return df_final
 
 
-def export(df_final, cols):
+def export(df_final, cols, ppp):
     print('Creating the final dataset...')
     start_time = time.time()
     #Reorder columns according to cols
     df_final = df_final[cols]
-
 
     # Separate out consumption-only, income-only, and both dataframes
     df_inc_only = df_final[df_final['welfare_type']=="income"].reset_index(drop=True).copy()
@@ -1203,13 +1210,13 @@ def export(df_final, cols):
     # digital ocean so that the data can be picked up in the explorer. But I know how to do this
     # if it's stored in GitHub. So for now I write it as csvs to this folder.
     # Save as csv
-    df_inc_only.to_csv(f'data/final/PIP_data_public_download/full_dataset/inc_only/poverty_inc_only.csv', index=False)
-    df_cons_only.to_csv(f'data/final/PIP_data_public_download/full_dataset/cons_only/poverty_cons_only.csv', index=False)
-    df_inc_or_cons.to_csv(f'data/final/PIP_data_public_download/full_dataset/inc_or_cons/poverty_inc_or_cons.csv', index=False)
+    df_inc_only.to_csv(f'data/ppp_{ppp}/final/PIP_data_public_download/full_dataset/inc_only/poverty_inc_only.csv', index=False)
+    df_cons_only.to_csv(f'data/ppp_{ppp}/final/PIP_data_public_download/full_dataset/cons_only/poverty_cons_only.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/ppp_{ppp}/final/PIP_data_public_download/full_dataset/inc_or_cons/poverty_inc_or_cons.csv', index=False)
     
-    df_inc_only.to_csv(f'data/final/OWID_internal_upload/explorer_database/inc_only/poverty_inc_only.csv', index=False)
-    df_cons_only.to_csv(f'data/final/OWID_internal_upload/explorer_database/cons_only/poverty_cons_only.csv', index=False)
-    df_inc_or_cons.to_csv(f'data/final/OWID_internal_upload/explorer_database/inc_or_cons/poverty_inc_or_cons.csv', index=False)
+    df_inc_only.to_csv(f'data/ppp_{ppp}/final/OWID_internal_upload/explorer_database/inc_only/poverty_inc_only.csv', index=False)
+    df_cons_only.to_csv(f'data/ppp_{ppp}/final/OWID_internal_upload/explorer_database/cons_only/poverty_cons_only.csv', index=False)
+    df_inc_or_cons.to_csv(f'data/ppp_{ppp}/final/OWID_internal_upload/explorer_database/inc_or_cons/poverty_inc_or_cons.csv', index=False)
     
 
     #upload_to_s3(df_inc_only, 'PIP/explorer_key_variables', f'poverty_inc_only.csv')
@@ -1226,12 +1233,68 @@ def export(df_final, cols):
     return df_inc_only, df_cons_only, df_inc_or_cons
 
 
-def show_breaks():
+# +
+def ppp_comparison():
+    
+    #Create files that merge poverty indices for different reference poverty lines in 2011 and 2017 PPPs
+    #This data is used for the 2011 vs 2017 PPP explorer
+    
+    print('Creating files to compare PPP versions...')
+    start_time = time.time()
+    
+    #List of welfare types to read and write
+    welfare = ['inc_only', 'cons_only', 'inc_or_cons']
+
+    #For each welfare type
+    for w in welfare:
+
+        #Read the respective 2011 and 2017 PPP file
+        df_2011 = pd.read_csv(f'data/ppp_2011/final/OWID_internal_upload/explorer_database/{w}/poverty_{w}.csv')
+        df_2017 = pd.read_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/{w}/poverty_{w}.csv')
+
+        #Define columns to keep
+        
+        #Columns with basic IDs
+        col_id = ['Entity', 'Year', 'welfare_type', 'reporting_level']
+
+#         #Columns with reference 2011 PPPs poverty lines
+#         col_190 = list(df_2011.filter(like="190", axis=1).columns)
+#         col_320 = list(df_2011.filter(like="320", axis=1).columns)
+#         col_550 = list(df_2011.filter(like="550", axis=1).columns)
+#         col_2170 = list(df_2011.filter(like="2170", axis=1).columns)
+
+#         #Columns with reference 2017 PPPs poverty lines
+#         col_215 = list(df_2017.filter(like="215", axis=1).columns)
+#         col_365 = list(df_2017.filter(like="365", axis=1).columns)
+#         col_685 = list(df_2017.filter(like="685", axis=1).columns)
+#         col_2435 = list(df_2017.filter(like="2435", axis=1).columns)
+        
+#         #Select only id and reference poverty lines by PPP
+#         df_2011 = df_2011[col_id + col_190 + col_320 + col_550 + col_2170]
+#         df_2017 = df_2017[col_id + col_215 + col_365 + col_685 + col_2435]
+
+        #Rename all the non-id columns with the suffix _ppp(year)
+        #(the suffix option in merge only adds suffix when columns coincide)
+        df_2011 = df_2011.rename(columns={c: c+'_ppp2011' for c in df_2011.columns if c not in col_id})
+        df_2017 = df_2017.rename(columns={c: c+'_ppp2017' for c in df_2017.columns if c not in col_id})
+        
+        #Merge the two files and save
+        df = pd.merge(df_2011, df_2017, on=col_id, validate='one_to_one')
+        df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_database/{w}/poverty_{w}.csv', index=False)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+# -
+
+def show_breaks(ppp):
     
     print('Creating multiple variable files to show survey breaks...')
     start_time = time.time()
 
-    fp = 'data/final/OWID_internal_upload/explorer_database/'
+    fp = f'data/ppp_{ppp}/final/OWID_internal_upload/explorer_database/'
 
 
     for welfare in ['inc_or_cons', "inc_only", "cons_only"]:
@@ -1279,14 +1342,14 @@ def show_breaks():
 
 
             # write to csv – one csv per variable in the main dataset
-            df_var.to_csv(f'data/final/OWID_internal_upload/explorer_database/comparability_data/{welfare}/{select_var}.csv', index = False)
+            df_var.to_csv(f'data/ppp_{ppp}/final/OWID_internal_upload/explorer_database/comparability_data/{welfare}/{select_var}.csv', index = False)
             
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def include_metadata(df_final):
+def include_metadata(df_final, ppp):
     print('Including metadata to update Grapher\'s dataset...')
     start_time = time.time()
     
@@ -1295,7 +1358,12 @@ def include_metadata(df_final):
     #sheet_name = 'admin_metadata_manual'
     
     sheet_id = '1ntYtYF0NqIW2oXuXl_ZJHvuI7n-bik94BEIOvWHrJAI'
-    sheet_name = 'Sheet1'
+    
+    if ppp == 2011:
+        sheet_name = 'pip_ppp_2011'
+        
+    elif ppp == 2017:
+        sheet_name = 'pip_ppp_2017'
 
     # Read in variable metadata as dataframe
     url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
@@ -1326,7 +1394,7 @@ def include_metadata(df_final):
     df_dataset = df_dataset.rename(columns=varnames_dict)
     
     #Export the dataset
-    df_dataset.to_csv('data/final/OWID_internal_upload/admin_database/pip_final.csv', index=False)
+    df_dataset.to_csv(f'data/ppp_{ppp}/final/OWID_internal_upload/admin_database/pip_final.csv', index=False)
     
     #upload_to_s3(df_dataset, 'PIP/datasets', f'pip_final.csv')
     
@@ -1335,7 +1403,7 @@ def include_metadata(df_final):
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def regional_headcount(df_regions, df_country_filled):
+def regional_headcount(df_regions, df_country_filled, ppp):
     
     print('Creating regional headcount dataset...')
     start_time = time.time()
@@ -1343,7 +1411,7 @@ def regional_headcount(df_regions, df_country_filled):
     # Standardize entity names
     df_regions = standardize_entities(
         orig_df = df_regions,
-        entity_mapping_url = "data/raw/countries_standardized.csv",
+        entity_mapping_url = f"data/ppp_{ppp}/raw/countries_standardized.csv",
         mapping_varname_raw ='country',
         mapping_vaname_owid = 'Our World In Data Name',
         data_varname_old = 'Entity',
@@ -1399,7 +1467,7 @@ def regional_headcount(df_regions, df_country_filled):
     
     
     #Export the dataset
-    df_final.to_csv('data/final/OWID_internal_upload/admin_database/pip_regional_headcount.csv', index=False)    
+    df_final.to_csv(f'data/ppp_{ppp}/final/OWID_internal_upload/admin_database/pip_regional_headcount.csv', index=False)    
     
     #upload_to_s3(df_final, 'PIP/datasets', f'pip_regional_headcount.csv')
     
@@ -1408,11 +1476,11 @@ def regional_headcount(df_regions, df_country_filled):
     print('Done. Execution time:', elapsed_time, 'seconds')
 
 
-def survey_count(df_country):
+def survey_count(df_country, ppp):
     print('Creating dataset which counts the surveys in the recent decade...')
     start_time = time.time()
     
-    df_country = standardise(df_country)
+    df_country = standardise(df_country, ppp)
     
     #Generate a new dataset to count the surveys available for each entity
     #Create a list of all the years and entities available
@@ -1444,10 +1512,41 @@ def survey_count(df_country):
     df_country.sort_values(by=['Entity', 'Year'], ignore_index=True, inplace=True)
     
     #Export the dataset
-    df_country.to_csv('data/final/OWID_internal_upload/admin_database/pip_survey_count.csv', index=False)
+    df_country.to_csv(f'data/ppp_{ppp}/final/OWID_internal_upload/admin_database/pip_survey_count.csv', index=False)
     
     #upload_to_s3(df_country, 'PIP/datasets', f'pip_survey_count.csv')
     
     end_time = time.time()
     elapsed_time = end_time - start_time
     print('Done. Execution time:', elapsed_time, 'seconds')
+
+
+def national_povlines():
+    
+    print('Creating dataset with national poverty lines (used to generate international poverty lines)...')
+    start_time = time.time()
+
+    national_povlines = pd.read_stata(f'data/ppp_2017/raw/harmonized_npl_owid.dta')
+
+    national_povlines = standardize_entities(
+        orig_df = national_povlines,
+        entity_mapping_url = f"data/ppp_2017/raw/countries_natpovlines_standardized.csv",
+        mapping_varname_raw ='country',
+        mapping_vaname_owid = 'Our World In Data Name',
+        data_varname_old = 'countrycode',
+        data_varname_new = 'Entity'
+    )
+
+    national_povlines = national_povlines.rename(columns={'year': 'Year',
+                                                         'incgroup_historical': 'Income group',
+                                                         'harm_npl': 'Harmonized national poverty line'})
+    national_povlines = national_povlines.drop(columns=['gdp_2017_ppp_pc'])
+
+    national_povlines = national_povlines.sort_values(by=['Year', 'Entity'])
+    national_povlines.to_csv(f'data/ppp_2017/final/OWID_internal_upload/admin_database/pip_national_povlines.csv', index=False)
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print('Done. Execution time:', elapsed_time, 'seconds')
+
+

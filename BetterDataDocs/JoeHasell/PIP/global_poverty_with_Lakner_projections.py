@@ -16,9 +16,9 @@ from numpy import NaN
 import pandas as pd
 import plotly.express as px
 # %%
-povline='1.9'
-# We will use a specific older version of the data in order to match up with the projections.
-version='20220408_2011_02_02_PROD'
+povline='2.15'
+
+version='20220909_2017_01_02_PROD'
 request_url = f'https://api.worldbank.org/pip/v1/pip-grp?povline={povline}&version={version}&year=all&group_by=wb&format=csv'
 
 df = pd.read_csv(request_url)
@@ -32,14 +32,14 @@ df = df[["reporting_year", "pop_in_poverty"]].\
 
 df["estimate"] = "historic"
 # %%
-# Make dataframes of projections from https://blogs.worldbank.org/opendata/pandemic-prices-and-poverty
+# Make dataframes of projections from Poverty and Shared Prosperity report 2022, Figure 0.3
 # We match the 2018 value onto the exact value from the API data
-value_in_2018 = df[df["year"]==2018]["pop_in_poverty"].values[0]
+value_in_2019 = df[df["year"]==2019]["pop_in_poverty"].values[0]
 
 no_pandemic_df = pd.DataFrame(
     
-        {'year': [2018, 2019, 2020, 2021, 2022],
-        'pop_in_poverty': [value_in_2018/1000000, 641.4, 621.1, 599.7, 581.3]}
+        {'year': [2019, 2020, 2021, 2022],
+        'pop_in_poverty': [value_in_2019/1000000, 629, 612, 596]}
 
 )
 
@@ -50,7 +50,7 @@ no_pandemic_df["pop_in_poverty"] = no_pandemic_df["pop_in_poverty"]*1000000
 baseline_df = pd.DataFrame(
     
         {'year': [2019, 2020, 2021, 2022],
-        'pop_in_poverty': [641.4, 713.8, 684.2, 656.7]}
+        'pop_in_poverty': [value_in_2019/1000000, 719, 690, 667]}
 
 )
 
@@ -61,7 +61,7 @@ baseline_df["pop_in_poverty"] = baseline_df["pop_in_poverty"]*1000000
 pessimistic_df = pd.DataFrame(
     
         {'year': [2021, 2022],
-        'pop_in_poverty': [684.2, 676.5]}
+        'pop_in_poverty': [690, 685]}
 
 )
 
@@ -95,6 +95,25 @@ fig.show()
 
 # %%
 fig.write_image("graphics/global_pov_with_projections.svg")
+
+
+
+# %%
+# Only keep from 2017 onwards for detail panel of graphic
+df = df[df['year']>=2017]
+
+
+fig = px.line(df, x="year", y="pop_in_poverty", color='estimate',
+        template='none')
+
+fig.update_layout(showlegend=False)
+
+
+fig.show()
+
+# %%
+fig.write_image("graphics/global_pov_with_projections_detail_panel.svg")
+
 
 # %% [markdown]
 # ## Second chart
