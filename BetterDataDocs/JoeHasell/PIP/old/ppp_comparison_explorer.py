@@ -5,6 +5,14 @@ import numpy as np
 #Read Google sheets
 sheet_id = '1mR0LPEGlY-wCp1q9lNTlDbVIG65JazKvHL16my9tH8Y'
 
+# sheet_name = 'table_base'
+# url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+# table_base = pd.read_csv(url)
+
+# sheet_name = 'grapher_base'
+# url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+# grapher_base = pd.read_csv(url)
+
 sheet_name = 'povlines_ppp2011'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 povlines_ppp2011 = pd.read_csv(url, dtype={'dollars_text':'str'})
@@ -26,9 +34,170 @@ url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sh
 survey_type = pd.read_csv(url)
 # -
 
+p_2017 = 0
+p_2011 = 0
+p = 0
+survey = 0
+
+table_base = {
+0: {'name': f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)',
+  'slug': f'headcount_ratio_{povlines_ppp2011.cents[p_2011]}_ppp2011',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'% of population living in households with an income or expenditure per person below ${povlines_ppp2011.dollars[p_2011]} a day (2011 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': '%',
+  'shortUnit': '%',
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '3;10;20;30;40;50;60;70;80;90;100',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'OrRd'},
+1: {'name': f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)',
+  'slug': f'headcount_ratio_{povlines_ppp2017.cents[p_2017]}_ppp2017',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'% of population living in households with an income or expenditure per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': '%',
+  'shortUnit': '%',
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '3;10;20;30;40;50;60;70;80;90;100',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'OrRd'},
+2: {'name': f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)',
+  'slug': f'headcount_{povlines_ppp2011.cents[p_2011]}_ppp2011',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'Number of people living in households with an income or expenditure per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': np.nan,
+  'shortUnit': np.nan,
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '100000;300000;1000000;3000000;10000000;30000000;100000000;300000000;1000000000;1000000001',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'Reds'},
+3: {'name': f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)',
+  'slug': f'headcount_{povlines_ppp2017.cents[p_2017]}_ppp2017',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'Number of people living in households with an income or expenditure per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': np.nan,
+  'shortUnit': np.nan,
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '100000;300000;1000000;3000000;10000000;30000000;100000000;300000000;1000000000;1000000001',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'Reds'}
+}
+
+table_base = [
+{'name': f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)',
+  'slug': f'headcount_ratio_{povlines_ppp2011.cents[p_2011]}_ppp2011',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'% of population living in households with an income or expenditure per person below ${povlines_ppp2011.dollars[p_2011]} a day (2011 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': '%',
+  'shortUnit': '%',
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '3;10;20;30;40;50;60;70;80;90;100',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'OrRd'},
+{'name': f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)',
+  'slug': f'headcount_ratio_{povlines_ppp2017.cents[p_2017]}_ppp2017',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'% of population living in households with an income or expenditure per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': '%',
+  'shortUnit': '%',
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '3;10;20;30;40;50;60;70;80;90;100',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'OrRd'},
+{'name': f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)',
+  'slug': f'headcount_{povlines_ppp2011.cents[p_2011]}_ppp2011',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'Number of people living in households with an income or expenditure per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': np.nan,
+  'shortUnit': np.nan,
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '100000;300000;1000000;3000000;10000000;30000000;100000000;300000000;1000000000;1000000001',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'Reds'},
+{'name': f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)',
+  'slug': f'headcount_{povlines_ppp2017.cents[p_2017]}_ppp2017',
+  'sourceName': 'World Bank Poverty and Inequality Platform',
+  'description': f'Number of people living in households with an income or expenditure per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).',
+  'sourceLink': 'https://pip.worldbank.org/',
+  'dataPublishedBy': 'World Bank Poverty and Inequality Platform (PIP)',
+  'unit': np.nan,
+  'shortUnit': np.nan,
+  'tolerance': 5,
+  'retrievedDate': np.nan,
+  'type': 'Numeric',
+  'colorScaleNumericMinValue': 0,
+  'colorScaleNumericBins': '100000;300000;1000000;3000000;10000000;30000000;100000000;300000000;1000000000;1000000001',
+  'colorScaleEqualSizeBins': 'true',
+  'colorScaleScheme': 'Reds'}
+]
+
+# +
+df = pd.DataFrame()
+df_complete = pd.DataFrame()
+
+j=0
+
+for key in range(len(table_base)):
+    for p_2017 in range(len(povlines_ppp2017)):
+        for p_2011 in range(len(povlines_ppp2011)):
+            for p in range(len(povlines_both)):
+                for survey in range(len(survey_type)):
+                    df.loc[j, 'name'] = table_base[key]['name']
+                    df.loc[j, 'slug'] = table_base[key]['slug']
+                    df.loc[j, 'sourceName'] = table_base[key]['sourceName']
+                    df.loc[j, 'description'] = table_base[key]['description']
+                    df.loc[j, 'sourceLink'] = table_base[key]['sourceLink']
+                    df.loc[j, 'dataPublishedBy'] = table_base[key]['dataPublishedBy']
+                    df.loc[j, 'unit'] = table_base[key]['unit']
+                    df.loc[j, 'shortUnit'] = table_base[key]['shortUnit']
+                    df.loc[j, 'tolerance'] = table_base[key]['tolerance']
+                    df.loc[j, 'retrievedDate'] = table_base[key]['retrievedDate']
+                    df.loc[j, 'type'] = table_base[key]['type']
+                    df.loc[j, 'colorScaleNumericMinValue'] = table_base[key]['colorScaleNumericMinValue']
+                    df.loc[j, 'colorScaleNumericBins'] = table_base[key]['colorScaleNumericBins']
+                    df.loc[j, 'colorScaleEqualSizeBins'] = table_base[key]['colorScaleEqualSizeBins']
+                    df.loc[j, 'colorScaleScheme'] = table_base[key]['colorScaleScheme']
+                    j += 1
+# -
+
 # ## Long method
 # ### Tables with variable definitions
-# Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, separated by survey type in csv files.
+
+povlines_ppp2011
 
 # +
 #Table generation
@@ -316,17 +485,15 @@ for survey in range(len(survey_type)):
     df.loc[j, 'colorScaleScheme'] = "Blues"
     df.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
-      
-#Separate the tables into inc, cons and inc or cons
+# -
+
 survey_list = list(survey_type['table_name'])
 for i in survey_list:
     table_export = df[df['survey_type'] == i].copy().reset_index(drop=True)
     table_export = table_export.drop(columns=['survey_type'])
     table_export.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/table_{i}.csv', index=False)
-# -
 
 # ### Grapher views
-# Similar to the tables, this creates the grapher views by grouping by types of variables and then running by survey type and poverty lines.
 
 # +
 #Grapher table generation
@@ -884,3 +1051,5 @@ df = df.drop(columns=['povline_dropdown_aux'])
 
 #Export Grapher table    
 df.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/grapher.csv', index=False)
+# -
+
