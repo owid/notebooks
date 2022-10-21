@@ -123,8 +123,8 @@ for survey in range(len(survey_type)):
         df.loc[j, 'description'] = f"The {survey_type.text[survey]} of the {deciles10.ordinal[dec10]} (tenth of the population) as a share of total {survey_type.text[survey]}."
         df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
-        df.loc[j, 'unit'] = "international-$ at 2017 prices"
-        df.loc[j, 'shortUnit'] = "$"
+        df.loc[j, 'unit'] = "%"
+        df.loc[j, 'shortUnit'] = "%"
         df.loc[j, 'tolerance'] = 5
         df.loc[j, 'type'] = "Numeric"
         df.loc[j, 'colorScaleNumericMinValue'] = 0
@@ -227,7 +227,7 @@ for survey in range(len(survey_type)):
 
             #averages
             df.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within the {deciles10.ordinal[dec10]}"
-            df.loc[j, 'ySlugs'] = f"decile{deciles10.decile[dec10]}_thr{income_aggregation.slug_suffix[agg]}"
+            df.loc[j, 'ySlugs'] = f"decile{deciles10.decile[dec10]}_avg{income_aggregation.slug_suffix[agg]}"
             df.loc[j, 'Metric Dropdown'] = "Mean within decile"
             df.loc[j, 'Decile Dropdown'] = f'{deciles10.dropdown[dec10]}'
             df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
@@ -251,7 +251,7 @@ for survey in range(len(survey_type)):
 
         #shares
         df.loc[j, 'title'] = f"Share of the {deciles10.ordinal[dec10]} in total {survey_type.text[survey]}"
-        df.loc[j, 'ySlugs'] = f"decile{deciles10.decile[dec10]}_thr"
+        df.loc[j, 'ySlugs'] = f"decile{deciles10.decile[dec10]}_share"
         df.loc[j, 'Metric Dropdown'] = "Decile shares"
         df.loc[j, 'Decile Dropdown'] = f'{deciles10.dropdown[dec10]}'
         df.loc[j, 'Aggregation Radio'] = np.nan
