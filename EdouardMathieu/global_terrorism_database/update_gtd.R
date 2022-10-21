@@ -4,7 +4,11 @@ library(readxl)
 rm(list = ls())
 setwd("~/git/notebooks/EdouardMathieu/global_terrorism_database/")
 
-df <- read_excel("input/globalterrorismdb_0221dist.xlsx")
+# Go to https://www.start.umd.edu/gtd/contact/download
+# Fill the form to request access to the data
+# An email will be automatically sent after a few minutes
+# Click on the link and download "Entire GTD dataset (~105 MB)"
+df <- read_excel("input/globalterrorismdb_0522dist.xlsx")
 
 country_mapping <- read_csv("config/gtd_country_standardized.csv")
 

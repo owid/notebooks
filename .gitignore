@@ -144,7 +144,7 @@ BetterDataDocs/**/access_key.py
 
 
 # Individual exclusions can be added here.
-EdouardMathieu/global_terrorism_database/input/globalterrorismdb_0221dist.xlsx
+EdouardMathieu/global_terrorism_database/input/*
 BetterDataDocs/JoeHasell/PhD_global_dist/**/*.csv
 PabloArriagada/poverty_inequality_dataexplorer/LIS/lws_data.do
 PabloArriagada/poverty_inequality_dataexplorer/LIS/Tutorials

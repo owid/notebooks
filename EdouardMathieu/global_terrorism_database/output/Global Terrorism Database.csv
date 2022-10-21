@@ -21,7 +21,7 @@ Afghanistan,2004,88,275,263
 Afghanistan,2005,155,367,411
 Afghanistan,2006,283,736,922
 Afghanistan,2007,342,1201,1156
-Afghanistan,2008,414,1092,1331
+Afghanistan,2008,414,1099,1331
 Afghanistan,2009,503,1065,1604
 Afghanistan,2010,542,1157,1701
 Afghanistan,2011,421,1525,1941
@@ -31,8 +31,9 @@ Afghanistan,2014,1824,5414,5111
 Afghanistan,2015,1928,6216,6987
 Afghanistan,2016,1616,6141,6487
 Afghanistan,2017,1415,6095,6022
-Afghanistan,2018,1776,9812,7845
-Afghanistan,2019,1804,8249,7624
+Afghanistan,2018,1777,9812,7846
+Afghanistan,2019,1806,8257,7625
+Afghanistan,2020,2604,10081,7493
 Albania,1981,1,0,0
 Albania,1990,1,0,0
 Albania,1991,1,0,0
@@ -52,6 +53,7 @@ Albania,2015,4,0,0
 Albania,2016,2,0,0
 Albania,2017,1,0,0
 Albania,2019,1,0,0
+Albania,2020,1,0,0
 Algeria,1972,1,0,0
 Algeria,1976,1,0,0
 Algeria,1978,1,0,1
@@ -84,6 +86,7 @@ Algeria,2015,15,20,19
 Algeria,2016,9,9,2
 Algeria,2017,14,12,19
 Algeria,2018,7,19,11
+Algeria,2020,4,7,6
 Andorra,1974,1,0,0
 Angola,1977,1,0,0
 Angola,1978,2,0,40
@@ -114,6 +117,7 @@ Angola,2010,2,4,7
 Angola,2016,2,0,0
 Angola,2017,6,7,411
 Angola,2019,1,5,1
+Angola,2020,1,12,0
 Antigua and Barbuda,1992,1,0,0
 Argentina,1970,21,5,2
 Argentina,1971,7,5,0
@@ -157,6 +161,7 @@ Argentina,2016,2,0,2
 Argentina,2017,3,0,0
 Argentina,2018,5,0,4
 Argentina,2019,1,2,0
+Argentina,2020,5,0,1
 Armenia,1991,1,0,0
 Armenia,1992,2,2,1
 Armenia,1994,4,15,46
@@ -204,6 +209,7 @@ Australia,2016,9,0,1
 Australia,2017,4,4,21
 Australia,2018,3,2,3
 Australia,2019,2,0,0
+Australia,2020,5,2,1
 Austria,1972,7,4,5
 Austria,1973,2,0,0
 Austria,1974,1,0,0
@@ -238,6 +244,7 @@ Austria,2013,1,0,2
 Austria,2016,3,0,0
 Austria,2017,1,2,0
 Austria,2018,1,1,1
+Austria,2020,4,6,23
 Azerbaijan,1991,3,26,4
 Azerbaijan,1992,12,186,50
 Azerbaijan,1994,11,30,104
@@ -298,7 +305,7 @@ Bangladesh,1997,17,14,349
 Bangladesh,1998,2,0,1
 Bangladesh,1999,11,30,185
 Bangladesh,2000,23,11,34
-Bangladesh,2001,15,57,258
+Bangladesh,2001,15,59,308
 Bangladesh,2002,5,21,440
 Bangladesh,2003,4,3,13
 Bangladesh,2004,11,43,384
@@ -310,13 +317,14 @@ Bangladesh,2009,27,18,46
 Bangladesh,2010,22,15,28
 Bangladesh,2011,13,9,6
 Bangladesh,2012,18,8,32
-Bangladesh,2013,139,16,117
+Bangladesh,2013,138,13,113
 Bangladesh,2014,130,38,114
 Bangladesh,2015,469,86,720
 Bangladesh,2016,89,76,90
 Bangladesh,2017,41,25,73
 Bangladesh,2018,33,13,41
 Bangladesh,2019,32,16,89
+Bangladesh,2020,30,3,32
 Barbados,1976,2,73,0
 Barbados,1992,1,3,3
 Belarus,1994,1,0,0
@@ -328,6 +336,7 @@ Belarus,2008,1,0,50
 Belarus,2010,2,0,0
 Belarus,2011,1,13,161
 Belarus,2012,3,0,0
+Belarus,2020,2,0,0
 Belgium,1970,1,0,0
 Belgium,1972,4,0,1
 Belgium,1973,1,0,0
@@ -364,6 +373,7 @@ Belgium,2016,6,36,276
 Belgium,2017,3,2,2
 Belgium,2018,3,4,7
 Belgium,2019,1,0,0
+Belgium,2020,3,0,0
 Belize,1980,1,0,0
 Belize,1991,3,2,0
 Belize,1992,2,1,0
@@ -375,6 +385,7 @@ Benin,1995,1,0,0
 Benin,1996,2,0,0
 Benin,2007,1,0,4
 Benin,2019,1,1,0
+Benin,2020,1,1,1
 Bhutan,2006,1,4,0
 Bhutan,2008,3,5,3
 Bhutan,2011,1,0,2
@@ -410,6 +421,7 @@ Bolivia,2009,3,0,7
 Bolivia,2012,1,0,2
 Bolivia,2018,2,12,60
 Bolivia,2019,1,0,0
+Bolivia,2020,9,0,0
 Bosnia and Herzegovina,1992,22,55,22
 Bosnia and Herzegovina,1994,9,3,5
 Bosnia and Herzegovina,1995,6,2,3
@@ -475,10 +487,11 @@ Brazil,2012,1,1,0
 Brazil,2013,3,2,0
 Brazil,2014,3,2,0
 Brazil,2015,5,3,0
-Brazil,2016,2,1,0
+Brazil,2016,3,1,0
 Brazil,2017,2,0,0
-Brazil,2018,11,10,8
+Brazil,2018,12,10,8
 Brazil,2019,3,2,2
+Brazil,2020,6,3,0
 Brunei,1972,5,0,0
 Brunei,1992,1,0,1
 Bulgaria,1982,2,2,0
@@ -503,6 +516,7 @@ Bulgaria,2014,1,0,0
 Bulgaria,2015,2,0,0
 Bulgaria,2016,1,0,1
 Bulgaria,2018,1,0,1
+Bulgaria,2020,1,0,0
 Burkina Faso,1984,1,1,0
 Burkina Faso,1991,2,1,2
 Burkina Faso,2013,1,1,0
@@ -510,7 +524,8 @@ Burkina Faso,2015,6,16,132
 Burkina Faso,2016,10,62,40
 Burkina Faso,2017,32,53,45
 Burkina Faso,2018,72,116,131
-Burkina Faso,2019,160,804,215
+Burkina Faso,2019,161,804,215
+Burkina Faso,2020,110,681,151
 Burundi,1991,7,117,41
 Burundi,1992,2,61,19
 Burundi,1994,16,265,158
@@ -538,6 +553,7 @@ Burundi,2016,83,74,213
 Burundi,2017,21,20,127
 Burundi,2018,10,36,80
 Burundi,2019,6,25,11
+Burundi,2020,7,28,17
 Cambodia,1971,2,2,10
 Cambodia,1972,2,1,0
 Cambodia,1978,1,1,0
@@ -558,6 +574,7 @@ Cambodia,2003,1,1,0
 Cambodia,2008,2,1,2
 Cambodia,2013,2,0,0
 Cambodia,2018,1,0,0
+Cambodia,2020,1,0,0
 Cameroon,1991,4,36,0
 Cameroon,1992,6,6,5
 Cameroon,1994,6,33,6
@@ -569,12 +586,13 @@ Cameroon,2009,1,0,0
 Cameroon,2010,3,5,2
 Cameroon,2011,3,4,0
 Cameroon,2013,3,7,0
-Cameroon,2014,68,789,19
+Cameroon,2014,69,789,20
 Cameroon,2015,83,931,463
 Cameroon,2016,58,269,329
 Cameroon,2017,111,244,248
 Cameroon,2018,236,296,224
 Cameroon,2019,146,318,164
+Cameroon,2020,145,209,180
 Canada,1970,2,1,0
 Canada,1972,4,1,7
 Canada,1974,1,0,0
@@ -605,6 +623,7 @@ Canada,2016,6,1,33
 Canada,2017,16,6,29
 Canada,2018,7,13,45
 Canada,2019,5,0,4
+Canada,2020,14,3,2
 Central African Republic,1981,1,3,0
 Central African Republic,1986,1,0,0
 Central African Republic,1991,4,3,7
@@ -624,9 +643,10 @@ Central African Republic,2013,21,121,71
 Central African Republic,2014,94,751,298
 Central African Republic,2015,49,171,91
 Central African Republic,2016,38,189,174
-Central African Republic,2017,43,601,239
+Central African Republic,2017,43,604,349
 Central African Republic,2018,46,227,379
 Central African Republic,2019,15,116,106
+Central African Republic,2020,36,103,78
 Chad,1974,1,0,0
 Chad,1984,1,0,25
 Chad,1985,1,0,0
@@ -651,6 +671,7 @@ Chad,2016,5,22,68
 Chad,2017,6,62,1
 Chad,2018,12,112,13
 Chad,2019,14,189,56
+Chad,2020,15,244,117
 Chile,1973,7,0,0
 Chile,1976,2,0,1
 Chile,1977,6,0,0
@@ -689,10 +710,11 @@ Chile,2012,2,0,0
 Chile,2013,5,2,1
 Chile,2014,17,1,26
 Chile,2015,1,0,0
-Chile,2016,18,2,4
+Chile,2016,19,2,4
 Chile,2017,17,0,4
 Chile,2018,47,0,6
 Chile,2019,27,0,19
+Chile,2020,54,3,9
 China,1989,3,20,12
 China,1990,1,2,10
 China,1991,1,0,0
@@ -720,7 +742,8 @@ China,2015,17,123,83
 China,2016,5,13,18
 China,2017,6,16,76
 China,2018,1,2,2
-China,2019,13,0,12
+China,2019,14,0,12
+China,2020,21,0,0
 Colombia,1970,1,0,0
 Colombia,1972,2,1,0
 Colombia,1973,6,0,0
@@ -750,14 +773,14 @@ Colombia,1998,94,592,176
 Colombia,1999,116,262,246
 Colombia,2000,137,426,181
 Colombia,2001,207,576,435
-Colombia,2002,150,356,648
+Colombia,2002,150,356,650
 Colombia,2003,98,184,557
 Colombia,2004,37,83,213
 Colombia,2005,42,145,106
 Colombia,2006,43,79,94
 Colombia,2007,30,64,103
 Colombia,2008,133,85,238
-Colombia,2009,139,107,226
+Colombia,2009,138,107,226
 Colombia,2010,136,56,141
 Colombia,2011,94,43,85
 Colombia,2012,115,168,456
@@ -766,8 +789,9 @@ Colombia,2014,231,143,314
 Colombia,2015,136,104,138
 Colombia,2016,110,52,72
 Colombia,2017,119,84,118
-Colombia,2018,205,132,186
-Colombia,2019,228,134,273
+Colombia,2018,206,132,186
+Colombia,2019,230,135,273
+Colombia,2020,171,171,113
 Comoros,1992,1,1,0
 Comoros,1994,1,0,0
 Comoros,1997,3,0,2
@@ -828,6 +852,7 @@ Cote d'Ivoire,2016,1,22,33
 Cote d'Ivoire,2017,13,3,2
 Cote d'Ivoire,2018,2,2,0
 Cote d'Ivoire,2019,1,0,0
+Cote d'Ivoire,2020,4,16,4
 Croatia,1991,26,237,35
 Croatia,1992,4,2,20
 Croatia,1994,4,3,0
@@ -840,6 +865,7 @@ Croatia,2005,1,0,1
 Croatia,2008,2,0,0
 Croatia,2009,1,0,3
 Croatia,2013,2,0,1
+Croatia,2020,1,1,1
 Cuba,1991,1,0,0
 Cuba,1992,4,3,1
 Cuba,1994,9,3,6
@@ -877,6 +903,7 @@ Cyprus,2012,1,0,0
 Cyprus,2013,2,0,0
 Cyprus,2014,2,0,0
 Cyprus,2016,2,0,0
+Cyprus,2020,11,0,0
 Czechia,1994,1,0,0
 Czechia,1995,3,1,0
 Czechia,1996,3,2,3
@@ -929,6 +956,7 @@ Democratic Republic of Congo,2016,169,532,176
 Democratic Republic of Congo,2017,143,596,193
 Democratic Republic of Congo,2018,163,993,271
 Democratic Republic of Congo,2019,250,642,127
+Democratic Republic of Congo,2020,310,1356,228
 Denmark,1978,1,0,0
 Denmark,1979,3,0,2
 Denmark,1980,1,0,0
@@ -965,6 +993,7 @@ Djibouti,2015,1,0,0
 Djibouti,2017,1,0,0
 Dominica,1981,2,3,10
 Dominica,1997,1,0,0
+Dominica,2020,1,0,0
 Dominican Republic,1970,2,1,0
 Dominican Republic,1971,3,0,0
 Dominican Republic,1973,3,0,0
@@ -983,7 +1012,6 @@ Dominican Republic,1994,7,2,18
 Dominican Republic,1996,3,3,11
 Dominican Republic,1997,12,3,30
 Dominican Republic,2013,1,0,0
-Dominican Republic,2014,1,0,35
 Dominican Republic,2017,1,2,1
 East Germany,1970,12,0,0
 East Germany,1971,4,0,0
@@ -1030,7 +1058,7 @@ Ecuador,2002,2,0,3
 Ecuador,2003,4,0,4
 Ecuador,2004,2,0,0
 Ecuador,2008,2,0,3
-Ecuador,2009,1,0,0
+Ecuador,2009,3,0,0
 Ecuador,2011,1,0,0
 Ecuador,2012,1,0,0
 Ecuador,2013,2,1,0
@@ -1039,6 +1067,7 @@ Ecuador,2016,6,1,14
 Ecuador,2017,3,0,0
 Ecuador,2018,11,10,40
 Ecuador,2019,3,2,3
+Ecuador,2020,5,0,0
 Egypt,1970,1,0,2
 Egypt,1971,1,1,0
 Egypt,1972,1,0,0
@@ -1074,9 +1103,10 @@ Egypt,2013,321,243,623
 Egypt,2014,354,343,548
 Egypt,2015,647,829,1047
 Egypt,2016,376,609,633
-Egypt,2017,225,878,627
+Egypt,2017,225,878,622
 Egypt,2018,54,98,118
 Egypt,2019,63,152,223
+Egypt,2020,57,143,61
 El Salvador,1972,2,0,0
 El Salvador,1973,1,0,0
 El Salvador,1974,3,0,3
@@ -1111,6 +1141,7 @@ Eritrea,2008,2,4,10
 Eritrea,2009,1,2,8
 Eritrea,2010,1,17,20
 Eritrea,2011,1,17,5
+Eritrea,2020,7,0,0
 Estonia,1992,2,0,1
 Estonia,1994,6,0,0
 Estonia,1995,2,0,0
@@ -1176,6 +1207,7 @@ Ethiopia,2016,13,279,83
 Ethiopia,2017,28,69,53
 Ethiopia,2018,10,25,185
 Ethiopia,2019,26,83,68
+Ethiopia,2020,53,1330,144
 Falkland Islands,1983,1,0,0
 Fiji,1987,3,0,1
 Fiji,1989,2,0,0
@@ -1195,6 +1227,7 @@ Finland,2016,3,0,0
 Finland,2017,2,2,10
 Finland,2018,1,0,0
 Finland,2019,3,1,10
+Finland,2020,1,0,0
 France,1972,11,1,0
 France,1973,14,5,20
 France,1974,29,3,41
@@ -1241,7 +1274,8 @@ France,2015,38,162,443
 France,2016,25,94,457
 France,2017,42,7,28
 France,2018,13,13,34
-France,2019,20,8,30
+France,2019,21,8,30
+France,2020,24,11,16
 French Guiana,1983,3,1,0
 French Guiana,1996,2,0,1
 French Guiana,1997,2,0,12
@@ -1281,8 +1315,9 @@ Georgia,2015,1,0,0
 Georgia,2016,4,1,7
 Georgia,2017,1,0,5
 Georgia,2018,1,1,0
+Georgia,2020,1,0,0
 Germany,1990,1,0,0
-Germany,1991,65,10,35
+Germany,1991,66,11,37
 Germany,1992,156,17,217
 Germany,1994,79,2,85
 Germany,1995,147,10,26
@@ -1303,12 +1338,13 @@ Germany,2009,4,0,0
 Germany,2010,1,0,0
 Germany,2011,8,2,2
 Germany,2012,5,0,0
-Germany,2014,13,0,0
-Germany,2015,66,1,48
+Germany,2014,14,0,0
+Germany,2015,68,1,48
 Germany,2016,45,27,118
-Germany,2017,27,1,10
-Germany,2018,22,0,8
-Germany,2019,16,3,8
+Germany,2017,28,1,10
+Germany,2018,24,0,8
+Germany,2019,17,4,9
+Germany,2020,33,14,31
 Ghana,1987,1,0,0
 Ghana,1992,8,0,1
 Ghana,1994,4,13,0
@@ -1319,6 +1355,7 @@ Ghana,2014,1,0,3
 Ghana,2016,1,0,0
 Ghana,2018,2,2,5
 Ghana,2019,3,2,5
+Ghana,2020,10,4,12
 Greece,1970,3,2,0
 Greece,1971,1,0,0
 Greece,1972,2,0,0
@@ -1360,14 +1397,15 @@ Greece,2008,53,0,3
 Greece,2009,115,1,10
 Greece,2010,49,4,5
 Greece,2011,11,0,5
-Greece,2012,23,1,3
-Greece,2013,55,4,7
+Greece,2012,24,1,4
+Greece,2013,56,4,16
 Greece,2014,27,0,4
 Greece,2015,30,1,2
 Greece,2016,30,0,2
 Greece,2017,44,0,7
 Greece,2018,26,3,15
 Greece,2019,32,0,6
+Greece,2020,50,0,1
 Grenada,1980,4,9,20
 Grenada,1983,1,0,1
 Guadeloupe,1980,9,1,2
@@ -1412,6 +1450,7 @@ Guatemala,2006,4,5,0
 Guatemala,2012,1,2,1
 Guatemala,2013,6,4,3
 Guatemala,2018,2,0,12
+Guatemala,2020,3,2,0
 Guinea,1980,2,1,1
 Guinea,1992,2,0,0
 Guinea,1994,2,2,20
@@ -1443,6 +1482,7 @@ Guyana,2006,2,6,0
 Guyana,2008,3,23,12
 Guyana,2016,1,0,0
 Guyana,2019,1,0,0
+Guyana,2020,6,0,0
 Haiti,1973,1,0,0
 Haiti,1974,2,0,0
 Haiti,1983,6,5,9
@@ -1469,6 +1509,7 @@ Haiti,2007,2,1,1
 Haiti,2016,1,7,0
 Haiti,2018,5,0,1
 Haiti,2019,4,2,3
+Haiti,2020,2,2,6
 Honduras,1973,1,0,0
 Honduras,1979,6,1,12
 Honduras,1980,16,6,8
@@ -1497,6 +1538,7 @@ Honduras,2014,1,0,1
 Honduras,2016,1,2,0
 Honduras,2017,1,2,0
 Honduras,2019,5,4,1
+Honduras,2020,2,2,0
 Hong Kong,1980,1,0,2
 Hong Kong,1981,3,0,25
 Hong Kong,1989,1,0,0
@@ -1560,7 +1602,7 @@ India,2004,108,334,949
 India,2005,146,468,1223
 India,2006,167,722,2138
 India,2007,150,626,1192
-India,2008,534,824,1759
+India,2008,535,904,1929
 India,2009,672,774,854
 India,2010,663,812,660
 India,2011,645,499,730
@@ -1568,10 +1610,11 @@ India,2012,613,264,651
 India,2013,694,467,771
 India,2014,860,490,776
 India,2015,885,387,654
-India,2016,1026,467,788
+India,2016,1027,467,788
 India,2017,967,465,703
-India,2018,888,412,650
-India,2019,623,311,496
+India,2018,889,413,650
+India,2019,622,310,496
+India,2020,450,212,380
 Indonesia,1977,1,1,1
 Indonesia,1978,2,0,1
 Indonesia,1981,1,4,0
@@ -1608,6 +1651,7 @@ Indonesia,2016,19,22,35
 Indonesia,2017,27,20,27
 Indonesia,2018,43,71,105
 Indonesia,2019,26,21,19
+Indonesia,2020,19,15,19
 International,2002,1,1,12
 Iran,1970,5,0,1
 Iran,1971,11,4,0
@@ -1655,6 +1699,7 @@ Iran,2016,10,12,8
 Iran,2017,11,39,67
 Iran,2018,13,66,125
 Iran,2019,8,37,24
+Iran,2020,7,6,8
 Iraq,1975,1,0,1
 Iraq,1976,3,12,285
 Iraq,1979,2,1,0
@@ -1688,12 +1733,13 @@ Iraq,2010,1179,2074,6917
 Iraq,2011,1308,1870,5041
 Iraq,2012,1435,2679,6995
 Iraq,2013,2852,7042,15710
-Iraq,2014,3934,13965,16804
+Iraq,2014,3934,14095,16804
 Iraq,2015,2751,8885,13326
 Iraq,2016,3395,12276,14380
 Iraq,2017,2548,6619,5136
 Iraq,2018,1364,1432,2050
-Iraq,2019,642,798,1293
+Iraq,2019,644,799,1293
+Iraq,2020,764,525,1092
 Ireland,1970,1,1,0
 Ireland,1971,1,1,0
 Ireland,1972,5,6,0
@@ -1737,6 +1783,7 @@ Ireland,2016,15,2,3
 Ireland,2017,17,0,0
 Ireland,2018,5,0,1
 Ireland,2019,12,0,0
+Ireland,2020,10,0,2
 Israel,1971,1,1,11
 Israel,1972,15,26,72
 Israel,1973,1,2,18
@@ -1785,6 +1832,7 @@ Israel,2016,50,16,175
 Israel,2017,34,4,16
 Israel,2018,63,9,46
 Israel,2019,65,9,35
+Israel,2020,67,9,22
 Italy,1970,3,0,0
 Italy,1971,3,0,0
 Italy,1972,4,1,4
@@ -1828,11 +1876,12 @@ Italy,2011,5,2,5
 Italy,2012,10,0,1
 Italy,2013,7,0,4
 Italy,2014,7,0,3
-Italy,2015,5,0,1
+Italy,2015,6,0,1
 Italy,2016,11,1,1
 Italy,2017,10,0,8
 Italy,2018,15,0,12
 Italy,2019,8,0,13
+Italy,2020,13,0,4
 Jamaica,1974,2,0,0
 Jamaica,1976,1,0,0
 Jamaica,1979,2,4,0
@@ -1931,6 +1980,7 @@ Kazakhstan,2012,4,2,3
 Kazakhstan,2013,4,0,1
 Kazakhstan,2016,3,10,11
 Kazakhstan,2019,1,0,1
+Kazakhstan,2020,3,0,0
 Kenya,1975,4,27,100
 Kenya,1976,2,0,0
 Kenya,1978,1,4,0
@@ -1961,7 +2011,8 @@ Kenya,2015,70,268,203
 Kenya,2016,65,72,69
 Kenya,2017,97,126,110
 Kenya,2018,52,74,77
-Kenya,2019,49,82,65
+Kenya,2019,50,105,85
+Kenya,2020,66,59,51
 Kosovo,1999,39,23,146
 Kosovo,2000,60,23,84
 Kosovo,2001,17,20,59
@@ -1982,6 +2033,7 @@ Kosovo,2015,2,0,0
 Kosovo,2016,8,0,0
 Kosovo,2017,8,0,4
 Kosovo,2018,2,1,0
+Kosovo,2020,3,0,0
 Kuwait,1972,1,0,0
 Kuwait,1974,1,0,0
 Kuwait,1975,1,0,0
@@ -2023,6 +2075,7 @@ Kyrgyzstan,2015,3,1,1
 Kyrgyzstan,2016,4,1,5
 Kyrgyzstan,2017,3,1,0
 Kyrgyzstan,2018,1,0,0
+Kyrgyzstan,2020,2,0,1
 Laos,1989,1,2,0
 Laos,1990,1,0,0
 Laos,1992,4,3,0
@@ -2090,9 +2143,10 @@ Lebanon,2013,121,190,1048
 Lebanon,2014,205,135,532
 Lebanon,2015,44,111,347
 Lebanon,2016,41,25,74
-Lebanon,2017,23,17,49
+Lebanon,2017,24,17,49
 Lebanon,2018,8,2,1
 Lebanon,2019,7,8,3
+Lebanon,2020,10,10,1
 Lesotho,1979,2,0,0
 Lesotho,1981,5,10,6
 Lesotho,1982,2,0,5
@@ -2135,6 +2189,7 @@ Libya,2016,422,634,744
 Libya,2017,191,290,173
 Libya,2018,167,244,375
 Libya,2019,70,90,139
+Libya,2020,17,11,14
 Lithuania,1991,1,0,1
 Lithuania,1992,1,0,0
 Lithuania,1995,2,0,0
@@ -2191,6 +2246,7 @@ Malaysia,2016,19,6,9
 Malaysia,2017,4,4,2
 Malaysia,2018,7,3,2
 Malaysia,2019,2,0,0
+Malaysia,2020,1,1,0
 Maldives,1988,1,19,100
 Maldives,2006,1,0,1
 Maldives,2007,1,0,12
@@ -2203,6 +2259,7 @@ Maldives,2016,1,0,3
 Maldives,2017,2,1,0
 Maldives,2018,2,0,0
 Maldives,2019,1,0,1
+Maldives,2020,2,0,3
 Mali,1990,1,14,1
 Mali,1991,12,43,19
 Mali,1992,3,5,0
@@ -2219,10 +2276,11 @@ Mali,2012,19,53,45
 Mali,2013,58,137,138
 Mali,2014,69,125,225
 Mali,2015,121,269,251
-Mali,2016,100,181,220
+Mali,2016,100,182,220
 Mali,2017,142,363,348
 Mali,2018,164,584,180
-Mali,2019,137,826,277
+Mali,2019,139,826,277
+Mali,2020,138,566,326
 Malta,1977,1,1,0
 Malta,1984,7,0,0
 Malta,1985,1,0,0
@@ -2295,10 +2353,11 @@ Mexico,2012,16,17,8
 Mexico,2013,8,47,110
 Mexico,2014,5,1,2
 Mexico,2015,19,9,10
-Mexico,2016,5,4,0
-Mexico,2017,20,23,6
+Mexico,2016,7,6,0
+Mexico,2017,23,27,6
 Mexico,2018,27,23,32
 Mexico,2019,31,24,14
+Mexico,2020,13,13,1
 Moldova,1991,1,0,0
 Moldova,1992,11,10,39
 Moldova,1994,1,1,0
@@ -2358,6 +2417,7 @@ Mozambique,2016,79,62,84
 Mozambique,2017,15,24,15
 Mozambique,2018,65,138,40
 Mozambique,2019,133,333,109
+Mozambique,2020,220,709,96
 Myanmar,1973,1,0,0
 Myanmar,1976,2,0,0
 Myanmar,1979,19,86,175
@@ -2394,6 +2454,7 @@ Myanmar,2016,74,73,58
 Myanmar,2017,116,218,39
 Myanmar,2018,40,37,81
 Myanmar,2019,90,84,104
+Myanmar,2020,65,41,77
 Namibia,1975,1,1,0
 Namibia,1976,2,3,0
 Namibia,1978,8,2,65
@@ -2440,6 +2501,7 @@ Nepal,2016,43,5,15
 Nepal,2017,247,4,94
 Nepal,2018,99,0,32
 Nepal,2019,200,7,21
+Nepal,2020,37,1,7
 Netherlands,1970,3,1,0
 Netherlands,1971,1,0,0
 Netherlands,1972,1,0,0
@@ -2483,6 +2545,7 @@ Netherlands,2016,6,0,4
 Netherlands,2017,1,0,0
 Netherlands,2018,6,1,7
 Netherlands,2019,4,4,8
+Netherlands,2020,37,0,1
 New Caledonia,1984,10,11,1
 New Caledonia,1985,7,0,11
 New Caledonia,1986,2,0,0
@@ -2492,6 +2555,7 @@ New Caledonia,1992,2,0,0
 New Caledonia,2017,1,0,0
 New Caledonia,2018,18,0,0
 New Caledonia,2019,1,0,0
+New Caledonia,2020,4,0,0
 New Zealand,1973,1,0,0
 New Zealand,1981,2,0,0
 New Zealand,1984,1,1,0
@@ -2501,10 +2565,11 @@ New Zealand,1996,2,0,2
 New Zealand,1997,1,0,0
 New Zealand,2001,1,0,0
 New Zealand,2003,3,0,0
-New Zealand,2008,5,0,0
+New Zealand,2008,4,0,0
 New Zealand,2014,1,0,0
 New Zealand,2016,1,0,0
 New Zealand,2019,2,51,50
+New Zealand,2020,12,0,0
 Nicaragua,1970,1,0,0
 Nicaragua,1974,1,0,0
 Nicaragua,1975,1,11,0
@@ -2533,6 +2598,7 @@ Nicaragua,2000,1,2,1
 Nicaragua,2014,2,5,28
 Nicaragua,2018,7,9,9
 Nicaragua,2019,3,0,0
+Nicaragua,2020,3,1,0
 Niger,1985,1,3,0
 Niger,1989,1,171,0
 Niger,1991,6,8,2
@@ -2555,6 +2621,7 @@ Niger,2016,25,190,143
 Niger,2017,13,148,72
 Niger,2018,19,75,72
 Niger,2019,49,364,83
+Niger,2020,35,371,124
 Nigeria,1976,1,3,1
 Nigeria,1980,1,0,0
 Nigeria,1983,3,1,2
@@ -2581,12 +2648,13 @@ Nigeria,2010,63,117,191
 Nigeria,2011,175,447,619
 Nigeria,2012,615,1506,909
 Nigeria,2013,347,2015,528
-Nigeria,2014,713,7781,2283
+Nigeria,2014,713,7775,2283
 Nigeria,2015,641,5567,2863
 Nigeria,2016,535,2174,1167
 Nigeria,2017,488,1809,1032
-Nigeria,2018,648,2577,1005
+Nigeria,2018,650,2577,1005
 Nigeria,2019,507,1718,591
+Nigeria,2020,478,2102,801
 North Korea,1994,1,3,4
 North Macedonia,1994,1,0,0
 North Macedonia,1995,1,1,6
@@ -2624,6 +2692,7 @@ Norway,2010,1,0,1
 Norway,2011,3,77,75
 Norway,2017,1,0,0
 Norway,2019,3,1,2
+Norway,2020,2,0,0
 Pakistan,1970,1,4,20
 Pakistan,1974,2,0,2
 Pakistan,1975,2,1,0
@@ -2661,14 +2730,15 @@ Pakistan,2008,568,1184,1901
 Pakistan,2009,667,1487,3541
 Pakistan,2010,713,1701,2967
 Pakistan,2011,1012,1676,2649
-Pakistan,2012,1654,2784,4265
-Pakistan,2013,2215,2875,5769
+Pakistan,2012,1655,2784,4269
+Pakistan,2013,2215,2876,5768
 Pakistan,2014,2149,2411,3388
 Pakistan,2015,1243,1608,1849
 Pakistan,2016,864,1113,1894
 Pakistan,2017,719,1076,2091
 Pakistan,2018,480,697,1369
-Pakistan,2019,362,416,812
+Pakistan,2019,363,417,815
+Pakistan,2020,294,322,646
 Palestine,1972,1,1,3
 Palestine,1976,1,2,0
 Palestine,1978,4,6,37
@@ -2712,6 +2782,7 @@ Palestine,2016,157,90,124
 Palestine,2017,84,50,75
 Palestine,2018,118,44,60
 Palestine,2019,97,27,56
+Palestine,2020,61,15,33
 Panama,1972,1,0,0
 Panama,1976,2,0,0
 Panama,1979,4,1,1
@@ -2766,6 +2837,7 @@ Paraguay,2015,19,14,0
 Paraguay,2016,15,10,2
 Paraguay,2017,10,4,1
 Paraguay,2018,4,2,0
+Paraguay,2020,2,1,0
 People's Republic of the Congo,1972,1,0,0
 People's Republic of the Congo,1977,2,0,0
 People's Republic of the Congo,1982,1,15,0
@@ -2812,6 +2884,7 @@ Peru,2016,4,11,7
 Peru,2017,8,8,4
 Peru,2018,5,4,6
 Peru,2019,1,1,0
+Peru,2020,2,0,3
 Philippines,1970,10,41,13
 Philippines,1971,4,0,0
 Philippines,1972,7,2,1
@@ -2850,7 +2923,7 @@ Philippines,2006,58,60,163
 Philippines,2007,65,115,404
 Philippines,2008,276,220,388
 Philippines,2009,229,151,354
-Philippines,2010,205,155,231
+Philippines,2010,204,155,231
 Philippines,2011,151,127,228
 Philippines,2012,249,212,441
 Philippines,2013,651,432,666
@@ -2858,8 +2931,9 @@ Philippines,2014,597,472,723
 Philippines,2015,721,447,752
 Philippines,2016,632,415,718
 Philippines,2017,695,500,675
-Philippines,2018,600,440,534
-Philippines,2019,466,398,498
+Philippines,2018,601,440,535
+Philippines,2019,467,399,499
+Philippines,2020,294,280,297
 Poland,1971,1,0,0
 Poland,1979,1,0,5
 Poland,1981,1,0,1
@@ -2875,6 +2949,7 @@ Poland,2010,1,1,1
 Poland,2016,2,0,1
 Poland,2017,1,0,0
 Poland,2018,1,0,0
+Poland,2020,2,0,0
 Portugal,1972,1,0,0
 Portugal,1973,1,0,1
 Portugal,1975,4,0,0
@@ -2895,6 +2970,7 @@ Portugal,1992,1,0,1
 Portugal,1994,1,2,0
 Portugal,1995,3,0,15
 Portugal,2011,2,0,0
+Portugal,2020,1,0,0
 Qatar,1982,1,1,0
 Qatar,1989,1,3,0
 Qatar,1996,1,0,0
@@ -2935,6 +3011,7 @@ Russia,2016,56,64,61
 Russia,2017,34,61,114
 Russia,2018,23,23,24
 Russia,2019,10,16,10
+Russia,2020,12,6,11
 Rwanda,1991,3,0,0
 Rwanda,1992,18,141,182
 Rwanda,1994,33,1571,9
@@ -2956,8 +3033,10 @@ Rwanda,2016,1,0,0
 Rwanda,2017,2,2,8
 Rwanda,2018,5,12,9
 Rwanda,2019,3,22,22
+Rwanda,2020,1,4,3
 Saint Kitts and Nevis,1995,2,0,9
 Saint Lucia,2000,1,2,12
+Saint Lucia,2020,1,0,0
 Saudi Arabia,1977,1,0,0
 Saudi Arabia,1979,1,5,10
 Saudi Arabia,1984,2,0,1
@@ -2986,7 +3065,8 @@ Saudi Arabia,2015,104,214,291
 Saudi Arabia,2016,134,165,208
 Saudi Arabia,2017,57,31,69
 Saudi Arabia,2018,94,17,60
-Saudi Arabia,2019,42,10,69
+Saudi Arabia,2019,43,10,69
+Saudi Arabia,2020,60,2,13
 Senegal,1980,1,0,0
 Senegal,1988,3,2,4
 Senegal,1990,11,20,65
@@ -3114,6 +3194,7 @@ Somalia,2016,602,1583,1325
 Somalia,2017,617,1917,1287
 Somalia,2018,527,1144,828
 Somalia,2019,361,860,953
+Somalia,2020,280,885,569
 South Africa,1974,1,0,1
 South Africa,1976,1,2,0
 South Africa,1977,15,5,35
@@ -3150,6 +3231,7 @@ South Africa,2016,27,21,11
 South Africa,2017,29,21,7
 South Africa,2018,41,24,11
 South Africa,2019,23,10,10
+South Africa,2020,17,7,3
 South Korea,1974,1,1,0
 South Korea,1982,1,1,3
 South Korea,1983,1,1,4
@@ -3177,7 +3259,7 @@ South Sudan,2016,59,633,191
 South Sudan,2017,54,581,258
 South Sudan,2018,69,97,48
 South Sudan,2019,13,67,25
-South Vietnam,1972,1,81,0
+South Sudan,2020,16,56,27
 South Yemen,1971,1,0,0
 South Yemen,1983,1,0,2
 Spain,1970,4,0,0
@@ -3267,6 +3349,7 @@ Sri Lanka,2016,1,0,2
 Sri Lanka,2017,41,1,3
 Sri Lanka,2018,7,3,5
 Sri Lanka,2019,15,266,502
+Sri Lanka,2020,1,0,0
 Sudan,1973,1,3,0
 Sudan,1981,1,2,3
 Sudan,1982,3,0,0
@@ -3303,6 +3386,7 @@ Sudan,2016,173,182,213
 Sudan,2017,106,82,176
 Sudan,2018,42,42,126
 Sudan,2019,26,59,91
+Sudan,2020,33,160,157
 Suriname,1982,1,0,0
 Suriname,1983,1,0,2
 Suriname,1984,1,0,0
@@ -3345,6 +3429,7 @@ Sweden,2016,16,0,1
 Sweden,2017,18,5,32
 Sweden,2018,6,0,1
 Sweden,2019,2,0,0
+Sweden,2020,3,0,2
 Switzerland,1970,3,47,0
 Switzerland,1971,1,0,3
 Switzerland,1972,3,0,0
@@ -3380,6 +3465,7 @@ Switzerland,2013,2,0,0
 Switzerland,2016,2,0,2
 Switzerland,2018,1,0,0
 Switzerland,2019,1,0,0
+Switzerland,2020,2,1,2
 Syria,1974,4,1,9
 Syria,1975,2,0,0
 Syria,1976,2,5,35
@@ -3402,13 +3488,14 @@ Syria,2006,1,5,0
 Syria,2008,1,18,14
 Syria,2011,49,163,215
 Syria,2012,180,877,1927
-Syria,2013,286,1570,2237
+Syria,2013,287,1570,2237
 Syria,2014,333,3312,2014
 Syria,2015,491,3924,2979
 Syria,2016,474,2811,2983
 Syria,2017,250,2031,1303
-Syria,2018,233,1547,1434
-Syria,2019,292,1102,1202
+Syria,2018,235,1547,1434
+Syria,2019,293,1103,1202
+Syria,2020,256,973,728
 Taiwan,1971,1,25,0
 Taiwan,1976,1,0,1
 Taiwan,1990,1,0,0
@@ -3467,6 +3554,7 @@ Tanzania,2016,3,3,2
 Tanzania,2017,6,8,4
 Tanzania,2018,3,9,0
 Tanzania,2019,1,6,7
+Tanzania,2020,8,24,1
 Thailand,1972,1,0,0
 Thailand,1974,1,2,0
 Thailand,1977,3,1,70
@@ -3510,6 +3598,7 @@ Thailand,2016,329,120,385
 Thailand,2017,179,72,270
 Thailand,2018,182,69,159
 Thailand,2019,130,72,142
+Thailand,2020,39,18,72
 Timor,2000,4,1,1
 Timor,2003,2,5,5
 Timor,2005,1,0,0
@@ -3538,6 +3627,7 @@ Trinidad and Tobago,2013,3,0,0
 Trinidad and Tobago,2015,1,0,0
 Trinidad and Tobago,2018,1,0,0
 Trinidad and Tobago,2019,1,0,0
+Trinidad and Tobago,2020,1,0,0
 Tunisia,1979,1,0,0
 Tunisia,1980,1,41,100
 Tunisia,1986,2,0,0
@@ -3559,6 +3649,7 @@ Tunisia,2016,12,71,26
 Tunisia,2017,4,5,5
 Tunisia,2018,19,16,33
 Tunisia,2019,16,9,17
+Tunisia,2020,5,5,8
 Turkey,1970,12,0,1
 Turkey,1971,35,1,0
 Turkey,1972,9,3,5
@@ -3599,7 +3690,7 @@ Turkey,2008,32,42,274
 Turkey,2009,13,18,48
 Turkey,2010,20,13,7
 Turkey,2011,51,25,110
-Turkey,2012,189,248,463
+Turkey,2012,190,251,463
 Turkey,2013,42,83,192
 Turkey,2014,95,40,89
 Turkey,2015,425,490,1107
@@ -3607,6 +3698,7 @@ Turkey,2016,544,1008,2771
 Turkey,2017,181,222,328
 Turkey,2018,94,94,201
 Turkey,2019,70,99,201
+Turkey,2020,20,34,143
 Turkmenistan,2002,1,0,1
 Turkmenistan,2014,1,3,2
 Uganda,1979,8,13,3
@@ -3645,6 +3737,7 @@ Uganda,2016,15,75,19
 Uganda,2017,13,7,2
 Uganda,2018,10,17,9
 Uganda,2019,4,2,0
+Uganda,2020,5,20,0
 Ukraine,1991,2,0,1
 Ukraine,1992,1,1,1
 Ukraine,1994,10,4,6
@@ -3668,6 +3761,7 @@ Ukraine,2016,62,48,41
 Ukraine,2017,62,40,64
 Ukraine,2018,36,14,22
 Ukraine,2019,31,18,22
+Ukraine,2020,38,8,36
 United Arab Emirates,1974,1,1,2
 United Arab Emirates,1977,1,1,0
 United Arab Emirates,1978,1,5,0
@@ -3731,7 +3825,8 @@ United Kingdom,2015,114,1,22
 United Kingdom,2016,104,9,20
 United Kingdom,2017,123,42,341
 United Kingdom,2018,101,2,19
-United Kingdom,2019,86,5,23
+United Kingdom,2019,85,5,22
+United Kingdom,2020,90,6,23
 United States,1970,468,33,160
 United States,1971,247,20,55
 United States,1972,68,10,35
@@ -3753,7 +3848,7 @@ United States,1987,34,1,1
 United States,1988,27,1,1
 United States,1989,42,3,14
 United States,1990,32,5,7
-United States,1991,30,2,4
+United States,1991,31,26,31
 United States,1992,32,2,3
 United States,1994,55,10,16
 United States,1995,60,178,738
@@ -3764,23 +3859,24 @@ United States,1999,54,20,40
 United States,2000,42,8,10
 United States,2001,47,3014,21894
 United States,2002,33,4,11
-United States,2003,33,0,0
+United States,2003,35,0,0
 United States,2004,9,0,0
 United States,2005,21,0,0
 United States,2006,6,1,14
-United States,2007,8,0,0
+United States,2007,11,0,0
 United States,2008,18,2,13
 United States,2009,12,22,50
-United States,2010,17,4,17
-United States,2011,10,0,2
+United States,2010,19,4,17
+United States,2011,9,0,2
 United States,2012,20,7,7
 United States,2013,20,23,436
 United States,2014,29,26,19
-United States,2015,39,54,59
+United States,2015,41,54,59
 United States,2016,68,68,150
 United States,2017,66,98,948
-United States,2018,75,45,66
-United States,2019,68,53,113
+United States,2018,76,45,66
+United States,2019,72,53,115
+United States,2020,103,12,32
 Uruguay,1970,33,3,0
 Uruguay,1971,8,1,0
 Uruguay,1972,7,0,0
@@ -3854,6 +3950,7 @@ Venezuela,2016,6,9,77
 Venezuela,2017,17,5,32
 Venezuela,2018,11,32,40
 Venezuela,2019,9,2,5
+Venezuela,2020,7,14,8
 Vietnam,1992,1,0,0
 Vietnam,1994,1,0,21
 Vietnam,1995,1,0,5
@@ -3909,14 +4006,15 @@ Yemen,2008,22,74,177
 Yemen,2009,23,47,29
 Yemen,2010,112,345,233
 Yemen,2011,118,461,415
-Yemen,2012,312,1056,925
-Yemen,2013,434,626,901
+Yemen,2012,313,1057,925
+Yemen,2013,435,627,901
 Yemen,2014,814,1384,1352
 Yemen,2015,818,2506,3195
 Yemen,2016,917,1867,1798
-Yemen,2017,530,1016,970
-Yemen,2018,497,1124,824
-Yemen,2019,772,1223,1498
+Yemen,2017,531,1014,972
+Yemen,2018,498,1124,824
+Yemen,2019,795,1270,1533
+Yemen,2020,474,903,890
 Zambia,1971,1,1,0
 Zambia,1973,1,2,0
 Zambia,1975,1,1,0
@@ -3967,6 +4065,7 @@ Zimbabwe,2014,1,0,0
 Zimbabwe,2017,3,0,1
 Zimbabwe,2018,2,2,47
 Zimbabwe,2019,2,0,0
+Zimbabwe,2020,1,1,1
 Australasia & Oceania,1970,1,0,0
 Australasia & Oceania,1971,1,0,0
 Australasia & Oceania,1972,8,1,0
@@ -3998,7 +4097,7 @@ Australasia & Oceania,2002,2,1,0
 Australasia & Oceania,2003,4,1,0
 Australasia & Oceania,2006,2,0,0
 Australasia & Oceania,2007,1,0,0
-Australasia & Oceania,2008,6,0,0
+Australasia & Oceania,2008,5,0,0
 Australasia & Oceania,2009,1,0,0
 Australasia & Oceania,2010,1,0,0
 Australasia & Oceania,2013,1,0,0
@@ -4008,6 +4107,7 @@ Australasia & Oceania,2016,10,0,1
 Australasia & Oceania,2017,13,4,24
 Australasia & Oceania,2018,21,2,3
 Australasia & Oceania,2019,5,51,50
+Australasia & Oceania,2020,21,2,1
 Central America & Caribbean,1970,7,3,0
 Central America & Caribbean,1971,5,0,0
 Central America & Caribbean,1972,3,0,0
@@ -4050,12 +4150,13 @@ Central America & Caribbean,2010,1,0,0
 Central America & Caribbean,2011,1,2,0
 Central America & Caribbean,2012,1,2,1
 Central America & Caribbean,2013,14,9,3
-Central America & Caribbean,2014,5,5,65
+Central America & Caribbean,2014,4,5,30
 Central America & Caribbean,2015,1,0,0
 Central America & Caribbean,2016,3,9,0
 Central America & Caribbean,2017,4,4,1
 Central America & Caribbean,2018,15,9,22
 Central America & Caribbean,2019,15,6,4
+Central America & Caribbean,2020,13,7,6
 Central Asia,1991,7,28,12
 Central Asia,1992,77,320,907
 Central Asia,1994,65,122,258
@@ -4084,6 +4185,7 @@ Central Asia,2016,17,21,25
 Central Asia,2017,8,7,7
 Central Asia,2018,7,34,10
 Central Asia,2019,3,49,1
+Central Asia,2020,6,0,1
 East Asia,1970,2,0,0
 East Asia,1971,1,25,0
 East Asia,1973,2,0,0
@@ -4130,7 +4232,8 @@ East Asia,2015,28,123,84
 East Asia,2016,8,32,44
 East Asia,2017,7,16,77
 East Asia,2018,6,2,2
-East Asia,2019,17,0,22
+East Asia,2019,18,0,22
+East Asia,2020,21,0,0
 Eastern Europe,1970,12,0,0
 Eastern Europe,1971,5,0,0
 Eastern Europe,1972,1,26,0
@@ -4178,6 +4281,7 @@ Eastern Europe,2016,136,112,108
 Eastern Europe,2017,112,101,183
 Eastern Europe,2018,72,41,52
 Eastern Europe,2019,44,34,32
+Eastern Europe,2020,60,15,48
 Middle East & North Africa,1970,28,1,5
 Middle East & North Africa,1971,55,7,11
 Middle East & North Africa,1972,53,33,83
@@ -4219,14 +4323,15 @@ Middle East & North Africa,2008,1535,3467,8545
 Middle East & North Africa,2009,1361,2982,9862
 Middle East & North Africa,2010,1463,2663,7871
 Middle East & North Africa,2011,1663,2651,6089
-Middle East & North Africa,2012,2402,5027,10860
-Middle East & North Africa,2013,4570,10169,21498
-Middle East & North Africa,2014,6996,20113,22650
+Middle East & North Africa,2012,2404,5031,10860
+Middle East & North Africa,2013,4572,10170,21498
+Middle East & North Africa,2014,6996,20243,22650
 Middle East & North Africa,2015,6194,17990,23913
 Middle East & North Africa,2016,6557,19630,23994
-Middle East & North Africa,2017,4181,11224,8864
-Middle East & North Africa,2018,2737,4717,5344
-Middle East & North Africa,2019,2148,3568,4775
+Middle East & North Africa,2017,4183,11222,8861
+Middle East & North Africa,2018,2740,4717,5344
+Middle East & North Africa,2019,2175,3617,4810
+Middle East & North Africa,2020,1802,2643,3019
 North America,1970,472,34,160
 North America,1971,247,20,55
 North America,1972,73,11,42
@@ -4248,7 +4353,7 @@ North America,1987,35,1,1
 North America,1988,30,3,1
 North America,1989,44,18,28
 North America,1990,37,8,8
-North America,1991,40,15,4
+North America,1991,41,39,31
 North America,1992,41,8,7
 North America,1994,101,98,49
 North America,1995,94,240,766
@@ -4259,23 +4364,24 @@ North America,1999,57,20,44
 North America,2000,51,13,43
 North America,2001,54,3027,21899
 North America,2002,33,4,11
-North America,2003,34,2,1
+North America,2003,36,2,1
 North America,2004,12,0,3
 North America,2005,22,2,0
 North America,2006,15,8,48
-North America,2007,18,25,6
+North America,2007,21,25,6
 North America,2008,31,23,126
 North America,2009,17,24,53
-North America,2010,24,4,17
-North America,2011,12,0,3
+North America,2010,26,4,17
+North America,2011,11,0,3
 North America,2012,39,24,15
 North America,2013,32,70,546
 North America,2014,37,34,27
-North America,2015,63,63,71
-North America,2016,79,73,183
-North America,2017,102,127,983
-North America,2018,109,81,143
-North America,2019,104,77,131
+North America,2015,65,63,71
+North America,2016,81,75,183
+North America,2017,105,131,983
+North America,2018,110,81,143
+North America,2019,108,77,133
+North America,2020,130,28,35
 South America,1970,65,11,4
 South America,1971,24,6,0
 South America,1972,33,6,1
@@ -4307,24 +4413,25 @@ South America,1998,108,599,191
 South America,1999,134,293,250
 South America,2000,150,430,191
 South America,2001,229,593,446
-South America,2002,162,369,690
+South America,2002,162,369,692
 South America,2003,117,191,575
 South America,2004,42,89,218
 South America,2005,49,152,108
 South America,2006,50,93,106
 South America,2007,47,83,163
 South America,2008,144,109,253
-South America,2009,159,136,244
+South America,2009,160,136,244
 South America,2010,148,58,149
 South America,2011,106,43,90
 South America,2012,136,182,475
 South America,2013,185,159,292
 South America,2014,283,157,355
 South America,2015,176,128,145
-South America,2016,165,87,179
+South America,2016,167,87,179
 South America,2017,179,101,159
-South America,2018,301,202,350
-South America,2019,274,143,302
+South America,2018,303,202,350
+South America,2019,276,144,302
+South America,2020,267,192,134
 South Asia,1970,1,4,20
 South Asia,1972,1,0,0
 South Asia,1973,1,0,1
@@ -4354,28 +4461,29 @@ South Asia,1997,489,1797,2774
 South Asia,1998,136,1237,1450
 South Asia,1999,225,900,1656
 South Asia,2000,356,1361,2289
-South Asia,2001,385,1367,2288
+South Asia,2001,385,1369,2338
 South Asia,2002,334,1288,2415
 South Asia,2003,353,802,1604
 South Asia,2004,369,1616,2710
 South Asia,2005,604,1367,2890
 South Asia,2006,938,2877,5062
 South Asia,2007,984,3688,5333
-South Asia,2008,1759,3517,6427
+South Asia,2008,1760,3604,6597
 South Asia,2009,1945,3565,6729
 South Asia,2010,1981,3697,5402
 South Asia,2011,2138,3725,5408
-South Asia,2012,3806,6587,9640
-South Asia,2013,4612,7070,11098
+South Asia,2012,3807,6587,9644
+South Asia,2013,4611,7068,11093
 South Asia,2014,4997,8357,9461
 South Asia,2015,4586,8300,10238
-South Asia,2016,3640,7802,9279
+South Asia,2016,3641,7802,9279
 South Asia,2017,3432,7667,8986
-South Asia,2018,3285,10937,9942
-South Asia,2019,3037,9265,9545
+South Asia,2018,3287,10938,9943
+South Asia,2019,3039,9273,9549
+South Asia,2020,3418,10619,8561
 Southeast Asia,1970,10,41,13
 Southeast Asia,1971,6,2,10
-Southeast Asia,1972,16,84,1
+Southeast Asia,1972,15,3,1
 Southeast Asia,1973,2,0,8
 Southeast Asia,1974,3,5,0
 Southeast Asia,1975,7,1,48
@@ -4412,7 +4520,7 @@ Southeast Asia,2006,272,260,582
 Southeast Asia,2007,365,390,1057
 Southeast Asia,2008,514,403,1060
 Southeast Asia,2009,561,482,892
-Southeast Asia,2010,473,322,634
+Southeast Asia,2010,472,322,634
 Southeast Asia,2011,356,299,733
 Southeast Asia,2012,588,454,1527
 Southeast Asia,2013,1188,723,1392
@@ -4420,8 +4528,9 @@ Southeast Asia,2014,1083,702,1451
 Southeast Asia,2015,1072,646,1386
 Southeast Asia,2016,1077,639,1220
 Southeast Asia,2017,1024,815,1013
-Southeast Asia,2018,874,620,882
-Southeast Asia,2019,714,575,763
+Southeast Asia,2018,875,620,883
+Southeast Asia,2019,715,576,764
+Southeast Asia,2020,419,355,465
 Sub-Saharan Africa,1970,3,1,0
 Sub-Saharan Africa,1971,2,1,0
 Sub-Saharan Africa,1972,4,0,0
@@ -4465,12 +4574,13 @@ Sub-Saharan Africa,2010,331,830,1142
 Sub-Saharan Africa,2011,494,1237,1613
 Sub-Saharan Africa,2012,1167,2994,2532
 Sub-Saharan Africa,2013,1001,3859,2407
-Sub-Saharan Africa,2014,2320,13351,5316
+Sub-Saharan Africa,2014,2321,13345,5317
 Sub-Saharan Africa,2015,1971,10766,6395
-Sub-Saharan Africa,2016,2082,6661,4652
-Sub-Saharan Africa,2017,2000,6743,4641
-Sub-Saharan Africa,2018,2210,6620,3752
-Sub-Saharan Africa,2019,1940,6539,2986
+Sub-Saharan Africa,2016,2082,6662,4652
+Sub-Saharan Africa,2017,2000,6746,4751
+Sub-Saharan Africa,2018,2212,6620,3752
+Sub-Saharan Africa,2019,1944,6562,3006
+Sub-Saharan Africa,2020,1997,8948,3091
 Western Europe,1970,50,79,10
 Western Europe,1971,125,112,6
 Western Europe,1972,376,405,282
@@ -4492,7 +4602,7 @@ Western Europe,1987,416,194,431
 Western Europe,1988,488,435,590
 Western Europe,1989,444,119,234
 Western Europe,1990,390,120,292
-Western Europe,1991,696,170,473
+Western Europe,1991,697,171,475
 Western Europe,1992,769,182,929
 Western Europe,1994,584,105,365
 Western Europe,1995,337,68,322
@@ -4512,17 +4622,18 @@ Western Europe,2008,162,3,76
 Western Europe,2009,182,15,104
 Western Europe,2010,133,5,42
 Western Europe,2011,95,83,96
-Western Europe,2012,193,12,15
-Western Europe,2013,254,8,85
-Western Europe,2014,214,6,31
-Western Europe,2015,335,171,527
+Western Europe,2012,194,12,16
+Western Europe,2013,255,8,94
+Western Europe,2014,215,6,31
+Western Europe,2015,338,171,527
 Western Europe,2016,272,170,891
-Western Europe,2017,296,83,549
-Western Europe,2018,203,25,105
-Western Europe,2019,194,22,103
+Western Europe,2017,297,83,549
+Western Europe,2018,205,25,105
+Western Europe,2019,195,23,103
+Western Europe,2020,284,38,105
 World,1970,651,174,212
 World,1971,471,173,82
-World,1972,568,566,409
+World,1972,567,485,409
 World,1973,473,370,495
 World,1974,581,539,865
 World,1975,740,617,617
@@ -4541,7 +4652,7 @@ World,1987,3183,6482,5775
 World,1988,3720,7206,6960
 World,1989,4324,8152,5539
 World,1990,3886,7036,6053
-World,1991,4683,8429,7591
+World,1991,4685,8454,7620
 World,1992,5071,9745,10006
 World,1994,3456,7690,7569
 World,1995,3081,6103,14295
@@ -4550,22 +4661,23 @@ World,1997,3198,10906,8968
 World,1998,934,4688,8183
 World,1999,1396,3394,5405
 World,2000,1823,4394,5797
-World,2001,1912,7727,28137
-World,2002,1330,4797,7079
-World,2003,1278,3317,7384
+World,2001,1912,7729,28187
+World,2002,1330,4797,7081
+World,2003,1280,3317,7384
 World,2004,1164,5716,11976
 World,2005,2017,6343,12961
 World,2006,2757,9316,15470
-World,2007,3247,12825,22531
-World,2008,4801,9157,18998
-World,2009,4722,9277,19147
-World,2010,4826,7829,15953
-World,2011,5076,8246,14662
-World,2012,8521,15494,25446
-World,2013,12045,22280,37690
-World,2014,16959,44524,41177
-World,2015,15133,38993,44204
-World,2016,14046,35236,40576
-World,2017,11358,26892,25487
-World,2018,9840,23290,20607
-World,2019,8495,20329,18714
+World,2007,3250,12825,22531
+World,2008,4801,9244,19168
+World,2009,4723,9277,19147
+World,2010,4827,7829,15953
+World,2011,5075,8246,14662
+World,2012,8525,15498,25451
+World,2013,12047,22279,37694
+World,2014,16960,44648,41143
+World,2015,15138,38993,44204
+World,2016,14051,35239,40576
+World,2017,11364,26897,25594
+World,2018,9853,23291,20609
+World,2019,8537,20412,18776
+World,2020,8438,22847,15466
