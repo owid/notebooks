@@ -90,7 +90,7 @@ for survey in range(len(survey_type)):
             df.loc[j, 'colorScaleEqualSizeBins'] = "'true"
             df.loc[j, 'colorScaleScheme'] = "Greens"
             df.loc[j, 'survey_type'] = survey_type['table_name'][survey]
-            df.loc[j, 'transform'] = f'multiplyBy decile{deciles9.ordinal[dec9]}_thr {income_aggregation.multiplier[agg]}'
+            df.loc[j, 'transform'] = f'multiplyBy decile{deciles9.decile[dec9]}_thr {income_aggregation.multiplier[agg]}'
             j += 1
             
         for dec10 in range(len(deciles10)):
@@ -111,7 +111,7 @@ for survey in range(len(survey_type)):
             df.loc[j, 'colorScaleEqualSizeBins'] = "'true"
             df.loc[j, 'colorScaleScheme'] = "Greens"
             df.loc[j, 'survey_type'] = survey_type['table_name'][survey]
-            df.loc[j, 'transform'] = f'multiplyBy decile{deciles10.ordinal[dec10]}_avg {income_aggregation.multiplier[agg]}'
+            df.loc[j, 'transform'] = f'multiplyBy decile{deciles10.decile[dec10]}_avg {income_aggregation.multiplier[agg]}'
             j += 1
             
     for dec10 in range(len(deciles10)):
@@ -209,7 +209,7 @@ for survey in range(len(survey_type)):
             df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
             df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
             df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-            df.loc[j, 'subtitle'] = f"This is the level of {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} below which {income_aggregation.slug_suffix[agg]}0% of the population falls."
+            df.loc[j, 'subtitle'] = f"This is the level of {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} below which {deciles9.decile[dec9]}0% of the population falls."
             df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
             df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
             df.loc[j, 'relatedQuestionUrl'] = np.nan
@@ -254,7 +254,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'ySlugs'] = f"decile{deciles10.decile[dec10]}_thr"
         df.loc[j, 'Metric Dropdown'] = "Decile shares"
         df.loc[j, 'Decile Dropdown'] = f'{deciles10.dropdown[dec10]}'
-        df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
+        df.loc[j, 'Aggregation Radio'] = np.nan
         df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
         df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
         df.loc[j, 'subtitle'] = f"This is the {survey_type.text[survey]} of the {deciles10.ordinal[dec10]} (tenth of the population) as a share of total {survey_type.text[survey]}."
