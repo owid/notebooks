@@ -247,6 +247,51 @@ for survey in range(len(survey_type)):
             df.loc[j, 'yScaleToggle'] = "'true"
             j += 1
             
+        #thresholds - multiple deciles
+        df.loc[j, 'title'] = f"Threshold {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} for each decile"
+        df.loc[j, 'ySlugs'] = f"decile1_thr{income_aggregation.slug_suffix[agg]} decile2_thr{income_aggregation.slug_suffix[agg]} decile3_thr{income_aggregation.slug_suffix[agg]} decile4_thr{income_aggregation.slug_suffix[agg]} decile5_thr{income_aggregation.slug_suffix[agg]} decile6_thr{income_aggregation.slug_suffix[agg]} decile7_thr{income_aggregation.slug_suffix[agg]} decile8_thr{income_aggregation.slug_suffix[agg]} decile9_thr{income_aggregation.slug_suffix[agg]}"
+        df.loc[j, 'Metric Dropdown'] = "Decile threshold"
+        df.loc[j, 'Decile Dropdown'] = "All deciles"
+        df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
+        df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df.loc[j, 'subtitle'] = f"This data is adjusted for inflation and for differences in the cost of living between countries."
+        df.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
+        df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df.loc[j, 'relatedQuestionUrl'] = np.nan
+        df.loc[j, 'type'] = np.nan
+        df.loc[j, 'yAxisMin'] = 0
+        df.loc[j, 'facet'] = "entity"
+        df.loc[j, 'selectedFacetStrategy'] = "entity"
+        df.loc[j, 'hasMapTab'] = np.nan
+        df.loc[j, 'tab'] = np.nan
+        df.loc[j, 'mapTargetTime'] = np.nan
+        df.loc[j, 'yScaleToggle'] = "'true"
+        j += 1
+        
+        #averages - multiple deciles
+        df.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within each decile"
+        df.loc[j, 'ySlugs'] = f"decile1_avg{income_aggregation.slug_suffix[agg]} decile2_avg{income_aggregation.slug_suffix[agg]} decile3_avg{income_aggregation.slug_suffix[agg]} decile4_avg{income_aggregation.slug_suffix[agg]} decile5_avg{income_aggregation.slug_suffix[agg]} decile6_avg{income_aggregation.slug_suffix[agg]} decile7_avg{income_aggregation.slug_suffix[agg]} decile8_avg{income_aggregation.slug_suffix[agg]} decile9_avg{income_aggregation.slug_suffix[agg]} decile10_avg{income_aggregation.slug_suffix[agg]}"
+        df.loc[j, 'Metric Dropdown'] = "Mean within decile"
+        df.loc[j, 'Decile Dropdown'] = "All deciles"
+        df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
+        df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df.loc[j, 'subtitle'] = f"This data is adjusted for inflation and for differences in the cost of living between countries."
+        df.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
+        df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df.loc[j, 'relatedQuestionUrl'] = np.nan
+        df.loc[j, 'type'] = np.nan
+        df.loc[j, 'yAxisMin'] = 0
+        df.loc[j, 'facet'] = "entity"
+        df.loc[j, 'selectedFacetStrategy'] = "entity"
+        df.loc[j, 'hasMapTab'] = np.nan
+        df.loc[j, 'tab'] = np.nan
+        df.loc[j, 'mapTargetTime'] = np.nan
+        df.loc[j, 'yScaleToggle'] = "'true"
+        j += 1
+        
+            
     for dec10 in range(len(deciles10)):
 
         #shares
@@ -258,7 +303,7 @@ for survey in range(len(survey_type)):
         df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
         df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
         df.loc[j, 'subtitle'] = f"This is the {survey_type.text[survey]} of the {deciles10.ordinal[dec10]} (tenth of the population) as a share of total {survey_type.text[survey]}."
-        df.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
+        df.loc[j, 'note'] = np.nan
         df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
         df.loc[j, 'relatedQuestionUrl'] = np.nan
         df.loc[j, 'type'] = np.nan
@@ -268,8 +313,30 @@ for survey in range(len(survey_type)):
         df.loc[j, 'hasMapTab'] = "'true"
         df.loc[j, 'tab'] = "map"
         df.loc[j, 'mapTargetTime'] = 2019
-        df.loc[j, 'yScaleToggle'] = "'true"
+        df.loc[j, 'yScaleToggle'] = "'false"
         j += 1
+        
+    #shares - multiple deciles
+    df.loc[j, 'title'] = f"Share of the total {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} for each decile"
+    df.loc[j, 'ySlugs'] = f"decile1_share{income_aggregation.slug_suffix[agg]} decile2_share{income_aggregation.slug_suffix[agg]} decile3_share{income_aggregation.slug_suffix[agg]} decile4_share{income_aggregation.slug_suffix[agg]} decile5_share{income_aggregation.slug_suffix[agg]} decile6_share{income_aggregation.slug_suffix[agg]} decile7_share{income_aggregation.slug_suffix[agg]} decile8_share{income_aggregation.slug_suffix[agg]} decile9_share{income_aggregation.slug_suffix[agg]} decile10_share{income_aggregation.slug_suffix[agg]}"
+    df.loc[j, 'Metric Dropdown'] = "Decile shares"
+    df.loc[j, 'Decile Dropdown'] = "All deciles"
+    df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
+    df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+    df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+    df.loc[j, 'subtitle'] = f"This data is adjusted for inflation and for differences in the cost of living between countries."
+    df.loc[j, 'note'] = np.nan
+    df.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+    df.loc[j, 'relatedQuestionUrl'] = np.nan
+    df.loc[j, 'type'] = np.nan
+    df.loc[j, 'yAxisMin'] = 0
+    df.loc[j, 'facet'] = "entity"
+    df.loc[j, 'selectedFacetStrategy'] = "entity"
+    df.loc[j, 'hasMapTab'] = np.nan
+    df.loc[j, 'tab'] = np.nan
+    df.loc[j, 'mapTargetTime'] = np.nan
+    df.loc[j, 'yScaleToggle'] = "'true"
+    j += 1
     
 # #Select one default view
 # df.loc[(df['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") 
