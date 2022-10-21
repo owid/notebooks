@@ -78,7 +78,7 @@ for survey in range(len(survey_type)):
             df.loc[j, 'name'] = deciles9.ordinal[dec9]
             df.loc[j, 'slug'] = f"decile{deciles9.decile[dec9]}_thr{income_aggregation.slug_suffix[agg]}"
             df.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-            df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} below which {income_aggregation.slug_suffix[agg]}0% of the population falls."
+            df.loc[j, 'description'] = f"The level of {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} below which {deciles9.decile[dec9]}0% of the population falls."
             df.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
             df.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
             df.loc[j, 'unit'] = "international-$ at 2017 prices"
@@ -249,7 +249,7 @@ for survey in range(len(survey_type)):
             
         #thresholds - multiple deciles
         df.loc[j, 'title'] = f"Threshold {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} for each decile"
-        df.loc[j, 'ySlugs'] = f"decile1_thr{income_aggregation.slug_suffix[agg]} decile2_thr{income_aggregation.slug_suffix[agg]} decile3_thr{income_aggregation.slug_suffix[agg]} decile4_thr{income_aggregation.slug_suffix[agg]} decile5_thr{income_aggregation.slug_suffix[agg]} decile6_thr{income_aggregation.slug_suffix[agg]} decile7_thr{income_aggregation.slug_suffix[agg]} decile8_thr{income_aggregation.slug_suffix[agg]} decile9_thr{income_aggregation.slug_suffix[agg]}"
+        df.loc[j, 'ySlugs'] = f"decile1_thr{income_aggregation.slug_suffix[agg]}decile2_thr{income_aggregation.slug_suffix[agg]}decile3_thr{income_aggregation.slug_suffix[agg]}decile4_thr{income_aggregation.slug_suffix[agg]}decile5_thr{income_aggregation.slug_suffix[agg]}decile6_thr{income_aggregation.slug_suffix[agg]}decile7_thr{income_aggregation.slug_suffix[agg]}decile8_thr{income_aggregation.slug_suffix[agg]}decile9_thr{income_aggregation.slug_suffix[agg]}"
         df.loc[j, 'Metric Dropdown'] = "Decile threshold"
         df.loc[j, 'Decile Dropdown'] = "All deciles"
         df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
@@ -271,7 +271,7 @@ for survey in range(len(survey_type)):
         
         #averages - multiple deciles
         df.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within each decile"
-        df.loc[j, 'ySlugs'] = f"decile1_avg{income_aggregation.slug_suffix[agg]} decile2_avg{income_aggregation.slug_suffix[agg]} decile3_avg{income_aggregation.slug_suffix[agg]} decile4_avg{income_aggregation.slug_suffix[agg]} decile5_avg{income_aggregation.slug_suffix[agg]} decile6_avg{income_aggregation.slug_suffix[agg]} decile7_avg{income_aggregation.slug_suffix[agg]} decile8_avg{income_aggregation.slug_suffix[agg]} decile9_avg{income_aggregation.slug_suffix[agg]} decile10_avg{income_aggregation.slug_suffix[agg]}"
+        df.loc[j, 'ySlugs'] = f"decile1_avg{income_aggregation.slug_suffix[agg]}decile2_avg{income_aggregation.slug_suffix[agg]}decile3_avg{income_aggregation.slug_suffix[agg]}decile4_avg{income_aggregation.slug_suffix[agg]}decile5_avg{income_aggregation.slug_suffix[agg]}decile6_avg{income_aggregation.slug_suffix[agg]}decile7_avg{income_aggregation.slug_suffix[agg]}decile8_avg{income_aggregation.slug_suffix[agg]}decile9_avg{income_aggregation.slug_suffix[agg]}decile10_avg{income_aggregation.slug_suffix[agg]}"
         df.loc[j, 'Metric Dropdown'] = "Mean within decile"
         df.loc[j, 'Decile Dropdown'] = "All deciles"
         df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
@@ -318,7 +318,7 @@ for survey in range(len(survey_type)):
         
     #shares - multiple deciles
     df.loc[j, 'title'] = f"Share of the total {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} for each decile"
-    df.loc[j, 'ySlugs'] = f"decile1_share{income_aggregation.slug_suffix[agg]} decile2_share{income_aggregation.slug_suffix[agg]} decile3_share{income_aggregation.slug_suffix[agg]} decile4_share{income_aggregation.slug_suffix[agg]} decile5_share{income_aggregation.slug_suffix[agg]} decile6_share{income_aggregation.slug_suffix[agg]} decile7_share{income_aggregation.slug_suffix[agg]} decile8_share{income_aggregation.slug_suffix[agg]} decile9_share{income_aggregation.slug_suffix[agg]} decile10_share{income_aggregation.slug_suffix[agg]}"
+    df.loc[j, 'ySlugs'] = f"decile1_share decile2_share decile3_share decile4_share decile5_share decile6_share decile7_share decile8_share decile9_share decile10_share"
     df.loc[j, 'Metric Dropdown'] = "Decile shares"
     df.loc[j, 'Decile Dropdown'] = "All deciles"
     df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
