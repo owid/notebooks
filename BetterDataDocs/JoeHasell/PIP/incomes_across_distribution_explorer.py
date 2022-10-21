@@ -321,7 +321,7 @@ for survey in range(len(survey_type)):
     df.loc[j, 'ySlugs'] = f"decile1_share decile2_share decile3_share decile4_share decile5_share decile6_share decile7_share decile8_share decile9_share decile10_share"
     df.loc[j, 'Metric Dropdown'] = "Decile shares"
     df.loc[j, 'Decile Dropdown'] = "All deciles"
-    df.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
+    df.loc[j, 'Aggregation Radio'] = np.nan
     df.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df.loc[j, 'subtitle'] = f"This data is adjusted for inflation and for differences in the cost of living between countries."
