@@ -4,7 +4,11 @@ library(readxl)
 rm(list = ls())
 setwd("~/git/notebooks/EdouardMathieu/global_terrorism_database/")
 
-df <- read_excel("input/globalterrorismdb_0221dist.xlsx")
+# Go to https://www.start.umd.edu/gtd/contact/download
+# Fill the form to request access to the data
+# An email will be automatically sent after a few minutes
+# Click on the link and download "Entire GTD dataset (~105 MB)"
+df <- read_excel("input/globalterrorismdb_0522dist.xlsx")
 
 country_mapping <- read_csv("config/gtd_country_standardized.csv")
 
@@ -47,3 +51,15 @@ output <- bind_rows(by_country, by_region, world) %>%
   rename(year = iyear)
 
 write_csv(output, "output/Global Terrorism Database.csv")
+
+# Print figures & trends to update the text in the terrorism entry
+decade <- output %>%
+  filter(entity == "World") %>%
+  arrange(year) %>%
+  tail(10)
+message("Decade average: ", round(mean(decade$terrorism_fatalities), -3))
+message("Latest: ", decade$terrorism_fatalities[nrow(decade)], " in ", decade$year[nrow(decade)])
+decade <- decade %>% arrange(terrorism_fatalities)
+message("Lowest: ", round(decade$terrorism_fatalities[1], -2), " in ", decade$year[1])
+decade <- decade %>% arrange(-terrorism_fatalities)
+message("Highest: ", round(decade$terrorism_fatalities[1], -2), " in ", decade$year[1])
