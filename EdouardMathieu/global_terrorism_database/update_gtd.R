@@ -52,7 +52,7 @@ output <- bind_rows(by_country, by_region, world) %>%
 
 write_csv(output, "output/Global Terrorism Database.csv")
 
-# Calculate trends for terrorism entry
+# Print figures & trends to update the text in the terrorism entry
 decade <- output %>%
   filter(entity == "World") %>%
   arrange(year) %>%
