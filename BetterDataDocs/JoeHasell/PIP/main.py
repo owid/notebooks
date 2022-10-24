@@ -166,13 +166,6 @@ ppp_comparison()
 # %%
 national_povlines()
 
-# %% [markdown]
-# ## Create public zip file and finish
-# A zip file is created for users to download the data loaded in the explorers.
-
-# %%
-shutil.make_archive(f'data/ppp_{ppp_version}/final/PIP_data_public_download', 'zip', f'data/ppp_{ppp_version}/final/PIP_data_public_download')
-print(f'Public files are zipped in: data/ppp_{ppp_version}/final/PIP_data_public_download')
 # %%
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -181,3 +174,5 @@ print('Update the main PIP dataset with pip_final.csv')
 print('Update the regional headcount dataset with pip_regional_headcount.csv')
 print('Update the survey count dataset with pip_survey_count.csv')
 print('Update the national poverty lines dataset with pip_national_povlines.csv')
+
+# %%
