@@ -45,7 +45,7 @@ def process_usa(source: str):
         ]
     ]
 
-    df["Entity"] = df.Entity.replace({"all_ages": "All ages"})
+    df["Entity"] = df.Entity.replace({"all_ages": "50+"})
 
     df.to_csv(
         "output/COVID-19 - Deaths by vaccination status - United States.csv",
