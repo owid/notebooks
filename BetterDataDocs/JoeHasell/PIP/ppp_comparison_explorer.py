@@ -37,7 +37,7 @@ j=0
 
 for survey in range(len(survey_type)):
     for p_2011 in range(len(povlines_ppp2011)):
-        df_tables.loc[j, 'name'] = f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
+        df_tables.loc[j, 'name'] = f'Share of population below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_ratio_{povlines_ppp2011.cents[p_2011]}_ppp2011'
         df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
         df_tables.loc[j, 'description'] = f'% of population living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).'
@@ -55,7 +55,7 @@ for survey in range(len(survey_type)):
         j += 1
     
     for p_2017 in range(len(povlines_ppp2017)):
-        df_tables.loc[j, 'name'] = f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
+        df_tables.loc[j, 'name'] = f'Share of population below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_ratio_{povlines_ppp2017.cents[p_2017]}_ppp2017'
         df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
         df_tables.loc[j, 'description'] = f'% of population living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).'
@@ -73,7 +73,7 @@ for survey in range(len(survey_type)):
         j += 1
         
     for p_2011 in range(len(povlines_ppp2011)):
-        df_tables.loc[j, 'name'] = f'Below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
+        df_tables.loc[j, 'name'] = f'Number of people below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_{povlines_ppp2011.cents[p_2011]}_ppp2011'
         df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
         df_tables.loc[j, 'description'] = f'Number of people living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices).'
@@ -91,7 +91,7 @@ for survey in range(len(survey_type)):
         j += 1
         
     for p_2017 in range(len(povlines_ppp2017)):
-        df_tables.loc[j, 'name'] = f'Below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
+        df_tables.loc[j, 'name'] = f'Number of people below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_{povlines_ppp2017.cents[p_2017]}_ppp2017'
         df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
         df_tables.loc[j, 'description'] = f'Number of people living in households with an {survey_type.text[survey]} per person below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices).'
