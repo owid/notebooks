@@ -344,7 +344,72 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'tab'] = "map"
         df_graphers.loc[j, 'mapTargetTime'] = 2019
         j += 1
+    
+    #Average shortfall ($ per day)
+    for p in range(len(povlines_abs)):
+
+        df_graphers.loc[j, 'title'] = f'{povlines_abs.title_avg_shortfall[p]}'
+        df_graphers.loc[j, 'ySlugs'] = f'avg_shortfall_{povlines_abs.cents[p]}'
+        df_graphers.loc[j, 'Metric Dropdown'] = "Average shortfall ($ per day)"
+        df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_abs.povline_dropdown[p]}'
+        df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df_graphers.loc[j, 'subtitle'] = f'{povlines_abs.subtitle_avg_shortfall[p]}'
+        df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
+        df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
+        df_graphers.loc[j, 'type'] = np.nan
+        df_graphers.loc[j, 'yAxisMin'] = 0
+        df_graphers.loc[j, 'facet'] = np.nan
+        df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'tab'] = "map"
+        df_graphers.loc[j, 'mapTargetTime'] = 2019
+        j += 1
         
+    #Average shortfall (% of poverty line)
+    for p in range(len(povlines_abs)):
+
+        df_graphers.loc[j, 'title'] = f'{povlines_abs.title_income_gap_ratio[p]}'
+        df_graphers.loc[j, 'ySlugs'] = f'income_gap_ratio_{povlines_abs.cents[p]}'
+        df_graphers.loc[j, 'Metric Dropdown'] = "Average shortfall (% of poverty line)"
+        df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_abs.povline_dropdown[p]}'
+        df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df_graphers.loc[j, 'subtitle'] = f'{povlines_abs.subtitle_income_gap_ratio[p]}'
+        df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
+        df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
+        df_graphers.loc[j, 'type'] = np.nan
+        df_graphers.loc[j, 'yAxisMin'] = 0
+        df_graphers.loc[j, 'facet'] = np.nan
+        df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'tab'] = "map"
+        df_graphers.loc[j, 'mapTargetTime'] = 2019
+        j += 1
+        
+    #Poverty gap index
+    for p in range(len(povlines_abs)):
+
+        df_graphers.loc[j, 'title'] = f'Poverty gap index at ${povlines_abs.dollars_text[p]} a day'
+        df_graphers.loc[j, 'ySlugs'] = f'poverty_gap_index_{povlines_abs.cents[p]}'
+        df_graphers.loc[j, 'Metric Dropdown'] = "Poverty gap index"
+        df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_abs.povline_dropdown[p]}'
+        df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is the mean shortfall from the poverty line counting the non-poor as having zero shortfall, and expressed as a percentage of the poverty line. This data is adjusted for inflation and for differences in the cost of living between countries.'
+        df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices. Depending on the country and year, the data relates to either income or expenditure."
+        df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
+        df_graphers.loc[j, 'type'] = np.nan
+        df_graphers.loc[j, 'yAxisMin'] = 0
+        df_graphers.loc[j, 'facet'] = np.nan
+        df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'tab'] = "map"
+        df_graphers.loc[j, 'mapTargetTime'] = 2019
+        j += 1
         
     #Headcount ratio (rel)
     for pct in range(len(povlines_rel)):
@@ -379,6 +444,94 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
+        df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
+        df_graphers.loc[j, 'type'] = np.nan
+        df_graphers.loc[j, 'yAxisMin'] = 0
+        df_graphers.loc[j, 'facet'] = np.nan
+        df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'tab'] = "map"
+        df_graphers.loc[j, 'mapTargetTime'] = 2019
+        j += 1
+        
+    #Total shortfall (rel)    
+    for pct in range(len(povlines_rel)):
+
+        df_graphers.loc[j, 'title'] = f'Total shortfall from a poverty line of {povlines_rel.text[pct]} {survey_type.text[survey]}'
+        df_graphers.loc[j, 'ySlugs'] = f'total_shortfall_{povlines_rel.slug_suffix[pct]}'
+        df_graphers.loc[j, 'Metric Dropdown'] = "Total shortfall from poverty line"
+        df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
+        df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to the {povlines_rel.text[pct]} {survey_type.text[survey]}. This data is adjusted for inflation and for differences in the cost of living between countries.'
+        df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
+        df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
+        df_graphers.loc[j, 'type'] = np.nan
+        df_graphers.loc[j, 'yAxisMin'] = 0
+        df_graphers.loc[j, 'facet'] = np.nan
+        df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'tab'] = "map"
+        df_graphers.loc[j, 'mapTargetTime'] = 2019
+        j += 1
+        
+    #Average shortfall ($ per day) (rel)    
+    for pct in range(len(povlines_rel)):
+
+        df_graphers.loc[j, 'title'] = f'Average shortfall from a poverty line of {povlines_rel.text[pct]} {survey_type.text[survey]}'
+        df_graphers.loc[j, 'ySlugs'] = f'avg_shortfall_{povlines_rel.slug_suffix[pct]}'
+        df_graphers.loc[j, 'Metric Dropdown'] = "Average shortfall ($ per day)"
+        df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
+        df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to the {povlines_rel.text[pct]} {survey_type.text[survey]}, averaged across the population in poverty.'
+        df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
+        df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
+        df_graphers.loc[j, 'type'] = np.nan
+        df_graphers.loc[j, 'yAxisMin'] = 0
+        df_graphers.loc[j, 'facet'] = np.nan
+        df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'tab'] = "map"
+        df_graphers.loc[j, 'mapTargetTime'] = 2019
+        j += 1
+        
+    #Average shortfall (% of poverty line) (rel)    
+    for pct in range(len(povlines_rel)):
+
+        df_graphers.loc[j, 'title'] = f'Average shortfall from a poverty line of {povlines_rel.text[pct]} {survey_type.text[survey]} (as a share of the poverty line)'
+        df_graphers.loc[j, 'ySlugs'] = f'income_gap_ratio{povlines_rel.slug_suffix[pct]}'
+        df_graphers.loc[j, 'Metric Dropdown'] = "Average shortfall (% of poverty line)"
+        df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
+        df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df_graphers.loc[j, 'subtitle'] = f'This is the average shortfall expressed as a share of the poverty line, sometimes called the "income gap ratio". It captures the depth of poverty in which those below {povlines_rel.text[pct]} {survey_type.text[survey]} a day are living.'
+        df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
+        df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
+        df_graphers.loc[j, 'type'] = np.nan
+        df_graphers.loc[j, 'yAxisMin'] = 0
+        df_graphers.loc[j, 'facet'] = np.nan
+        df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'tab'] = "map"
+        df_graphers.loc[j, 'mapTargetTime'] = 2019
+        j += 1
+        
+    #Poverty gap index (rel)    
+    for pct in range(len(povlines_rel)):
+
+        df_graphers.loc[j, 'title'] = f'Poverty gap index at {povlines_rel.text[pct]} {survey_type.text[survey]}'
+        df_graphers.loc[j, 'ySlugs'] = f'poverty_gap_index{povlines_rel.slug_suffix[pct]}'
+        df_graphers.loc[j, 'Metric Dropdown'] = "Poverty gap index"
+        df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
+        df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+        df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+        df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is the mean shortfall from the poverty line counting the non-poor as having zero shortfall, and expressed as a percentage of the poverty line. This data is adjusted for inflation and for differences in the cost of living between countries.'
+        df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices. Depending on the country and year, the data relates to either income or expenditure."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
         df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
