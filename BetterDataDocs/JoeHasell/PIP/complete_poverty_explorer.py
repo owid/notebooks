@@ -120,7 +120,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
         df_tables.loc[j, 'colorScaleNumericBins'] = "10;20;30;40;50;60;70;80;90;100"
         df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
-        df_tables.loc[j, 'colorScaleScheme'] = "BuPu"
+        df_tables.loc[j, 'colorScaleScheme'] = "YlOrRd"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
     
