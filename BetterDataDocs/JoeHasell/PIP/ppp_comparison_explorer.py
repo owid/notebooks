@@ -348,7 +348,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_ppp2011.subtitle[p_2011]}'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2011 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -370,7 +370,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_ppp2017.subtitle[p_2017]}'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -392,7 +392,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_ppp2011.subtitle[p_2011]}'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2011 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -414,7 +414,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_ppp2017.subtitle[p_2017]}'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -436,7 +436,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_both.subtitle[p]}'
         df_graphers.loc[j, 'note'] = np.nan
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = "entity"
@@ -458,7 +458,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_both.subtitle[p]}'
         df_graphers.loc[j, 'note'] = np.nan
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = "entity"
@@ -480,7 +480,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2011 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -502,7 +502,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -524,7 +524,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2011 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -546,7 +546,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -567,7 +567,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at 60% of the median {survey_type.text[survey]}.'
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = "entity"
@@ -587,7 +587,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at 60% of the median {survey_type.text[survey]}.'
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = "entity"
@@ -608,7 +608,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2011 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -629,7 +629,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -650,7 +650,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'note'] = np.nan
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = "entity"
@@ -671,7 +671,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2011 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -692,7 +692,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -713,7 +713,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'note'] = np.nan
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = "entity"
@@ -734,7 +734,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f"P10 is the level of {survey_type.text[survey]} per day below which 10% of the population falls."
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2011 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -755,7 +755,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f"P10 is the level of {survey_type.text[survey]} per day below which 10% of the population falls."
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -776,7 +776,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f"P10 is the level of {survey_type.text[survey]} per day below which 10% of the population falls."
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = "entity"
@@ -797,7 +797,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f"P90 is the level of {survey_type.text[survey]} per day above which 10% of the population falls."
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2011 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -818,7 +818,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f"P90 is the level of {survey_type.text[survey]} per day above which 10% of the population falls."
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
@@ -839,7 +839,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'subtitle'] = f"P90 is the level of {survey_type.text[survey]} per day above which 10% of the population falls."
     df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'relatedQuestionUrl'] = np.nan
+    df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
     df_graphers.loc[j, 'type'] = np.nan
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = "entity"
@@ -850,19 +850,22 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yScaleToggle'] = "'true"
     j += 1
     
+df_graphers['relatedQuestionText'] = "From $1.90 to $2.15 a day: the updated International Poverty Line"
+df_graphers['relatedQuestionUrl'] = "https://ourworldindata.org/from-1-90-to-2-15-a-day-the-updated-international-poverty-line"
+    
 #Select one default view
 df_graphers.loc[(df_graphers['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") 
        & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
     
     
 #Reorder dropdown menus
-povline_dropdown_list = ['$1 per day',
-                         '$1.90 per day: International Poverty Line',
+povline_dropdown_list = ['$1.90 per day: International Poverty Line',
                          '$2.15 per day: International Poverty Line',
                          '$3.20 per day: Lower-middle income poverty line',
                          '$3.65 per day: Lower-middle income poverty line',
                          '$5.50 per day: Upper-middle income poverty line',
                          '$6.85 per day: Upper-middle income poverty line',
+                         '$1 per day',
                          '$10 per day',
                          '$20 per day',
                          '$30 per day',
