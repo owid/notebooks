@@ -291,7 +291,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_abs.subtitle[p]}'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -313,7 +312,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_abs.subtitle[p]}'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -335,7 +333,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_abs.subtitle_total_shortfall[p]}'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices. The cost of closing the poverty gap does not take into account costs and inefficiencies from making the necessary transfers."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -357,7 +354,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_abs.subtitle_avg_shortfall[p]}'
         df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -379,7 +375,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'{povlines_abs.subtitle_income_gap_ratio[p]}'
         df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -401,7 +396,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is the mean shortfall from the poverty line counting the non-poor as having zero shortfall, and expressed as a percentage of the poverty line. This data is adjusted for inflation and for differences in the cost of living between countries.'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices. Depending on the country and year, the data relates to either income or expenditure."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -423,7 +417,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -445,7 +438,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -467,7 +459,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to the {povlines_rel.text[pct]} {survey_type.text[survey]}. This data is adjusted for inflation and for differences in the cost of living between countries.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -489,7 +480,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to the {povlines_rel.text[pct]} {survey_type.text[survey]}, averaged across the population in poverty.'
         df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -511,7 +501,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'This is the average shortfall expressed as a share of the poverty line, sometimes called the "income gap ratio". It captures the depth of poverty in which those below {povlines_rel.text[pct]} {survey_type.text[survey]} a day are living.'
         df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
@@ -533,7 +522,6 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is the mean shortfall from the poverty line counting the non-poor as having zero shortfall, and expressed as a percentage of the poverty line. This data is adjusted for inflation and for differences in the cost of living between countries.'
         df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices. Depending on the country and year, the data relates to either income or expenditure."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-        df_graphers.loc[j, 'relatedQuestionUrl'] = "https://ourworldindata.org/poverty"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan

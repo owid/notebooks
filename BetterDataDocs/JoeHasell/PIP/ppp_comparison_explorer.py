@@ -825,7 +825,8 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'mapTargetTime'] = np.nan
     df_graphers.loc[j, 'yScaleToggle'] = "'true"
     j += 1
-    
+
+#Add PPP comparison article as related question link
 df_graphers['relatedQuestionText'] = "From $1.90 to $2.15 a day: the updated International Poverty Line"
 df_graphers['relatedQuestionUrl'] = "https://ourworldindata.org/from-1-90-to-2-15-a-day-the-updated-international-poverty-line"
     
