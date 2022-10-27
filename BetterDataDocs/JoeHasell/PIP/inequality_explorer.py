@@ -41,7 +41,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'tolerance'] = 5
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
-    df_tables.loc[j, 'colorScaleNumericBins'] = "0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7"
+    df_tables.loc[j, 'colorScaleNumericBins'] = "0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6"
     df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
     df_tables.loc[j, 'colorScaleScheme'] = "Reds"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -59,7 +59,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'tolerance'] = 5
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
-    df_tables.loc[j, 'colorScaleNumericBins'] = "0;5;10;15;20;25;30;35;40;45;50"
+    df_tables.loc[j, 'colorScaleNumericBins'] = "10;15;20;25;30;35;40;45;50"
     df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
     df_tables.loc[j, 'colorScaleScheme'] = "Greens"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -95,7 +95,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'tolerance'] = 5
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
-    df_tables.loc[j, 'colorScaleNumericBins'] = "0;2;4;6;8;10;12;14;16;18"
+    df_tables.loc[j, 'colorScaleNumericBins'] = "0;1;2;3;4;5"
     df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
     df_tables.loc[j, 'colorScaleScheme'] = "Purples"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -131,7 +131,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'tolerance'] = 5
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
-    df_tables.loc[j, 'colorScaleNumericBins'] = "0;2;4;6;8;10;12;14;16;18"
+    df_tables.loc[j, 'colorScaleNumericBins'] = "0;1;2;3;4;5"
     df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
     df_tables.loc[j, 'colorScaleScheme'] = "Oranges"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -168,7 +168,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'tolerance'] = 5
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
-    df_tables.loc[j, 'colorScaleNumericBins'] = "0;2;4;6;8;10;12;14;16;18"
+    df_tables.loc[j, 'colorScaleNumericBins'] = "0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1"
     df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
     df_tables.loc[j, 'colorScaleScheme'] = "RdPu"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -186,7 +186,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'tolerance'] = 5
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
-    df_tables.loc[j, 'colorScaleNumericBins'] = "0;2;4;6;8;10;12;14;16;18"
+    df_tables.loc[j, 'colorScaleNumericBins'] = "0;0.1;0.2;0.3;0.4;0.5;0.6;0.7"
     df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
     df_tables.loc[j, 'colorScaleScheme'] = "Reds"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -287,7 +287,7 @@ for survey in range(len(survey_type)):
     #P50/P10 
     df_graphers.loc[j, 'title'] = f'Income inequality: P50/P10 ratio'
     df_graphers.loc[j, 'ySlugs'] = f'p50_p10_ratio'
-    df_graphers.loc[j, 'Metric Dropdown'] = "P90/P50"
+    df_graphers.loc[j, 'Metric Dropdown'] = "P50/P10"
     df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
     df_graphers.loc[j, 'subtitle'] = f'P50 is the median – the level of {survey_type.text[survey]} below which 50% of the population lives. P10 is the the level of {survey_type.text[survey]} below which 10% of the population lives. This variable gives the ratio of the two. It is a measure of inequality within the bottom half of the distribution.'
