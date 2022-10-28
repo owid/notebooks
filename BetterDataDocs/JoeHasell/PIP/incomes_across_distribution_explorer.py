@@ -338,32 +338,26 @@ df_graphers['relatedQuestionUrl'] = np.nan
 #        & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
     
     
-# #Reorder dropdown menus
-# povline_dropdown_list = ['$1 per day',
-#                          '$1.90 per day: International Poverty Line',
-#                          '$2.15 per day: International Poverty Line',
-#                          '$3.20 per day: Lower-middle income poverty line',
-#                          '$3.65 per day: Lower-middle income poverty line',
-#                          '$5.50 per day: Upper-middle income poverty line',
-#                          '$6.85 per day: Upper-middle income poverty line',
-#                          '$10 per day',
-#                          '$20 per day',
-#                          '$30 per day',
-#                          '$40 per day',
-#                          'International Poverty Line',
-#                          'Lower-middle income poverty line',
-#                          'Upper-middle income poverty line',
-#                          'Relative poverty: 40% of median',
-#                          'Relative poverty: 50% of median',
-#                          'Relative poverty: 60% of median']
+#Reorder dropdown menus
+decile_dropdown_list = ['1 (poorest)',
+                        '2',
+                        '3',
+                        '4',
+                        '5',
+                        '5 (median)',
+                        '6',
+                        '7',
+                        '8',
+                        '9',
+                        '9 (richest)',
+                        '10 (richest)']
 
+df_graphers_mapping = pd.DataFrame({'decile_dropdown': decile_dropdown_list,})
+df_graphers_mapping = df_graphers_mapping.reset_index().set_index('decile_dropdown')
 
-# df_graphers_mapping = pd.DataFrame({'povline_dropdown': povline_dropdown_list,})
-# df_graphers_mapping = df_graphers_mapping.reset_index().set_index('povline_dropdown')
-
-# df_graphers['povline_dropdown_aux'] = df_graphers['Poverty line Dropdown'].map(df_graphers_mapping['index'])
-# df_graphers = df_graphers.sort_values('povline_dropdown_aux', ignore_index=True)
-# df_graphers = df_graphers.drop(columns=['povline_dropdown_aux'])
+df_graphers['decile_dropdown_aux'] = df_graphers['Decile Dropdown'].map(df_graphers_mapping['index'])
+df_graphers = df_graphers.sort_values('decile_dropdown_aux', ignore_index=True)
+df_graphers = df_graphers.drop(columns=['decile_dropdown_aux'])
 
 #Export Grapher table    
 df_graphers.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/grapher.csv', index=False)
