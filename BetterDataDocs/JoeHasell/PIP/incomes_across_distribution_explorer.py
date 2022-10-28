@@ -336,7 +336,8 @@ df_graphers['relatedQuestionUrl'] = np.nan
     
 #Select one default view
 df_graphers.loc[(df_graphers['Decile Dropdown'] == 'All deciles') 
-                & (df_graphers['Metric Dropdown'] == "Decile thresholds") 
+                & (df_graphers['Metric Dropdown'] == "Decile thresholds")
+                & (df_graphers['Aggregation Radio'] == "Day") 
                 & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
     
     
