@@ -66,7 +66,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
         df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
         df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
-        df_tables.loc[j, 'colorScaleScheme'] = "BuGn"
+        df_tables.loc[j, 'colorScaleScheme'] = "Blues"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         df_tables.loc[j, 'transform'] = f'multiplyBy median {income_aggregation.multiplier[agg]}'
         j += 1
@@ -87,7 +87,7 @@ for survey in range(len(survey_type)):
             df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
             df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
             df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
-            df_tables.loc[j, 'colorScaleScheme'] = "Greens"
+            df_tables.loc[j, 'colorScaleScheme'] = "Purples"
             df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
             df_tables.loc[j, 'transform'] = f'multiplyBy decile{deciles9.decile[dec9]}_thr {income_aggregation.multiplier[agg]}'
             j += 1
@@ -129,7 +129,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
         df_tables.loc[j, 'colorScaleNumericBins'] = deciles10.scale_share[dec10]
         df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
-        df_tables.loc[j, 'colorScaleScheme'] = "Greens"
+        df_tables.loc[j, 'colorScaleScheme'] = "OrRd"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
       
