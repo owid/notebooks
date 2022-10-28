@@ -174,6 +174,29 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'mapTargetTime'] = 2019
         df_graphers.loc[j, 'yScaleToggle'] = "'true"
         j += 1
+        
+        for dec10 in range(len(deciles10)):
+
+            #averages
+            df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within the {deciles10.ordinal[dec10]}"
+            df_graphers.loc[j, 'ySlugs'] = f"decile{deciles10.decile[dec10]}_avg{income_aggregation.slug_suffix[agg]}"
+            df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure, by decile"
+            df_graphers.loc[j, 'Decile Dropdown'] = f'{deciles10.dropdown[dec10]}'
+            df_graphers.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
+            df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+            df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+            df_graphers.loc[j, 'subtitle'] = f"This is the mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within the {deciles10.ordinal[dec10]} (tenth of the population)."
+            df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
+            df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+            df_graphers.loc[j, 'type'] = np.nan
+            df_graphers.loc[j, 'yAxisMin'] = 0
+            df_graphers.loc[j, 'facet'] = np.nan
+            df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
+            df_graphers.loc[j, 'hasMapTab'] = "'true"
+            df_graphers.loc[j, 'tab'] = "map"
+            df_graphers.loc[j, 'mapTargetTime'] = 2019
+            df_graphers.loc[j, 'yScaleToggle'] = "'true"
+            j += 1
 
         #median
         df_graphers.loc[j, 'title'] = f"Median {survey_type.text[survey]} per {income_aggregation.aggregation[agg]}"
@@ -201,7 +224,7 @@ for survey in range(len(survey_type)):
             #thresholds
             df_graphers.loc[j, 'title'] = f"Threshold {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} marking the {deciles9.ordinal[dec9]}"
             df_graphers.loc[j, 'ySlugs'] = f"decile{deciles9.decile[dec9]}_thr{income_aggregation.slug_suffix[agg]}"
-            df_graphers.loc[j, 'Metric Dropdown'] = "Decile threshold"
+            df_graphers.loc[j, 'Metric Dropdown'] = "Decile thresholds"
             df_graphers.loc[j, 'Decile Dropdown'] = f'{deciles9.dropdown[dec9]}'
             df_graphers.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
             df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
@@ -219,33 +242,12 @@ for survey in range(len(survey_type)):
             df_graphers.loc[j, 'yScaleToggle'] = "'true"
             j += 1
 
-        for dec10 in range(len(deciles10)):
 
-            #averages
-            df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within the {deciles10.ordinal[dec10]}"
-            df_graphers.loc[j, 'ySlugs'] = f"decile{deciles10.decile[dec10]}_avg{income_aggregation.slug_suffix[agg]}"
-            df_graphers.loc[j, 'Metric Dropdown'] = "Mean within decile"
-            df_graphers.loc[j, 'Decile Dropdown'] = f'{deciles10.dropdown[dec10]}'
-            df_graphers.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
-            df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
-            df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-            df_graphers.loc[j, 'subtitle'] = f"This is the mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within the {deciles10.ordinal[dec10]} (tenth of the population)."
-            df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
-            df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-            df_graphers.loc[j, 'type'] = np.nan
-            df_graphers.loc[j, 'yAxisMin'] = 0
-            df_graphers.loc[j, 'facet'] = np.nan
-            df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-            df_graphers.loc[j, 'hasMapTab'] = "'true"
-            df_graphers.loc[j, 'tab'] = "map"
-            df_graphers.loc[j, 'mapTargetTime'] = 2019
-            df_graphers.loc[j, 'yScaleToggle'] = "'true"
-            j += 1
             
         #thresholds - multiple deciles
         df_graphers.loc[j, 'title'] = f"Threshold {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} for each decile"
         df_graphers.loc[j, 'ySlugs'] = f"decile1_thr{income_aggregation.slug_suffix[agg]}decile2_thr{income_aggregation.slug_suffix[agg]}decile3_thr{income_aggregation.slug_suffix[agg]}decile4_thr{income_aggregation.slug_suffix[agg]}decile5_thr{income_aggregation.slug_suffix[agg]}decile6_thr{income_aggregation.slug_suffix[agg]}decile7_thr{income_aggregation.slug_suffix[agg]}decile8_thr{income_aggregation.slug_suffix[agg]}decile9_thr{income_aggregation.slug_suffix[agg]}"
-        df_graphers.loc[j, 'Metric Dropdown'] = "Decile threshold"
+        df_graphers.loc[j, 'Metric Dropdown'] = "Decile thresholds"
         df_graphers.loc[j, 'Decile Dropdown'] = "All deciles"
         df_graphers.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
         df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
@@ -266,7 +268,7 @@ for survey in range(len(survey_type)):
         #averages - multiple deciles
         df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within each decile"
         df_graphers.loc[j, 'ySlugs'] = f"decile1_avg{income_aggregation.slug_suffix[agg]}decile2_avg{income_aggregation.slug_suffix[agg]}decile3_avg{income_aggregation.slug_suffix[agg]}decile4_avg{income_aggregation.slug_suffix[agg]}decile5_avg{income_aggregation.slug_suffix[agg]}decile6_avg{income_aggregation.slug_suffix[agg]}decile7_avg{income_aggregation.slug_suffix[agg]}decile8_avg{income_aggregation.slug_suffix[agg]}decile9_avg{income_aggregation.slug_suffix[agg]}decile10_avg{income_aggregation.slug_suffix[agg]}"
-        df_graphers.loc[j, 'Metric Dropdown'] = "Mean within decile"
+        df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure, by decile"
         df_graphers.loc[j, 'Decile Dropdown'] = "All deciles"
         df_graphers.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
         df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
@@ -326,7 +328,6 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'hasMapTab'] = np.nan
     df_graphers.loc[j, 'tab'] = np.nan
     df_graphers.loc[j, 'mapTargetTime'] = np.nan
-    df_graphers.loc[j, 'yScaleToggle'] = "'true"
     j += 1
     
 #Add related question link
