@@ -359,10 +359,20 @@ decile_dropdown_list = [np.nan,
 
 df_graphers_mapping = pd.DataFrame({'decile_dropdown': decile_dropdown_list,})
 df_graphers_mapping = df_graphers_mapping.reset_index().set_index('decile_dropdown')
-
 df_graphers['decile_dropdown_aux'] = df_graphers['Decile Dropdown'].map(df_graphers_mapping['index'])
-df_graphers = df_graphers.sort_values('decile_dropdown_aux', ignore_index=True)
-df_graphers = df_graphers.drop(columns=['decile_dropdown_aux'])
+
+metric_dropdown_list = ["Mean income or expenditure",
+                        "Mean income or expenditure, by decile",
+                        "Median income or expenditure",
+                        "Decile thresholds",
+                        "Decile shares"]
+
+df_graphers_mapping = pd.DataFrame({'metric_dropdown': metric_dropdown_list,})
+df_graphers_mapping = df_graphers_mapping.reset_index().set_index('metric_dropdown')
+df_graphers['metric_dropdown_aux'] = df_graphers['Metric Dropdown'].map(df_graphers_mapping['index'])
+
+df_graphers = df_graphers.sort_values(['metric_dropdown_aux', 'decile_dropdown_aux'], ignore_index=True)
+df_graphers = df_graphers.drop(columns=['metric_dropdown_aux', 'decile_dropdown_aux'])
 
 #Export Grapher table    
 df_graphers.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/grapher.csv', index=False)
