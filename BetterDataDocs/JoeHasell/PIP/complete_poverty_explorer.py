@@ -530,6 +530,10 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'tab'] = "map"
         df_graphers.loc[j, 'mapTargetTime'] = 2019
         j += 1
+        
+#Add related question link
+df_graphers['relatedQuestionText'] = np.nan
+df_graphers['relatedQuestionUrl'] = np.nan
     
 #Select one default view
 df_graphers.loc[(df_graphers['ySlugs'] == "headcount_ratio_215") 
