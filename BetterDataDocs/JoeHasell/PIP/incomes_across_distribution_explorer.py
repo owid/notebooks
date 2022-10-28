@@ -333,13 +333,15 @@ for survey in range(len(survey_type)):
 df_graphers['relatedQuestionText'] = np.nan
 df_graphers['relatedQuestionUrl'] = np.nan
     
-# #Select one default view
-# df_graphers.loc[(df_graphers['ySlugs'] == "headcount_ratio_190_ppp2011 headcount_ratio_215_ppp2017") 
-#        & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
+#Select one default view
+df_graphers.loc[(df_graphers['Decile Dropdown'] == 'All deciles') 
+                & (df_graphers['Metric Dropdown'] == "Decile threshold") 
+                & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
     
     
 #Reorder dropdown menus
-decile_dropdown_list = ['1 (poorest)',
+decile_dropdown_list = [np.nan,
+                        '1 (poorest)',
                         '2',
                         '3',
                         '4',
@@ -350,7 +352,8 @@ decile_dropdown_list = ['1 (poorest)',
                         '8',
                         '9',
                         '9 (richest)',
-                        '10 (richest)']
+                        '10 (richest)',
+                        'All deciles']
 
 df_graphers_mapping = pd.DataFrame({'decile_dropdown': decile_dropdown_list,})
 df_graphers_mapping = df_graphers_mapping.reset_index().set_index('decile_dropdown')
