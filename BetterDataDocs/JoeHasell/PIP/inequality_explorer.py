@@ -254,7 +254,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'Metric Dropdown'] = "P90/P10"
     df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-    df_graphers.loc[j, 'subtitle'] = f'P90 and P10 are the levels of {survey_type.text[survey]} below which 90% and 10% of the population live respectively. This variable gives the ratio of the two. It is a measure of inequality that indicates the gap between the richest and poorest tenth of the population.'
+    df_graphers.loc[j, 'subtitle'] = f'P90 and P10 are the levels of {survey_type.text[survey]} below which 90% and 10% of the population live, respectively. This variable gives the ratio of the two. It is a measure of inequality that indicates the gap between the richest and poorest tenth of the population.'
     df_graphers.loc[j, 'note'] = f"This data relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df_graphers.loc[j, 'type'] = np.nan
