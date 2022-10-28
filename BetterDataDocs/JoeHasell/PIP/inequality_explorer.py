@@ -254,7 +254,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'Metric Dropdown'] = "P90/P10"
     df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-    df_graphers.loc[j, 'subtitle'] = f'P90 is the the level of {survey_type.text[survey]} below which 90% of the population lives. P10 is the level of {survey_type.text[survey]} below which 10% of the population lives. This variable gives the ratio of the two. It is a measure of inequality that indicates the gap between the richest and poorest tenth of the population.'
+    df_graphers.loc[j, 'subtitle'] = f'P90 and P10 are the levels of {survey_type.text[survey]} below which 90% and 10% of the population live respectively. This variable gives the ratio of the two. It is a measure of inequality that indicates the gap between the richest and poorest tenth of the population.'
     df_graphers.loc[j, 'note'] = f"This data relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df_graphers.loc[j, 'type'] = np.nan
@@ -272,7 +272,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'Metric Dropdown'] = "P90/P50"
     df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-    df_graphers.loc[j, 'subtitle'] = f'P90 is the the level of {survey_type.text[survey]} above which 10% of the population lives. P50 is the median – the level of {survey_type.text[survey]} below which 50% of the population lives. This variable gives the ratio of the two. It is a measure of inequality within the top half of the distribution.'
+    df_graphers.loc[j, 'subtitle'] = f'The P90/P50 ratio measures the degree of inequality within the richest half of the population. A ratio of 2 means that someone just falling in the richest tenth of the population has twice the median {survey_type.text[survey]}.'
     df_graphers.loc[j, 'note'] = f"This data relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df_graphers.loc[j, 'type'] = np.nan
@@ -290,7 +290,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'Metric Dropdown'] = "P50/P10"
     df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-    df_graphers.loc[j, 'subtitle'] = f'P50 is the median – the level of {survey_type.text[survey]} below which 50% of the population lives. P10 is the the level of {survey_type.text[survey]} below which 10% of the population lives. This variable gives the ratio of the two. It is a measure of inequality within the bottom half of the distribution.'
+    df_graphers.loc[j, 'subtitle'] = f'The P50/P10 ratio measures the degree of inequality within the poorest half of the population. A ratio of 2 means that the median {survey_type.text[survey]} is two times higher than that of someone just falling in the poorest tenth of the population.'
     df_graphers.loc[j, 'note'] = f"This data relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df_graphers.loc[j, 'type'] = np.nan
@@ -308,7 +308,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'Metric Dropdown'] = "Palma ratio"
     df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
     df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-    df_graphers.loc[j, 'subtitle'] = f'The Palma ratio is a measure of inequality: it is the share of total {survey_type.text[survey]} of the top 10% divided by the share of the bottom 40%.'
+    df_graphers.loc[j, 'subtitle'] = f'The Palma ratio is the share of total {survey_type.text[survey]} of the top 10% divided by the share of the bottom 40%.'
     df_graphers.loc[j, 'note'] = f"This data relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
     df_graphers.loc[j, 'type'] = np.nan
@@ -325,7 +325,7 @@ for survey in range(len(survey_type)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_rel.title_share[pct]}'
         df_graphers.loc[j, 'ySlugs'] = f'headcount_ratio_{povlines_rel.slug_suffix[pct]}'
-        df_graphers.loc[j, 'Metric Dropdown'] = f"Share in poverty (< {povlines_rel.text[pct]})"
+        df_graphers.loc[j, 'Metric Dropdown'] = f"Share in relative poverty (< {povlines_rel.text[pct]})"
         df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
         df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
         df_graphers.loc[j, 'subtitle'] = f'Relative poverty is measured in terms of a poverty line that rises and falls over time with average incomes – in this case set at {povlines_rel.text[pct]} {survey_type.text[survey]}.'
