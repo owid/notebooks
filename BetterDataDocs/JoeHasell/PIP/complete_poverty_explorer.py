@@ -393,8 +393,8 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_abs.povline_dropdown[p]}'
         df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
         df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-        df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is the mean shortfall from the poverty line counting the non-poor as having zero shortfall, and expressed as a percentage of the poverty line. This data is adjusted for inflation and for differences in the cost of living between countries.'
-        df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices. Depending on the country and year, the data relates to either income or expenditure."
+        df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is a poverty measure that reflects both the prevalence and the depth of poverty. It is calculated as the share of population in poverty multiplied by the average shortfall from the poverty line (expressed as a % of the poverty line).'
+        df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
@@ -456,7 +456,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
         df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
         df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-        df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to the {povlines_rel.text[pct]} {survey_type.text[survey]}. This data is adjusted for inflation and for differences in the cost of living between countries.'
+        df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to {povlines_rel.text[pct]} {survey_type.text[survey]}. This data is adjusted for inflation and for differences in the cost of living between countries.'
         df_graphers.loc[j, 'note'] = "This data is adjusted for inflation and for differences in the cost of living between countries. It is expressed in international-$ at 2017 prices."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
         df_graphers.loc[j, 'type'] = np.nan
@@ -477,7 +477,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
         df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
         df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-        df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to the {povlines_rel.text[pct]} {survey_type.text[survey]}, averaged across the population in poverty.'
+        df_graphers.loc[j, 'subtitle'] = f'This is the amount of money that would be theoretically needed to lift the incomes of all people in poverty up to {povlines_rel.text[pct]} {survey_type.text[survey]}, averaged across the population in poverty.'
         df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
         df_graphers.loc[j, 'type'] = np.nan
@@ -519,8 +519,8 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'Poverty line Dropdown'] = f'{povlines_rel.dropdown[pct]}'
         df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
         df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
-        df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is the mean shortfall from the poverty line counting the non-poor as having zero shortfall, and expressed as a percentage of the poverty line. This data is adjusted for inflation and for differences in the cost of living between countries.'
-        df_graphers.loc[j, 'note'] = "This data is expressed in international-$ at 2017 prices. Depending on the country and year, the data relates to either income or expenditure."
+        df_graphers.loc[j, 'subtitle'] = f'The poverty gap index is a poverty measure that reflects both the prevalence and the depth of poverty. It is calculated as the share of population in poverty multiplied by the average shortfall from the poverty line (expressed as a % of the poverty line).'
+        df_graphers.loc[j, 'note'] = "This data relates to household income or expenditure, measured in international-$ at 2017 prices to account for inflation and differences in the cost of living between countries."
         df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
         df_graphers.loc[j, 'type'] = np.nan
         df_graphers.loc[j, 'yAxisMin'] = 0
