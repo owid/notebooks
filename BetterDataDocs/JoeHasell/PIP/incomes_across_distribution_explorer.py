@@ -134,54 +134,55 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
-#Separate the tables into inc, cons and inc or cons
-survey_list = list(survey_type['table_name'])
-for i in survey_list:
-    table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
-    table_export = table_export.drop(columns=['survey_type'])
-    table_export.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/table_{i}.csv', index=False)
+# #Separate the tables into inc, cons and inc or cons
+# survey_list = list(survey_type['table_name'])
+# for i in survey_list:
+#     table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
+#     table_export = table_export.drop(columns=['survey_type'])
+#     table_export.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/table_{i}.csv', index=False)
 
 # %%
 #Create master table for line breaks
-df_slugs = table_export.copy()
 df_spells = pd.DataFrame()
 j=0
 
-for i in range(len(df_slugs)):
+for i in range(len(df_tables)):
     for c_spell in range(1,7):
-        df_spells.loc[j, 'master_var'] = df_slugs.slug[i]
+        df_spells.loc[j, 'master_var'] = df_tables.slug[i]
         df_spells.loc[j, 'name'] = "Consumption surveys"
         df_spells.loc[j, 'slug'] = f"consumption_spell_{c_spell}"
         df_spells.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
-        df_spells.loc[j, 'description'] = df_slugs.description[i]
+        df_spells.loc[j, 'description'] = df_tables.description[i]
         df_spells.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
         df_spells.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
-        df_spells.loc[j, 'unit'] = df_slugs.unit[i]
-        df_spells.loc[j, 'shortUnit'] = df_slugs.shortUnit[i]
-        df_spells.loc[j, 'tolerance'] = df_slugs.tolerance[i]
-        df_spells.loc[j, 'type'] = df_slugs.type[i]
-        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_slugs.colorScaleNumericMinValue[i]
-        df_spells.loc[j, 'colorScaleNumericBins'] = df_slugs.colorScaleNumericBins[i]
-        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_slugs.colorScaleEqualSizeBins[i]
-        df_spells.loc[j, 'colorScaleScheme'] = df_slugs.colorScaleScheme[i]
+        df_spells.loc[j, 'unit'] = df_tables.unit[i]
+        df_spells.loc[j, 'shortUnit'] = df_tables.shortUnit[i]
+        df_spells.loc[j, 'tolerance'] = df_tables.tolerance[i]
+        df_spells.loc[j, 'type'] = df_tables.type[i]
+        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_tables.colorScaleNumericMinValue[i]
+        df_spells.loc[j, 'colorScaleNumericBins'] = df_tables.colorScaleNumericBins[i]
+        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_tables.colorScaleEqualSizeBins[i]
+        df_spells.loc[j, 'colorScaleScheme'] = df_tables.colorScaleScheme[i]
+        df_spells.loc[j, 'survey_type'] = df_tables.survey_type[i]
         j += 1
         
     for i_spell in range(1,8):
-        df_spells.loc[j, 'master_var'] = df_slugs.slug[i]
+        df_spells.loc[j, 'master_var'] = df_tables.slug[i]
         df_spells.loc[j, 'name'] = "Income surveys"
         df_spells.loc[j, 'slug'] = f"income_spell_{i_spell}"
-        df_spells.loc[j, 'sourceName'] = df_slugs.sourceName[i]
-        df_spells.loc[j, 'description'] = df_slugs.description[i]
-        df_spells.loc[j, 'sourceLink'] = df_slugs.sourceLink[i]
-        df_spells.loc[j, 'dataPublishedBy'] = df_slugs.dataPublishedBy[i]
-        df_spells.loc[j, 'unit'] = df_slugs.unit[i]
-        df_spells.loc[j, 'shortUnit'] = df_slugs.shortUnit[i]
-        df_spells.loc[j, 'tolerance'] = df_slugs.tolerance[i]
-        df_spells.loc[j, 'type'] = df_slugs.type[i]
-        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_slugs.colorScaleNumericMinValue[i]
-        df_spells.loc[j, 'colorScaleNumericBins'] = df_slugs.colorScaleNumericBins[i]
-        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_slugs.colorScaleEqualSizeBins[i]
-        df_spells.loc[j, 'colorScaleScheme'] = df_slugs.colorScaleScheme[i]
+        df_spells.loc[j, 'sourceName'] = df_tables.sourceName[i]
+        df_spells.loc[j, 'description'] = df_tables.description[i]
+        df_spells.loc[j, 'sourceLink'] = df_tables.sourceLink[i]
+        df_spells.loc[j, 'dataPublishedBy'] = df_tables.dataPublishedBy[i]
+        df_spells.loc[j, 'unit'] = df_tables.unit[i]
+        df_spells.loc[j, 'shortUnit'] = df_tables.shortUnit[i]
+        df_spells.loc[j, 'tolerance'] = df_tables.tolerance[i]
+        df_spells.loc[j, 'type'] = df_tables.type[i]
+        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_tables.colorScaleNumericMinValue[i]
+        df_spells.loc[j, 'colorScaleNumericBins'] = df_tables.colorScaleNumericBins[i]
+        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_tables.colorScaleEqualSizeBins[i]
+        df_spells.loc[j, 'colorScaleScheme'] = df_tables.colorScaleScheme[i]
+        df_spells.loc[j, 'survey_type'] = df_tables.survey_type[i]
         j += 1
 
 # %% [markdown]
@@ -374,6 +375,37 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'mapTargetTime'] = np.nan
     j += 1
     
+df_graphers['Show breaks between less comparable surveys Checkbox'] = "'false"
+
+    
+
+
+# %%
+for survey in range(len(survey_type)):
+        
+    #mean
+    df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day"
+    df_graphers.loc[j, 'ySlugs'] = f"{survey_type.text[survey]}_mean"
+    df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure"
+    df_graphers.loc[j, 'Decile Dropdown'] = np.nan
+    df_graphers.loc[j, 'Aggregation Radio'] = f'Day'
+    df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
+    df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+    df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
+    df_graphers.loc[j, 'note'] = f"This data is measured in international-$ at 2017 prices. It relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
+    df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
+    df_graphers.loc[j, 'type'] = np.nan
+    df_graphers.loc[j, 'yAxisMin'] = 0
+    df_graphers.loc[j, 'facet'] = 'entity'
+    df_graphers.loc[j, 'selectedFacetStrategy'] = 'entity'
+    df_graphers.loc[j, 'hasMapTab'] = "'false"
+    df_graphers.loc[j, 'tab'] = np.nan
+    df_graphers.loc[j, 'mapTargetTime'] = np.nan
+    df_graphers.loc[j, 'yScaleToggle'] = "'true"
+    df_graphers['Show breaks between less comparable surveys Checkbox'] = "'true"
+    j += 1
+
+# %%
 #Add related question link
 df_graphers['relatedQuestionText'] = np.nan
 df_graphers['relatedQuestionUrl'] = np.nan
@@ -382,6 +414,7 @@ df_graphers['relatedQuestionUrl'] = np.nan
 df_graphers.loc[(df_graphers['Decile Dropdown'] == 'All deciles') 
                 & (df_graphers['Metric Dropdown'] == "Decile thresholds")
                 & (df_graphers['Aggregation Radio'] == "Day") 
+                & (df_graphers['Show breaks between less comparable surveys Checkbox'] == "'false")
                 & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
     
     
@@ -432,7 +465,8 @@ with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_di
     f.write("graphers\n" + graphers_tsv_indented)
     
     for i in survey_list:
-        table_tsv = pd.read_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/table_{i}.csv')
+        table_tsv = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
+        table_tsv = table_tsv.drop(columns=['survey_type'])
         table_tsv = table_tsv.to_csv(sep="\t", index=False)
         table_tsv_indented = textwrap.indent(table_tsv, "\t")
         f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/" + i + "/poverty_" + i + ".csv\t" + i)
@@ -440,9 +474,9 @@ with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_di
         
     for var in var_list:
         for i in survey_list:
-            table_tsv = df_spells[df_spells['master_var'] == var].copy().reset_index(drop=True)
-            table_tsv = table_tsv.drop(columns=['master_var'])
+            table_tsv = df_spells[(df_spells['master_var'] == var) & (df_spells['survey_type'] == i)].copy().reset_index(drop=True)
+            table_tsv = table_tsv.drop(columns=['master_var', 'survey_type'])
             table_tsv = table_tsv.to_csv(sep="\t", index=False)
             table_tsv_indented = textwrap.indent(table_tsv, "\t")
-            f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/comparability_data/" + i + "/" + var.strip() + ".csv\t" + i + var.strip())
-            f.write("\ncolumns\t" + i + var.strip() + "\n\n" + table_tsv_indented)
+            f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/comparability_data/" + i + "/" + var.strip() + ".csv\t" + i + "_" + var.strip())
+            f.write("\ncolumns\t" + i + "_" + var.strip() + "\n\n" + table_tsv_indented)
