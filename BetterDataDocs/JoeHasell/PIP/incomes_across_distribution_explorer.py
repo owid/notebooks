@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import textwrap
+from string import Template
 
 #Read Google sheets
 sheet_id = '13Fv0aWgG8_3eB2TdGtIGS4cECUjdzIOQTpcMJ3XdtI8'
@@ -32,7 +33,7 @@ j=0
 
 for survey in range(len(survey_type)):
     for agg in range(len(income_aggregation)):
-        
+
         #mean
         df_tables.loc[j, 'name'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]}"
         df_tables.loc[j, 'slug'] = f"mean{income_aggregation.slug_suffix[agg]}"
@@ -48,8 +49,8 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
         df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
         df_tables.loc[j, 'colorScaleScheme'] = "BuGn"
-        df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         df_tables.loc[j, 'transform'] = f'multiplyBy mean {income_aggregation.multiplier[agg]}'
+        df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
 
         #median
@@ -67,12 +68,12 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
         df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
         df_tables.loc[j, 'colorScaleScheme'] = "Blues"
-        df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         df_tables.loc[j, 'transform'] = f'multiplyBy median {income_aggregation.multiplier[agg]}'
+        df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
 
         for dec9 in range(len(deciles9)):
-            
+
             #thresholds
             df_tables.loc[j, 'name'] = deciles9.ordinal[dec9]
             df_tables.loc[j, 'slug'] = f"decile{deciles9.decile[dec9]}_thr{income_aggregation.slug_suffix[agg]}"
@@ -88,10 +89,10 @@ for survey in range(len(survey_type)):
             df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
             df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
             df_tables.loc[j, 'colorScaleScheme'] = "Purples"
-            df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
             df_tables.loc[j, 'transform'] = f'multiplyBy decile{deciles9.decile[dec9]}_thr {income_aggregation.multiplier[agg]}'
+            df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
             j += 1
-            
+
         for dec10 in range(len(deciles10)):
 
             #averages
@@ -109,12 +110,12 @@ for survey in range(len(survey_type)):
             df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
             df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
             df_tables.loc[j, 'colorScaleScheme'] = "Greens"
-            df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
             df_tables.loc[j, 'transform'] = f'multiplyBy decile{deciles10.decile[dec10]}_avg {income_aggregation.multiplier[agg]}'
+            df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
             j += 1
-            
+
     for dec10 in range(len(deciles10)):
-    
+
         #shares
         df_tables.loc[j, 'name'] = deciles10.ordinal[dec10]
         df_tables.loc[j, 'slug'] = f"decile{deciles10.decile[dec10]}_share"
@@ -132,13 +133,56 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleScheme'] = "OrRd"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
-      
+        
 #Separate the tables into inc, cons and inc or cons
 survey_list = list(survey_type['table_name'])
 for i in survey_list:
     table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
     table_export = table_export.drop(columns=['survey_type'])
     table_export.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/table_{i}.csv', index=False)
+
+# %%
+#Create master table for line breaks
+df_slugs = table_export.copy()
+df_spells = pd.DataFrame()
+j=0
+
+for i in range(len(df_slugs)):
+    for c_spell in range(1,7):
+        df_spells.loc[j, 'master_var'] = df_slugs.slug[i]
+        df_spells.loc[j, 'name'] = "Consumption surveys"
+        df_spells.loc[j, 'slug'] = f"consumption_spell_{c_spell}"
+        df_spells.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
+        df_spells.loc[j, 'description'] = df_slugs.description[i]
+        df_spells.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
+        df_spells.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
+        df_spells.loc[j, 'unit'] = df_slugs.unit[i]
+        df_spells.loc[j, 'shortUnit'] = df_slugs.shortUnit[i]
+        df_spells.loc[j, 'tolerance'] = df_slugs.tolerance[i]
+        df_spells.loc[j, 'type'] = df_slugs.type[i]
+        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_slugs.colorScaleNumericMinValue[i]
+        df_spells.loc[j, 'colorScaleNumericBins'] = df_slugs.colorScaleNumericBins[i]
+        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_slugs.colorScaleEqualSizeBins[i]
+        df_spells.loc[j, 'colorScaleScheme'] = df_slugs.colorScaleScheme[i]
+        j += 1
+        
+    for i_spell in range(1,8):
+        df_spells.loc[j, 'master_var'] = df_slugs.slug[i]
+        df_spells.loc[j, 'name'] = "Income surveys"
+        df_spells.loc[j, 'slug'] = f"income_spell_{i_spell}"
+        df_spells.loc[j, 'sourceName'] = df_slugs.sourceName[i]
+        df_spells.loc[j, 'description'] = df_slugs.description[i]
+        df_spells.loc[j, 'sourceLink'] = df_slugs.sourceLink[i]
+        df_spells.loc[j, 'dataPublishedBy'] = df_slugs.dataPublishedBy[i]
+        df_spells.loc[j, 'unit'] = df_slugs.unit[i]
+        df_spells.loc[j, 'shortUnit'] = df_slugs.shortUnit[i]
+        df_spells.loc[j, 'tolerance'] = df_slugs.tolerance[i]
+        df_spells.loc[j, 'type'] = df_slugs.type[i]
+        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_slugs.colorScaleNumericMinValue[i]
+        df_spells.loc[j, 'colorScaleNumericBins'] = df_slugs.colorScaleNumericBins[i]
+        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_slugs.colorScaleEqualSizeBins[i]
+        df_spells.loc[j, 'colorScaleScheme'] = df_slugs.colorScaleScheme[i]
+        j += 1
 
 # %% [markdown]
 # ### Grapher views
@@ -378,27 +422,27 @@ df_graphers = df_graphers.drop(columns=['metric_dropdown_aux', 'decile_dropdown_
 df_graphers.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/grapher.csv', index=False)
 
 # %%
-# graphers_tsv = df_graphers.to_csv(sep="\t", index=False)
-# graphers_tsv_indented = textwrap.indent(graphers_tsv, "\t")
+survey_list = list(survey_type['table_name'].unique())
+var_list = list(df_spells['master_var'].unique())
 
-# survey_list = list(survey_type['table_name'])
-# for i in survey_list:
-#     table_export = df_table[df_table['survey_type'] == i].copy().reset_index(drop=True)
-#     table_export = table_export.drop(columns=['survey_type'])
+graphers_tsv = df_graphers.to_csv(sep="\t", index=False)
+graphers_tsv_indented = textwrap.indent(graphers_tsv, "\t")
 
-
-# table_defs = "\n".join([df_table[df_table['survey_type'] == i].copy().reset_index(drop=True) for i in survey_list])
-# #food_slugs = "\t".join(foods_df.index)
-
-# %%
-# warning = "# DO NOT EDIT THIS FILE BY HAND. It is automatically generated using a set of input files. Any changes made directly to it will be overwritten.\n\n"
-
-# with open('hola.csv', "w", newline="\n") as f:
-#     f.write(
-#         warning
-#         + template.substitute(
-#             #food_slugs=food_slugs,
-#             graphers_tsv=graphers_tsv_indented,
-#             table_defs=table_defs,
-#         )
-#     )
+with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/grapher.tsv', "w", newline="\n") as f:
+    f.write("graphers\n" + graphers_tsv_indented)
+    
+    for i in survey_list:
+        table_tsv = pd.read_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/table_{i}.csv')
+        table_tsv = table_tsv.to_csv(sep="\t", index=False)
+        table_tsv_indented = textwrap.indent(table_tsv, "\t")
+        f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/" + i + "/poverty_" + i + ".csv\t" + i)
+        f.write("\ncolumns\t" + i + "\n\n" + table_tsv_indented)
+        
+    for var in var_list:
+        for i in survey_list:
+            table_tsv = df_spells[df_spells['master_var'] == var].copy().reset_index(drop=True)
+            table_tsv = table_tsv.drop(columns=['master_var'])
+            table_tsv = table_tsv.to_csv(sep="\t", index=False)
+            table_tsv_indented = textwrap.indent(table_tsv, "\t")
+            f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/comparability_data/" + i + "/" + var.strip() + ".csv\t" + i + var.strip())
+            f.write("\ncolumns\t" + i + var.strip() + "\n\n" + table_tsv_indented)
