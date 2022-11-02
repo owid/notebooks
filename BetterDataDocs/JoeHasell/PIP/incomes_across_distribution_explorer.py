@@ -385,12 +385,12 @@ for survey in range(len(survey_type)):
         
     #mean
     df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day"
-    df_graphers.loc[j, 'ySlugs'] = f"{survey_type.text[survey]}_mean"
+    df_graphers.loc[j, 'ySlugs'] = "consumption_spell_1 consumption_spell_2 consumption_spell_3 consumption_spell_4 consumption_spell_5 consumption_spell_6 income_spell_1 income_spell_2 income_spell_3 income_spell_4 income_spell_5 income_spell_6 income_spell_7"
     df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure"
     df_graphers.loc[j, 'Decile Dropdown'] = np.nan
     df_graphers.loc[j, 'Aggregation Radio'] = f'Day'
     df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
-    df_graphers.loc[j, 'tableSlug'] = f'{survey_type.table_name[survey]}'
+    df_graphers.loc[j, 'tableSlug'] = f"{survey_type.table_name[survey]}_mean"
     df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
     df_graphers.loc[j, 'note'] = f"This data is measured in international-$ at 2017 prices. It relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
     df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
