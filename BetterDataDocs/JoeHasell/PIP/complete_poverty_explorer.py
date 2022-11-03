@@ -613,7 +613,7 @@ for i in range(len(df_graphers)):
     df_graphers_spells.loc[j, 'ySlugs'] = "consumption_spell_1 consumption_spell_2 consumption_spell_3 consumption_spell_4 consumption_spell_5 consumption_spell_6 income_spell_1 income_spell_2 income_spell_3 income_spell_4 income_spell_5 income_spell_6 income_spell_7"
     df_graphers_spells.loc[j, 'Metric Dropdown'] = df_graphers['Metric Dropdown'][i]
     df_graphers_spells.loc[j, 'Poverty line Dropdown'] = df_graphers['Poverty line Dropdown'][i]
-    df_graphers_spells.loc[j, 'Household survey data type Dropdown'] = df_graphers['Metric Dropdown'][i]
+    df_graphers_spells.loc[j, 'Household survey data type Dropdown'] = df_graphers['Household survey data type Dropdown'][i]
     df_graphers_spells.loc[j, 'tableSlug'] = df_graphers['survey_type'][i] + "_" + df_graphers['ySlugs'][i]
     df_graphers_spells.loc[j, 'subtitle'] = df_graphers['subtitle'][i]
     df_graphers_spells.loc[j, 'note'] = df_graphers['note'][i]

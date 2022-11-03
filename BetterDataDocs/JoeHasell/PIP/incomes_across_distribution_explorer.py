@@ -2,7 +2,6 @@
 import pandas as pd
 import numpy as np
 import textwrap
-from string import Template
 
 #Read Google sheets
 sheet_id = '13Fv0aWgG8_3eB2TdGtIGS4cECUjdzIOQTpcMJ3XdtI8'
@@ -22,6 +21,21 @@ income_aggregation = pd.read_csv(url, keep_default_na=False, dtype={'multiplier'
 sheet_name = 'survey_type'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 survey_type = pd.read_csv(url)
+# %% [markdown]
+# ### Header
+
+# %%
+header_dict = {'explorerTitle': 'Incomes across the distribution (World Bank PIP)',
+               'selection': ['Mozambique', 'Nigeria', 'Kenya', 'Bangladesh', 'Bolivia', 'World'],
+               'explorerSubtitle': '<i><a href="https://github.com/owid/poverty-data">Download Poverty data on GitHub</a></i>',
+               'isPublished': 'false',
+               'googleSheet': 'https://docs.google.com/spreadsheets/d/13Fv0aWgG8_3eB2TdGtIGS4cECUjdzIOQTpcMJ3XdtI8',
+               'wpBlockId': '52633',
+               'entityType': 'country or region'}
+
+df_header = pd.DataFrame.from_dict(header_dict, orient='index', columns=None)
+df_header = df_header[0].apply(pd.Series)
+
 # %% [markdown]
 # ### Tables with variable definitions
 # Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, separated by survey type in csv files.
@@ -47,7 +61,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'type'] = "Numeric"
         df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
         df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
-        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
         df_tables.loc[j, 'colorScaleScheme'] = "BuGn"
         df_tables.loc[j, 'transform'] = f'multiplyBy mean {income_aggregation.multiplier[agg]}'
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -66,7 +80,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'type'] = "Numeric"
         df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
         df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
-        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
         df_tables.loc[j, 'colorScaleScheme'] = "Blues"
         df_tables.loc[j, 'transform'] = f'multiplyBy median {income_aggregation.multiplier[agg]}'
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -87,7 +101,7 @@ for survey in range(len(survey_type)):
             df_tables.loc[j, 'type'] = "Numeric"
             df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
             df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
-            df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+            df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
             df_tables.loc[j, 'colorScaleScheme'] = "Purples"
             df_tables.loc[j, 'transform'] = f'multiplyBy decile{deciles9.decile[dec9]}_thr {income_aggregation.multiplier[agg]}'
             df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -108,7 +122,7 @@ for survey in range(len(survey_type)):
             df_tables.loc[j, 'type'] = "Numeric"
             df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
             df_tables.loc[j, 'colorScaleNumericBins'] = income_aggregation.scale[agg]
-            df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+            df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
             df_tables.loc[j, 'colorScaleScheme'] = "Greens"
             df_tables.loc[j, 'transform'] = f'multiplyBy decile{deciles10.decile[dec10]}_avg {income_aggregation.multiplier[agg]}'
             df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
@@ -129,7 +143,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'type'] = "Numeric"
         df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
         df_tables.loc[j, 'colorScaleNumericBins'] = deciles10.scale_share[dec10]
-        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
         df_tables.loc[j, 'colorScaleScheme'] = "OrRd"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
@@ -151,10 +165,10 @@ for i in range(len(df_tables)):
         df_spells.loc[j, 'master_var'] = df_tables.slug[i]
         df_spells.loc[j, 'name'] = "Consumption surveys"
         df_spells.loc[j, 'slug'] = f"consumption_spell_{c_spell}"
-        df_spells.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
+        df_spells.loc[j, 'sourceName'] = df_tables.sourceName[i]
         df_spells.loc[j, 'description'] = df_tables.description[i]
-        df_spells.loc[j, 'sourceLink'] = "https://pip.worldbank.org/"
-        df_spells.loc[j, 'dataPublishedBy'] = "World Bank Poverty and Inequality Platform (PIP)"
+        df_spells.loc[j, 'sourceLink'] = df_tables.sourceLink[i]
+        df_spells.loc[j, 'dataPublishedBy'] = df_tables.dataPublishedBy[i]
         df_spells.loc[j, 'unit'] = df_tables.unit[i]
         df_spells.loc[j, 'shortUnit'] = df_tables.shortUnit[i]
         df_spells.loc[j, 'tolerance'] = df_tables.tolerance[i]
@@ -214,10 +228,11 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
         df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'hasMapTab'] = "true"
         df_graphers.loc[j, 'tab'] = "map"
         df_graphers.loc[j, 'mapTargetTime'] = 2019
-        df_graphers.loc[j, 'yScaleToggle'] = "'true"
+        df_graphers.loc[j, 'yScaleToggle'] = "true"
+        df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
         for dec10 in range(len(deciles10)):
@@ -237,10 +252,11 @@ for survey in range(len(survey_type)):
             df_graphers.loc[j, 'yAxisMin'] = 0
             df_graphers.loc[j, 'facet'] = np.nan
             df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-            df_graphers.loc[j, 'hasMapTab'] = "'true"
+            df_graphers.loc[j, 'hasMapTab'] = "true"
             df_graphers.loc[j, 'tab'] = "map"
             df_graphers.loc[j, 'mapTargetTime'] = 2019
-            df_graphers.loc[j, 'yScaleToggle'] = "'true"
+            df_graphers.loc[j, 'yScaleToggle'] = "true"
+            df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
             j += 1
 
         #median
@@ -258,10 +274,11 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
         df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'hasMapTab'] = "true"
         df_graphers.loc[j, 'tab'] = "map"
         df_graphers.loc[j, 'mapTargetTime'] = 2019
-        df_graphers.loc[j, 'yScaleToggle'] = "'true"
+        df_graphers.loc[j, 'yScaleToggle'] = "true"
+        df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
 
         for dec9 in range(len(deciles9)):
@@ -281,10 +298,11 @@ for survey in range(len(survey_type)):
             df_graphers.loc[j, 'yAxisMin'] = 0
             df_graphers.loc[j, 'facet'] = np.nan
             df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-            df_graphers.loc[j, 'hasMapTab'] = "'true"
+            df_graphers.loc[j, 'hasMapTab'] = "true"
             df_graphers.loc[j, 'tab'] = "map"
             df_graphers.loc[j, 'mapTargetTime'] = 2019
-            df_graphers.loc[j, 'yScaleToggle'] = "'true"
+            df_graphers.loc[j, 'yScaleToggle'] = "true"
+            df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
             j += 1
 
 
@@ -307,7 +325,8 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'hasMapTab'] = np.nan
         df_graphers.loc[j, 'tab'] = np.nan
         df_graphers.loc[j, 'mapTargetTime'] = np.nan
-        df_graphers.loc[j, 'yScaleToggle'] = "'true"
+        df_graphers.loc[j, 'yScaleToggle'] = "true"
+        df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
         #averages - multiple deciles
@@ -328,7 +347,8 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'hasMapTab'] = np.nan
         df_graphers.loc[j, 'tab'] = np.nan
         df_graphers.loc[j, 'mapTargetTime'] = np.nan
-        df_graphers.loc[j, 'yScaleToggle'] = "'true"
+        df_graphers.loc[j, 'yScaleToggle'] = "true"
+        df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
             
@@ -349,10 +369,11 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
         df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'hasMapTab'] = "true"
         df_graphers.loc[j, 'tab'] = "map"
         df_graphers.loc[j, 'mapTargetTime'] = 2019
-        df_graphers.loc[j, 'yScaleToggle'] = "'false"
+        df_graphers.loc[j, 'yScaleToggle'] = "false"
+        df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
     #shares - multiple deciles
@@ -373,34 +394,37 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'hasMapTab'] = np.nan
     df_graphers.loc[j, 'tab'] = np.nan
     df_graphers.loc[j, 'mapTargetTime'] = np.nan
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
-df_graphers['Show breaks between less comparable surveys Checkbox'] = "'false"
+df_graphers['Show breaks between less comparable surveys Checkbox'] = "false"
 
 # %%
-for survey in range(len(survey_type)):
-        
-    #mean
-    df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day"
-    df_graphers.loc[j, 'ySlugs'] = "consumption_spell_1 consumption_spell_2 consumption_spell_3 consumption_spell_4 consumption_spell_5 consumption_spell_6 income_spell_1 income_spell_2 income_spell_3 income_spell_4 income_spell_5 income_spell_6 income_spell_7"
-    df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure"
-    df_graphers.loc[j, 'Decile Dropdown'] = np.nan
-    df_graphers.loc[j, 'Aggregation Radio'] = f'Day'
-    df_graphers.loc[j, 'Household survey data type Dropdown'] = f'{survey_type.dropdown_option[survey]}'
-    df_graphers.loc[j, 'tableSlug'] = f"{survey_type.table_name[survey]}_mean"
-    df_graphers.loc[j, 'subtitle'] = "This data is adjusted for inflation and for differences in the cost of living between countries."
-    df_graphers.loc[j, 'note'] = f"This data is measured in international-$ at 2017 prices. It relates to disposable {survey_type.text[survey]} per capita (exact definitions vary)."
-    df_graphers.loc[j, 'sourceDesc'] = "World Bank Poverty and Inequality Platform"
-    df_graphers.loc[j, 'type'] = np.nan
-    df_graphers.loc[j, 'yAxisMin'] = 0
-    df_graphers.loc[j, 'facet'] = 'entity'
-    df_graphers.loc[j, 'selectedFacetStrategy'] = 'entity'
-    df_graphers.loc[j, 'hasMapTab'] = "'false"
-    df_graphers.loc[j, 'tab'] = np.nan
-    df_graphers.loc[j, 'mapTargetTime'] = np.nan
-    df_graphers.loc[j, 'yScaleToggle'] = "'true"
-    df_graphers.loc[j, 'Show breaks between less comparable surveys Checkbox'] = "'true"
+df_graphers_spells = pd.DataFrame()
+j=0
+
+for i in range(len(df_graphers)):
+    df_graphers_spells.loc[j, 'title'] = df_graphers['title'][i]
+    df_graphers_spells.loc[j, 'ySlugs'] = "consumption_spell_1 consumption_spell_2 consumption_spell_3 consumption_spell_4 consumption_spell_5 consumption_spell_6 income_spell_1 income_spell_2 income_spell_3 income_spell_4 income_spell_5 income_spell_6 income_spell_7"
+    df_graphers_spells.loc[j, 'Metric Dropdown'] = df_graphers['Metric Dropdown'][i]
+    df_graphers_spells.loc[j, 'Decile Dropdown'] = df_graphers['Decile Dropdown'][i]
+    df_graphers_spells.loc[j, 'Aggregation Radio'] = df_graphers['Aggregation Radio'][i]
+    df_graphers_spells.loc[j, 'Household survey data type Dropdown'] = df_graphers['Household survey data type Dropdown'][i]
+    df_graphers_spells.loc[j, 'tableSlug'] = df_graphers['survey_type'][i] + "_" + df_graphers['ySlugs'][i]
+    df_graphers_spells.loc[j, 'subtitle'] = df_graphers['subtitle'][i]
+    df_graphers_spells.loc[j, 'note'] = df_graphers['note'][i]
+    df_graphers_spells.loc[j, 'sourceDesc'] = df_graphers['sourceDesc'][i]
+    df_graphers_spells.loc[j, 'type'] = df_graphers['type'][i]
+    df_graphers_spells.loc[j, 'yAxisMin'] = df_graphers['yAxisMin'][i]
+    df_graphers_spells.loc[j, 'facet'] = 'entity'
+    df_graphers_spells.loc[j, 'selectedFacetStrategy'] = 'entity'
+    df_graphers_spells.loc[j, 'hasMapTab'] = "false"
+    df_graphers_spells.loc[j, 'tab'] = np.nan
+    df_graphers_spells.loc[j, 'mapTargetTime'] = np.nan
+    df_graphers_spells.loc[j, 'Show breaks between less comparable surveys Checkbox'] = "true"
     j += 1
+    
+df_graphers = pd.concat([df_graphers, df_graphers_spells], ignore_index=True)
 
 # %%
 #Add related question link
@@ -411,8 +435,8 @@ df_graphers['relatedQuestionUrl'] = np.nan
 df_graphers.loc[(df_graphers['Decile Dropdown'] == 'All deciles') 
                 & (df_graphers['Metric Dropdown'] == "Decile thresholds")
                 & (df_graphers['Aggregation Radio'] == "Day") 
-                & (df_graphers['Show breaks between less comparable surveys Checkbox'] == "'false")
-                & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
+                & (df_graphers['Show breaks between less comparable surveys Checkbox'] == "false")
+                & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "true"
     
     
 #Reorder dropdown menus
@@ -455,11 +479,15 @@ df_graphers.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/
 survey_list = list(survey_type['table_name'].unique())
 var_list = list(df_spells['master_var'].unique())
 
-graphers_tsv = df_graphers.to_csv(sep="\t", index=False)
+header_tsv = df_header.to_csv(sep="\t", header=False)
+
+graphers_tsv = df_graphers.drop(columns=['survey_type'])
+graphers_tsv = graphers_tsv.to_csv(sep="\t", index=False)
 graphers_tsv_indented = textwrap.indent(graphers_tsv, "\t")
 
 with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/grapher.tsv', "w", newline="\n") as f:
-    f.write("graphers\n" + graphers_tsv_indented)
+    f.write(header_tsv)
+    f.write("\ngraphers\n" + graphers_tsv_indented)
     
     for i in survey_list:
         table_tsv = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)

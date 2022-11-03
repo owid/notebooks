@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import textwrap
 
 # +
 #Read Google sheets
@@ -16,6 +17,21 @@ povlines_rel = pd.read_csv(url)
 sheet_name = 'survey_type'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 survey_type = pd.read_csv(url)
+# -
+
+# ## Header
+
+# +
+header_dict = {'explorerTitle': 'Inequality Data Explorer of World Bank data',
+               'selection': ['Chile', 'Brazil', 'South Africa', 'United States', 'France', 'China'],
+               'explorerSubtitle': '<i><a href="https://github.com/owid/poverty-data">Download Poverty data on GitHub</a></i>',
+               'isPublished': 'false',
+               'googleSheet': 'https://docs.google.com/spreadsheets/d/1Oit-4xH6pg5fVKe5gfgd4H7CKRpAe7dQhrmkBc4IpkU',
+               'wpBlockId': '52633',
+               'entityType': 'country or region'}
+
+df_header = pd.DataFrame.from_dict(header_dict, orient='index', columns=None)
+df_header = df_header[0].apply(pd.Series)
 # -
 
 # ## Long method
@@ -42,7 +58,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "Reds"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
@@ -60,7 +76,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "10;15;20;25;30;35;40;45;50"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "Greens"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
@@ -78,7 +94,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "0;2;4;6;8;10;12;14;16;18"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "OrRd"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
@@ -96,7 +112,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "0;1;2;3;4;5"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "Purples"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
@@ -114,7 +130,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "0;0.5;1;1.5;2;2.5;3;3.5;4"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "YlOrRd"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
@@ -132,7 +148,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "0;0.5;1;1.5;2;2.5;3;3.5;4;4.5;5"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "Oranges"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
@@ -151,7 +167,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'type'] = "Numeric"
         df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
         df_tables.loc[j, 'colorScaleNumericBins'] = "5;10;15;20;25;30;30.0001"
-        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+        df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
         df_tables.loc[j, 'colorScaleScheme'] = "YlOrBr"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
@@ -169,7 +185,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "RdPu"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
@@ -187,17 +203,61 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'type'] = "Numeric"
     df_tables.loc[j, 'colorScaleNumericMinValue'] = 0
     df_tables.loc[j, 'colorScaleNumericBins'] = "0;0.1;0.2;0.3;0.4;0.5;0.6;0.7"
-    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "'true"
+    df_tables.loc[j, 'colorScaleEqualSizeBins'] = "true"
     df_tables.loc[j, 'colorScaleScheme'] = "Reds"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
       
-#Separate the tables into inc, cons and inc or cons
-survey_list = list(survey_type['table_name'])
-for i in survey_list:
-    table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
-    table_export = table_export.drop(columns=['survey_type'])
-    table_export.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/inequality/table_{i}.csv', index=False)
+# #Separate the tables into inc, cons and inc or cons
+# survey_list = list(survey_type['table_name'])
+# for i in survey_list:
+#     table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
+#     table_export = table_export.drop(columns=['survey_type'])
+#     table_export.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/inequality/table_{i}.csv', index=False)
+
+# +
+#Create master table for line breaks
+df_spells = pd.DataFrame()
+j=0
+
+for i in range(len(df_tables)):
+    for c_spell in range(1,7):
+        df_spells.loc[j, 'master_var'] = df_tables.slug[i]
+        df_spells.loc[j, 'name'] = "Consumption surveys"
+        df_spells.loc[j, 'slug'] = f"consumption_spell_{c_spell}"
+        df_spells.loc[j, 'sourceName'] = df_tables.sourceName[i]
+        df_spells.loc[j, 'description'] = df_tables.description[i]
+        df_spells.loc[j, 'sourceLink'] = df_tables.sourceLink[i]
+        df_spells.loc[j, 'dataPublishedBy'] = df_tables.dataPublishedBy[i]
+        df_spells.loc[j, 'unit'] = df_tables.unit[i]
+        df_spells.loc[j, 'shortUnit'] = df_tables.shortUnit[i]
+        df_spells.loc[j, 'tolerance'] = df_tables.tolerance[i]
+        df_spells.loc[j, 'type'] = df_tables.type[i]
+        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_tables.colorScaleNumericMinValue[i]
+        df_spells.loc[j, 'colorScaleNumericBins'] = df_tables.colorScaleNumericBins[i]
+        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_tables.colorScaleEqualSizeBins[i]
+        df_spells.loc[j, 'colorScaleScheme'] = df_tables.colorScaleScheme[i]
+        df_spells.loc[j, 'survey_type'] = df_tables.survey_type[i]
+        j += 1
+        
+    for i_spell in range(1,8):
+        df_spells.loc[j, 'master_var'] = df_tables.slug[i]
+        df_spells.loc[j, 'name'] = "Income surveys"
+        df_spells.loc[j, 'slug'] = f"income_spell_{i_spell}"
+        df_spells.loc[j, 'sourceName'] = df_tables.sourceName[i]
+        df_spells.loc[j, 'description'] = df_tables.description[i]
+        df_spells.loc[j, 'sourceLink'] = df_tables.sourceLink[i]
+        df_spells.loc[j, 'dataPublishedBy'] = df_tables.dataPublishedBy[i]
+        df_spells.loc[j, 'unit'] = df_tables.unit[i]
+        df_spells.loc[j, 'shortUnit'] = df_tables.shortUnit[i]
+        df_spells.loc[j, 'tolerance'] = df_tables.tolerance[i]
+        df_spells.loc[j, 'type'] = df_tables.type[i]
+        df_spells.loc[j, 'colorScaleNumericMinValue'] = df_tables.colorScaleNumericMinValue[i]
+        df_spells.loc[j, 'colorScaleNumericBins'] = df_tables.colorScaleNumericBins[i]
+        df_spells.loc[j, 'colorScaleEqualSizeBins'] = df_tables.colorScaleEqualSizeBins[i]
+        df_spells.loc[j, 'colorScaleScheme'] = df_tables.colorScaleScheme[i]
+        df_spells.loc[j, 'survey_type'] = df_tables.survey_type[i]
+        j += 1
 # -
 
 # ### Grapher views
@@ -225,9 +285,10 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
     #Share of the top 10%  
@@ -243,9 +304,10 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
     #P90/P10 
@@ -261,9 +323,10 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
     #P90/P50 
@@ -279,9 +342,10 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
     #P50/P10 
@@ -297,9 +361,10 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
     #Palma ratio
@@ -315,9 +380,10 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
         
     #Headcount ratio (rel)
@@ -335,9 +401,10 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'yAxisMin'] = 0
         df_graphers.loc[j, 'facet'] = np.nan
         df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-        df_graphers.loc[j, 'hasMapTab'] = "'true"
+        df_graphers.loc[j, 'hasMapTab'] = "true"
         df_graphers.loc[j, 'tab'] = "map"
         df_graphers.loc[j, 'mapTargetTime'] = 2019
+        df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
     #MLD
@@ -353,9 +420,10 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
     #Polarization
@@ -371,14 +439,47 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'yAxisMin'] = 0
     df_graphers.loc[j, 'facet'] = np.nan
     df_graphers.loc[j, 'selectedFacetStrategy'] = np.nan
-    df_graphers.loc[j, 'hasMapTab'] = "'true"
+    df_graphers.loc[j, 'hasMapTab'] = "true"
     df_graphers.loc[j, 'tab'] = "map"
     df_graphers.loc[j, 'mapTargetTime'] = 2019
+    df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+df_graphers['Show breaks between less comparable surveys Checkbox'] = "false"
+# +
+df_graphers_spells = pd.DataFrame()
+j=0
+
+for i in range(len(df_graphers)):
+    df_graphers_spells.loc[j, 'title'] = df_graphers['title'][i]
+    df_graphers_spells.loc[j, 'ySlugs'] = "consumption_spell_1 consumption_spell_2 consumption_spell_3 consumption_spell_4 consumption_spell_5 consumption_spell_6 income_spell_1 income_spell_2 income_spell_3 income_spell_4 income_spell_5 income_spell_6 income_spell_7"
+    df_graphers_spells.loc[j, 'Metric Dropdown'] = df_graphers['Metric Dropdown'][i]
+    df_graphers_spells.loc[j, 'Household survey data type Dropdown'] = df_graphers['Household survey data type Dropdown'][i]
+    df_graphers_spells.loc[j, 'tableSlug'] = df_graphers['survey_type'][i] + "_" + df_graphers['ySlugs'][i]
+    df_graphers_spells.loc[j, 'subtitle'] = df_graphers['subtitle'][i]
+    df_graphers_spells.loc[j, 'note'] = df_graphers['note'][i]
+    df_graphers_spells.loc[j, 'sourceDesc'] = df_graphers['sourceDesc'][i]
+    df_graphers_spells.loc[j, 'type'] = df_graphers['type'][i]
+    df_graphers_spells.loc[j, 'yAxisMin'] = df_graphers['yAxisMin'][i]
+    df_graphers_spells.loc[j, 'facet'] = 'entity'
+    df_graphers_spells.loc[j, 'selectedFacetStrategy'] = 'entity'
+    df_graphers_spells.loc[j, 'hasMapTab'] = "false"
+    df_graphers_spells.loc[j, 'tab'] = np.nan
+    df_graphers_spells.loc[j, 'mapTargetTime'] = np.nan
+    df_graphers_spells.loc[j, 'Show breaks between less comparable surveys Checkbox'] = "true"
+    j += 1
+    
+df_graphers = pd.concat([df_graphers, df_graphers_spells], ignore_index=True)
+
+# +
+#Add related question link
+df_graphers['relatedQuestionText'] = np.nan
+df_graphers['relatedQuestionUrl'] = np.nan
+
 #Select one default view
 df_graphers.loc[(df_graphers['ySlugs'] == "gini") 
-       & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "'true"
+                & (df_graphers['Show breaks between less comparable surveys Checkbox'] == "false") 
+                & (df_graphers['tableSlug'] == "inc_or_cons"), ['defaultView']] = "true"
     
     
 # #Reorder dropdown menus
@@ -408,8 +509,34 @@ df_graphers.loc[(df_graphers['ySlugs'] == "gini")
 # df_graphers = df_graphers.sort_values('povline_dropdown_aux', ignore_index=True)
 # df_graphers = df_graphers.drop(columns=['povline_dropdown_aux'])
 
-#Export Grapher table    
-df_graphers.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/inequality/graphers.csv', index=False)
-# -
 
+# +
+survey_list = list(survey_type['table_name'].unique())
+var_list = list(df_spells['master_var'].unique())
 
+header_tsv = df_header.to_csv(sep="\t", header=False)
+
+graphers_tsv = df_graphers.drop(columns=['survey_type'])
+graphers_tsv = graphers_tsv.to_csv(sep="\t", index=False)
+graphers_tsv_indented = textwrap.indent(graphers_tsv, "\t")
+
+with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/inequality/grapher.tsv', "w", newline="\n") as f:
+    f.write(header_tsv)
+    f.write("\ngraphers\n" + graphers_tsv_indented)
+    
+    for i in survey_list:
+        table_tsv = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
+        table_tsv = table_tsv.drop(columns=['survey_type'])
+        table_tsv = table_tsv.to_csv(sep="\t", index=False)
+        table_tsv_indented = textwrap.indent(table_tsv, "\t")
+        f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/" + i + "/poverty_" + i + ".csv\t" + i)
+        f.write("\ncolumns\t" + i + "\n\n" + table_tsv_indented)
+        
+    for var in var_list:
+        for i in survey_list:
+            table_tsv = df_spells[(df_spells['master_var'] == var) & (df_spells['survey_type'] == i)].copy().reset_index(drop=True)
+            table_tsv = table_tsv.drop(columns=['master_var', 'survey_type'])
+            table_tsv = table_tsv.to_csv(sep="\t", index=False)
+            table_tsv_indented = textwrap.indent(table_tsv, "\t")
+            f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/comparability_data/" + i + "/" + var + ".csv\t" + i + "_" + var)
+            f.write("\ncolumns\t" + i + "_" + var + "\n\n" + table_tsv_indented)
