@@ -377,9 +377,6 @@ for survey in range(len(survey_type)):
     
 df_graphers['Show breaks between less comparable surveys Checkbox'] = "'false"
 
-    
-
-
 # %%
 for survey in range(len(survey_type)):
         
@@ -402,7 +399,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'tab'] = np.nan
     df_graphers.loc[j, 'mapTargetTime'] = np.nan
     df_graphers.loc[j, 'yScaleToggle'] = "'true"
-    df_graphers['Show breaks between less comparable surveys Checkbox'] = "'true"
+    df_graphers.loc[j, 'Show breaks between less comparable surveys Checkbox'] = "'true"
     j += 1
 
 # %%
