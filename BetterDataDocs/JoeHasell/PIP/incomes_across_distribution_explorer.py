@@ -17,7 +17,7 @@ deciles9 = pd.read_csv(url, dtype={'dropdown':'str', 'decile':'str'})
 
 sheet_name = 'income_aggregation'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-income_aggregation = pd.read_csv(url, dtype={'multiplier':'str'})
+income_aggregation = pd.read_csv(url, keep_default_na=False, dtype={'multiplier':'str'})
 
 sheet_name = 'survey_type'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
@@ -478,5 +478,5 @@ with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_di
             table_tsv = table_tsv.drop(columns=['master_var', 'survey_type'])
             table_tsv = table_tsv.to_csv(sep="\t", index=False)
             table_tsv_indented = textwrap.indent(table_tsv, "\t")
-            f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/comparability_data/" + i + "/" + var.strip() + ".csv\t" + i + "_" + var.strip())
-            f.write("\ncolumns\t" + i + "_" + var.strip() + "\n\n" + table_tsv_indented)
+            f.write("\ntable\t" + "https://raw.githubusercontent.com/owid/notebooks/main/BetterDataDocs/JoeHasell/PIP/data/ppp_2017/final/OWID_internal_upload/explorer_database/comparability_data/" + i + "/" + var + ".csv\t" + i + "_" + var)
+            f.write("\ncolumns\t" + i + "_" + var + "\n\n" + table_tsv_indented)
