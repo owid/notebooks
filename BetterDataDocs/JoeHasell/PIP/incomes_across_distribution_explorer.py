@@ -291,7 +291,7 @@ for survey in range(len(survey_type)):
             
         #thresholds - multiple deciles
         df_graphers.loc[j, 'title'] = f"Threshold {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} for each decile"
-        df_graphers.loc[j, 'ySlugs'] = f"decile1_thr{income_aggregation.slug_suffix[agg]}decile2_thr{income_aggregation.slug_suffix[agg]}decile3_thr{income_aggregation.slug_suffix[agg]}decile4_thr{income_aggregation.slug_suffix[agg]}decile5_thr{income_aggregation.slug_suffix[agg]}decile6_thr{income_aggregation.slug_suffix[agg]}decile7_thr{income_aggregation.slug_suffix[agg]}decile8_thr{income_aggregation.slug_suffix[agg]}decile9_thr{income_aggregation.slug_suffix[agg]}"
+        df_graphers.loc[j, 'ySlugs'] = f"decile1_thr{income_aggregation.slug_suffix[agg]} decile2_thr{income_aggregation.slug_suffix[agg]} decile3_thr{income_aggregation.slug_suffix[agg]} decile4_thr{income_aggregation.slug_suffix[agg]} decile5_thr{income_aggregation.slug_suffix[agg]} decile6_thr{income_aggregation.slug_suffix[agg]} decile7_thr{income_aggregation.slug_suffix[agg]} decile8_thr{income_aggregation.slug_suffix[agg]} decile9_thr{income_aggregation.slug_suffix[agg]}"
         df_graphers.loc[j, 'Metric Dropdown'] = "Decile thresholds"
         df_graphers.loc[j, 'Decile Dropdown'] = "All deciles"
         df_graphers.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
@@ -312,7 +312,7 @@ for survey in range(len(survey_type)):
         
         #averages - multiple deciles
         df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per {income_aggregation.aggregation[agg]} within each decile"
-        df_graphers.loc[j, 'ySlugs'] = f"decile1_avg{income_aggregation.slug_suffix[agg]}decile2_avg{income_aggregation.slug_suffix[agg]}decile3_avg{income_aggregation.slug_suffix[agg]}decile4_avg{income_aggregation.slug_suffix[agg]}decile5_avg{income_aggregation.slug_suffix[agg]}decile6_avg{income_aggregation.slug_suffix[agg]}decile7_avg{income_aggregation.slug_suffix[agg]}decile8_avg{income_aggregation.slug_suffix[agg]}decile9_avg{income_aggregation.slug_suffix[agg]}decile10_avg{income_aggregation.slug_suffix[agg]}"
+        df_graphers.loc[j, 'ySlugs'] = f"decile1_avg{income_aggregation.slug_suffix[agg]} decile2_avg{income_aggregation.slug_suffix[agg]} decile3_avg{income_aggregation.slug_suffix[agg]} decile4_avg{income_aggregation.slug_suffix[agg]} decile5_avg{income_aggregation.slug_suffix[agg]} decile6_avg{income_aggregation.slug_suffix[agg]} decile7_avg{income_aggregation.slug_suffix[agg]} decile8_avg{income_aggregation.slug_suffix[agg]} decile9_avg{income_aggregation.slug_suffix[agg]} decile10_avg{income_aggregation.slug_suffix[agg]}"
         df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure, by decile"
         df_graphers.loc[j, 'Decile Dropdown'] = "All deciles"
         df_graphers.loc[j, 'Aggregation Radio'] = f'{income_aggregation.aggregation[agg].title()}'
