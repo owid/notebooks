@@ -1,35 +1,48 @@
+# # Poverty Data Explorer of World Bank data: 2011 vs 2017 prices
+# This code creates the tsv file for the PPP comparison explorer from the World Bank PIP data, available [here](https://ourworldindata.org/explorers/poverty-explorer-2011-vs-2017-ppp)
+
 import pandas as pd
 import numpy as np
 import textwrap
+
+# ## Google sheets auxiliar data
+# These spreadsheets provide with different details depending on each poverty line (from 2011 and 2017 prices), both prices together, relative poverty or survey type.
 
 # +
 #Read Google sheets
 sheet_id = '1mR0LPEGlY-wCp1q9lNTlDbVIG65JazKvHL16my9tH8Y'
 
+#Poverty lines in 2011 prices sheet
 sheet_name = 'povlines_ppp2011'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 povlines_ppp2011 = pd.read_csv(url, dtype={'dollars_text':'str'})
 
+#Poverty lines in 2017 prices sheet
 sheet_name = 'povlines_ppp2017'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 povlines_ppp2017 = pd.read_csv(url, dtype={'dollars_text':'str'})
 
+#Poverty lines in both 2011 and 2017 prices sheet
 sheet_name = 'povlines_both'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 povlines_both = pd.read_csv(url, dtype={'dollars_2011_text':'str', 'dollars_2017_text':'str'})
 
+#Relative poverty lines sheet
 sheet_name = 'povlines_rel'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 povlines_rel = pd.read_csv(url)
 
+#Survey type sheet
 sheet_name = 'survey_type'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 survey_type = pd.read_csv(url)
 # -
 
-# ### Header
+# ## Header
+# General settings of the explorer are defined here, like the title, subtitle, default country selection, publishing status and others.
 
 # +
+#The header is defined as a dictionary first and then it is converted into a index-oriented dataframe
 header_dict = {'explorerTitle': 'Poverty Data Explorer of World Bank data: 2011 vs. 2017 prices',
                'selection': ['Mozambique', 'Nigeria', 'Kenya', 'Bangladesh', 'Bolivia', 'World'],
                'explorerSubtitle': '<i><a href="https://github.com/owid/poverty-data">Download Poverty data on GitHub</a></i>',
@@ -38,13 +51,14 @@ header_dict = {'explorerTitle': 'Poverty Data Explorer of World Bank data: 2011 
                'wpBlockId': '52633',
                'entityType': 'country or region'}
 
+#Index-oriented dataframe
 df_header = pd.DataFrame.from_dict(header_dict, orient='index', columns=None)
+#Assigns a cell for each entity separated by comma (like in `selection`)
 df_header = df_header[0].apply(pd.Series)
 # -
 
-# ## Long method
-# ### Tables with variable definitions
-# Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, separated by survey type in csv files.
+# ## Tables
+# Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, with metadata.
 
 # +
 #Table generation
@@ -52,6 +66,7 @@ df_tables = pd.DataFrame()
 j=0
 
 for survey in range(len(survey_type)):
+    #Shares (2011)
     for p_2011 in range(len(povlines_ppp2011)):
         df_tables.loc[j, 'name'] = f'Share of population below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_ratio_{povlines_ppp2011.cents[p_2011]}_ppp2011'
@@ -70,6 +85,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
     
+    #Shares (2017)
     for p_2017 in range(len(povlines_ppp2017)):
         df_tables.loc[j, 'name'] = f'Share of population below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_ratio_{povlines_ppp2017.cents[p_2017]}_ppp2017'
@@ -87,7 +103,8 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleScheme'] = "OrRd"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
-        
+    
+    #Number (2011)
     for p_2011 in range(len(povlines_ppp2011)):
         df_tables.loc[j, 'name'] = f'Number of people below ${povlines_ppp2011.dollars_text[p_2011]} a day (2011 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_{povlines_ppp2011.cents[p_2011]}_ppp2011'
@@ -105,7 +122,8 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleScheme'] = "Reds"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
-        
+    
+    #Number (2017)
     for p_2017 in range(len(povlines_ppp2017)):
         df_tables.loc[j, 'name'] = f'Number of people below ${povlines_ppp2017.dollars_text[p_2017]} a day (2017 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_{povlines_ppp2017.cents[p_2017]}_ppp2017'
@@ -124,6 +142,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Share (relative, 2011)
     for pct in range(len(povlines_rel)):
         df_tables.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - share of population below poverty line (2011 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_ratio_{povlines_rel.slug_suffix[pct]}_ppp2011'
@@ -141,7 +160,8 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleScheme'] = "YlOrBr"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
-        
+    
+    #Share (relative, 2017)
     for pct in range(len(povlines_rel)):
         df_tables.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - share of population below poverty line (2017 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_ratio_{povlines_rel.slug_suffix[pct]}_ppp2017'
@@ -160,6 +180,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
     
+    #Number (relative, 2011)
     for pct in range(len(povlines_rel)):
         df_tables.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - total number of people below poverty line (2011 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_{povlines_rel.slug_suffix[pct]}_ppp2011'
@@ -178,6 +199,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Number (relative, 2017)
     for pct in range(len(povlines_rel)):
         df_tables.loc[j, 'name'] = f'{povlines_rel.percent[pct]} of median - total number of people below poverty line (2017 prices)'
         df_tables.loc[j, 'slug'] = f'headcount_{povlines_rel.slug_suffix[pct]}_ppp2017'
@@ -196,7 +218,7 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
-
+    #Mean (2011)
     df_tables.loc[j, 'name'] = f"Mean {survey_type.text[survey]} per day (2011 prices)"
     df_tables.loc[j, 'slug'] = "mean_ppp2011"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -214,6 +236,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+    #Mean (2017)
     df_tables.loc[j, 'name'] = f"Mean {survey_type.text[survey]} per day (2017 prices)"
     df_tables.loc[j, 'slug'] = "mean_ppp2017"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -231,6 +254,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+    #Median (2011)
     df_tables.loc[j, 'name'] = f"Median {survey_type.text[survey]} per day (2011 prices)"
     df_tables.loc[j, 'slug'] = "median_ppp2011"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -248,6 +272,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+    #Median (2017)
     df_tables.loc[j, 'name'] = f"Median {survey_type.text[survey]} per day (2017 prices)"
     df_tables.loc[j, 'slug'] = "median_ppp2017"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -265,6 +290,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+    #P10 (2011)
     df_tables.loc[j, 'name'] = "P10 (2011 prices)"
     df_tables.loc[j, 'slug'] = "decile1_thr_ppp2011"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -282,6 +308,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+    #P10 (2017)
     df_tables.loc[j, 'name'] = "P10 (2017 prices)"
     df_tables.loc[j, 'slug'] = "decile1_thr_ppp2017"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -299,6 +326,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+    #P90 (2011)
     df_tables.loc[j, 'name'] = "P90 (2011 prices)"
     df_tables.loc[j, 'slug'] = "decile9_thr_ppp2011"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -316,6 +344,7 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
     
+    #P90 (2017)
     df_tables.loc[j, 'name'] = "P90 (2017 prices)"
     df_tables.loc[j, 'slug'] = "decile9_thr_ppp2017"
     df_tables.loc[j, 'sourceName'] = "World Bank Poverty and Inequality Platform"
@@ -332,16 +361,9 @@ for survey in range(len(survey_type)):
     df_tables.loc[j, 'colorScaleScheme'] = "Blues"
     df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
-      
-# #Separate the tables into inc, cons and inc or cons
-# survey_list = list(survey_type['table_name'])
-# for i in survey_list:
-#     table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
-#     table_export = table_export.drop(columns=['survey_type'])
-#     table_export.to_csv(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/table_{i}.csv', index=False)
 # -
 
-# ### Grapher views
+# ## Grapher views
 # Similar to the tables, this creates the grapher views by grouping by types of variables and then running by survey type and poverty lines.
 
 # +
@@ -352,6 +374,7 @@ df_graphers = pd.DataFrame()
 j=0
 
 for survey in range(len(survey_type)):
+    #Share (2011)
     for p_2011 in range(len(povlines_ppp2011)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_ppp2011.title_share[p_2011]}'
@@ -373,7 +396,8 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'mapTargetTime'] = 2019
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
-        
+    
+    #Share (2017)
     for p_2017 in range(len(povlines_ppp2017)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_ppp2017.title_share[p_2017]}'
@@ -396,6 +420,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
     
+    #Number (2011)
     for p_2011 in range(len(povlines_ppp2011)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_ppp2011.title_number[p_2011]}'
@@ -418,6 +443,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Number (2017)
     for p_2017 in range(len(povlines_ppp2017)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_ppp2017.title_number[p_2017]}'
@@ -440,6 +466,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
 
+    #Share (2011 and 2017)
     for p in range(len(povlines_both)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_both.title_share[p]}'
@@ -462,6 +489,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Number (2011 and 2017)
     for p in range(len(povlines_both)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_both.title_number[p]}'
@@ -484,6 +512,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Share (relative, 2011)
     for pct in range(len(povlines_rel)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_rel.title_share[pct]} (2011 prices)'
@@ -506,6 +535,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Share (relative, 2017)
     for pct in range(len(povlines_rel)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_rel.title_share[pct]} (2017 prices)'
@@ -528,6 +558,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Number (relative, 2011)
     for pct in range(len(povlines_rel)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_rel.title_number[pct]} (2011 prices)'
@@ -550,6 +581,7 @@ for survey in range(len(survey_type)):
         df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
         
+    #Number (relative, 2017)
     for pct in range(len(povlines_rel)):
 
         df_graphers.loc[j, 'title'] = f'{povlines_rel.title_number[pct]} (2017 prices)'
@@ -573,6 +605,7 @@ for survey in range(len(survey_type)):
         j += 1
         
 
+    #Share (relative, 2011 vs 2017)
     df_graphers.loc[j, 'title'] = f'Relative poverty: Share of people below 60% of the median (2011 vs. 2017 prices)'
     df_graphers.loc[j, 'ySlugs'] = f'headcount_ratio_60_median_ppp2011 headcount_ratio_60_median_ppp2017'
     df_graphers.loc[j, 'Metric Dropdown'] = "Share in poverty"
@@ -593,6 +626,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #Number (relative, 2011 vs 2017)
     df_graphers.loc[j, 'title'] = f'Relative poverty: Number of people below 60% of the median (2011 vs. 2017 prices)'
     df_graphers.loc[j, 'ySlugs'] = f'headcount_60_median_ppp2011 headcount_60_median_ppp2017'
     df_graphers.loc[j, 'Metric Dropdown'] = "Number in poverty"
@@ -613,7 +647,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
-
+    #Mean (2011)
     df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day (2011 prices)"
     df_graphers.loc[j, 'ySlugs'] = "mean_ppp2011"
     df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure"
@@ -635,6 +669,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #Mean (2017)
     df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day (2017 prices)"
     df_graphers.loc[j, 'ySlugs'] = "mean_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure"
@@ -656,6 +691,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #Mean (2011, 2017)
     df_graphers.loc[j, 'title'] = f"Mean {survey_type.text[survey]} per day: 2011 vs. 2017 prices"
     df_graphers.loc[j, 'ySlugs'] = "mean_ppp2011 mean_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "Mean income or expenditure"
@@ -677,6 +713,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #Median (2011)
     df_graphers.loc[j, 'title'] = f"Median {survey_type.text[survey]} per day (2011 prices)"
     df_graphers.loc[j, 'ySlugs'] = "median_ppp2011"
     df_graphers.loc[j, 'Metric Dropdown'] = "Median income or expenditure"
@@ -698,6 +735,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #Median (2017)
     df_graphers.loc[j, 'title'] = f"Median {survey_type.text[survey]} per day (2017 prices)"
     df_graphers.loc[j, 'ySlugs'] = "median_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "Median income or expenditure"
@@ -719,6 +757,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #Median (2011, 2017)
     df_graphers.loc[j, 'title'] = f"Median {survey_type.text[survey]} per day: 2011 vs. 2017 prices"
     df_graphers.loc[j, 'ySlugs'] = "median_ppp2011 median_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "Median income or expenditure"
@@ -740,6 +779,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #P10 (2011)
     df_graphers.loc[j, 'title'] = f"P10: The {survey_type.text[survey]} of the poorest tenth (2011 prices)"
     df_graphers.loc[j, 'ySlugs'] = "decile1_thr_ppp2011"
     df_graphers.loc[j, 'Metric Dropdown'] = "P10 (poorest tenth)"
@@ -761,6 +801,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #P10 (2017)
     df_graphers.loc[j, 'title'] = f"P10: The {survey_type.text[survey]} of the poorest tenth (2017 prices)"
     df_graphers.loc[j, 'ySlugs'] = "decile1_thr_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "P10 (poorest tenth)"
@@ -782,6 +823,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #P10 (2011, 2017)
     df_graphers.loc[j, 'title'] = f"P10: The {survey_type.text[survey]} of the poorest tenth (2011 vs. 2017 prices)"
     df_graphers.loc[j, 'ySlugs'] = "decile1_thr_ppp2011 decile1_thr_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "P10 (poorest tenth)"
@@ -803,6 +845,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #P90 (2011)
     df_graphers.loc[j, 'title'] = f"P90: The {survey_type.text[survey]} of the richest tenth (2011 prices)"
     df_graphers.loc[j, 'ySlugs'] = "decile9_thr_ppp2011"
     df_graphers.loc[j, 'Metric Dropdown'] = "P90 (richest tenth)"
@@ -824,6 +867,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #P90 (2017)
     df_graphers.loc[j, 'title'] = f"P90: The {survey_type.text[survey]} of the richest tenth (2017 prices)"
     df_graphers.loc[j, 'ySlugs'] = "decile9_thr_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "P90 (richest tenth)"
@@ -845,6 +889,7 @@ for survey in range(len(survey_type)):
     df_graphers.loc[j, 'survey_type'] = survey_type['table_name'][survey]
     j += 1
 
+    #P90 (2011, 2017)
     df_graphers.loc[j, 'title'] = f"P90: The {survey_type.text[survey]} of the richest tenth (2011 vs. 2017 prices)"
     df_graphers.loc[j, 'ySlugs'] = "decile9_thr_ppp2011 decile9_thr_ppp2017"
     df_graphers.loc[j, 'Metric Dropdown'] = "P90 (richest tenth)"
@@ -901,16 +946,26 @@ df_graphers_mapping = df_graphers_mapping.reset_index().set_index('povline_dropd
 df_graphers['povline_dropdown_aux'] = df_graphers['Poverty line Dropdown'].map(df_graphers_mapping['index'])
 df_graphers = df_graphers.sort_values('povline_dropdown_aux', ignore_index=True)
 df_graphers = df_graphers.drop(columns=['povline_dropdown_aux'])
+# -
+
+# ## Explorer generation
+# Here, the header, tables and graphers dataframes are combined to be shown in for format required for OWID data explorers.
 
 # +
+#Define list of variables to iterate: survey types
 survey_list = list(survey_type['table_name'].unique())
 
+#Header is converted into a tab-separated text
 header_tsv = df_header.to_csv(sep="\t", header=False)
 
+#Auxiliar variable `survey_type` is dropped and graphers table is converted into a tab-separated text
 graphers_tsv = df_graphers.drop(columns=['survey_type'])
 graphers_tsv = graphers_tsv.to_csv(sep="\t", index=False)
+
+#This table is indented, to follow explorers' format
 graphers_tsv_indented = textwrap.indent(graphers_tsv, "\t")
 
+#The dataframes are combined, including tables which are filtered by survey type and variable
 with open(f'data/ppp_vs/final/OWID_internal_upload/explorer_ppp_vs/grapher.tsv', "w", newline="\n") as f:
     f.write(header_tsv)
     f.write("\ngraphers\n" + graphers_tsv_indented)

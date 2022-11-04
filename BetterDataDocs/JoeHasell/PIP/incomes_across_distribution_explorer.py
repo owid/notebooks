@@ -1,30 +1,45 @@
+# %% [markdown]
+# # Incomes across the distribution explorer
+# This code creates the tsv file for the incomes across the distribution explorer from the World Bank PIP data, available [here](https://owid.cloud/admin/explorers/preview/incomes-across-distribution-ppp2017)
+
 # %%
 import pandas as pd
 import numpy as np
 import textwrap
 
+# %% [markdown]
+# ## Google sheets auxiliar data
+# These spreadsheets provide with different details depending on each poverty line or survey type.
+
+# %%
 #Read Google sheets
 sheet_id = '13Fv0aWgG8_3eB2TdGtIGS4cECUjdzIOQTpcMJ3XdtI8'
 
+#Settings for 10 deciles variables (share, avg) sheet
 sheet_name = 'deciles10'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 deciles10 = pd.read_csv(url, dtype={'dropdown':'str', 'decile':'str'})
 
+#Settings for 9 deciles variables (thr) sheet
 sheet_name = 'deciles9'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 deciles9 = pd.read_csv(url, dtype={'dropdown':'str', 'decile':'str'})
 
+#Income aggregation sheet (day, month, year)
 sheet_name = 'income_aggregation'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 income_aggregation = pd.read_csv(url, keep_default_na=False, dtype={'multiplier':'str'})
 
+#Survey type sheet
 sheet_name = 'survey_type'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 survey_type = pd.read_csv(url)
 # %% [markdown]
-# ### Header
+# ## Header
+# General settings of the explorer are defined here, like the title, subtitle, default country selection, publishing status and others.
 
 # %%
+#The header is defined as a dictionary first and then it is converted into a index-oriented dataframe
 header_dict = {'explorerTitle': 'Incomes across the distribution (World Bank PIP)',
                'selection': ['Mozambique', 'Nigeria', 'Kenya', 'Bangladesh', 'Bolivia', 'World'],
                'explorerSubtitle': '<i><a href="https://github.com/owid/poverty-data">Download Poverty data on GitHub</a></i>',
@@ -33,12 +48,16 @@ header_dict = {'explorerTitle': 'Incomes across the distribution (World Bank PIP
                'wpBlockId': '52633',
                'entityType': 'country or region'}
 
+#Index-oriented dataframe
 df_header = pd.DataFrame.from_dict(header_dict, orient='index', columns=None)
+#Assigns a cell for each entity separated by comma (like in `selection`)
 df_header = df_header[0].apply(pd.Series)
 
 # %% [markdown]
-# ### Tables with variable definitions
-# Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, separated by survey type in csv files.
+# ## Tables
+# Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, with metadata.
+# ### Tables for variables not showing breaks between surveys
+# These variables consider a continous series, without breaks due to changes in surveys' methodology
 
 # %%
 #Table generation
@@ -147,13 +166,10 @@ for survey in range(len(survey_type)):
         df_tables.loc[j, 'colorScaleScheme'] = "OrRd"
         df_tables.loc[j, 'survey_type'] = survey_type['table_name'][survey]
         j += 1
-        
-# #Separate the tables into inc, cons and inc or cons
-# survey_list = list(survey_type['table_name'])
-# for i in survey_list:
-#     table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
-#     table_export = table_export.drop(columns=['survey_type'])
-#     table_export.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/table_{i}.csv', index=False)
+
+# %% [markdown]
+# ### Tables for variables showing breaks between surveys
+# These variables consider a breaks in the series due to changes in surveys' methodology. Special modifications have to be included to graph monthly and yearly variables properly.
 
 # %%
 #Create master table for line breaks
@@ -219,10 +235,11 @@ df_spells_year['transform'] = "multiplyBy " + df_spells_year['slug'] + " 365"
 df_spells_year['slug'] = df_spells_year['slug'] + "_year"
 df_spells_year['description'] = df_spells_year['description'].str.replace("day", "year")
 
+#Concatenate all the spells tables
 df_spells = pd.concat([df_spells, df_spells_month, df_spells_year], ignore_index=True)
 
 # %% [markdown]
-# ### Grapher views
+# ## Grapher views
 # Similar to the tables, this creates the grapher views by grouping by types of variables and then running by survey type and poverty lines.
 
 # %%
@@ -421,6 +438,10 @@ for survey in range(len(survey_type)):
     
 df_graphers['Show breaks between less comparable surveys Checkbox'] = "false"
 
+# %% [markdown]
+# ### Grapher views to show breaks in the curves
+# Similar to the tables, additional modifications have to be done to process monthly and yearly data properly.
+
 # %%
 df_graphers_spells = pd.DataFrame()
 j=0
@@ -458,6 +479,9 @@ df_graphers_spells['tableSlug'] = df_graphers_spells['tableSlug'].str.removesuff
     
 df_graphers = pd.concat([df_graphers, df_graphers_spells], ignore_index=True)
 
+# %% [markdown]
+# Final adjustments to the graphers table: add `relatedQuestion` link and `defaultView`, and also order decile and metric dropdowns properly
+
 # %%
 #Add related question link
 df_graphers['relatedQuestionText'] = np.nan
@@ -472,6 +496,7 @@ df_graphers.loc[(df_graphers['Decile Dropdown'] == 'All deciles')
     
     
 #Reorder dropdown menus
+#Decile dropdown
 decile_dropdown_list = [np.nan,
                         '1 (poorest)',
                         '2',
@@ -491,6 +516,7 @@ df_graphers_mapping = pd.DataFrame({'decile_dropdown': decile_dropdown_list,})
 df_graphers_mapping = df_graphers_mapping.reset_index().set_index('decile_dropdown')
 df_graphers['decile_dropdown_aux'] = df_graphers['Decile Dropdown'].map(df_graphers_mapping['index'])
 
+#Metric dropdown
 metric_dropdown_list = ["Mean income or expenditure",
                         "Mean income or expenditure, by decile",
                         "Median income or expenditure",
@@ -501,22 +527,30 @@ df_graphers_mapping = pd.DataFrame({'metric_dropdown': metric_dropdown_list,})
 df_graphers_mapping = df_graphers_mapping.reset_index().set_index('metric_dropdown')
 df_graphers['metric_dropdown_aux'] = df_graphers['Metric Dropdown'].map(df_graphers_mapping['index'])
 
+#Drop auxiliary variables
 df_graphers = df_graphers.sort_values(['metric_dropdown_aux', 'decile_dropdown_aux'], ignore_index=True)
 df_graphers = df_graphers.drop(columns=['metric_dropdown_aux', 'decile_dropdown_aux'])
 
-#Export Grapher table    
-df_graphers.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/grapher.csv', index=False)
+# %% [markdown]
+# ## Explorer generation
+# Here, the header, tables and graphers dataframes are combined to be shown in for format required for OWID data explorers.
 
 # %%
+#Define list of variables to iterate: survey types and the list of variables (the latter for spell tables)
 survey_list = list(survey_type['table_name'].unique())
 var_list = list(df_spells['master_var'].unique())
 
+#Header is converted into a tab-separated text
 header_tsv = df_header.to_csv(sep="\t", header=False)
 
+#Auxiliar variable `survey_type` is dropped and graphers table is converted into a tab-separated text
 graphers_tsv = df_graphers.drop(columns=['survey_type'])
 graphers_tsv = graphers_tsv.to_csv(sep="\t", index=False)
+
+#This table is indented, to follow explorers' format
 graphers_tsv_indented = textwrap.indent(graphers_tsv, "\t")
 
+#The dataframes are combined, including tables which are filtered by survey type and variable
 with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/across_distribution/grapher.tsv', "w", newline="\n") as f:
     f.write(header_tsv)
     f.write("\ngraphers\n" + graphers_tsv_indented)

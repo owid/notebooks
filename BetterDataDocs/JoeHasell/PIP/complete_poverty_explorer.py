@@ -1,27 +1,38 @@
+# # Poverty Data Explorer of World Bank data: Expanded metrics
+# This code creates the tsv file for the expanded poverty metrics explorer from the World Bank PIP data, available [here](https://owid.cloud/admin/explorers/preview/poverty-explorer-expanded)
+
 import pandas as pd
 import numpy as np
 import textwrap
+
+# ## Google sheets auxiliar data
+# These spreadsheets provide with different details depending on each poverty line or survey type.
 
 # +
 #Read Google sheets
 sheet_id = '17KJ9YcvfdmO_7-Sv2Ij0vmzAQI6rXSIqHfJtgFHN-a8'
 
+#Absolute poverty sheet
 sheet_name = 'povlines_abs'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 povlines_abs = pd.read_csv(url, dtype={'dollars_text':'str'})
 
+#Relative poverty sheet
 sheet_name = 'povlines_rel'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 povlines_rel = pd.read_csv(url)
 
+#Survey type sheet
 sheet_name = 'survey_type'
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
 survey_type = pd.read_csv(url)
 # -
 
 # ## Header
+# General settings of the explorer are defined here, like the title, subtitle, default country selection, publishing status and others.
 
 # +
+#The header is defined as a dictionary first and then it is converted into a index-oriented dataframe
 header_dict = {'explorerTitle': 'Poverty Data Explorer of World Bank data: Expanded metrics',
                'selection': ['Mozambique', 'Nigeria', 'Kenya', 'Bangladesh', 'Bolivia', 'World'],
                'explorerSubtitle': '<i><a href="https://github.com/owid/poverty-data">Download Poverty data on GitHub</a></i>',
@@ -30,13 +41,16 @@ header_dict = {'explorerTitle': 'Poverty Data Explorer of World Bank data: Expan
                'wpBlockId': '52633',
                'entityType': 'country or region'}
 
+#Index-oriented dataframe
 df_header = pd.DataFrame.from_dict(header_dict, orient='index', columns=None)
+#Assigns a cell for each entity separated by comma (like in `selection`)
 df_header = df_header[0].apply(pd.Series)
 # -
 
-# ## Long method
-# ### Tables with variable definitions
-# Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, separated by survey type in csv files.
+# ## Tables
+# Variables are grouped by type to iterate by different poverty lines and survey types at the same time. The output is the list of all the variables being used in the explorer, with metadata.
+# ### Tables for variables not showing breaks between surveys
+# These variables consider a continous series, without breaks due to changes in surveys' methodology
 
 # +
 #Table generation
@@ -281,6 +295,10 @@ for survey in range(len(survey_type)):
 #     table_export = df_tables[df_tables['survey_type'] == i].copy().reset_index(drop=True)
 #     table_export = table_export.drop(columns=['survey_type'])
 #     table_export.to_csv(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/complete_poverty/table_{i}.csv', index=False)
+# -
+
+# ### Tables for variables showing breaks between surveys
+# These variables consider a breaks in the series due to changes in surveys' methodology.
 
 # +
 #Create master table for line breaks
@@ -327,7 +345,7 @@ for i in range(len(df_tables)):
         j += 1
 # -
 
-# ### Grapher views
+# ## Grapher views
 # Similar to the tables, this creates the grapher views by grouping by types of variables and then running by survey type and poverty lines.
 
 # +
@@ -604,6 +622,9 @@ for survey in range(len(survey_type)):
         j += 1
 
 df_graphers['Show breaks between less comparable surveys Checkbox'] = "false"
+# -
+# ### Grapher views to show breaks in the curves
+
 # +
 df_graphers_spells = pd.DataFrame()
 j=0
@@ -629,7 +650,10 @@ for i in range(len(df_graphers)):
     j += 1
     
 df_graphers = pd.concat([df_graphers, df_graphers_spells], ignore_index=True)
+# -
 
+
+# Final adjustments to the graphers table: add `relatedQuestion` link and `defaultView`:
 
 # +
 #Add related question link
@@ -640,45 +664,27 @@ df_graphers['relatedQuestionUrl'] = np.nan
 df_graphers.loc[(df_graphers['ySlugs'] == "headcount_ratio_215") 
                 & (df_graphers['tableSlug'] == "inc_or_cons") 
                 & (df_graphers['Show breaks between less comparable surveys Checkbox'] == "false"), ['defaultView']] = "true"
-    
-    
-# #Reorder dropdown menus
-# povline_dropdown_list = ['$1 per day',
-#                          '$1.90 per day: International Poverty Line',
-#                          '$2.15 per day: International Poverty Line',
-#                          '$3.20 per day: Lower-middle income poverty line',
-#                          '$3.65 per day: Lower-middle income poverty line',
-#                          '$5.50 per day: Upper-middle income poverty line',
-#                          '$6.85 per day: Upper-middle income poverty line',
-#                          '$10 per day',
-#                          '$20 per day',
-#                          '$30 per day',
-#                          '$40 per day',
-#                          'International Poverty Line',
-#                          'Lower-middle income poverty line',
-#                          'Upper-middle income poverty line',
-#                          'Relative poverty: 40% of median',
-#                          'Relative poverty: 50% of median',
-#                          'Relative poverty: 60% of median']
+# -
 
-
-# df_graphers_mapping = pd.DataFrame({'povline_dropdown': povline_dropdown_list,})
-# df_graphers_mapping = df_graphers_mapping.reset_index().set_index('povline_dropdown')
-
-# df_graphers['povline_dropdown_aux'] = df_graphers['Poverty line Dropdown'].map(df_graphers_mapping['index'])
-# df_graphers = df_graphers.sort_values('povline_dropdown_aux', ignore_index=True)
-# df_graphers = df_graphers.drop(columns=['povline_dropdown_aux'])
+# ## Explorer generation
+# Here, the header, tables and graphers dataframes are combined to be shown in for format required for OWID data explorers.
 
 # +
+#Define list of variables to iterate: survey types and the list of variables (the latter for spell tables)
 survey_list = list(survey_type['table_name'].unique())
 var_list = list(df_spells['master_var'].unique())
 
+#Header is converted into a tab-separated text
 header_tsv = df_header.to_csv(sep="\t", header=False)
 
+#Auxiliar variable `survey_type` is dropped and graphers table is converted into a tab-separated text
 graphers_tsv = df_graphers.drop(columns=['survey_type'])
 graphers_tsv = graphers_tsv.to_csv(sep="\t", index=False)
+
+#This table is indented, to follow explorers' format
 graphers_tsv_indented = textwrap.indent(graphers_tsv, "\t")
 
+#The dataframes are combined, including tables which are filtered by survey type and variable
 with open(f'data/ppp_2017/final/OWID_internal_upload/explorer_database/complete_poverty/grapher.tsv', "w", newline="\n") as f:
     f.write(header_tsv)
     f.write("\ngraphers\n" + graphers_tsv_indented)
