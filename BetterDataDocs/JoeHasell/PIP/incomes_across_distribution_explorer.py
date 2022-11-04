@@ -198,6 +198,28 @@ for i in range(len(df_tables)):
         df_spells.loc[j, 'colorScaleScheme'] = df_tables.colorScaleScheme[i]
         df_spells.loc[j, 'survey_type'] = df_tables.survey_type[i]
         j += 1
+        
+#Delete monthly and yearly variables, because there are not spells files for them
+df_spells = df_spells[~df_spells['master_var'].str.contains("_month")].reset_index(drop=True)
+df_spells = df_spells[~df_spells['master_var'].str.contains("_year")].reset_index(drop=True)
+
+#Create new rows for monthly and yearly aggregations
+#Drop shares, because they are not aggregated
+df_spells_agg = df_spells[~df_spells['master_var'].str.contains("_share")].copy().reset_index(drop=True)
+
+#Create monthly columns
+df_spells_month = df_spells_agg.copy()
+df_spells_month['transform'] = "multiplyBy " + df_spells_month['slug'] + " 30"
+df_spells_month['slug'] = df_spells_month['slug'] + "_month"
+df_spells_month['description'] = df_spells_month['description'].str.replace("day", "month")
+
+#Create yearly columns
+df_spells_year = df_spells_agg.copy()
+df_spells_year['transform'] = "multiplyBy " + df_spells_year['slug'] + " 365"
+df_spells_year['slug'] = df_spells_year['slug'] + "_year"
+df_spells_year['description'] = df_spells_year['description'].str.replace("day", "year")
+
+df_spells = pd.concat([df_spells, df_spells_month, df_spells_year], ignore_index=True)
 
 # %% [markdown]
 # ### Grapher views
@@ -423,6 +445,16 @@ for i in range(len(df_graphers)):
     df_graphers_spells.loc[j, 'mapTargetTime'] = np.nan
     df_graphers_spells.loc[j, 'Show breaks between less comparable surveys Checkbox'] = "true"
     j += 1
+    
+#Delete spells views for multiple deciles
+df_graphers_spells = df_graphers_spells[~(df_graphers_spells['Decile Dropdown'] == 'All deciles')].reset_index(drop=True)
+
+df_graphers_spells.loc[df_graphers_spells['tableSlug'].str.contains("_month"), ['ySlugs']] = "consumption_spell_1_month consumption_spell_2_month consumption_spell_3_month consumption_spell_4_month consumption_spell_5_month consumption_spell_6_month income_spell_1_month income_spell_2_month income_spell_3_month income_spell_4_month income_spell_5_month income_spell_6_month income_spell_7_month"
+df_graphers_spells.loc[df_graphers_spells['tableSlug'].str.contains("_year"), ['ySlugs']] = "consumption_spell_1_year consumption_spell_2_year consumption_spell_3_year consumption_spell_4_year consumption_spell_5_year consumption_spell_6_year income_spell_1_year income_spell_2_year income_spell_3_year income_spell_4_year income_spell_5_year income_spell_6_year income_spell_7_year"
+
+#Modify tableSlug to redirect _month and _year to the daily tables
+df_graphers_spells['tableSlug'] = df_graphers_spells['tableSlug'].str.removesuffix("_month")
+df_graphers_spells['tableSlug'] = df_graphers_spells['tableSlug'].str.removesuffix("_year")
     
 df_graphers = pd.concat([df_graphers, df_graphers_spells], ignore_index=True)
 
