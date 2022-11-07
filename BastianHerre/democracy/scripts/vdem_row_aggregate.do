@@ -1,6 +1,6 @@
 *****  This Stata do-file aggregates some of the variables of the V-Dem and RoW data
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  October 25, 2022
 
 version 14
 clear all
@@ -32,7 +32,8 @@ tabulate libdem_age_group_row_owid, generate(libdem_age_group_row_owid)
 
 * Collapse dataset by year:
 collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* ///
-	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid, by(year)
+	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid ///
+	civ_libs_vdem_owid civ_libs_vdem_high_owid civ_libs_vdem_low_owid phys_integr_libs_vdem_owid phys_integr_libs_vdem_high_owid phys_integr_libs_vdem_low_owid pol_libs_vdem_owid pol_libs_vdem_high_owid pol_libs_vdem_low_owid priv_libs_vdem_owid priv_libs_vdem_high_owid priv_libs_vdem_low_owid, by(year)
 drop regime_row_owid regime_amb_row_owid electdem_age_group_row_owid libdem_age_group_row_owid
 
 * Create entity identifier:
@@ -103,7 +104,8 @@ tabulate libdem_age_group_row_owid, generate(libdem_age_group_row_owid)
 
 * Collapse dataset by year:
 collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* ///
-	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid [fweight = population_owid], by(year)
+	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid ///
+	civ_libs_vdem_owid civ_libs_vdem_high_owid civ_libs_vdem_low_owid phys_integr_libs_vdem_owid phys_integr_libs_vdem_high_owid phys_integr_libs_vdem_low_owid pol_libs_vdem_owid pol_libs_vdem_high_owid pol_libs_vdem_low_owid priv_libs_vdem_owid priv_libs_vdem_high_owid priv_libs_vdem_low_owid [fweight = population_owid], by(year)
 drop regime_row_owid regime_amb_row_owid regime_amb_row_owid11 electdem_age_group_row_owid libdem_age_group_row_owid
 
 * Create entity identifier:
@@ -161,6 +163,23 @@ rename egaldem_vdem_owid popw_egaldem_vdem_owid
 rename egaldem_vdem_low_owid popw_egaldem_l_vdem_owid
 rename egaldem_vdem_high_owid popw_egaldem_h_vdem_owid
 
+rename civ_libs_vdem_owid popw_civ_libs_vdem_owid
+rename civ_libs_vdem_high_owid popw_civ_libs_vdem_high_owid
+rename civ_libs_vdem_low_owid popw_civ_libs_vdem_low_owid
+
+rename phys_integr_libs_vdem_owid popw_physinteg_libs_vdem_owid
+rename phys_integr_libs_vdem_high_owid popw_physinteg_libs_vdem_h_owid
+rename phys_integr_libs_vdem_low_owid popw_physinteg_libs_vdem_l_owid
+
+rename pol_libs_vdem_owid popw_pol_libs_vdem_owid
+rename pol_libs_vdem_high_owid popw_pol_libs_vdem_high_owid
+rename pol_libs_vdem_low_owid popw_pol_libs_vdem_low_owid
+
+rename priv_libs_vdem_owid popw_priv_libs_vdem_owid
+rename priv_libs_vdem_high_owid popw_priv_libs_vdem_high_owid
+rename priv_libs_vdem_low_owid popw_priv_libs_vdem_low_owid
+
+
 * Temporarily save data:
 save "democracy/datasets/final/vdem_row_aggregated_popweighted.dta", replace
 
@@ -207,7 +226,8 @@ tabulate libdem_age_group_row_owid, generate(libdem_age_group_row_owid)
 
 * Collapse dataset by year:
 collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* ///
-	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid, by(year region)
+	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid ///
+	civ_libs_vdem_owid civ_libs_vdem_high_owid civ_libs_vdem_low_owid phys_integr_libs_vdem_owid phys_integr_libs_vdem_high_owid phys_integr_libs_vdem_low_owid pol_libs_vdem_owid pol_libs_vdem_high_owid pol_libs_vdem_low_owid priv_libs_vdem_owid priv_libs_vdem_high_owid priv_libs_vdem_low_owid, by(year region)
 drop regime_row_owid regime_amb_row_owid electdem_age_group_row_owid libdem_age_group_row_owid
 
 * Create entity identifier:
@@ -286,7 +306,8 @@ tabulate libdem_age_group_row_owid, generate(libdem_age_group_row_owid)
 
 * Collapse dataset by year:
 collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* ///
-	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid [fweight = population_owid], by(year region)
+	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid ///
+	civ_libs_vdem_owid civ_libs_vdem_high_owid civ_libs_vdem_low_owid phys_integr_libs_vdem_owid phys_integr_libs_vdem_high_owid phys_integr_libs_vdem_low_owid pol_libs_vdem_owid pol_libs_vdem_high_owid pol_libs_vdem_low_owid priv_libs_vdem_owid priv_libs_vdem_high_owid priv_libs_vdem_low_owid [fweight = population_owid], by(year region)
 drop regime_row_owid regime_amb_row_owid regime_amb_row_owid11 electdem_age_group_row_owid libdem_age_group_row_owid
 
 * Create entity identifier:
@@ -343,6 +364,22 @@ rename delibdem_vdem_high_owid popw_delibdem_h_vdem_owid
 rename egaldem_vdem_owid popw_egaldem_vdem_owid
 rename egaldem_vdem_low_owid popw_egaldem_l_vdem_owid
 rename egaldem_vdem_high_owid popw_egaldem_h_vdem_owid
+
+rename civ_libs_vdem_owid popw_civ_libs_vdem_owid
+rename civ_libs_vdem_high_owid popw_civ_libs_vdem_high_owid
+rename civ_libs_vdem_low_owid popw_civ_libs_vdem_low_owid
+
+rename phys_integr_libs_vdem_owid popw_physinteg_libs_vdem_owid
+rename phys_integr_libs_vdem_high_owid popw_physinteg_libs_vdem_h_owid
+rename phys_integr_libs_vdem_low_owid popw_physinteg_libs_vdem_l_owid
+
+rename pol_libs_vdem_owid popw_pol_libs_vdem_owid
+rename pol_libs_vdem_high_owid popw_pol_libs_vdem_high_owid
+rename pol_libs_vdem_low_owid popw_pol_libs_vdem_low_owid
+
+rename priv_libs_vdem_owid popw_priv_libs_vdem_owid
+rename priv_libs_vdem_high_owid popw_priv_libs_vdem_high_owid
+rename priv_libs_vdem_low_owid popw_priv_libs_vdem_low_owid
 
 * Temporarily save data:
 save "democracy/datasets/final/vdem_row_aggregated_popweighted_regions.dta", replace
@@ -451,6 +488,22 @@ label variable popw_delibdem_h_vdem_owid "Deliberative democracy (upper bound, p
 label variable popw_egaldem_vdem_owid "Egalitarian democracy (V-Dem, population-weighted)"
 label variable popw_egaldem_l_vdem_owid "Egalitarian democracy (lower bound, pop-weighted, V-Dem)"
 label variable popw_egaldem_h_vdem_owid "Egalitarian democracy (upper bound, pop-weighted, V-Dem)"
+
+label variable popw_civ_libs_vdem_owid "Civil liberties (V-Dem, population-weighted)"
+label variable popw_civ_libs_vdem_low_owid "Civil liberties (lower bound, pop-weighted, V-Dem)"
+label variable popw_civ_libs_vdem_high_owid "Civil liberties (upper bound, pop-weighted, V-Dem)"
+
+label variable popw_physinteg_libs_vdem_owid "Physical integrity liberties (V-Dem, population-weighted)"
+label variable popw_physinteg_libs_vdem_l_owid "Physical integrity liberties (lower bound, pop-weighted, V-Dem)"
+label variable popw_physinteg_libs_vdem_h_owid "Physical integrity liberties (upper bound, pop-weighted, V-Dem)"
+
+label variable popw_pol_libs_vdem_owid "Political civil liberties (V-Dem, population-weighted)"
+label variable popw_pol_libs_vdem_low_owid "Political civil liberties (lower bound, pop-weighted, V-Dem)"
+label variable popw_pol_libs_vdem_high_owid "Political civil liberties (upper bound, pop-weighted, V-Dem)"
+
+label variable popw_priv_libs_vdem_owid "Private civil liberties (V-Dem, population-weighted)"
+label variable popw_priv_libs_vdem_low_owid "Private civil liberties (lower bound, pop-weighted, V-Dem)"
+label variable popw_priv_libs_vdem_high_owid "Private civil liberties (upper bound, pop-weighted, V-Dem)"
 
 label variable region "Region"
 

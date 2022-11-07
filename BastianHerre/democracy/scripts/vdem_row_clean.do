@@ -1,6 +1,6 @@
 *****  This Stata do-file cleans the democracy dataset by the Varieties of Democracy (V-Dem) project, including the Regimes of the World (RoW) data
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  October 25, 2022
 
 version 14
 clear all
@@ -25,6 +25,7 @@ keep country_name year v2x_regime v2x_regime_amb v2elmulpar_osp v2elmulpar_osp_c
 	v2x_partipdem v2x_partip v2x_cspart v2xdd_dd v2xel_locelec v2xel_regelec v2x_partipdem_codelow v2x_partip_codelow v2x_cspart_codelow v2xel_locelec_codelow v2xel_regelec_codelow v2x_partipdem_codehigh v2x_partip_codehigh v2x_cspart_codehigh v2xel_locelec_codehigh v2xel_regelec_codehigh ///
 	v2x_delibdem v2xdl_delib v2dlreason v2dlcommon v2dlcountr v2dlconslt v2dlengage v2x_delibdem_codelow v2xdl_delib_codelow v2dlreason_codelow v2dlcommon_codelow v2dlcountr_codelow v2dlconslt_codelow v2dlengage_codelow v2x_delibdem_codehigh v2xdl_delib_codehigh v2dlreason_codehigh v2dlcommon_codehigh v2dlcountr_codehigh v2dlconslt_codehigh v2dlengage_codehigh ///
 	v2x_egaldem v2x_egal v2xeg_eqprotec v2xeg_eqaccess v2xeg_eqdr v2x_egaldem_codelow v2x_egal_codelow v2xeg_eqprotec_codelow v2xeg_eqaccess_codelow v2xeg_eqdr_codelow v2x_egaldem_codehigh v2x_egal_codehigh v2xeg_eqprotec_codehigh v2xeg_eqaccess_codehigh v2xeg_eqdr_codehigh ///
+	v2x_civlib v2x_civlib_codehigh v2x_civlib_codelow v2x_clphy v2x_clphy_codehigh v2x_clphy_codelow v2x_clpol v2x_clpol_codehigh v2x_clpol_codelow v2x_clpriv v2x_clpriv_codehigh v2x_clpriv_codelow ///
 	v2eltrnout e_wbgi_gee
 
 ** Drop superfluous observations:
@@ -476,9 +477,9 @@ rename v2x_liberal lib_vdem
 rename v2x_liberal_codelow lib_vdem_low
 rename v2x_liberal_codehigh lib_vdem_high
 
-rename v2xcl_rol civlib_vdem
-rename v2xcl_rol_codelow civlib_vdem_low
-rename v2xcl_rol_codehigh civlib_vdem_high
+rename v2xcl_rol indiv_libs_vdem
+rename v2xcl_rol_codelow indiv_libs_vdem_low
+rename v2xcl_rol_codehigh indiv_libs_vdem_high
 
 rename v2x_jucon judicial_constr_vdem
 rename v2x_jucon_codelow judicial_constr_vdem_low
@@ -558,6 +559,22 @@ rename v2xeg_eqdr equal_res_vdem
 rename v2xeg_eqdr_codelow equal_res_vdem_low
 rename v2xeg_eqdr_codehigh equal_res_vdem_high
 
+rename v2x_civlib civ_libs_vdem
+rename v2x_civlib_codelow civ_libs_vdem_low
+rename v2x_civlib_codehigh civ_libs_vdem_high
+
+rename v2x_clphy phys_integr_libs_vdem
+rename v2x_clphy_codehigh phys_integr_libs_vdem_high
+rename v2x_clphy_codelow phys_integr_libs_vdem_low
+
+rename v2x_clpol pol_libs_vdem
+rename v2x_clpol_codehigh pol_libs_vdem_high
+rename v2x_clpol_codelow pol_libs_vdem_low
+
+rename v2x_clpriv priv_libs_vdem
+rename v2x_clpriv_codehigh priv_libs_vdem_high
+rename v2x_clpriv_codelow priv_libs_vdem_low
+
 rename v2eltrnout turnout_vdem
 rename e_wbgi_gee goveffective_vdem_wbgi
 
@@ -627,9 +644,9 @@ label variable lib_vdem "Liberal political institutions (V-Dem)"
 label variable lib_vdem_low "Liberal political institutions (lower bound, V-Dem)"
 label variable lib_vdem_high "Liberal political institutions (upper bound, V-Dem)"
 
-label variable civlib_vdem "Civil liberties (V-Dem)"
-label variable civlib_vdem_low "Civil liberties (lower bound, V-Dem)"
-label variable civlib_vdem_high "Civil liberties (upper bound, V-Dem)"
+label variable indiv_libs_vdem "Individual liberties and equality before the law (V-Dem)"
+label variable indiv_libs_vdem_low "Individual liberties and equality before the law (lower bound, V-Dem)"
+label variable indiv_libs_vdem_high "Individual liberties and equality before the law (upper bound, V-Dem)"
 
 label variable judicial_constr_vdem "Judicial constraints on the executive (V-Dem)"
 label variable judicial_constr_vdem_low "Judicial constraints on the executive (lower bound, V-Dem)"
@@ -708,6 +725,23 @@ label variable elitecons_polch_vdem_high "Elite consultation  (upper bound, V-De
 label variable soccons_polch_vdem "Engaged society (V-Dem)"
 label variable soccons_polch_vdem_low "Engaged society (lower bound, V-Dem)"
 label variable soccons_polch_vdem_high "Engaged society (upper bound, V-Dem)"
+
+
+label variable civ_libs_vdem "Civil liberties (V-Dem)"
+label variable civ_libs_vdem_low "Civil liberties (lower bound, V-Dem)"
+label variable civ_libs_vdem_high "Civil liberties (upper bound, V-Dem)"
+
+label variable phys_integr_libs_vdem "Physical integrity liberties (V-Dem)"
+label variable phys_integr_libs_vdem_low "Physical integrity liberties (lower bound, V-Dem)"
+label variable phys_integr_libs_vdem_high "Physical integrity liberties (upper bound, V-Dem)"
+
+label variable pol_libs_vdem "Political civil liberties (V-Dem)"
+label variable pol_libs_vdem_low "Political civil liberties (lower bound, V-Dem)"
+label variable pol_libs_vdem_high "Political civil liberties (upper bound, V-Dem)"
+
+label variable priv_libs_vdem "Private civil liberties (V-Dem)"
+label variable priv_libs_vdem_low "Private civil liberties (lower bound, V-Dem)"
+label variable priv_libs_vdem_high "Private civil liberties (upper bound, V-Dem)"
 
 
 label variable turnout_vdem "Voter turnout (V-Dem)"

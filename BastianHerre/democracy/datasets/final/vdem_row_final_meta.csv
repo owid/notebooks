@@ -63,9 +63,9 @@ electoff_vdem_owid,Elected officials (V-Dem)
 lib_vdem_owid,Liberal political institutions (V-Dem)
 lib_vdem_low_owid,"Liberal political institutions (lower bound, V-Dem)"
 lib_vdem_high_owid,"Liberal political institutions (upper bound, V-Dem)"
-civlib_vdem_owid,Civil liberties (V-Dem)
-civlib_vdem_low_owid,"Civil liberties (lower bound, V-Dem)"
-civlib_vdem_high_owid,"Civil liberties (upper bound, V-Dem)"
+indiv_libs_vdem_owid,Individual liberties and equality before the law (V-Dem)
+indiv_libs_vdem_low_owid,"Individual liberties and equality before the law (lower bound, V-Dem)"
+indiv_libs_vdem_high_owid,"Individual liberties and equality before the law (upper bound, V-Dem)"
 judicial_constr_vdem_owid,Judicial constraints on the executive (V-Dem)
 judicial_constr_vdem_low_owid,"Judicial constraints on the executive (lower bound, V-Dem)"
 judicial_constr_vdem_high_owid,"Judicial constraints on the executive (upper bound, V-Dem)"
@@ -116,6 +116,18 @@ equal_access_vdem_high_owid,"Equal access to power (upper bound, V-Dem)"
 equal_res_vdem_owid,Equal resource distribution (V-Dem)
 equal_res_vdem_low_owid,"Equal resource distribution (lower bound, V-Dem)"
 equal_res_vdem_high_owid,"Equal resource distribution (upper bound, V-Dem)"
+civ_libs_vdem_owid,Civil liberties (V-Dem)
+civ_libs_vdem_low_owid,"Civil liberties (lower bound, V-Dem)"
+civ_libs_vdem_high_owid,"Civil liberties (upper bound, V-Dem)"
+phys_integr_libs_vdem_owid,Physical integrity liberties (V-Dem)
+phys_integr_libs_vdem_low_owid,"Physical integrity liberties (lower bound, V-Dem)"
+phys_integr_libs_vdem_high_owid,"Physical integrity liberties (upper bound, V-Dem)"
+pol_libs_vdem_owid,Political civil liberties (V-Dem)
+pol_libs_vdem_low_owid,"Political civil liberties (lower bound, V-Dem)"
+pol_libs_vdem_high_owid,"Political civil liberties (upper bound, V-Dem)"
+priv_libs_vdem_owid,Private civil liberties (V-Dem)
+priv_libs_vdem_low_owid,"Private civil liberties (lower bound, V-Dem)"
+priv_libs_vdem_high_owid,"Private civil liberties (upper bound, V-Dem)"
 goveffective_vdem_wbgi_owid,"Government effectiveness (World Bank Governance Indicators, V-Dem)"
 regime_redux_row_owid,"Political regime (Regimes of the World, reduced, OWID)"
 regime_imputed_vdem_owid,V-Dem regime information imputed from another country
@@ -186,4 +198,16 @@ popw_delibdem_h_vdem_owid,"Deliberative democracy (upper bound, pop-weighted, V-
 popw_egaldem_vdem_owid,"Egalitarian democracy (V-Dem, population-weighted)"
 popw_egaldem_l_vdem_owid,"Egalitarian democracy (lower bound, pop-weighted, V-Dem)"
 popw_egaldem_h_vdem_owid,"Egalitarian democracy (upper bound, pop-weighted, V-Dem)"
+popw_civ_libs_vdem_owid,"Civil liberties (V-Dem, population-weighted)"
+popw_civ_libs_vdem_high_owid,"Civil liberties (upper bound, pop-weighted, V-Dem)"
+popw_civ_libs_vdem_low_owid,"Civil liberties (lower bound, pop-weighted, V-Dem)"
+popw_physinteg_libs_vdem_owid,"Physical integrity liberties (V-Dem, population-weighted)"
+popw_physinteg_libs_vdem_h_owid,"Physical integrity liberties (upper bound, pop-weighted, V-Dem)"
+popw_physinteg_libs_vdem_l_owid,"Physical integrity liberties (lower bound, pop-weighted, V-Dem)"
+popw_pol_libs_vdem_owid,"Political civil liberties (V-Dem, population-weighted)"
+popw_pol_libs_vdem_high_owid,"Political civil liberties (upper bound, pop-weighted, V-Dem)"
+popw_pol_libs_vdem_low_owid,"Political civil liberties (lower bound, pop-weighted, V-Dem)"
+popw_priv_libs_vdem_owid,"Private civil liberties (V-Dem, population-weighted)"
+popw_priv_libs_vdem_high_owid,"Private civil liberties (upper bound, pop-weighted, V-Dem)"
+popw_priv_libs_vdem_low_owid,"Private civil liberties (lower bound, pop-weighted, V-Dem)"
 region,Region

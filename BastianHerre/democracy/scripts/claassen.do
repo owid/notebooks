@@ -1,6 +1,6 @@
 *****  This Stata do-file cleans Claassen's data on citizens' support of and satisfaction with democracy.
 *****  Author: Bastian Herre
-*****  August 4, 2022
+*****  October 31, 2022
 
 version 14
 clear all
@@ -45,8 +45,8 @@ sort country_name year
 
 
 ** Export data:
-save "Claassen 2022/claassen_support.dta", replace
-export delimited "Claassen 2022/claassen_support.csv", replace
+save "democracy/dataset/claassen_support.dta", replace
+export delimited "democracy/dataset/claassen_support.csv", replace
 
 describe, replace
 keep name varlab
@@ -88,14 +88,14 @@ sort country_name year
 
 
 ** Export data:
-save "Claassen 2022/claassen_satisfaction.dta", replace
-export delimited "Claassen 2022/claassen_satisfaction.csv", replace
+save "democracy/dataset/claassen_satisfaction.dta", replace
+export delimited "democracy/dataset/claassen_satisfaction.csv", replace
 
 describe, replace
 keep name varlab
 rename name varname
 rename varlab varlabel
-export delimited "Claassen 2022/claassen_satisfaction_meta.csv", replace
+export delimited "democracy/dataset/claassen_satisfaction_meta.csv", replace
 
 
 
