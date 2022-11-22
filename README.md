@@ -1,10 +1,12 @@
-# Our World In Data Jupyter Notebooks
+# Our World In Data Scripts & Notebooks
 
-This repository contains Jupyter notebooks created at Our World In Data.
+This repository contains scripts and notebooks used by the team at Our World In Data.
 
-The folder structure is sorted by author first, then by project. Jupyter notebooks in here are created for different purposes and thus to different standards of quality. The readme in every individual folder will tell you more.
+⚠️ **Scripts and notebooks here are created by many different team members and for different purposes. The standards of quality inside each project will vary a lot in terms of code, data management, project architecture, etc.**
 
-See below how to install a local setup for running these notebooks.
+The folder structure is sorted by author first, then by project. Some individual folders contain README files for more information.
+
+See below how to install a local setup for running the notebooks.
 
 To run and modify these notebooks from your browser, one of the easiest ways is using [Nextjournal.com](https://github.nextjournal.com/). Just open the This repository in nextjournal by [clicking this link](https://github.nextjournal.com/owid/notebooks/tree/main).
 
