@@ -1,5 +1,4 @@
 rm(list = ls())
-library(stringr)
 library(googlesheets4)
 library(dplyr)
 library(readr)
@@ -64,8 +63,7 @@ df5 <- Reduce(function(x, y) merge(x, y, all=TRUE),
 df5 <- df5 %>% relocate(Entity, Year)
 
 # Take care of inconsistency in numbers for US 2021 (in df2: 52878619257 vs df4: 52872119257)
-(52878619257+52872119257)/2
-df5[165, 3] <- 52875369257
+df5[165, 3] <- round((52878619257 + 52872119257) / 2)
 df5 <- df5[-166, ]
 
 write_csv(df5, "transformed/Private_investment_ai.csv")
