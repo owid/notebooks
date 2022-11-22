@@ -66,4 +66,30 @@ df5 <- df5 %>% relocate(Entity, Year)
 df5[165, 3] <- round((52878619257 + 52872119257) / 2)
 df5 <- df5[-166, ]
 
+
+### Adjust for inflation
+
+# We adjust for inflation based on the US CPI for 2021
+# For full explanation see https://github.com/owid/owid-issues/issues/621#issuecomment-1291179760
+cpi <- read_csv("https://owid.cloud/api/variables/446013.csv") %>%
+  filter(Entity == "United States") %>%
+  rename(cpi = `Consumer price index (2010 = 100)`) %>%
+  select(Year, cpi)
+
+# Adjust CPI values so that 2021 is the reference year (2021 = 100)
+cpi_2021 <- cpi %>% filter(Year == 2021) %>% pull(cpi)
+cpi <- cpi %>% mutate(cpi = 100 * cpi / cpi_2021)
+
+# Merge df5 with CPI data
+df5 <- left_join(df5, cpi, by = "Year")
+
+# Adjust total_private_investment_by_country & total_private_investment_by_focus_area for inflation
+df5 <- df5 %>%
+  mutate(
+    total_private_investment_by_country = round(100 * total_private_investment_by_country / cpi),
+    total_private_investment_by_focus_area = round(100 * total_private_investment_by_focus_area / cpi)
+  ) %>%
+  select(-cpi)
+
+
 write_csv(df5, "transformed/Private_investment_ai.csv")
