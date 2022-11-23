@@ -1,5 +1,4 @@
 rm(list = ls())
-library(stringr)
 library(googlesheets4)
 library(dplyr)
 library(readr)
@@ -18,11 +17,35 @@ df <- df %>%
 write_csv(df, "transformed/Corporate_investment_ai.csv")
 
 # Total corporate investment 
-df2 <- df %>% 
+df <- df %>% 
   group_by(Year) %>% 
   summarise(total_corporate_investment = sum(total_corporate_investment_by_activity))
 
-df2$Entity <- "World"
+df$Entity <- "World"
 
-df2 <- df2 %>% relocate(Entity, Year)
-write_csv(df2, "transformed/total_corporate_investment_ai.csv")
+df <- df %>% relocate(Entity, Year)
+
+
+### Adjust for inflation
+
+# We adjust for inflation based on the US CPI for 2021
+# For full explanation see https://github.com/owid/owid-issues/issues/621#issuecomment-1291179760
+cpi <- read_csv("https://owid.cloud/api/variables/446013.csv") %>%
+  filter(Entity == "United States") %>%
+  rename(cpi = `Consumer price index (2010 = 100)`) %>%
+  select(Year, cpi)
+
+# Adjust CPI values so that 2021 is the reference year (2021 = 100)
+cpi_2021 <- cpi %>% filter(Year == 2021) %>% pull(cpi)
+cpi <- cpi %>% mutate(cpi = 100 * cpi / cpi_2021)
+
+# Merge df with CPI data
+df <- left_join(df, cpi, by = "Year")
+
+# Adjust total_private_investment_by_country & total_private_investment_by_focus_area for inflation
+df <- df %>%
+  mutate(total_corporate_investment = round(100 * total_corporate_investment / cpi)) %>%
+  select(-cpi)
+
+
+write_csv(df, "transformed/total_corporate_investment_ai.csv")
