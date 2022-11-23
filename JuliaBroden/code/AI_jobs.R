@@ -11,8 +11,7 @@ sheet_url <- "https://docs.google.com/spreadsheets/d/19UGjvQW-PcnWoHEPe9Wd1Eib5z
 df <- read_sheet(sheet_url, sheet = 3)
 
 df <- df %>%
-  gather(Entity, AI_job_postings, -Year) %>%
+  gather(Entity, ai_job_postings, -Year) %>%
   relocate(Entity, Year)
 
-# percent or decimal?
 write_csv(df, "transformed/AI_jobs.csv")

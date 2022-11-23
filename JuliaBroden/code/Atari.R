@@ -11,7 +11,7 @@ df <- read_sheet(sheet_url, sheet = 35)
 
 df <- df %>% 
   select(-Source) %>%
-  rename(Entity = 'Model', Mean_normalized_human_score = 'Mean-Normalized Human Score') %>%
+  rename(Entity = 'Model', mean_normalized_human_score = 'Mean-Normalized Human Score') %>%
   relocate(Entity, Year)
 
 write_csv(df, "transformed/Atari.csv")

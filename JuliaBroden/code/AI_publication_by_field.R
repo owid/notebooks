@@ -9,8 +9,17 @@ sheet_url <- "https://docs.google.com/spreadsheets/d/1D_7XVaE4BK0DrEFRg0aLaQSYdG
 df <- read_sheet(sheet_url, sheet = 2)
 
 df <- df %>%
-  rename(c(Entity = `Field of Study`, Number_ai_publications = `Number of AI Publications`)) %>%
-  relocate(Entity, Year) %>%
-  mutate(Entity = ifelse(Entity == "Human‚Äìcomputer interaction", "Human-computer interaction", Entity))
+  rename(c(Entity = `Field of Study`, number_ai_publications_by_field = `Number of AI Publications`)) %>%
+  mutate(Entity = ifelse(Entity == "Human‚Äìcomputer interaction", "Human-computer interaction", Entity)) %>% 
+  mutate(Entity = ifelse(Entity == "Other AI", "All other fields", Entity)) %>% 
+  relocate(Entity, Year)
 
-write_csv(df, "transformed/AI_publications_by_field.csv")
+# Add Total entity
+df2 <- df %>%
+  group_by(Year) %>% 
+  summarise(number_ai_publications_by_field = sum(number_ai_publications_by_field)) %>% 
+  bind_rows(df, .)
+
+df2$Entity[is.na(df2$Entity)] <- 'Total'
+
+write_csv(df2, "transformed/AI_publications_by_field.csv")

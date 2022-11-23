@@ -11,8 +11,8 @@ df <- read_sheet(sheet_url)
 df$Entity <- "World"
 
 df <- df %>%
-  rename(Number_ai_publications = `Number of AI Publications`) %>%
+  rename(number_ai_publications_by_country = `Number of AI Publications`) %>%
   mutate(Entity = str_to_sentence(Entity)) %>%
   relocate(Entity, Year)
 
-write_csv(df, "AI_publications.csv")
+write_csv(df, "transformed/AI_publications.csv")

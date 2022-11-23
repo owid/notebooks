@@ -11,8 +11,13 @@ df <- read_sheet(sheet_url, sheet = 'New Computing PhD by Race/Ethnicity')
 
 #total <- df[9,]
 #dft <- mutate_each(funs(./.[9], setdiff(names(.), "share")))
+#df <- df %>% pivot_longer(cols = '2010':'2020', names_to = 'Year', values_to = 'share_race_ethnicity_new_cs_phds') %>% rename(Entity = ...1)
 
-df <- df %>% pivot_longer(cols = '2010':'2020', names_to = 'Year', values_to = 'share_race_ethnicity_new_cs_phds') %>% 
-  rename(Entity = ...1)
-
+df <- df %>%
+  pivot_longer(cols = "2010":"2020", names_to = "Year", values_to = "share_race_ethnicity_new_cs_phds") %>% 
+  rename(Entity = ...1) %>%
+  filter(Entity != "Total") %>%
+  group_by(Year) %>%
+  mutate(share_race_ethnicity_new_cs_phds = share_race_ethnicity_new_cs_phds / sum(share_race_ethnicity_new_cs_phds))
+  
 write_csv(df, "transformed/share_race_ethnicity_new_cs_phds.csv") 
