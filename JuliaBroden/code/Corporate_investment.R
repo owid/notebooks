@@ -37,12 +37,14 @@ df <- df %>%
 
 write_csv(df, "transformed/Corporate_investment_ai.csv")
 
-# Total corporate investment 
-df_total <- df %>% 
-  group_by(Year) %>% 
-  summarise(total_corporate_investment = sum(total_corporate_investment_by_activity), 
-                                             total_corporate_investment_inflation_adjusted = 
-                                               sum(total_corporate_investment_by_activity_inflation_adjusted))
+# Calculate total corporate investment
+df_total <- df %>%
+  group_by(Year) %>%
+  summarise(
+    total_corporate_investment = sum(total_corporate_investment_by_activity),
+    total_corporate_investment_inflation_adjusted =
+      sum(total_corporate_investment_by_activity_inflation_adjusted)
+  )
 
 df_total$Entity <- "World"
 
