@@ -47,13 +47,13 @@ df_cs <- df2[34, 2:18]
 df_ai <- df2[66, 2:18]
 
 df_cs <- df_cs %>%
-  gather(Year, female_new_cs_phds) %>%
-  mutate(Entity = "North America", Year = as.numeric(Year), female_new_cs_phds = female_new_cs_phds / 100) %>%
+  gather(Year, share_new_female_cs_phds) %>%
+  mutate(Entity = "North America", Year = as.numeric(Year), share_new_female_cs_phds = share_new_female_cs_phds / 100) %>%
   relocate(Entity, Year)
 
 df_ai <- df_ai %>%
-  gather(Year, female_new_ai_phds) %>%
-  mutate(Entity = "North America", Year = as.numeric(Year), female_new_ai_phds = female_new_ai_phds / 100) %>%
+  gather(Year, share_new_female_ai_phds) %>%
+  mutate(Entity = "North America", Year = as.numeric(Year), share_new_female_ai_phds = share_new_female_ai_phds / 100) %>%
   relocate(Entity, Year)
 
 df_female <- merge(df_cs, df_ai, by = c('Entity', 'Year'), all = T)
@@ -62,8 +62,8 @@ df_female <- merge(df_cs, df_ai, by = c('Entity', 'Year'), all = T)
 df_inter <- df2[67, 2:18]
 
 df_inter <- df_inter %>%
-  gather(Year, new_international_ai_phds) %>%
-  mutate(Entity = "North America", Year = as.numeric(Year), new_international_ai_phds = new_international_ai_phds / 100) %>%
+  gather(Year, share_new_international_ai_phds) %>%
+  mutate(Entity = "North America", Year = as.numeric(Year), share_new_international_ai_phds = share_new_international_ai_phds / 100) %>%
   relocate(Entity, Year)
 
 df_fem_int <- merge(df_female, df_inter, by = c('Entity', 'Year'), all = T)

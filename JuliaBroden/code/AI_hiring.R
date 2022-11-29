@@ -16,7 +16,7 @@ reference_date <- ymd("2020/01/01")
 df <- df %>%
   rename(Year = 'Month-Year') %>%
   mutate(Year = difftime(ymd(Year), reference_date, units = "days")) %>%
-  gather(Entity, relative_ai_hiring_index, -Year) %>% 
+  gather(Entity, growth_ai_hiring_smoothed, -Year) %>% 
   relocate(Entity, Year)
 
 write_csv(df, "transformed/AI_hiring.csv")
@@ -29,7 +29,7 @@ df2 <- read_sheet(sheet_url, sheet = 'Relative AI Hiring Index')
 df2$Year <- 2021
 
 df2 <- df2 %>%
-  rename(Entity = `Country Geo`, relative_ai_hiring_rate = `Relative AI Hiring Index (Dec 2021)`) %>%
+  rename(Entity = `Country Geo`, growth_ai_hiring = `Relative AI Hiring Index (Dec 2021)`) %>%
   relocate(Entity, Year)
 
 df2[2,1] <- 'Hong Kong'

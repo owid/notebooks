@@ -14,18 +14,6 @@ df <- df %>%
   mutate(total_corporate_investment_by_activity = 10^9 * total_corporate_investment_by_activity) %>%
   relocate(Entity, Year)
 
-write_csv(df, "transformed/Corporate_investment_ai.csv")
-
-# Total corporate investment 
-df <- df %>% 
-  group_by(Year) %>% 
-  summarise(total_corporate_investment = sum(total_corporate_investment_by_activity))
-
-df$Entity <- "World"
-
-df <- df %>% relocate(Entity, Year)
-
-
 ### Adjust for inflation
 
 # We adjust for inflation based on the US CPI for 2021
@@ -42,10 +30,22 @@ cpi <- cpi %>% mutate(cpi = 100 * cpi / cpi_2021)
 # Merge df with CPI data
 df <- left_join(df, cpi, by = "Year")
 
-# Adjust total_private_investment_by_country & total_private_investment_by_focus_area for inflation
+# Adjust total_corporate_investment_by_activity for inflation
 df <- df %>%
-  mutate(total_corporate_investment = round(100 * total_corporate_investment / cpi)) %>%
+  mutate(total_corporate_investment_by_activity_inflation_adjusted = round(100 * total_corporate_investment_by_activity / cpi)) %>%
   select(-cpi)
 
+write_csv(df, "transformed/Corporate_investment_ai.csv")
 
-write_csv(df, "transformed/total_corporate_investment_ai.csv")
+# Total corporate investment 
+df_total <- df %>% 
+  group_by(Year) %>% 
+  summarise(total_corporate_investment = sum(total_corporate_investment_by_activity), 
+                                             total_corporate_investment_inflation_adjusted = 
+                                               sum(total_corporate_investment_by_activity_inflation_adjusted))
+
+df_total$Entity <- "World"
+
+df_total <- df_total %>% relocate(Entity, Year)
+
+write_csv(df_total, "transformed/total_corporate_investment_ai.csv")

@@ -86,8 +86,8 @@ df5 <- left_join(df5, cpi, by = "Year")
 # Adjust total_private_investment_by_country & total_private_investment_by_focus_area for inflation
 df5 <- df5 %>%
   mutate(
-    total_private_investment_by_country = round(100 * total_private_investment_by_country / cpi),
-    total_private_investment_by_focus_area = round(100 * total_private_investment_by_focus_area / cpi)
+    total_private_investment_by_country_inflation_adjusted = round(100 * total_private_investment_by_country / cpi),
+    total_private_investment_by_focus_area_inflation_adjusted = round(100 * total_private_investment_by_focus_area / cpi)
   ) %>%
   select(-cpi)
 

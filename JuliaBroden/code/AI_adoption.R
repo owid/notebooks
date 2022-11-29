@@ -14,8 +14,8 @@ df <- read_sheet(sheet_url)
 
 df <- df %>%
   rename(Entity = ...1) %>%
-  gather(Year, ai_adoption_by_organizations, -Entity) %>%
-  mutate(Year = as.numeric(Year), ai_adoption_by_organizations = ai_adoption_by_organizations / 100)
+  gather(Year, share_companies_using_ai, -Entity) %>%
+  mutate(Year = as.numeric(Year), share_companies_using_ai = share_companies_using_ai / 100)
 
 write_csv(df, "transformed/adoption_organization.csv")
 
