@@ -116,11 +116,14 @@ def add_metadata_and_export(df_final, sheet):
 
     id_vars = ['Entity', 'Year']
 
-    var_list = df_variable_metadata['slug'].tolist()
+    slug_list = df_variable_metadata['slug'].tolist()
 
-    var_list = id_vars + var_list 
+    var_list = id_vars + slug_list 
 
     df_dataset = df_final[df_final.columns.intersection(var_list)].copy()
+    
+    #Filter countries-years with no data in any variable (esp post-tax)
+    df_dataset = df_dataset[~df_dataset[slug_list].isna().all(1)].reset_index(drop=True)
 
     # Replace var names with those defined in the variable metadata ('name')
 
