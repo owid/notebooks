@@ -1,3 +1,7 @@
+***This code gets percentiles for hitotal, total current income
+***(factor + transfer income)
+***hifactor + hitransfer
+
 program define make_variables
 	gen miss_comp = 0
 	quietly replace miss_comp=1 if dhci==. | dhci==. | hitotal==.

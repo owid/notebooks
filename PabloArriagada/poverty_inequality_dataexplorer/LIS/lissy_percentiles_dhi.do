@@ -1,3 +1,7 @@
+***This code gets percentiles for dhi, disposable household income
+*** (total current income - income taxes and contributions)
+*** (hitotal - hxitsc)
+
 program define make_variables
 	gen miss_comp = 0
 	quietly replace miss_comp=1 if dhci==. | dhci==. | hitotal==.
