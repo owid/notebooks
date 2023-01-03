@@ -1,4 +1,5 @@
 import requests
+import time
 
 import pandas as pd
 from tqdm import tqdm
@@ -17,12 +18,17 @@ def offset_url(offset):
 
 def get_rows(offset):
     url = offset_url(offset)
-    data = requests.get(url).json()
+    try:
+        data = requests.get(url).json()
+    except Exception:
+        time.sleep(10)
+        data = requests.get(url).json()
     return pd.DataFrame.from_records([result["values"] for result in data["results"]])
 
 
 def main():
     n = get_n_objects()
+    print(f"{n} objects found.")
 
     data = []
     for i in tqdm(range(0, n + 1, 15)):
