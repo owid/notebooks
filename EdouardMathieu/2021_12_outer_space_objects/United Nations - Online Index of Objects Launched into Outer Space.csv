@@ -4,6 +4,7 @@ Algeria,2010,1,2
 Algeria,2016,3,5
 Algeria,2017,1,6
 Angola,2017,1,1
+Angola,2022,1,2
 Arabsat,1985,2,2
 Arabsat,1992,1,3
 Arabsat,1996,2,5
@@ -28,6 +29,7 @@ Argentina,2015,1,17
 Argentina,2018,1,18
 Argentina,2020,1,19
 Argentina,2021,1,20
+Armenia,2022,1,1
 Australia,1967,1,1
 Australia,1970,1,2
 Australia,1985,2,4
@@ -89,9 +91,11 @@ Brazil,2017,4,31
 Brazil,2018,3,34
 Brazil,2019,2,36
 Brazil,2021,3,39
+Brazil,2022,1,40
 Bulgaria,2017,1,1
 Bulgaria,2018,1,2
 Bulgaria,2021,1,3
+Bulgaria,2022,1,4
 Canada,1962,1,1
 Canada,1965,1,2
 Canada,1969,1,3
@@ -129,10 +133,12 @@ Canada,2018,5,62
 Canada,2019,3,65
 Canada,2020,6,71
 Canada,2021,11,82
+Canada,2022,7,89
 Chile,1995,1,1
 Chile,1998,1,2
 Chile,2011,1,3
 Chile,2017,1,4
+Chile,2022,3,7
 China,1970,1,1
 China,1971,1,2
 China,1974,1,3
@@ -178,6 +184,7 @@ China,2018,95,470
 China,2019,82,552
 China,2020,73,625
 China,2021,106,731
+China,2022,131,862
 Colombia,2007,1,1
 Colombia,2018,1,2
 Costa Rica,2018,1,1
@@ -188,6 +195,7 @@ Czechia,1995,1,4
 Czechia,1996,1,5
 Czechia,2003,1,6
 Czechia,2019,1,7
+Czechia,2022,2,9
 Denmark,1999,1,1
 Denmark,2003,2,3
 Denmark,2008,1,4
@@ -214,6 +222,7 @@ Egypt,2007,1,3
 Egypt,2010,1,4
 Egypt,2014,1,5
 Egypt,2019,4,9
+Egypt,2022,1,10
 Estonia,2013,1,1
 Estonia,2019,1,2
 Estonia,2020,1,3
@@ -288,6 +297,7 @@ Finland,2018,4,5
 Finland,2019,2,7
 Finland,2020,2,9
 Finland,2021,8,17
+Finland,2022,4,21
 France,1965,3,3
 France,1966,1,4
 France,1967,2,6
@@ -324,9 +334,10 @@ France,2014,2,105
 France,2016,2,107
 France,2017,2,109
 France,2018,2,111
-France,2019,6,117
-France,2020,4,121
-France,2021,9,130
+France,2019,7,118
+France,2020,4,122
+France,2021,9,131
+France,2022,8,139
 Germany,1969,1,1
 Germany,1970,1,2
 Germany,1972,1,3
@@ -366,6 +377,7 @@ Germany,2018,12,88
 Germany,2019,11,99
 Germany,2020,5,104
 Germany,2021,10,114
+Germany,2022,2,116
 Ghana,2017,1,1
 Greece,2003,1,1
 Greece,2017,1,2
@@ -411,6 +423,7 @@ India,2018,10,109
 India,2019,10,119
 India,2020,3,122
 India,2021,5,127
+India,2022,6,133
 Indonesia,1976,1,1
 Indonesia,1977,1,2
 Indonesia,1983,1,3
@@ -480,6 +493,7 @@ Iran,2011,1,3
 Iran,2012,1,4
 Iran,2015,1,5
 Iran,2020,1,6
+Iran,2022,2,8
 Israel,1988,1,1
 Israel,1990,1,2
 Israel,1995,1,3
@@ -530,6 +544,7 @@ Italy,2018,1,41
 Italy,2019,3,44
 Italy,2020,1,45
 Italy,2021,7,52
+Italy,2022,9,61
 Japan,1970,1,1
 Japan,1971,2,3
 Japan,1972,1,4
@@ -580,7 +595,8 @@ Japan,2017,16,229
 Japan,2018,18,247
 Japan,2019,21,268
 Japan,2020,9,277
-Japan,2021,23,300
+Japan,2021,24,301
+Japan,2022,5,306
 Jordan,2018,1,1
 Kazakhstan,2006,1,1
 Kazakhstan,2011,1,2
@@ -594,6 +610,7 @@ Lithuania,2014,2,2
 Lithuania,2019,2,4
 Lithuania,2020,2,6
 Lithuania,2021,3,9
+Lithuania,2022,1,10
 Luxembourg,1988,1,1
 Luxembourg,1991,1,2
 Luxembourg,1993,1,3
@@ -617,13 +634,15 @@ Luxembourg,2014,2,26
 Luxembourg,2018,9,35
 Luxembourg,2019,4,39
 Luxembourg,2020,8,47
-Luxembourg,2021,6,53
+Luxembourg,2021,11,58
+Luxembourg,2022,9,67
 Malaysia,1996,2,2
 Malaysia,2000,1,3
 Malaysia,2006,1,4
 Malaysia,2009,2,6
 Malaysia,2014,1,7
 Malaysia,2018,2,9
+Malaysia,2022,1,10
 Mauritius,2021,1,1
 Mexico,1985,2,2
 Mexico,1993,1,3
@@ -639,6 +658,7 @@ Mexico,2016,1,14
 Mexico,2019,1,15
 Mexico,2020,1,16
 Mexico,2021,2,18
+Moldova,2022,1,1
 Monaco,2020,1,1
 Mongolia,2017,1,1
 Morocco,2001,1,1
@@ -656,10 +676,12 @@ Netherlands,2013,4,6
 Netherlands,2017,1,7
 Netherlands,2018,3,10
 Netherlands,2021,3,13
+Netherlands,2022,1,14
 New Zealand,2018,1,1
 New Zealand,2019,1,2
 New Zealand,2020,8,10
 New Zealand,2021,4,14
+New Zealand,2022,11,25
 Nigeria,2003,1,1
 Nigeria,2011,3,4
 Nigeria,2017,1,5
@@ -676,6 +698,7 @@ Norway,2014,1,8
 Norway,2015,1,9
 Norway,2017,4,13
 Norway,2021,1,14
+Norway,2022,2,16
 Pakistan,1990,1,1
 Pakistan,2001,1,2
 Pakistan,2011,1,3
@@ -697,6 +720,7 @@ Poland,2014,1,3
 Poland,2018,1,4
 Poland,2019,2,6
 Poland,2021,2,8
+Poland,2022,1,9
 Portugal,1993,1,1
 Qatar,2018,1,1
 RASCOM,2007,1,1
@@ -767,6 +791,7 @@ Russia,2018,23,3536
 Russia,2019,30,3566
 Russia,2020,24,3590
 Russia,2021,21,3611
+Russia,2022,47,3658
 Rwanda,2021,1,1
 Saudi Arabia,2000,2,2
 Saudi Arabia,2002,1,3
@@ -782,14 +807,17 @@ Singapore,2013,1,4
 Singapore,2014,2,6
 Singapore,2015,6,12
 Singapore,2019,1,13
+Singapore,2022,3,16
 Slovakia,2017,1,1
 Slovakia,2021,1,2
 Slovenia,2020,2,2
+Slovenia,2022,1,3
 South Africa,1999,1,1
 South Africa,2009,1,2
 South Africa,2013,1,3
 South Africa,2014,1,4
 South Africa,2018,1,5
+South Africa,2022,2,7
 South Korea,1992,1,1
 South Korea,1993,1,2
 South Korea,1995,1,3
@@ -806,6 +834,7 @@ South Korea,2017,5,26
 South Korea,2018,11,37
 South Korea,2020,2,39
 South Korea,2021,4,43
+South Korea,2022,8,51
 Spain,1974,1,1
 Spain,1992,1,2
 Spain,1993,1,3
@@ -826,6 +855,7 @@ Spain,2018,5,23
 Spain,2019,2,25
 Spain,2020,3,28
 Spain,2021,1,29
+Spain,2022,9,38
 Sri Lanka,2019,1,1
 Starsem,2000,2,2
 Sweden,1986,1,1
@@ -841,6 +871,7 @@ Sweden,2010,2,15
 Sweden,2012,2,17
 Sweden,2017,1,18
 Sweden,2019,1,19
+Sweden,2022,1,20
 Switzerland,2009,1,1
 Switzerland,2010,1,2
 Switzerland,2018,1,3
@@ -866,6 +897,7 @@ Thailand,2018,1,10
 Thailand,2019,1,11
 Thailand,2020,1,12
 Thailand,2021,2,14
+Tunisia,2021,1,1
 Turkey,1994,1,1
 Turkey,1996,1,2
 Turkey,2001,1,3
@@ -880,6 +912,7 @@ Turkey,2015,1,11
 Turkey,2016,1,12
 Turkey,2018,1,13
 Turkey,2021,3,16
+Turkey,2022,2,18
 Turkmenistan,2015,1,1
 Ukraine,1995,1,1
 Ukraine,2004,2,3
@@ -887,6 +920,7 @@ Ukraine,2010,1,4
 Ukraine,2011,2,6
 Ukraine,2013,1,7
 Ukraine,2014,1,8
+Ukraine,2022,1,9
 United Arab Emirates,2000,1,1
 United Arab Emirates,2003,1,2
 United Arab Emirates,2008,1,3
@@ -899,6 +933,7 @@ United Arab Emirates,2018,1,9
 United Arab Emirates,2019,1,10
 United Arab Emirates,2020,3,13
 United Arab Emirates,2021,4,17
+United Arab Emirates,2022,2,19
 United Kingdom,1962,1,1
 United Kingdom,1964,1,2
 United Kingdom,1967,1,3
@@ -922,22 +957,23 @@ United Kingdom,2000,4,40
 United Kingdom,2001,1,41
 United Kingdom,2003,1,42
 United Kingdom,2005,3,45
-United Kingdom,2006,2,47
-United Kingdom,2007,2,49
-United Kingdom,2008,3,52
-United Kingdom,2009,3,55
-United Kingdom,2010,3,58
-United Kingdom,2011,2,60
-United Kingdom,2012,4,64
-United Kingdom,2013,7,71
-United Kingdom,2014,10,81
-United Kingdom,2015,7,88
-United Kingdom,2016,1,89
-United Kingdom,2017,7,96
-United Kingdom,2018,12,108
-United Kingdom,2019,14,122
-United Kingdom,2020,104,226
-United Kingdom,2021,289,515
+United Kingdom,2006,1,46
+United Kingdom,2007,2,48
+United Kingdom,2008,3,51
+United Kingdom,2009,3,54
+United Kingdom,2010,3,57
+United Kingdom,2011,2,59
+United Kingdom,2012,4,63
+United Kingdom,2013,7,70
+United Kingdom,2014,10,80
+United Kingdom,2015,7,87
+United Kingdom,2016,1,88
+United Kingdom,2017,7,95
+United Kingdom,2018,12,107
+United Kingdom,2019,14,121
+United Kingdom,2020,104,225
+United Kingdom,2021,289,514
+United Kingdom,2022,71,585
 United States,1958,7,7
 United States,1959,11,18
 United States,1960,17,35
@@ -986,28 +1022,30 @@ United States,2002,33,1779
 United States,2003,28,1807
 United States,2004,21,1828
 United States,2005,21,1849
-United States,2006,37,1886
-United States,2007,46,1932
-United States,2008,24,1956
-United States,2009,38,1994
-United States,2010,35,2029
-United States,2011,29,2058
-United States,2012,33,2091
-United States,2013,80,2171
-United States,2014,95,2266
-United States,2015,104,2370
-United States,2016,105,2475
-United States,2017,287,2762
-United States,2018,190,2952
-United States,2019,363,3315
-United States,2020,984,4299
-United States,2021,1235,5534
+United States,2006,36,1885
+United States,2007,46,1931
+United States,2008,24,1955
+United States,2009,38,1993
+United States,2010,35,2028
+United States,2011,29,2057
+United States,2012,33,2090
+United States,2013,80,2170
+United States,2014,95,2265
+United States,2015,104,2369
+United States,2016,105,2474
+United States,2017,287,2761
+United States,2018,190,2951
+United States,2019,362,3313
+United States,2020,984,4297
+United States,2021,1232,5529
+United States,2022,1796,7325
 Uruguay,2014,1,1
 Uruguay,2016,2,3
 Uruguay,2017,1,4
 Uruguay,2018,2,6
 Uruguay,2020,13,19
 Uruguay,2021,4,23
+Uruguay,2022,9,32
 Venezuela,2008,2,2
 Venezuela,2012,1,3
 Venezuela,2017,1,4
@@ -1015,7 +1053,6 @@ Vietnam,2008,1,1
 Vietnam,2012,2,3
 Vietnam,2013,2,5
 Vietnam,2019,1,6
-Vietnam,2021,1,7
 World,1957,2,2
 World,1958,8,10
 World,1959,14,24
@@ -1065,19 +1102,20 @@ World,2002,96,5588
 World,2003,88,5676
 World,2004,74,5750
 World,2005,72,5822
-World,2006,96,5918
-World,2007,111,6029
-World,2008,109,6138
-World,2009,125,6263
-World,2010,120,6383
-World,2011,129,6512
-World,2012,134,6646
-World,2013,210,6856
-World,2014,241,7097
-World,2015,222,7319
-World,2016,221,7540
-World,2017,456,7996
-World,2018,453,8449
-World,2019,586,9035
-World,2020,1274,10309
-World,2021,1807,12116
+World,2006,95,5917
+World,2007,111,6028
+World,2008,109,6137
+World,2009,125,6262
+World,2010,120,6382
+World,2011,129,6511
+World,2012,134,6645
+World,2013,210,6855
+World,2014,241,7096
+World,2015,222,7318
+World,2016,221,7539
+World,2017,456,7995
+World,2018,453,8448
+World,2019,586,9034
+World,2020,1274,10308
+World,2021,1810,12118
+World,2022,2163,14281
