@@ -14,12 +14,7 @@ def read():
 
 
 def aggregate_world(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.groupby("year", as_index=False)
-        .size()
-        .rename(columns={"size": "yearly_launches"})
-        .assign(entity="World")
-    )
+    return df.groupby("year", as_index=False).size().assign(entity="World")
 
 
 def clean_entities(df: pd.DataFrame) -> pd.DataFrame:
@@ -47,14 +42,13 @@ def main():
 
     world = aggregate_world(df)
 
-    df = (
-        clean_entities(df)
-        .groupby(["entity", "year"], as_index=False)
-        .size()
-        .rename(columns={"size": "yearly_launches"})
-    )
+    df = clean_entities(df).groupby(["entity", "year"], as_index=False).size()
 
-    df = pd.concat([df, world], ignore_index=True).sort_values(["entity", "year"])
+    df = (
+        pd.concat([df, world], ignore_index=True)
+        .rename(columns={"size": "yearly_launches"})
+        .sort_values(["entity", "year"])
+    )
 
     df["cumulative_launches"] = (
         df[["entity", "yearly_launches"]].groupby("entity", as_index=False).cumsum()
