@@ -1,17 +1,22 @@
 rm(list = ls())
 
-data <- fread("~/Downloads/https __www.space-track.org_basicspacedata_query_class_gp_orderby_object_id asc_format_csv.csv")
+# Go to https://www.space-track.org and log in
+# Go to Query Builder
+# Use the following parameters: Class = gp, Order by = OBJECT_ID, Format = CSV
+# Click on BUILD QUERY to download the CSV
+# Move the CSV file to the script's folder
+data <- fread("https __www.space-track.org_basicspacedata_query_class_gp_orderby_object_id asc_format_csv_emptyresult_show.csv")
 
 
 # Orbit definitions
 
-data[PERIAPSIS < 2000, ORBIT := "Low Earth orbit"]
-data[PERIAPSIS > 2000 & PERIAPSIS < 35586, ORBIT := "Medium Earth orbit"]
-data[PERIAPSIS > 35586 & PERIAPSIS < 35986, ORBIT := "Geostationary orbit"]
-data[PERIAPSIS > 35986, ORBIT := "High Earth orbit"]
+data[PERIAPSIS <= 2000, ORBIT := "Low Earth orbit"]
+data[PERIAPSIS >= 2000 & PERIAPSIS <= 35586, ORBIT := "Medium Earth orbit"]
+data[PERIAPSIS >= 35586 & PERIAPSIS <= 35986, ORBIT := "Geostationary orbit"]
+data[PERIAPSIS >= 35986, ORBIT := "High Earth orbit"]
 
 
-# Objects in Lower Earth orbit over time, broken down by object type (wip)
+# Objects in Lower Earth orbit over time, broken down by object type
 
 df <- data[OBJECT_TYPE %in% c("PAYLOAD", "ROCKET BODY", "DEBRIS")]
 df <- df[ORBIT == "Low Earth orbit"]
@@ -32,7 +37,7 @@ leo_objects <- copy(df)
 setnames(leo_objects, "OBJECT_TYPE", "ENTITY")
 
 
-# Non-debris objects in space over time, broken down by orbit (wip)
+# Non-debris objects in space over time, broken down by orbit
 
 df <- data[OBJECT_TYPE %in% c("PAYLOAD", "ROCKET BODY")]
 
@@ -53,7 +58,7 @@ setnames(df, "ORBIT", "ENTITY")
 # Merge into a single dataset
 
 df <- rbindlist(list(leo_objects, df))
-df[, ENTITY := mapvalues(
+df[, ENTITY := plyr::mapvalues(
   ENTITY,
   c("ROCKET BODY", "PAYLOAD", "DEBRIS"),
   c("Rocket bodies", "Payloads", "Debris")
