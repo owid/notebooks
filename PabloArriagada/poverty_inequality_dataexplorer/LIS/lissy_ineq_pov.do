@@ -1,9 +1,9 @@
 /*
 LIS COMMANDS FOR OUR WORLD IN DATA
 This program calculates poverty and inequality estimates and percentiles for three incomes:
-dhi: Disposable household income, which is toal income minus taxes and social security contributions
+dhi: Disposable household income, which is total income minus taxes and social security contributions
 dhci: Disposable household cash income, which is dhi minus the total value of goods and services (fringe benefits, home production, in-kind benefits and transfers)
-mi: Market income, the sum of factor income (labor plus capital income), private income (private cash transfers and in-kind goods and services, not involving govt) and private pensions
+mi: Market income, the sum of factor income (labor plus capital income), private income (private cash transfers and in-kind goods and services, not involving goverment) and private pensions
 */
 
 *
@@ -11,7 +11,7 @@ mi: Market income, the sum of factor income (labor plus capital income), private
 ----------------------------------------------------------------------------------------------------------- 
 Select data to extract:
 1. Poverty and inequality metrics
-2. Percentiles
+2. Percentile thresholds and shares
 */
 global menu_option = 1
 
@@ -34,11 +34,15 @@ program define make_variables
 	quietly drop if miss_comp==1
 	gen mi = hifactor + hiprivate + hi33
 	foreach var in dhi dhci mi {
+		*Use raw income variable
 		gen e`var'_b = `var'
+		*Convert variable into int-$ at ppp_year prices
+		replace e`var'_b = e`var'_b / lisppp
+		*Replace negative values for zeros
 		replace e`var'_b = 0 if `var'<0
 		* Apply top and bottom codes / outlier detection
 		gen e`var'_log=log(e`var'_b)
-		* keep negatives and 0 in the overall distribution of non-missing dhi
+		* keep negatives and 0 in the overall distribution of non-missing income
 		replace e`var'_log=0 if e`var'_log==. & e`var'_b!=.
 		* detect interquartile range
 		cap drop iqr
@@ -66,6 +70,7 @@ end
 *Use PPP data
 if "$ppp_values" == "1" {
 	use $myincl/ppp_$ppp_year.dta
+	
 	tempfile ppp
 	save "`ppp'"
 }
@@ -81,10 +86,9 @@ qui lissydata, lis from(2015) to(2020) iso2(cl uk)
 /*Trying ways to incorporate PPP deflator (from WID code)
 
 *Merge with ppp data have
-merge n:1 country using "`ppp'", keep(match)
+merge n:1 iso3 year using "`ppp'", keep(match) nogenerate
 replace value = value/ppp
-drop ppp
-drop _merge
+drop lisppp
 tempfile avgthr
 save "`avgthr'"
 
@@ -100,7 +104,9 @@ local first_country : word 1 of `countries'
 * Option 1 is to get poverty and inequality variables
 if "$menu_option" == "1" {
 	foreach ccyy in `countries' {
-		quietly use dhi dhci hifactor hiprivate hi33 hwgt nhhmem grossnet using $`ccyy'h, clear
+		quietly use dhi dhci hifactor hiprivate hi33 hwgt nhhmem grossnet iso3 year using $`ccyy'h, clear
+		*Merge with PPP data to get deflator
+		quietly merge n:1 iso3 year using "`ppp'", keep(match) nogenerate keepusing(lisppp)
 		quietly make_variables
 		foreach var in dhi dhci mi {
 			*Identify observations below (relative) poverty lines
@@ -111,6 +117,20 @@ if "$menu_option" == "1" {
 			quietly ineqdec0 e`var'_b [w=hwgt*nhhmem]
 			local gini_`var' : di %9.3f r(gini)
 			
+			*Get mean income
+			local mean_`var': di r(mean)
+			
+			*Get generalized entropy inequality index
+			local gem1_`var': di %9.3f r(gem1)
+			local ge0_`var': di %9.3f r(ge0)
+			local ge1_`var': di %9.3f r(ge1)
+			local ge2_`var': di %9.3f r(ge2)
+			
+			*Get Atkinson inequality index
+			local ahalf_`var': di %9.3f r(ahalf)
+			local a1_`var': di %9.3f r(a1)
+			local a2_`var': di %9.3f r(a2)
+			
 			*Calculate the proportion of individuals in poverty
 			quietly sum poor_40_`var' [w=hwgt*nhhmem]
 			local povrate_40_`var' : di %9.2f r(mean)*100
@@ -120,13 +140,14 @@ if "$menu_option" == "1" {
 			local povrate_60_`var' : di %9.2f r(mean)*100
 		}
 	*Print dataset header
-	if "`ccyy'" == "`first_country'" di "dataset,gini_dhi,gini_dhci,gini_mi,povrate_40_dhi,povrate_50_dhi,povrate_60_dhi,povrate_40_dhci,povrate_50_dhci,povrate_60_dhci,povrate_40_mi,povrate_50_mi,povrate_60_mi"
+	if "`ccyy'" == "`first_country'" di "dataset,mean_dhi,mean_dhci,mean_mi,gini_dhi,gini_dhci,gini_mi,povrate_40_dhi,povrate_50_dhi,povrate_60_dhi,povrate_40_dhci,povrate_50_dhci,povrate_60_dhci,povrate_40_mi,povrate_50_mi,povrate_60_mi"
 	*Print poverty and inequality estimates for each country, year and income
-	di "`ccyy',`gini_dhi',`gini_dhci',`gini_mi',`povrate_40_dhi',`povrate_50_dhi',`povrate_60_dhi',`povrate_40_dhci',`povrate_50_dhci',`povrate_60_dhci',`povrate_40_mi',`povrate_50_mi',`povrate_60_mi'"
+	di "`ccyy',`mean_dhi',`mean_dhci',`mean_mi',`gini_dhi',`gini_dhci',`gini_mi',`povrate_40_dhi',`povrate_50_dhi',`povrate_60_dhi',`povrate_40_dhci',`povrate_50_dhci',`povrate_60_dhci',`povrate_40_mi',`povrate_50_mi',`povrate_60_mi'"
 	}
 }
 
-* Option 2 is to get the percentiles of each income distribution
+/* WILL DELETE IF THE OTHER OPTION WORKS FINE
+* Option 2 is to get the percentiles of the income distribution
 else if "$menu_option" == "2" {
 	foreach ccyy in `countries' {
 		quietly use dhi dhci hifactor hiprivate hi33 hwgt nhhmem grossnet using $`ccyy'h, clear
@@ -135,12 +156,37 @@ else if "$menu_option" == "2" {
 			*Estimate all the percentiles
 			_pctile e`var'_b [aw=hwgt*nhhmem], nq(100)
 			*Print dataset header
-			if "`ccyy'" == "`first_country'" di "dataset,variable,percentile,value"
+			if "`ccyy'" == "`first_country'" di "dataset,variable,percentile,thr"
 			*Print percentiles for each country, year, and income
 			forvalues j = 1/99 {
 				local p`j' = r(r`j')
 				di "`ccyy',`var',`j',`p`j''"
 			}
+			
+		}
+	}
+}
+*/
+
+* Option 2 is to get the percentiles and shares of the income distribution
+else if "$menu_option" == "2" {
+	foreach ccyy in `countries' {
+		quietly use dhi dhci hifactor hiprivate hi33 hwgt nhhmem grossnet iso3 year using $`ccyy'h, clear
+		*Merge with PPP data to get deflator
+		quietly merge n:1 iso3 year using "`ppp'", keep(match) nogenerate keepusing(lisppp)
+		quietly make_variables
+		foreach var in $perc_vars {
+			*Estimate percentile shares
+			qui sumdist e`var'_b [w=hwgt*nhhmem], ngp(100)
+			*Print dataset header
+			if "`ccyy'" == "`first_country'" di "dataset,variable,percentile,thr,share"
+			*Print percentile thresholds and shares for each country, year, and income
+			forvalues j = 1/100 {
+				local thr`j': di %16.2f r(q`j')
+				local s`j': di %9.4f r(sh`j')*100
+				di "`ccyy',`var',`j',`thr`j'',`s`j''"
+			}
+			
 		}
 	}
 }
