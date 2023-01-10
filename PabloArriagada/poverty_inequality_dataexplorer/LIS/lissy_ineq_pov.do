@@ -286,12 +286,13 @@ foreach ccyy in `countries' {
 				*Calculate poverty metrics (ineqdec0 only estimates ge2, indeqdeco calculates them all)
 				quietly povdeco e`var'_b [w=hwgt*nhhmem], pline(${povline_`pct'})
 				
-				local fgt0_`var'_`pct': di %9.3f r(fgt0)
-				local fgt1_`var'_`pct': di %9.3f r(fgt1)
-				local fgt2_`var'_`pct': di %9.3f r(fgt2)
+				*fgt0 is headcount ratio
+				*local fgt0_`var'_`pct': di %9.2f r(fgt0)
+				local fgt1_`var'_`pct': di %9.2f r(fgt1) *100
+				local fgt2_`var'_`pct': di %9.4f r(fgt2)
 				
-				local meanpoor_`var'_`pct': di %9.3f r(meanpoor)
-				local meangappoor_`var'_`pct': di %9.3f r(meangappoor)
+				local meanpoor_`var'_`pct': di %9.2f r(meanpoor)
+				local meangappoor_`var'_`pct': di %9.2f r(meangappoor)
 			}
 			
 			*quietly poverty e`var'_b [w=hwgt*nhhmem], line($povline_40)
@@ -334,8 +335,8 @@ foreach ccyy in `countries' {
 			*/
 		}
 		*Print dataset header
-		if "`ccyy'" == "`first_country'" di "dataset,fgt0_dhi_40,fgt0_dhci_40,fgt0_mi_40,fgt0_dhi_50,fgt0_dhci_50,fgt0_mi_50,fgt0_dhi_60,fgt0_dhci_60,fgt0_mi_60,fgt1_dhi_40,fgt1_dhci_40,fgt1_mi_40,fgt1_dhi_50,fgt1_dhci_50,fgt1_mi_50,fgt1_dhi_60,fgt1_dhci_60,fgt1_mi_60,fgt2_dhi_40,fgt2_dhci_40,fgt2_mi_40,fgt2_dhi_50,fgt2_dhci_50,fgt2_mi_50,fgt2_dhi_60,fgt2_dhci_60,fgt2_mi_60,meanpoor_dhi_40,meanpoor_dhci_40,meanpoor_mi_40,meanpoor_dhi_50,meanpoor_dhci_50,meanpoor_mi_50,meanpoor_dhi_60,meanpoor_dhci_60,meanpoor_mi_60,meangappoor_dhi_40,meangappoor_dhci_40,meangappoor_mi_40,meangappoor_dhi_50,meangappoor_dhci_50,meangappoor_mi_50,meangappoor_dhi_60,meangappoor_dhci_60,meangappoor_mi_60"
+		if "`ccyy'" == "`first_country'" di "dataset,fgt1_dhi_40,fgt1_dhci_40,fgt1_mi_40,fgt1_dhi_50,fgt1_dhci_50,fgt1_mi_50,fgt1_dhi_60,fgt1_dhci_60,fgt1_mi_60,fgt2_dhi_40,fgt2_dhci_40,fgt2_mi_40,fgt2_dhi_50,fgt2_dhci_50,fgt2_mi_50,fgt2_dhi_60,fgt2_dhci_60,fgt2_mi_60,meanpoor_dhi_40,meanpoor_dhci_40,meanpoor_mi_40,meanpoor_dhi_50,meanpoor_dhci_50,meanpoor_mi_50,meanpoor_dhi_60,meanpoor_dhci_60,meanpoor_mi_60,meangappoor_dhi_40,meangappoor_dhci_40,meangappoor_mi_40,meangappoor_dhi_50,meangappoor_dhci_50,meangappoor_mi_50,meangappoor_dhi_60,meangappoor_dhci_60,meangappoor_mi_60"
 		*Print inequality estimates for each country, year and income
-		di "`ccyy',`fgt0_dhi_40',`fgt0_dhci_40',`fgt0_mi_40',`fgt0_dhi_50',`fgt0_dhci_50',`fgt0_mi_50',`fgt0_dhi_60',`fgt0_dhci_60',`fgt0_mi_60',`fgt1_dhi_40',`fgt1_dhci_40',`fgt1_mi_40',`fgt1_dhi_50',`fgt1_dhci_50',`fgt1_mi_50',`fgt1_dhi_60',`fgt1_dhci_60',`fgt1_mi_60',`fgt2_dhi_40',`fgt2_dhci_40',`fgt2_mi_40',`fgt2_dhi_50',`fgt2_dhci_50',`fgt2_mi_50',`fgt2_dhi_60',`fgt2_dhci_60',`fgt2_mi_60',`meanpoor_dhi_40',`meanpoor_dhci_40',`meanpoor_mi_40',`meanpoor_dhi_50',`meanpoor_dhci_50',`meanpoor_mi_50',`meanpoor_dhi_60',`meanpoor_dhci_60',`meanpoor_mi_60',`meangappoor_dhi_40',`meangappoor_dhci_40',`meangappoor_mi_40',`meangappoor_dhi_50',`meangappoor_dhci_50',`meangappoor_mi_50',`meangappoor_dhi_60',`meangappoor_dhci_60',`meangappoor_mi_60'"
+		di "`ccyy',`fgt1_dhi_40',`fgt1_dhci_40',`fgt1_mi_40',`fgt1_dhi_50',`fgt1_dhci_50',`fgt1_mi_50',`fgt1_dhi_60',`fgt1_dhci_60',`fgt1_mi_60',`fgt2_dhi_40',`fgt2_dhci_40',`fgt2_mi_40',`fgt2_dhi_50',`fgt2_dhci_50',`fgt2_mi_50',`fgt2_dhi_60',`fgt2_dhci_60',`fgt2_mi_60',`meanpoor_dhi_40',`meanpoor_dhci_40',`meanpoor_mi_40',`meanpoor_dhi_50',`meanpoor_dhci_50',`meanpoor_mi_50',`meanpoor_dhi_60',`meanpoor_dhci_60',`meanpoor_mi_60',`meangappoor_dhi_40',`meangappoor_dhci_40',`meangappoor_mi_40',`meangappoor_dhi_50',`meangappoor_dhci_50',`meangappoor_mi_50',`meangappoor_dhi_60',`meangappoor_dhci_60',`meangappoor_mi_60'"
 	}
 }
