@@ -10,8 +10,9 @@ mi: Market income, the sum of factor income (labor plus capital income), private
 /* SETTINGS
 ----------------------------------------------------------------------------------------------------------- 
 Select data to extract:
-1. Poverty and inequality metrics
+1. Poverty and inequality metrics (mean, gini, relative poverty)
 2. Percentile thresholds and shares
+3. Additional inequality metrics (generalized entropy, Atkinson)
 */
 global menu_option = 1
 
@@ -36,8 +37,12 @@ program define make_variables
 	foreach var in dhi dhci mi {
 		*Use raw income variable
 		gen e`var'_b = `var'
-		*Convert variable into int-$ at ppp_year prices
-		replace e`var'_b = e`var'_b / lisppp
+		
+		if "$ppp_values" == "1" {
+			*Convert variable into int-$ at ppp_year prices
+			replace e`var'_b = e`var'_b / lisppp
+		}
+		
 		*Replace negative values for zeros
 		replace e`var'_b = 0 if `var'<0
 		* Apply top and bottom codes / outlier detection
@@ -83,23 +88,11 @@ else if "$dataset" == "test" {
 qui lissydata, lis from(2015) to(2020) iso2(cl uk)
 }
 
-/*Trying ways to incorporate PPP deflator (from WID code)
-
-*Merge with ppp data have
-merge n:1 iso3 year using "`ppp'", keep(match) nogenerate
-replace value = value/ppp
-drop lisppp
-tempfile avgthr
-save "`avgthr'"
-
-*Union with average and threshold income
-append using "`avgthr'"
-
-*/
-
 * Gets countries and the first country in the group
 local countries "${selected}"
 local first_country : word 1 of `countries'
+
+/*
 
 * Option 1 is to get poverty and inequality variables
 if "$menu_option" == "1" {
@@ -119,17 +112,6 @@ if "$menu_option" == "1" {
 			
 			*Get mean income
 			local mean_`var': di r(mean)
-			
-			*Get generalized entropy inequality index
-			local gem1_`var': di %9.3f r(gem1)
-			local ge0_`var': di %9.3f r(ge0)
-			local ge1_`var': di %9.3f r(ge1)
-			local ge2_`var': di %9.3f r(ge2)
-			
-			*Get Atkinson inequality index
-			local ahalf_`var': di %9.3f r(ahalf)
-			local a1_`var': di %9.3f r(a1)
-			local a2_`var': di %9.3f r(a2)
 			
 			*Calculate the proportion of individuals in poverty
 			quietly sum poor_40_`var' [w=hwgt*nhhmem]
@@ -188,5 +170,172 @@ else if "$menu_option" == "2" {
 			}
 			
 		}
+	}
+}
+
+* Option 3 is to get additional inequality variables
+if "$menu_option" == "3" {
+	foreach ccyy in `countries' {
+		quietly use dhi dhci hifactor hiprivate hi33 hwgt nhhmem grossnet iso3 year using $`ccyy'h, clear
+		*Merge with PPP data to get deflator
+		quietly merge n:1 iso3 year using "`ppp'", keep(match) nogenerate keepusing(lisppp)
+		quietly make_variables
+		foreach var in dhi dhci mi {
+			*Calculate inequality metrics
+			quietly ineqdec0 e`var'_b [w=hwgt*nhhmem]
+			
+			*Get generalized entropy inequality index
+			local gem1_`var': di %9.3f r(gem1)
+			local ge0_`var': di %9.3f r(ge0)
+			local ge1_`var': di %9.3f r(ge1)
+			local ge2_`var': di %9.3f r(ge2)
+			
+			*Get Atkinson inequality index
+			local ahalf_`var': di %9.3f r(ahalf)
+			local a1_`var': di %9.3f r(a1)
+			local a2_`var': di %9.3f r(a2)
+		}
+	*Print dataset header
+	if "`ccyy'" == "`first_country'" di "dataset,gem1_dhi,gem1_dhci,gem1_mi,ge0_dhi,ge0_dhci,ge0_mi,ge1_dhi,ge1_dhci,ge1_mi,ge2_dhi,ge2_dhci,ge2_mi,ahalf_dhi,ahalf_dhci,ahalf_mi,a1_dhi,a1_dhci,a1_mi,a2_dhi,a2_dhci,a2_mi"
+	*Print inequality estimates for each country, year and income
+	di "`ccyy',`gem1_dhi',`gem1_dhci',`gem1_mi',`ge0_dhi',`ge0_dhci',`ge0_mi',`ge1_dhi',`ge1_dhci',`ge1_mi',`ge2_dhi',`ge2_dhci',`ge2_mi',`ahalf_dhi',`ahalf_dhci',`ahalf_mi',`a1_dhi',`a1_dhci',`a1_mi',`a2_dhi',`a2_dhci',`a2_mi'"
+	}
+}
+
+*/
+
+///////////////////////////////////////////////////////////
+*Trying new configuration
+
+foreach ccyy in `countries' {
+	quietly use dhi dhci hifactor hiprivate hi33 hwgt nhhmem grossnet iso3 year using $`ccyy'h, clear
+	*Merge with PPP data to get deflator
+	if "$ppp_values" == "1" {
+		quietly merge n:1 iso3 year using "`ppp'", keep(match) nogenerate keepusing(lisppp)
+	}
+	quietly make_variables
+	* Option 1 is to get poverty and inequality variables
+	if "$menu_option" == "1" {
+		foreach var in dhi dhci mi {
+			*Identify observations below (relative) poverty lines
+			quietly gen byte poor_40_`var'=(e`var'_b<$povline_40)
+			quietly gen byte poor_50_`var'=(e`var'_b<$povline_50)
+			quietly gen byte poor_60_`var'=(e`var'_b<$povline_60)
+			*Calculate and store gini for equivalized income
+			quietly ineqdec0 e`var'_b [w=hwgt*nhhmem]
+			local gini_`var' : di %9.3f r(gini)
+			
+			*Get mean income
+			local mean_`var': di r(mean)
+			
+			*Calculate the proportion of individuals in poverty
+			quietly sum poor_40_`var' [w=hwgt*nhhmem]
+			local povrate_40_`var' : di %9.2f r(mean)*100
+			quietly sum poor_50_`var' [w=hwgt*nhhmem]
+			local povrate_50_`var' : di %9.2f r(mean)*100
+			quietly sum poor_60_`var' [w=hwgt*nhhmem]
+			local povrate_60_`var' : di %9.2f r(mean)*100
+		}
+		*Print dataset header
+		if "`ccyy'" == "`first_country'" di "dataset,mean_dhi,mean_dhci,mean_mi,gini_dhi,gini_dhci,gini_mi,povrate_40_dhi,povrate_50_dhi,povrate_60_dhi,povrate_40_dhci,povrate_50_dhci,povrate_60_dhci,povrate_40_mi,povrate_50_mi,povrate_60_mi"
+		*Print poverty and inequality estimates for each country, year and income
+		di "`ccyy',`mean_dhi',`mean_dhci',`mean_mi',`gini_dhi',`gini_dhci',`gini_mi',`povrate_40_dhi',`povrate_50_dhi',`povrate_60_dhi',`povrate_40_dhci',`povrate_50_dhci',`povrate_60_dhci',`povrate_40_mi',`povrate_50_mi',`povrate_60_mi'"
+	}
+	* Option 2 is to get the percentiles and shares of the income distribution
+	else if "$menu_option" == "2" {
+		foreach var in $perc_vars {
+			*Estimate percentile shares
+			qui sumdist e`var'_b [w=hwgt*nhhmem], ngp(100)
+			*Print dataset header
+			if "`ccyy'" == "`first_country'" di "dataset,variable,percentile,thr,share"
+			*Print percentile thresholds and shares for each country, year, and income
+			forvalues j = 1/100 {
+				local thr`j': di %16.2f r(q`j')
+				local s`j': di %9.4f r(sh`j')*100
+				di "`ccyy',`var',`j',`thr`j'',`s`j''"
+			}
+		}
+	}
+	* Option 3 is to get additional inequality variables
+	else if "$menu_option" == "3" {
+		foreach var in dhi dhci mi {
+			*Calculate inequality metrics (ineqdec0 only estimates ge2, indeqdeco calculates them all)
+			quietly ineqdeco e`var'_b [w=hwgt*nhhmem]
+			
+			*Get generalized entropy inequality index
+			local gem1_`var': di %9.3f r(gem1)
+			local ge0_`var': di %9.3f r(ge0)
+			local ge1_`var': di %9.3f r(ge1)
+			local ge2_`var': di %9.3f r(ge2)
+			
+			*Get Atkinson inequality index
+			local ahalf_`var': di %9.3f r(ahalf)
+			local a1_`var': di %9.3f r(a1)
+			local a2_`var': di %9.3f r(a2)
+		}
+		*Print dataset header
+		if "`ccyy'" == "`first_country'" di "dataset,gem1_dhi,gem1_dhci,gem1_mi,ge0_dhi,ge0_dhci,ge0_mi,ge1_dhi,ge1_dhci,ge1_mi,ge2_dhi,ge2_dhci,ge2_mi,ahalf_dhi,ahalf_dhci,ahalf_mi,a1_dhi,a1_dhci,a1_mi,a2_dhi,a2_dhci,a2_mi"
+		*Print inequality estimates for each country, year and income
+		di "`ccyy',`gem1_dhi',`gem1_dhci',`gem1_mi',`ge0_dhi',`ge0_dhci',`ge0_mi',`ge1_dhi',`ge1_dhci',`ge1_mi',`ge2_dhi',`ge2_dhci',`ge2_mi',`ahalf_dhi',`ahalf_dhci',`ahalf_mi',`a1_dhi',`a1_dhci',`a1_mi',`a2_dhi',`a2_dhci',`a2_mi'"
+	}
+	
+	* Option 4 is to get additional poverty variables
+	else if "$menu_option" == "4" {
+		foreach var in dhi dhci mi {
+			forvalues pct = 40(10)60 {
+				*Calculate poverty metrics (ineqdec0 only estimates ge2, indeqdeco calculates them all)
+				quietly povdeco e`var'_b [w=hwgt*nhhmem], pline(${povline_`pct'})
+				
+				local fgt0_`var'_`pct': di %9.3f r(fgt0)
+				local fgt1_`var'_`pct': di %9.3f r(fgt1)
+				local fgt2_`var'_`pct': di %9.3f r(fgt2)
+				
+				local meanpoor_`var'_`pct': di %9.3f r(meanpoor)
+				local meangappoor_`var'_`pct': di %9.3f r(meangappoor)
+			}
+			
+			*quietly poverty e`var'_b [w=hwgt*nhhmem], line($povline_40)
+			
+			/*
+			Saved Results
+			-------------
+
+				S_1  = total number of observations in the data
+				S_2  = number of observations used to compute the indices
+				S_3  = weighted number of observations
+				S_4  = value of the poverty line
+				S_5  = weighted number of observations identified as poor
+
+			(the following results are only available if the measure has been requested)
+				S_6  = headcount ratio [FGT(0)]     
+				S_7  = aggregate poverty gap
+				S_8  = poverty gap ratio [FGT(1)]
+				S_9  = income gap ratio 
+				S_10 = Watts index
+				S_11 = FGT(0.5)
+				S_12 = FGT(1.5)
+				S_13 = FGT(2)
+				S_14 = FGT(2.5)
+				S_15 = FGT(3)
+				S_16 = FGT(3.5)
+				S_17 = FGT(4)
+				S_18 = FGT(4.5)
+				S_19 = FGT(5)
+				S_20 = Clark et al. index (0.10)
+				S_21 = Clark et al. index (0.25)
+				S_22 = Clark et al. index (0.5)
+				S_23 = Clark et al. index (0.75)
+				S_24 = Clark et al. index (0.90)
+				S_25 = Sen index
+				S_26 = Thon index
+				S_27 = Takayama index
+
+			
+			*/
+		}
+		*Print dataset header
+		if "`ccyy'" == "`first_country'" di "dataset,fgt0_dhi_40,fgt0_dhci_40,fgt0_mi_40,fgt0_dhi_50,fgt0_dhci_50,fgt0_mi_50,fgt0_dhi_60,fgt0_dhci_60,fgt0_mi_60,fgt1_dhi_40,fgt1_dhci_40,fgt1_mi_40,fgt1_dhi_50,fgt1_dhci_50,fgt1_mi_50,fgt1_dhi_60,fgt1_dhci_60,fgt1_mi_60,fgt2_dhi_40,fgt2_dhci_40,fgt2_mi_40,fgt2_dhi_50,fgt2_dhci_50,fgt2_mi_50,fgt2_dhi_60,fgt2_dhci_60,fgt2_mi_60,meanpoor_dhi_40,meanpoor_dhci_40,meanpoor_mi_40,meanpoor_dhi_50,meanpoor_dhci_50,meanpoor_mi_50,meanpoor_dhi_60,meanpoor_dhci_60,meanpoor_mi_60,meangappoor_dhi_40,meangappoor_dhci_40,meangappoor_mi_40,meangappoor_dhi_50,meangappoor_dhci_50,meangappoor_mi_50,meangappoor_dhi_60,meangappoor_dhci_60,meangappoor_mi_60"
+		*Print inequality estimates for each country, year and income
+		di "`ccyy',`fgt0_dhi_40',`fgt0_dhci_40',`fgt0_mi_40',`fgt0_dhi_50',`fgt0_dhci_50',`fgt0_mi_50',`fgt0_dhi_60',`fgt0_dhci_60',`fgt0_mi_60',`fgt1_dhi_40',`fgt1_dhci_40',`fgt1_mi_40',`fgt1_dhi_50',`fgt1_dhci_50',`fgt1_mi_50',`fgt1_dhi_60',`fgt1_dhci_60',`fgt1_mi_60',`fgt2_dhi_40',`fgt2_dhci_40',`fgt2_mi_40',`fgt2_dhi_50',`fgt2_dhci_50',`fgt2_mi_50',`fgt2_dhi_60',`fgt2_dhci_60',`fgt2_mi_60',`meanpoor_dhi_40',`meanpoor_dhci_40',`meanpoor_mi_40',`meanpoor_dhi_50',`meanpoor_dhci_50',`meanpoor_mi_50',`meanpoor_dhi_60',`meanpoor_dhci_60',`meanpoor_mi_60',`meangappoor_dhi_40',`meangappoor_dhci_40',`meangappoor_mi_40',`meangappoor_dhi_50',`meangappoor_dhci_50',`meangappoor_mi_50',`meangappoor_dhi_60',`meangappoor_dhci_60',`meangappoor_mi_60'"
 	}
 }
