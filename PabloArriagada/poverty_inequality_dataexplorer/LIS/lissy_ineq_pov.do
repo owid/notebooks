@@ -10,9 +10,12 @@ mi: Market income, the sum of factor income (labor plus capital income), private
 /* SETTINGS
 ----------------------------------------------------------------------------------------------------------- 
 Select data to extract:
-1. Poverty and inequality metrics (mean, gini, relative poverty)
-2. Percentile thresholds and shares
-3. Additional inequality metrics (generalized entropy, Atkinson)
+1. Population, mean and Gini
+2. Relative poverty (headcount ratio)
+3. Additional relative poverty variables
+4. Decile thresholds and shares
+5. Additional inequality metrics (generalized entropy, Atkinson)
+
 */
 global menu_option = 1
 
@@ -21,6 +24,9 @@ global income = 1
 
 *Select if the code extracts equivalized (1) or per capita (0) aggregation
 global equivalized = 1
+
+*Select the variables to extract
+global inc_cons_vars dhi dhci mi hcexp
 
 *Select the income variable to get percentiles (dhi, dhci, mi). menu_option has to be 2 to extract data
 global perc_vars dhi
@@ -32,8 +38,13 @@ global dataset = "all"
 global ppp_values = 1
 global ppp_year = 2017
 
-*-------------------------------------------------------------------------------------------------------------
+*Define absolute poverty lines (cents)
+global abs_povlines 100 215 365 685 1000 2000 3000 4000
 
+*Set the maximum character limit per line
+set linesize 255
+
+*-------------------------------------------------------------------------------------------------------------
 
 program define make_variables
 	gen miss_comp = 0
@@ -99,6 +110,20 @@ if "$ppp_values" == "1" {
 	save "`ppp'"
 }
 
+*Define program to convert to PPP, to use in multiple instances and because some datasets do not have deflator (se76, tw)
+program define convert_ppp
+	if iso2 != "tw" | (iso2 != "se" & year == 1967)
+		quietly merge n:1 iso2 year using "`ppp'", keep(match) nogenerate keepusing(lisppp)
+		foreach var in dhi dhci mi hcexp {
+			replace e`var'_b = e`var'_b / lisppp
+		}
+	}
+	else
+		foreach var in dhi dhci mi hcexp {
+			replace e`var'_b = .
+		}
+end
+
 *Selects the entire dataset or a small one for testing
 if "$dataset" == "all" {
 	qui lissydata, lis
@@ -111,6 +136,9 @@ qui lissydata, lis from(2015) to(2020) iso2(cl uk)
 local countries "${selected}"
 local first_country : word 1 of `countries'
 
+*Gets first income/consumption variable in inc_cons_vars
+local first_inc_cons : word 1 of $inc_cons_vars
+
 * Gets the data
 foreach ccyy in `countries' {
 	quietly use dhi dhci hifactor hiprivate hi33 hcexp hwgt hpopwgt nhhmem grossnet iso2 year using $`ccyy'h, clear
@@ -119,9 +147,57 @@ foreach ccyy in `countries' {
 		quietly merge n:1 iso2 year using "`ppp'", keep(match) nogenerate keepusing(lisppp)
 	}
 	quietly make_variables
-	* Option 1 is to get poverty and inequality variables
+	* Option 1 is to get population, mean and inequality variables
 	if "$menu_option" == "1" {
-		foreach var in dhi dhci mi hcexp {
+		foreach var in $inc_cons_vars {
+			*Calculate and store gini for equivalized income
+			quietly ineqdec0 e`var'_b [w=hwgt*nhhmem]
+			local gini_`var' : di %9.3f r(gini)
+			
+			*Get mean income
+			local mean_`var': di r(mean)
+
+		}
+		*Print dataset header
+		if "`ccyy'" == "`first_country'" di "dataset,eq,pop,mean_dhi,mean_dhci,mean_mi,mean_hcexp,gini_dhi,gini_dhci,gini_mi,gini_hcexp"
+		*Print poverty and inequality estimates for each country, year and income
+		di "`ccyy',$equivalized,$pop,`mean_dhi',`mean_dhci',`mean_mi',`mean_hcexp',`gini_dhi',`gini_dhci',`gini_mi',`gini_hcexp'"
+	}
+	
+	if "$menu_option" == "10" {
+		foreach var in $inc_cons_vars {
+			*For 40, 50, 60 (% of median)
+			forvalues pct = 40(10)60 {
+				*Calculate poverty metrics
+				quietly povdeco e`var'_b [w=hwgt*nhhmem], pline(${povline_`pct'})
+				
+				*fgt0 is headcount ratio
+				local fgt0_`var'_`pct': di %9.2f r(fgt0) *100
+				local fgt1_`var'_`pct': di %9.2f r(fgt1) *100
+				local fgt2_`var'_`pct': di %9.4f r(fgt2)
+				
+				local meanpoor_`var'_`pct': di %9.2f r(meanpoor)
+				local meangap_`var'_`pct': di %9.2f r(meangappoor)
+			}
+			
+			*Calculate and store gini for equivalized income
+			quietly ineqdec0 e`var'_b [w=hwgt*nhhmem]
+			local gini_`var' : di %9.3f r(gini)
+			
+			*Get mean and median income
+			local mean_`var': di %9.2f r(mean)
+			local median_`var': di %9.2f r(p50)
+
+			*Print dataset header
+			if "`ccyy'" == "`first_country'" & "`var'" == "`first_inc_cons'" di "dataset,variable,eq,pop,mean,median,gini,fgt0_40,fgt0_50,fgt0_60,fgt1_40,fgt1_50,fgt1_60,fgt2_40,fgt2_50,fgt2_60,meanpoor_40,meanpoor_50,meanpoor_60,meangap_40,meangap_50,meangap_60"
+			*Print percentile thresholds and shares for each country, year, and income
+			di "`ccyy',`var',$equivalized,$pop,`mean_`var'',`median_`var'',`gini_`var'',`fgt0_`var'_40',`fgt0_`var'_50',`fgt0_`var'_60',`fgt1_`var'_40',`fgt1_`var'_50',`fgt1_`var'_60',`fgt2_`var'_40',`fgt2_`var'_50',`fgt2_`var'_60',`meanpoor_`var'_40',`meanpoor_`var'_50',`meanpoor_`var'_60',`meangap_`var'_40',`meangap_`var'_50',`meangap_`var'_60'"
+		}
+	}
+
+	* Option 2 is to get relative poverty variables
+	if "$menu_option" == "2" {
+		foreach var in $inc_cons_vars {
 			*Identify observations below (relative) poverty lines
 			quietly gen byte poor_40_`var'=(e`var'_b<$povline_40)
 			quietly gen byte poor_50_`var'=(e`var'_b<$povline_50)
@@ -142,28 +218,78 @@ foreach ccyy in `countries' {
 			local povrate_60_`var' : di %9.2f r(mean)*100
 		}
 		*Print dataset header
-		if "`ccyy'" == "`first_country'" di "dataset,pop,mean_dhi,mean_dhci,mean_mi,mean_hcexp,gini_dhi,gini_dhci,gini_mi,gini_hcexp,povrate_40_dhi,povrate_50_dhi,povrate_60_dhi,povrate_40_dhci,povrate_50_dhci,povrate_60_dhci,povrate_40_mi,povrate_50_mi,povrate_60_mi,povrate_40_hcexp,povrate_50_hcexp,povrate_60_hcexp"
+		if "`ccyy'" == "`first_country'" di "dataset,eq,povrate_40_dhi,povrate_50_dhi,povrate_60_dhi,povrate_40_dhci,povrate_50_dhci,povrate_60_dhci,povrate_40_mi,povrate_50_mi,povrate_60_mi,povrate_40_hcexp,povrate_50_hcexp,povrate_60_hcexp"
 		*Print poverty and inequality estimates for each country, year and income
-		di "`ccyy',$pop,`mean_dhi',`mean_dhci',`mean_mi',`mean_hcexp',`gini_dhi',`gini_dhci',`gini_mi',`gini_hcexp',`povrate_40_dhi',`povrate_50_dhi',`povrate_60_dhi',`povrate_40_dhci',`povrate_50_dhci',`povrate_60_dhci',`povrate_40_mi',`povrate_50_mi',`povrate_60_mi',`povrate_40_hcexp',`povrate_50_hcexp',`povrate_60_hcexp'"
+		di "`ccyy',$equivalized,`povrate_40_dhi',`povrate_50_dhi',`povrate_60_dhi',`povrate_40_dhci',`povrate_50_dhci',`povrate_60_dhci',`povrate_40_mi',`povrate_50_mi',`povrate_60_mi',`povrate_40_hcexp',`povrate_50_hcexp',`povrate_60_hcexp'"
 	}
-	* Option 2 is to get the percentiles and shares of the income distribution
-	else if "$menu_option" == "2" {
-		foreach var in $perc_vars {
+
+	
+	* Option 3 is to get additional poverty variables
+	else if "$menu_option" == "3" {
+		foreach var in $inc_cons_vars {
+			forvalues pct = 40(10)60 {
+				*Calculate poverty metrics
+				quietly povdeco e`var'_b [w=hwgt*nhhmem], pline(${povline_`pct'})
+				
+				*fgt0 is headcount ratio
+				*local fgt0_`var'_`pct': di %9.2f r(fgt0) *100
+				local fgt1_`var'_`pct': di %9.2f r(fgt1) *100
+				local fgt2_`var'_`pct': di %9.4f r(fgt2)
+				
+				local meanpoor_`var'_`pct': di %9.2f r(meanpoor)
+				local meangappoor_`var'_`pct': di %9.2f r(meangappoor)
+			}
+		}
+		*Print dataset header
+		if "`ccyy'" == "`first_country'" di "dataset,eq,fgt1_dhi_40,fgt1_dhci_40,fgt1_mi_40,fgt1_dhi_50,fgt1_dhci_50,fgt1_mi_50,fgt1_dhi_60,fgt1_dhci_60,fgt1_mi_60,fgt2_dhi_40,fgt2_dhci_40,fgt2_mi_40,fgt2_dhi_50,fgt2_dhci_50,fgt2_mi_50,fgt2_dhi_60,fgt2_dhci_60,fgt2_mi_60,meanpoor_dhi_40,meanpoor_dhci_40,meanpoor_mi_40,meanpoor_dhi_50,meanpoor_dhci_50,meanpoor_mi_50,meanpoor_dhi_60,meanpoor_dhci_60,meanpoor_mi_60,meangappoor_dhi_40,meangappoor_dhci_40,meangappoor_mi_40,meangappoor_dhi_50,meangappoor_dhci_50,meangappoor_mi_50,meangappoor_dhi_60,meangappoor_dhci_60,meangappoor_mi_60"
+		*Print inequality estimates for each country, year and income
+		di "`ccyy',$equivalized,`fgt1_dhi_40',`fgt1_dhci_40',`fgt1_mi_40',`fgt1_dhi_50',`fgt1_dhci_50',`fgt1_mi_50',`fgt1_dhi_60',`fgt1_dhci_60',`fgt1_mi_60',`fgt2_dhi_40',`fgt2_dhci_40',`fgt2_mi_40',`fgt2_dhi_50',`fgt2_dhci_50',`fgt2_mi_50',`fgt2_dhi_60',`fgt2_dhci_60',`fgt2_mi_60',`meanpoor_dhi_40',`meanpoor_dhci_40',`meanpoor_mi_40',`meanpoor_dhi_50',`meanpoor_dhci_50',`meanpoor_mi_50',`meanpoor_dhi_60',`meanpoor_dhci_60',`meanpoor_mi_60',`meangappoor_dhi_40',`meangappoor_dhci_40',`meangappoor_mi_40',`meangappoor_dhi_50',`meangappoor_dhci_50',`meangappoor_mi_50',`meangappoor_dhi_60',`meangappoor_dhci_60',`meangappoor_mi_60'"
+	}
+
+	* Option 4 is to get the deciles and shares of the income distribution
+	else if "$menu_option" == "4" {
+		foreach var in $inc_cons_vars {
 			*Estimate percentile shares
 			qui sumdist e`var'_b [w=hwgt*nhhmem], ngp(10)
 			*Print dataset header
-			if "`ccyy'" == "`first_country'" di "dataset,variable,percentile,thr,share"
+			if "`ccyy'" == "`first_country'" & "`var'" == "`first_inc_cons'" di "dataset,variable,eq,percentile,thr,share"
 			*Print percentile thresholds and shares for each country, year, and income
 			forvalues j = 1/10 {
 				local thr`j': di %16.2f r(q`j')
 				local s`j': di %9.4f r(sh`j')*100
-				di "`ccyy',`var',`j',`thr`j'',`s`j''"
+				di "`ccyy',`var',$equivalized,`j',`thr`j'',`s`j''"
 			}
 		}
 	}
-	* Option 3 is to get additional inequality variables
-	else if "$menu_option" == "3" {
-		foreach var in dhi dhci mi {
+	
+	* Option 5 is to get absolute poverty variables
+	else if "$menu_option" == "5" {
+		foreach var in $inc_cons_vars {
+			foreach pline in $abs_povlines {
+				*Calculate poverty metrics
+				local pline_year = `pline'/100*365
+				quietly povdeco e`var'_b [w=hwgt*nhhmem], pline(`pline_year')
+				
+				*fgt0 is headcount ratio
+				local fgt0_`var'_`pline': di %9.2f r(fgt0) *100
+				local fgt1_`var'_`pline': di %9.2f r(fgt1) *100
+				local fgt2_`var'_`pline': di %9.4f r(fgt2)
+				
+				local meanpoor_`var'_`pline': di %9.2f r(meanpoor)
+				local meangap_`var'_`pline': di %9.2f r(meangappoor)
+				
+				*Print dataset header
+				if "`ccyy'" == "`first_country'" & "`var'" == "`first_inc_cons'" di "dataset,variable,eq,povline,fgt0,fgt1,fgt2,meanpoor,meangap"
+				*Print percentile thresholds and shares for each country, year, and income
+				di "`ccyy',`var',$equivalized,`pline',`fgt0_`var'_`pline'',`fgt1_`var'_`pline'',`fgt2_`var'_`pline'',`meanpoor_`var'_`pline'',`meangap_`var'_`pline''"
+				
+			}
+		}
+	}
+	
+	* Option 100 is to get additional inequality variables
+	else if "$menu_option" == "100" {
+		foreach var in $inc_cons_vars {
 			*Calculate inequality metrics (ineqdec0 only estimates ge2, indeqdeco calculates them all)
 			quietly ineqdeco e`var'_b [w=hwgt*nhhmem]
 			
@@ -179,69 +305,8 @@ foreach ccyy in `countries' {
 			local a2_`var': di %9.3f r(a2)
 		}
 		*Print dataset header
-		if "`ccyy'" == "`first_country'" di "dataset,gem1_dhi,gem1_dhci,gem1_mi,ge0_dhi,ge0_dhci,ge0_mi,ge1_dhi,ge1_dhci,ge1_mi,ge2_dhi,ge2_dhci,ge2_mi,ahalf_dhi,ahalf_dhci,ahalf_mi,a1_dhi,a1_dhci,a1_mi,a2_dhi,a2_dhci,a2_mi"
+		if "`ccyy'" == "`first_country'" di "dataset,eq,gem1_dhi,gem1_dhci,gem1_mi,ge0_dhi,ge0_dhci,ge0_mi,ge1_dhi,ge1_dhci,ge1_mi,ge2_dhi,ge2_dhci,ge2_mi,ahalf_dhi,ahalf_dhci,ahalf_mi,a1_dhi,a1_dhci,a1_mi,a2_dhi,a2_dhci,a2_mi"
 		*Print inequality estimates for each country, year and income
-		di "`ccyy',`gem1_dhi',`gem1_dhci',`gem1_mi',`ge0_dhi',`ge0_dhci',`ge0_mi',`ge1_dhi',`ge1_dhci',`ge1_mi',`ge2_dhi',`ge2_dhci',`ge2_mi',`ahalf_dhi',`ahalf_dhci',`ahalf_mi',`a1_dhi',`a1_dhci',`a1_mi',`a2_dhi',`a2_dhci',`a2_mi'"
-	}
-	
-	* Option 4 is to get additional poverty variables
-	else if "$menu_option" == "4" {
-		foreach var in dhi dhci mi {
-			forvalues pct = 40(10)60 {
-				*Calculate poverty metrics (ineqdec0 only estimates ge2, indeqdeco calculates them all)
-				quietly povdeco e`var'_b [w=hwgt*nhhmem], pline(${povline_`pct'})
-				
-				*fgt0 is headcount ratio
-				*local fgt0_`var'_`pct': di %9.2f r(fgt0)
-				local fgt1_`var'_`pct': di %9.2f r(fgt1) *100
-				local fgt2_`var'_`pct': di %9.4f r(fgt2)
-				
-				local meanpoor_`var'_`pct': di %9.2f r(meanpoor)
-				local meangappoor_`var'_`pct': di %9.2f r(meangappoor)
-			}
-			
-			*quietly poverty e`var'_b [w=hwgt*nhhmem], line($povline_40)
-			
-			/*
-			Saved Results
-			-------------
-
-				S_1  = total number of observations in the data
-				S_2  = number of observations used to compute the indices
-				S_3  = weighted number of observations
-				S_4  = value of the poverty line
-				S_5  = weighted number of observations identified as poor
-
-			(the following results are only available if the measure has been requested)
-				S_6  = headcount ratio [FGT(0)]     
-				S_7  = aggregate poverty gap
-				S_8  = poverty gap ratio [FGT(1)]
-				S_9  = income gap ratio 
-				S_10 = Watts index
-				S_11 = FGT(0.5)
-				S_12 = FGT(1.5)
-				S_13 = FGT(2)
-				S_14 = FGT(2.5)
-				S_15 = FGT(3)
-				S_16 = FGT(3.5)
-				S_17 = FGT(4)
-				S_18 = FGT(4.5)
-				S_19 = FGT(5)
-				S_20 = Clark et al. index (0.10)
-				S_21 = Clark et al. index (0.25)
-				S_22 = Clark et al. index (0.5)
-				S_23 = Clark et al. index (0.75)
-				S_24 = Clark et al. index (0.90)
-				S_25 = Sen index
-				S_26 = Thon index
-				S_27 = Takayama index
-
-			
-			*/
-		}
-		*Print dataset header
-		if "`ccyy'" == "`first_country'" di "dataset,fgt1_dhi_40,fgt1_dhci_40,fgt1_mi_40,fgt1_dhi_50,fgt1_dhci_50,fgt1_mi_50,fgt1_dhi_60,fgt1_dhci_60,fgt1_mi_60,fgt2_dhi_40,fgt2_dhci_40,fgt2_mi_40,fgt2_dhi_50,fgt2_dhci_50,fgt2_mi_50,fgt2_dhi_60,fgt2_dhci_60,fgt2_mi_60,meanpoor_dhi_40,meanpoor_dhci_40,meanpoor_mi_40,meanpoor_dhi_50,meanpoor_dhci_50,meanpoor_mi_50,meanpoor_dhi_60,meanpoor_dhci_60,meanpoor_mi_60,meangappoor_dhi_40,meangappoor_dhci_40,meangappoor_mi_40,meangappoor_dhi_50,meangappoor_dhci_50,meangappoor_mi_50,meangappoor_dhi_60,meangappoor_dhci_60,meangappoor_mi_60"
-		*Print inequality estimates for each country, year and income
-		di "`ccyy',`fgt1_dhi_40',`fgt1_dhci_40',`fgt1_mi_40',`fgt1_dhi_50',`fgt1_dhci_50',`fgt1_mi_50',`fgt1_dhi_60',`fgt1_dhci_60',`fgt1_mi_60',`fgt2_dhi_40',`fgt2_dhci_40',`fgt2_mi_40',`fgt2_dhi_50',`fgt2_dhci_50',`fgt2_mi_50',`fgt2_dhi_60',`fgt2_dhci_60',`fgt2_mi_60',`meanpoor_dhi_40',`meanpoor_dhci_40',`meanpoor_mi_40',`meanpoor_dhi_50',`meanpoor_dhci_50',`meanpoor_mi_50',`meanpoor_dhi_60',`meanpoor_dhci_60',`meanpoor_mi_60',`meangappoor_dhi_40',`meangappoor_dhci_40',`meangappoor_mi_40',`meangappoor_dhi_50',`meangappoor_dhci_50',`meangappoor_mi_50',`meangappoor_dhi_60',`meangappoor_dhci_60',`meangappoor_mi_60'"
+		di "`ccyy',$equivalized,`gem1_dhi',`gem1_dhci',`gem1_mi',`ge0_dhi',`ge0_dhci',`ge0_mi',`ge1_dhi',`ge1_dhci',`ge1_mi',`ge2_dhi',`ge2_dhci',`ge2_mi',`ahalf_dhi',`ahalf_dhci',`ahalf_mi',`a1_dhi',`a1_dhci',`a1_mi',`a2_dhi',`a2_dhci',`a2_mi'"
 	}
 }
