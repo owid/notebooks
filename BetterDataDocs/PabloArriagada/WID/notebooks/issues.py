@@ -47,17 +47,17 @@ import seaborn as sns
 
 #keep_default_na and na_values are included because there is a country labeled NA, Namibia, which becomes null without the parameters
 
-file = Path('wid_pretax_992j_dist.csv')
+file = Path('../data/raw/wid_pretax_992j_dist.csv')
 wid_pretax = pd.read_csv(file, keep_default_na=False,
                          na_values=['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A', '#N/A', 'N/A', 'n/a', '', '#NA', 
                                     'NULL', 'null', 'NaN', '-NaN', 'nan', '-nan', ''])
 
-file = Path('wid_posttax_nat_992j_dist.csv')
+file = Path('../data/raw/wid_posttax_nat_992j_dist.csv')
 wid_posttax_nat = pd.read_csv(file, keep_default_na=False,
                               na_values=['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A', '#N/A', 'N/A', 'n/a', '', '#NA',
                                          'NULL', 'null', 'NaN', '-NaN', 'nan', '-nan', ''])
 
-file = Path('wid_posttax_dis_992j_dist.csv')
+file = Path('../data/raw/wid_posttax_dis_992j_dist.csv')
 wid_posttax_dis = pd.read_csv(file, keep_default_na=False,
                               na_values=['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A', '#N/A', 'N/A', 'n/a', '', '#NA', 
                                          'NULL', 'null', 'NaN', '-NaN', 'nan', '-nan', ''])
