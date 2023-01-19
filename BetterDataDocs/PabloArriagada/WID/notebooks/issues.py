@@ -488,7 +488,7 @@ posttax_dis_negative_thr.country.value_counts(dropna=False)
 # Consequentially, four different lists of percentiles are generated to apply them to the "clean" datasets:
 
 # %%
-file = Path('Percentile names.xlsx')
+file = Path('../Percentile names.xlsx')
 percentiles = pd.read_excel(file, sheet_name='percentiles')
 percentiles_list = percentiles['pXpY'].to_list()
 
@@ -680,7 +680,3 @@ posttax_dis_avg_thr_false.country_year.value_counts()
 
 # %%
 wid_pretax_clean[wid_pretax_clean['percentile']=='p50p51']
-
-# %%
-
-# %%
