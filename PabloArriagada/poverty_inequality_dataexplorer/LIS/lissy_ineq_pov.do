@@ -52,7 +52,7 @@ global menu_option = 1
 *Select if the code extracts equivalized (1) or per capita (0) aggregation
 global equivalized = 1
 
-*Select the dataset to extract. "all" for the entire LIS data, "test" for test data, small [from(2015) to(2020) iso2(cl uk)]
+*Select the dataset to extract. "all" for the entire LIS data, "test" for test data, small [from(2015) to(2020) iso2(cl uk za)]
 global dataset = "all"
 
 *Select the variables to extract
@@ -165,7 +165,7 @@ if "$dataset" == "all" {
 	qui lissydata, lis
 }
 else if "$dataset" == "test" {
-qui lissydata, lis from(2015) to(2020) iso2(cl uk)
+qui lissydata, lis from(2015) to(2020) iso2(cl uk za)
 }
 
 * Gets countries and the first country in the group
