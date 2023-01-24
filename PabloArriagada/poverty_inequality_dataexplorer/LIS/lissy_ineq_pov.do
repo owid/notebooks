@@ -310,7 +310,8 @@ foreach ccyy in `countries' {
 				forvalues j = 1/10 {
 					local thr`j': di %16.2f r(q`j')
 					local s`j': di %9.4f r(sh`j')*100
-					di "`ccyy',`var',$equivalized,`j',`thr`j'',`s`j''"
+					local perc = `j'*10
+					di "`ccyy',`var',$equivalized,`perc',`thr`j'',`s`j''"
 				}
 			}
 			
@@ -320,7 +321,8 @@ foreach ccyy in `countries' {
 				forvalues j = 1/10 {
 					local thr`j' = .
 					local s`j' = .
-					di "`ccyy',`var',$equivalized,`j',`thr`j'',`s`j''"
+					local perc = `j'*10
+					di "`ccyy',`var',$equivalized,`perc',`thr`j'',`s`j''"
 				}
 			
 			}
