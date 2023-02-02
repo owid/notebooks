@@ -1,6 +1,6 @@
-*****  This Stata do-file aggregates some of the variables in the Democracy-Index 2021 dataset by the EIU
+*****  This Stata do-file aggregates some of the variables in the Democracy-Index 2022 dataset by the EIU
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  February 1, 2023
 
 version 14
 clear all

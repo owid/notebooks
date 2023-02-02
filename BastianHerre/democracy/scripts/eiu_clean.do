@@ -1,6 +1,6 @@
 *****  This Stata do-file cleans the Democracy-Index 2021 dataset by the Economist Intelligence Unit (EIU)
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  February 2, 2023
 
 version 14
 clear all
@@ -13,9 +13,10 @@ cd "/Users/bastianherre/Dropbox/Data/"
 global project "/Users/bastianherre/Dropbox/Data/"
 
 
-** Export EIU dataset 2021 from https://www.eiu.com/n/campaigns/democracy-index-2021/ into the file "eiu_2021.xlsx" move it into the folder "EIU 2021 Democracy Index"
+** Export EIU dataset 2021 from https://www.eiu.com/n/campaigns/democracy-index-2021/ into the file "eiu_2021.xlsx" move it into the folder "EIU 2022 Democracy Index"
 ** Import EIU 2021 dataset:
-import excel "EIU 2021 Democracy Index/eiu_2021.xlsx", clear firstrow
+import excel "EIU 2022 Democracy Index/eiu_2021.xlsx", clear firstrow
+
 
 
 ** Keep variables of interest:
@@ -45,9 +46,40 @@ sort country_name year
 save "democracy/datasets/cleaned/eiu_2021.dta", replace
 
 
+** Export EIU dataset 2022 from https://www.eiu.com/n/campaigns/democracy-index-2022/ into the file "eiu_2022.xlsx" move it into the folder "EIU 2022 Democracy Index"
+** Import EIU 2022 dataset:
+import excel "EIU 2022 Democracy Index/eiu_2022.xlsx", clear firstrow
+
+
+
+** Keep variables of interest:
+drop rank_eiu
+
+
+** Add year identifier:
+generate year = 2022
+
+
+* Refine country names:
+replace country_name = "Bosnia and Herzegovina" if country_name == "Bosnia and Hercegovina"
+replace country_name = "Congo" if country_name == "Congo (Brazzaville)"
+replace country_name = "Cape Verde" if country_name == "Cabo Verde"
+replace country_name = "Czechia" if country_name == "Czech Republic"
+replace country_name = "Cote d'Ivoire" if country_name == "Côte d’Ivoire"
+replace country_name = "Kyrgyzstan" if country_name == "Kyrgyz Republic"
+replace country_name = "Timor" if country_name == "Timor-Leste"
+replace country_name = "United States" if country_name == "United States of America"
+
+sort country_name year
+
+
+** Export cleaned EIU 2022 data:
+save "democracy/datasets/cleaned/eiu_2022.dta", replace
+
+
 ** Download EIU dataset 2006-2020 from gapminder — http://www.gapm.io/dxlsdemocrix — and move it into the folder "EIU 2021 Democracy Index"
 ** Import EIU 2006-2020 dataset:
-import excel "EIU 2021 Democracy Index/_EIU-Democracy Indices - Dataset - v4.xlsx", clear firstrow sheet("data-for-countries-etc-by-year")
+import excel "EIU 2022 Democracy Index/_EIU-Democracy Indices - Dataset - v4.xlsx", clear firstrow sheet("data-for-countries-etc-by-year")
 
 
 ** Keep observations of interest:
@@ -144,6 +176,11 @@ replace civlib_eiu = 5.88 if country_name == "Ukraine" & year == 2020
 ** Merge with EIU 2021 data:
 append using "democracy/datasets/cleaned/eiu_2021.dta"
 erase "democracy/datasets/cleaned/eiu_2021.dta"
+
+
+** Merge with EIU 2022 data:
+append using "democracy/datasets/cleaned/eiu_2022.dta"
+erase "democracy/datasets/cleaned/eiu_2022.dta"
 
 
 ** Create regime identifier:
