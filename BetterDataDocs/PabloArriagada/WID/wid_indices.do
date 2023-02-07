@@ -124,7 +124,7 @@ sort country year
 *Export csv
 export delimited using "data\raw\wid_indices_992j.csv", replace
 
-** In case of needind it in a Stata datafile
+** In case of needing it in a Stata datafile
 *save "data\raw\wid_indices_992j.dta", replace
 
 exit, clear
