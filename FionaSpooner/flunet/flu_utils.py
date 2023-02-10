@@ -1,9 +1,12 @@
-import requests
-import pandas as pd
 import json
-import numpy as np
 import time
-import logging
+
+import numpy as np
+import pandas as pd
+import requests
+from structlog import getLogger
+
+log = getLogger()
 
 
 def get_metadata(output_path) -> pd.DataFrame:
@@ -43,7 +46,7 @@ def download_country_flu_data(
     data_dir: str, base_url: str, country_codes: list
 ) -> None:
     for country_code in country_codes:
-        logging.info(country_code)
+        log.info(country_code)
         data_df = get_flu_data(base_url, country_code)
         data_df.to_csv(f"{data_dir}{country_code}.csv", index=False, escapechar="\\")
 
@@ -59,7 +62,7 @@ def combine_country_datasets(data_dir: str, country_codes: list) -> pd.DataFrame
 
 def aggregate_surveillance_type(combined_df: pd.DataFrame) -> pd.DataFrame:
     sel_cols = [
-        "COUNTRY/AREA/TERRITORY",
+        "COUNTRY_AREA_TERRITORY",
         "HEMISPHERE",
         "ISO_WEEKSTARTDATE",
         "ORIGIN_SOURCE",
@@ -90,9 +93,9 @@ def aggregate_surveillance_type(combined_df: pd.DataFrame) -> pd.DataFrame:
         df["ISO_WEEKSTARTDATE"], format="%Y-%m-%d", utc=True
     ).dt.date
     df_agg = (
-        df.groupby(["COUNTRY/AREA/TERRITORY", "HEMISPHERE", "date"]).sum().reset_index()
+        df.groupby(["COUNTRY_AREA_TERRITORY", "HEMISPHERE", "date"]).sum().reset_index()
     )
-    df_agg = df_agg.rename(columns={"COUNTRY/AREA/TERRITORY": "Country"})
+    df_agg = df_agg.rename(columns={"COUNTRY_AREA_TERRITORY": "Country"})
     # Check we haven't lost any cases along the way
     assert combined_df["INF_ALL"].sum() == df_agg["INF_ALL"].sum()
     return df_agg
@@ -155,7 +158,7 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
 
     df_com["pcnt_pos"] = df_com["pcnt_pos"].round(2)
     over_100_pcnt = df_com[df_com["pcnt_pos"] > 100].shape[0]
-    logging.info(
+    log.info(
         f"{over_100_pcnt} rows with a percentage positive over 100. We'll set these to NA."
     )
     df_com.loc[df_com["pcnt_pos"] > 100, "pcnt_pos"] = np.nan
@@ -180,7 +183,7 @@ def combine_columns_calc_percent(df: pd.DataFrame) -> pd.DataFrame:
         ],
         axis=1,
     )
-    df_com.rename(columns={"COUNTRY/AREA/TERRITORY": "Country"}, inplace=True)
+    df_com.rename(columns={"COUNTRY_AREA_TERRITORY": "Country"}, inplace=True)
 
     return df_com
 
@@ -194,7 +197,7 @@ def standardise_countries(df: pd.DataFrame, path: str) -> pd.DataFrame:
     missing_countries = (
         df["Country"][df["Country_stan"].isna()].drop_duplicates().tolist()
     )
-
+    df = df.dropna(subset=["Country_stan"])
     assert (
         df["Country_stan"].isna().sum() == 0
     ), f"{missing_countries} are not standardised"
@@ -215,26 +218,25 @@ def clean_fluid_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df[
         [
             "HEMISPHERE",
-            "COUNTRY/AREA/TERRITORY",
+            "COUNTRY_AREA_TERRITORY",
             "date",
             "REPORTED_CASES",
             "OUTPATIENTS",
             "INPATIENTS",
             "CASE_INFO",
+            "MORTALITY_ALL",
         ]
     ]
     df = df.pivot(
         index=[
             "HEMISPHERE",
-            "COUNTRY/AREA/TERRITORY",
+            "COUNTRY_AREA_TERRITORY",
             "date",
             "OUTPATIENTS",
             "INPATIENTS",
         ],
         columns="CASE_INFO",
-        values=[
-            "REPORTED_CASES",
-        ],
+        values=["REPORTED_CASES", "MORTALITY_ALL"],
     ).reset_index()
 
     df.columns = list(map("".join, df.columns))
@@ -245,13 +247,13 @@ def clean_fluid_data(df: pd.DataFrame) -> pd.DataFrame:
     )
     df = df.rename(
         columns={
-            "COUNTRY/AREA/TERRITORY": "Country",
+            "COUNTRY_AREA_TERRITORY": "Country",
             "REPORTED_CASESARI": "ari_cases",
             "REPORTED_CASESSARI": "sari_cases",
             "REPORTED_CASESILI": "ili_cases",
         }
     )
-    df = df.dropna(subset="Country")
+    df = df.dropna(subset=["Country"])
     return df
 
 
@@ -270,13 +272,13 @@ def calculate_fluid_rates(df: pd.DataFrame) -> pd.DataFrame:
     over_1000_ari = df[df["ari_cases_per_thousand_outpatients"] >= 1000].shape[0]
     over_100_sari = df[df["sari_cases_per_hundred_inpatients"] >= 100].shape[0]
 
-    logging.info(
+    log.info(
         f"{over_1000_ili} rows with ili_cases_per_thousand_outpatients over or equal to 1000. We'll set these to NA."
     )
-    logging.info(
+    log.info(
         f"{over_1000_ari} rows with ari_cases_per_thousand_outpatients over or equal to 1000. We'll set these to NA."
     )
-    logging.info(
+    log.info(
         f"{over_100_sari} rows with sari_cases_per_hundred_inpatients over or equal to 100. We'll set these to NA."
     )
     df[df["ili_cases_per_thousand_outpatients"] > 1000] = np.nan
