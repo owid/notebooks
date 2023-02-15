@@ -4,7 +4,7 @@ import epiweeks
 import pandas as pd
 
 
-SOURCE_USA = "https://data.cdc.gov/api/views/ukww-au2k/rows.csv?accessType=DOWNLOAD"
+SOURCE_USA = "https://data.cdc.gov/api/views/54ys-qyzm/rows.csv?accessType=DOWNLOAD"
 SOURCE_CHL = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto89/incidencia_en_vacunados_edad.csv"
 SOURCE_ENG = "input/referencetable2.xlsx"
 SOURCE_CHE = "https://www.covid19.admin.ch/api/data/context"
@@ -16,20 +16,45 @@ def epiweek_to_date(row, system):
 
 def process_usa(source: str):
     df = pd.read_csv(source)
-    df = df[(df.outcome == "death") & (df.vaccine_product == "all_types")].rename(
-        columns={
-            "age_group": "Entity",
-            "crude_unvax_ir": "unvaccinated",
-            "crude_vax_ir": "fully_vaccinated",
-            "crude_one_booster_ir": "one_booster",
-            "crude_two_booster_ir": "two_boosters",
-        }
-    )
+    df = df[df.outcome == "death"].rename(columns={"age_group": "Entity"})[
+        [
+            "Entity",
+            "mmwr_week",
+            "vaccination_status",
+            "crude_unvax_ir",
+            "crude_vax_ir",
+            "age_adj_unvax_ir",
+            "age_adj_vax_ir",
+        ]
+    ]
 
-    df.loc[df.Entity == "all_ages", "unvaccinated"] = df.age_adj_unvax_ir
-    df.loc[df.Entity == "all_ages", "fully_vaccinated"] = df.age_adj_vax_ir
-    df.loc[df.Entity == "all_ages", "one_booster"] = df.age_adj_one_booster_ir
-    df.loc[df.Entity == "all_ages", "two_boosters"] = df.age_adj_two_booster_ir
+    # Unvaccinated
+    unvaccinated = df[df.vaccination_status == "vaccinated"][
+        ["Entity", "mmwr_week", "crude_unvax_ir", "age_adj_unvax_ir"]
+    ].rename(columns={"crude_unvax_ir": "unvaccinated"})
+    unvaccinated.loc[
+        unvaccinated.Entity == "all_ages", "unvaccinated"
+    ] = unvaccinated.age_adj_unvax_ir
+
+    # Vaccinated without updated booster
+    vaccinated_without = df[df.vaccination_status == "vaccinated"][
+        ["Entity", "mmwr_week", "crude_vax_ir", "age_adj_vax_ir"]
+    ].rename(columns={"crude_vax_ir": "vaccinated_without"})
+    vaccinated_without.loc[
+        vaccinated_without.Entity == "all_ages", "vaccinated_without"
+    ] = vaccinated_without.age_adj_vax_ir
+
+    # Vaccinated with updated booster
+    vaccinated_with = df[df.vaccination_status == "vax with updated booster"][
+        ["Entity", "mmwr_week", "crude_vax_ir", "age_adj_vax_ir"]
+    ].rename(columns={"crude_vax_ir": "vaccinated_with"})
+    vaccinated_with.loc[
+        vaccinated_with.Entity == "all_ages", "vaccinated_with"
+    ] = vaccinated_with.age_adj_vax_ir
+
+    df = unvaccinated.merge(
+        vaccinated_without, how="outer", on=["Entity", "mmwr_week"], validate="1:1"
+    ).merge(vaccinated_with, how="outer", on=["Entity", "mmwr_week"], validate="1:1")
 
     df = df.assign(Week=df.mmwr_week.mod(100), Year=df.mmwr_week.div(100).astype(int))
     df["Year"] = df.apply(epiweek_to_date, system="cdc", axis=1)
@@ -39,13 +64,12 @@ def process_usa(source: str):
             "Entity",
             "Year",
             "unvaccinated",
-            "fully_vaccinated",
-            "one_booster",
-            "two_boosters",
+            "vaccinated_with",
+            "vaccinated_without",
         ]
     ]
 
-    df["Entity"] = df.Entity.replace({"all_ages": "50+"})
+    df["Entity"] = df.Entity.replace({"all_ages": "All ages"})
 
     df.to_csv(
         "output/COVID-19 - Deaths by vaccination status - United States.csv",
