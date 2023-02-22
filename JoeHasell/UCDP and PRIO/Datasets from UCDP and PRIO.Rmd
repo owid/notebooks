@@ -525,7 +525,7 @@ Asia (GWNo: 700-999)
 
 
 Let's just check that this is in agreement with how GED have coded region.
-```{r}
+```{r, eval = false}
 df_ged<- df_ged %>%
   mutate(region_check = cut(country_id,
               breaks=c(1, 199, 399, 629, 699, 999),
@@ -542,7 +542,7 @@ print(paste0("Observations where the GED region coding didn't match the G&W defi
 ```
 
 First aggregate deaths by country (`year` `country_id` and `type`)
-```{r}
+```{r, eval = false}
 # df_year_country_type_agg<- df_ged %>%
 #   group_by(year, country_id, type) %>%
 #   summarise(deaths_best = sum(best),
@@ -553,7 +553,7 @@ First aggregate deaths by country (`year` `country_id` and `type`)
 
 
 Make a complete panel of country-year observations according to the Gleditsch & Ward system, with region classifications. (used by UCDP)
-```{r}
+```{r, eval = false}
 # # Using the 'states' package that is built on the G&W system for convenience
 # start_year<- "1989"
 # end_year<- "2020"
@@ -600,7 +600,7 @@ Make a complete panel of country-year observations according to the Gleditsch & 
 ```
 
 Merge in the aggregated country-year-type deaths data 
-```{r}
+```{r, eval = false}
 # df_country_data<- left_join(gwlist, df_year_country_type_agg)
 # 
 # # Replace NA deaths with zeros -  UCDP coverage is global, so the absence of deaths in the  data means 'no deaths found'.
@@ -614,7 +614,7 @@ Merge in the aggregated country-year-type deaths data
 
 
 Then aggregate by region (`year` `region` and `type`)
-```{r}
+```{r, eval = false}
 df_year_region_type_agg<- df_ged %>%
   group_by(year, region, type) %>%
   summarise(deaths_best = sum(best),
@@ -624,7 +624,7 @@ df_year_region_type_agg<- df_ged %>%
 
 
 I'll recode the type of violence categorical variable according to the codebook.
-```{r}
+```{r, eval = false}
 df_year_region_type_agg<- df_year_region_type_agg %>%
   mutate(type = recode(type, 
                                    `1` = "State-based conflict",
@@ -634,7 +634,7 @@ df_year_region_type_agg<- df_year_region_type_agg %>%
 ```
 
 And I'll add an "All types of violence" aggregate that sums across the three types of violence, as well as a world total for each of the types of violence.
-```{r}
+```{r, eval = false}
 # add 'all' type total
 
 all_types_by_region_total<- df_year_region_type_agg %>%
@@ -664,7 +664,7 @@ df_year_region_type_agg<- rbind(df_year_region_type_agg, world_total_by_type)
 
 
 This is what the final aggregates look like from the geo-referenced data:
-```{r}
+```{r, eval = false}
 kable(head(df_year_region_type_agg))
 ```
 
@@ -673,7 +673,7 @@ kable(head(df_year_region_type_agg))
 For the time being, I'll only upload the 'best' deaths data. But my plan is to add visualizations showing the range between the low, high and best estimates.
 
 Here I drop the high/low deaths estimates and then spread to wide format where each variable is the the deaths estimate for a type of conflict.
-```{r}
+```{r, eval = false}
 df_year_region_type_agg<- df_year_region_type_agg %>%
   select(-c(deaths_low, deaths_high)) %>% 
   mutate(type = paste0("Deaths in ", tolower(type))) %>%
@@ -684,7 +684,7 @@ df_year_region_type_agg<- df_year_region_type_agg %>%
 ```
 
 Load OWID population data and calculate global death rates
-```{r}
+```{r, eval = false}
 df_pop<- read.csv("original/OWID population/population-past-future.csv")
 
 # For now I will only calculate global death rates, as matching OWID population data to the G&W state system will be tricky. The population of Russia (Soviet Union) halves in 1991 (see G&W population data: http://ksgleditsch.com/data/exppop.txt). This only runs up until 2004. And in any case, this is probably a weird set of entites. 
@@ -709,7 +709,7 @@ df_year_region_type_agg<- df_year_region_type_agg %>%
 ```
 
 Export as csv
-```{r}
+```{r, eval = false}
 write.csv(df_year_region_type_agg, "output/Violent deaths in conflicts and one-sided violence since 1989, by region and type of violence (UCDP 2022).csv", row.names = FALSE)
 ```
 
@@ -731,7 +731,7 @@ In these datasets, the location variables (`location` and `region`) do not (nece
 
 
 One-sided (See codebook: https://ucdp.uu.se/downloads/nsos/ucdp-onesided-211.pdf)
-```{r}
+```{r, eval = false}
 
 # df_one_sided<- read.csv("original/UCDP Yearly datasets since 1989/ucdp-onesided-211.csv") 
 
@@ -749,7 +749,7 @@ kable(head(df_one_sided))
 
 ```
 The data is organised by year and dyad (though there is only one dyad per conflict-year and one conflict per dyad-year - I'm not sure if that is coincidental or part of the definition in this case.)
-```{r}
+```{r, eval = false}
 
 # Test if the dataset is organised by conflict_id and year:
 test_structure(df_one_sided, c("year","dyad_id"))
@@ -777,7 +777,7 @@ dyads_per_conf_distribution<- df_one_sided %>%
 #### Append the three datasets together
 
 Across the three datasets: keep needed vars, rename and convert data types to match, and append together.
-```{r}
+```{r, eval = false}
 
 df_state_based<- df_state_based %>%
   rename(deaths_best = bd_best,
@@ -810,7 +810,7 @@ df_one_sided_clean<- data.frame(
 Let's sum up the non-georeferenced datasets...
 
 
-```{r}
+```{r, eval = false}
 df_state_based_totals<- df_state_based %>%
   select(year, bd_best, conflict_id) %>%
   group_by(year) %>%
@@ -841,7 +841,7 @@ df_one_sided_totals<- df_one_sided %>%
 ```
 
 ...And  then merge into a single dataset, arranged by year and type of violence.
-```{r}
+```{r, eval = false}
 df_annual_data<- rbind(df_state_based_totals, df_non_state_totals)
 
 df_annual_data<- rbind(df_annual_data, df_one_sided_totals)
@@ -851,7 +851,7 @@ kable(head(df_annual_data))
 ```
 
 And let's add an "All types of violence" type which sums across the three
-```{r}
+```{r, eval = false}
 
 # calculate sum
 df_annual_data_total<- df_annual_data %>%
@@ -879,7 +879,7 @@ But the fact that the georeferenced (GED) data is always slightly lower than tha
 
 To see the discrepancy, I merge the World totals from the georeferenced data with the totals from the non-georeferenced data just calculated (both are arranged by year type of violence).
 
-```{r}
+```{r, eval = false}
 
 check<- left_join(world_total_by_type %>% select(year, type, deaths_best) %>%
                     rename(type_of_violence = type), 
@@ -904,7 +904,7 @@ However, because of this location issue, I think it's worth switching to using j
 
 Notice that in terms of annual total deaths across all conflict types, the differences are barely perceptible visually, even though in percentage terms the figures are about 2% below.
 
-```{r}
+```{r, eval = false}
 check %>%
   filter(type_of_violence=="All types of violence") %>%
   select(year, deaths_best, deaths_annual_data) %>%
@@ -967,13 +967,13 @@ But there is a sub-classification denoting whether it's a civil conflict, imperi
 ### Wrangling
 
 Pull in PRIO data (1946-2008)
-```{r}
+```{r, eval = false}
 df_prio<- read.csv("original/PRIO/PRIO Battle Deaths Dataset 3.1.csv")
 
 ```
 
 Rename a few variables to make matching to UCDP later more straightforward.
-```{r}
+```{r, eval = false}
 df_prio<- df_prio %>%
   rename(bd_low = bdeadlow,
          bd_high = bdeadhig,
@@ -985,7 +985,7 @@ df_prio<- df_prio %>%
 
 As before, the deaths variable we will use is the 'best estimate'
 But unlike the maintained UCDP datasets, this is sometimes coded as missing (`bd_best`=-999).
-```{r}
+```{r, eval = false}
 browse_missing_best_estimates<- df_prio %>%
   filter(bd_best == -999)
 
@@ -993,7 +993,7 @@ kable(head(browse_missing_best_estimates))
 ```
 
 In fact that's true of about 40% the observations.
-```{r}
+```{r, eval = false}
 
   
 df_prio_check_missing<- df_prio %>% 
@@ -1016,7 +1016,7 @@ kable(missing_best_deaths_est_by_range)
 ```
 
 Let's take a look at some of those very big events with missing 
-```{r}
+```{r, eval = false}
 
 kable(df_prio_check_missing %>% filter(best_missing == 1, high_estimate_bracket == ">100K"))
 
@@ -1029,7 +1029,7 @@ Let's produce 3 different aggregations: 1) using the low deaths estimate always,
 
 NB. in taking the midpoint this is different to how I've treated the dataset in the past - where I took the low estimate when no best estimate was available.
 
-```{r}
+```{r, eval = false}
 # Add a column for 'best or else midpoint' deaths estimates
 df_prio<- df_prio %>%
   mutate(bd_best_or_midpoint = if_else(bd_best == -999, (bd_low + bd_high)/2, as.numeric(bd_best)))
@@ -1054,7 +1054,7 @@ Because the data measures the presence (rather than absence) of conflict deaths,
 
 I make a complete set of region-type-year observations of zero, and then merge and replace in the actual data.
 
-```{r}
+```{r, eval = false}
 
 regions <- unique(df_prio$region)
 types <- unique(df_prio$type)
@@ -1078,7 +1078,7 @@ df_prio_agg_full<- left_join(df_prio_agg_full, df_prio_agg) %>%
 ```
 
 Give region and conflict type codes understandable labels
-```{r}
+```{r, eval = false}
 df_prio_agg_full<- df_prio_agg_full %>%
  mutate(type = recode(type, 
                   `1` = "Colonial or imperial conflicts", # Extrasystemic
@@ -1101,7 +1101,7 @@ df_prio_agg_full<- df_prio_agg_full %>%
 
 
 Calculate aggregate 'All state-based conflict types' type and merge back in
-```{r}
+```{r, eval = false}
 df_prio_agg_all_types<- df_prio_agg_full %>%
   group_by(year, death_est_type, region) %>%
   summarise(deaths_estimate = sum(deaths_estimate)) %>%
@@ -1114,7 +1114,7 @@ df_prio_agg_full<- rbind(df_prio_agg_full, df_prio_agg_all_types)
 
 
 Calculate aggregate World entity and merge back in
-```{r}
+```{r, eval = false}
 df_prio_agg_world<- df_prio_agg_full %>%
   group_by(year, death_est_type, type) %>%
   summarise(deaths_estimate = sum(deaths_estimate)) %>%
@@ -1125,7 +1125,7 @@ df_prio_agg_full<- rbind(df_prio_agg_full, df_prio_agg_world)
 ```
 
 Some plots to sense check
-```{r}
+```{r, eval = false}
 
 df_prio_agg_full %>%
   filter(type == "All state-based conflict types") %>%
@@ -1164,14 +1164,14 @@ df_prio_agg_full %>%
 (See codebook: https://ucdp.uu.se/downloads/brd/ucdp-brd-codebook-211.pdf)
 
 Note that this is the same dataset that we pulled in earlier in the context of the post-1989 data. But I'll pull it in again here to make it clear what's going on.
-```{r}
+```{r, eval = false}
 
 df_ucdp_brd<- read.csv("original/UCDP Yearly datasets since 1989/ucdp-brd-dyadic-211.csv") 
 
 ```
 
 Rename some variables to make the matching with the earlier PRIO data more straightforward.
-```{r}
+```{r, eval = false}
 df_ucdp_brd<- df_ucdp_brd %>%
   rename(type = type_of_conflict)
 
@@ -1180,7 +1180,7 @@ df_ucdp_brd<- df_ucdp_brd %>%
 This dataset is organised in almost exactly the same way as the earlier PRIO data, with two notable differences:
 
 1) Best estimates for deaths are always available (there are no NA or negative observations)
-```{r}
+```{r, eval = false}
 
 sum(is.na(df_ucdp_brd$bd_best))
 
@@ -1190,7 +1190,7 @@ min(df_ucdp_brd$bd_best)
 
 2) For a couple of observations, more than one region is coded (and for that reason `region` is a string variable in this dataset). I separate these out here:
 
-```{r}
+```{r, eval = false}
 # Region code is stored as string. A string length>1 means more than one region is coded.
 multi_region_conflicts<- df_ucdp_brd %>%
   filter(nchar(region)>1)
@@ -1203,7 +1203,7 @@ single_region_conflicts<- df_ucdp_brd %>%
 ```
 
 To handle these cases, I (arbitrarily) split the deaths evenly across the included regions. Note that these are only two relatively small conflicts.
-```{r}
+```{r, eval = false}
 
 #  a blank dataframe to append the data for individual conflicts with multiple regions
 df_multi_region_conflicts_by_region<- data.frame(year = numeric(),
@@ -1252,7 +1252,7 @@ for(this_id in unique(multi_region_conflicts$conflict_id)){
 ```
 
 Add the multi-region conflicts back in with the rest (dropping unnecessary columns)
-```{r}
+```{r, eval = false}
 # convert region to numeric format
 single_region_conflicts<- single_region_conflicts %>%
   mutate(region = as.integer(region))
@@ -1269,7 +1269,7 @@ df_ucdp_brd_unmixed_regions<- rbind(
 ### Aggregate deaths at the year region and conflict type levels.
 Again I'll produce 3 different aggregations: 1) using the low deaths estimate always, 2) using the high deaths estimate always, 3) using the best estimate (in this dataset this is available for all observations).
 
-```{r}
+```{r, eval = false}
 
                     
 # Aggregate high, low and 'best' deaths estimates by year, region and conflict type
@@ -1292,7 +1292,7 @@ As with the other datasets in this notebook, because the data measures the prese
 
 I make a complete set of region-type-year observations of zero, and then merge and replace in the actual data.
 
-```{r}
+```{r, eval = false}
 
 regions <-  c(1,2,3,4,5)
 types <- c(1,2,3,4) # note that the UCDP BRD has no type 1 (colonial/imperial) conflicts in it.
@@ -1312,7 +1312,7 @@ df_ucdp_brd_agg_full<- left_join(df_ucdp_brd_agg_full, df_ucdp_brd_agg) %>%
 ```
 
 Give region and conflict type codes understandable labels
-```{r}
+```{r, eval = false}
 df_ucdp_brd_agg_full<- df_ucdp_brd_agg_full %>%
  mutate(type = recode(type, 
                   `1` = "Colonial or imperial conflicts", # Extrasystemic
@@ -1335,7 +1335,7 @@ df_ucdp_brd_agg_full<- df_ucdp_brd_agg_full %>%
 
 
 Calculate aggregate 'All state-based conflict types' type and merge back in
-```{r}
+```{r, eval = false}
 df_ucdp_brd_agg_full_all_types<- df_ucdp_brd_agg_full %>%
   group_by(year, death_est_type, region) %>%
   summarise(deaths_estimate = sum(deaths_estimate)) %>%
@@ -1348,7 +1348,7 @@ df_ucdp_brd_agg_full<- rbind(df_ucdp_brd_agg_full, df_ucdp_brd_agg_full_all_type
 
 
 Calculate aggregate World entity and merge back in
-```{r}
+```{r, eval = false}
 df_ucdp_brd_agg_world<- df_ucdp_brd_agg_full %>%
   group_by(year, death_est_type, type) %>%
   summarise(deaths_estimate = sum(deaths_estimate)) %>%
@@ -1359,7 +1359,7 @@ df_ucdp_brd_agg_full<- rbind(df_ucdp_brd_agg_full, df_ucdp_brd_agg_world)
 ```
 
 Some plots to sense check
-```{r}
+```{r, eval = false}
 
 df_ucdp_brd_agg_full %>%
   filter(type == "All state-based conflict types") %>%
@@ -1396,7 +1396,7 @@ df_ucdp_brd_agg_full %>%
 ### Stitch together the two PRIO and UCDP BRD datasets (cutoff is at 1989)
 
 As a sense check, lets plot the two together. We see that the trends are similar, but there are differences. 
-```{r}
+```{r, eval = false}
 df_prio_agg_full<- df_prio_agg_full %>% 
   mutate(source = "prio")
 
@@ -1423,7 +1423,7 @@ df_agg_both_sources %>%
 
 Stitch together, dropping PRIO after 1989
 
-```{r}
+```{r, eval = false}
 
 df_agg_both_sources<- df_agg_both_sources %>%
   filter(!(source=="prio" & year>=1989)) %>%
@@ -1434,7 +1434,7 @@ df_agg_both_sources<- df_agg_both_sources %>%
 
 
 Some plots to sense check
-```{r}
+```{r, eval = false}
 
 df_agg_both_sources %>%
   filter(type == "All state-based conflict types") %>%
@@ -1473,7 +1473,7 @@ df_agg_both_sources %>%
 For the time being, I'll only upload the 'best or midpoint' data. But my plan is to add visualizations showing the range between the low, high and best/midpoint estimates.
 
 Filter for the best/midpoint estimates and then spread to wide format where each variable is the the deaths estimate for a type of conflict.
-```{r}
+```{r, eval = false}
 df_agg_both_sources<- df_agg_both_sources %>%
   filter(death_est_type == "bd_best_or_midpoint") %>% 
   mutate(type = paste0("Deaths in ", tolower(type))) %>%
@@ -1489,7 +1489,7 @@ df_agg_both_sources<- df_agg_both_sources %>%
 ##### Load OWID population data and calculate (only for now) global death rates
 
 Load data.
-```{r}
+```{r, eval = false}
 df_pop<- read.csv("original/OWID population/population-past-future.csv")
 
 # Only keep World estiamtes for now. I will come back and add rates for regions and countires (need to work with the Gleditsch and Ward system)
@@ -1516,7 +1516,7 @@ df_agg_both_sources<- df_agg_both_sources %>%
 
 
 Export as csv
-```{r}
+```{r, eval = false}
 write.csv(df_agg_both_sources, "output/State-based conflict deaths since 1946, by region and conflict type (PRIO; UCDP 2022).csv", row.names = FALSE)
 ```
 
@@ -1525,13 +1525,13 @@ write.csv(df_agg_both_sources, "output/State-based conflict deaths since 1946, b
 
 Write this dataset up a bit. 
 
-```{r}
+```{r, eval = false}
 df_ucdp_acd<- read.csv("original/UCDP Yearly datasets since 1946/ucdp-prio-acd-211.csv")
 ```
 
 
 The data is organised by conflict-year. (i.e. not that there are no duplicate year-conflict_id rows.)
-```{r}
+```{r, eval = false}
 # Test if the dataset is organised by conflict_new_id and year:
 test_structure(df_ucdp_acd, c("year","conflict_id"))
 
@@ -1540,14 +1540,14 @@ kable(head(df_ucdp_acd))
 ```
 
 Rename a couple of variables to be inline with rest of the UCDP datasets
-```{r}
+```{r, eval = false}
 df_ucdp_acd<- df_ucdp_acd %>%
   rename(type = type_of_conflict) 
   
 ```
 
 Sum a world total for each of the types of violence (number of rows = number of conflicts).
-```{r}
+```{r, eval = false}
 # Add World total (by type)
 
 df_ucdp_acd_agg_world<- df_ucdp_acd %>%
@@ -1560,7 +1560,7 @@ df_ucdp_acd_agg_world<- df_ucdp_acd %>%
 
 Calculating regional totals is a bit more complicated because for a handful of observations, more than one region is coded (and for that reason `region` is a string variable in th2is dataset). I separate these out here:
 
-```{r}
+```{r, eval = false}
 # Region code is stored as string. A string length>1 means more than one region is coded.
 multi_region_conflicts<- df_ucdp_acd %>%
   filter(nchar(region)>1)
@@ -1573,7 +1573,7 @@ single_region_conflicts<- df_ucdp_acd %>%
 ```
 
 To handle these cases, I split them into separate rows -  one row per region. Each region will be allocated a full conflict, so the regions won't sum to equal the world total.
-```{r}
+```{r, eval = false}
 
 #  a blank dataframe to append the data for individual conflicts with multiple regions
 df_multi_region_conflicts_by_region<- data.frame(year = numeric(),
@@ -1615,7 +1615,7 @@ df_this_conflict_by_region<- bind_rows(this_conflict_region)
 ```
 
 Add the multi-region conflicts back in with the single-region conflicts (dropping unnecessary columns)
-```{r}
+```{r, eval = false}
 
 
 df_ucdp_acd_unmixed_regions<- rbind(
@@ -1627,7 +1627,7 @@ df_ucdp_acd_unmixed_regions<- rbind(
 
 
 Sum number of separate conflicts in each year and type by region (i.e. multi-region conflicts will be double counted across regions).
-```{r}
+```{r, eval = false}
 df_ucdp_acd_agg_regions<- df_ucdp_acd_unmixed_regions %>%
   group_by(year, type, region) %>%
   summarise(number_of_conflicts = n()) # counting rows to count conflicts 
@@ -1637,7 +1637,7 @@ df_ucdp_acd_agg_regions<- df_ucdp_acd_unmixed_regions %>%
 
 
 Recode region with meaningful labels.
-```{r}
+```{r, eval = false}
 df_ucdp_acd_agg_regions<- df_ucdp_acd_agg_regions %>%
  mutate(region = recode(region,
                   `1` = "Europe",
@@ -1651,14 +1651,14 @@ df_ucdp_acd_agg_regions<- df_ucdp_acd_agg_regions %>%
 
 
 Append the region-level and world aggregates together.
-```{r}
+```{r, eval = false}
 df_ucdp_acd_agg<- rbind(df_ucdp_acd_agg_regions, 
                         subset(df_ucdp_acd_agg_world, select = colnames(df_ucdp_acd_agg_regions)))
                         
 ```
 
 Merge into a complete grid of year-type observations and set missing as zero
-```{r}
+```{r, eval = false}
 years<- seq(from= 1946, to = 2020)
 types<- c(1,2,3,4)
 regions<- c( "Europe","Middle East","Asia & Oceania","Africa","Americas", "World")
@@ -1682,7 +1682,7 @@ df_ucdp_acd_full<- df_ucdp_acd_full %>%
 
 
 Give  conflict type codes understandable labels
-```{r}
+```{r, eval = false}
 df_ucdp_acd_full<- df_ucdp_acd_full %>%
  mutate(type = recode(type, 
                   `1` = "Number of colonial or imperial conflicts", # Extrasystemic
@@ -1697,7 +1697,7 @@ df_ucdp_acd_full<- df_ucdp_acd_full %>%
 
 
 Create an "All types of violence" aggregate that sums across the three types of violence for each region and the world.
-```{r}
+```{r, eval = false}
 # add 'all' type total
 
 all_types_by_region_total<- df_ucdp_acd_full %>%
@@ -1713,7 +1713,7 @@ df_ucdp_acd_full<- rbind(df_ucdp_acd_full, all_types_by_region_total)
 #### Prepare for OWID grapher and export
 
 Spread to wide format.
-```{r}
+```{r, eval = false}
 df_ucdp_acd_full_wide<- df_ucdp_acd_full %>%
   pivot_wider(names_from = "type", values_from="number_of_conflicts") %>%
   rename(entity = region) %>%
@@ -1722,7 +1722,7 @@ df_ucdp_acd_full_wide<- df_ucdp_acd_full %>%
 ```
 
 Export
-```{r}
+```{r, eval = false}
 write.csv(df_ucdp_acd_full_wide, "output/Number of state-based conflicts, by conflict type and region (UCDP-PRIO).csv", row.names = FALSE)
 
 
