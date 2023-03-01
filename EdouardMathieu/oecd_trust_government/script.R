@@ -8,8 +8,8 @@ df <- fread(
 )
 setnames(df, "TIME", "Year")
 
-pop <- fread("https://github.com/owid/owid-datasets/raw/master/datasets/Population%20(Gapminder%2C%20HYDE%20%26%20UN)/Population%20(Gapminder%2C%20HYDE%20%26%20UN).csv", select = c("Entity", "Year", "Population (historical estimates)"))
-setnames(pop, "Population (historical estimates)", "population")
+pop <- fread("https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/Key%20Indicators/Key%20Indicators.csv", select = c("Entity", "Year", "Population"))
+setnames(pop, "Population", "population")
 
 mapping <- fread("oecd_country_standardized.csv")
 
