@@ -23,6 +23,10 @@ def calculate_cheapest_over_time(df, metric):
     df["year"] = df.year.astype(float).astype(int)
     df = df.groupby("year", as_index=False).min().sort_values("year")
     df["price"] = df.price.cummin()
+
+    # Convert prices to $/TB instead of $/MB
+    df["price"] = df.price.mul(1000000).round(2)
+
     return df.groupby("price", as_index=False).first().rename(columns={"price": metric})
 
 
