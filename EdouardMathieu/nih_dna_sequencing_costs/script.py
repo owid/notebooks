@@ -24,12 +24,14 @@ def main():
 
     df = df.sort_values(by="year")
 
-    df["base_pairs_per_dollar"] = 1000000 / df["cost_per_mb"]
-
     df["entity"] = "World"
-    df = df[
-        ["entity", "year", "cost_per_mb", "cost_per_genome", "base_pairs_per_dollar"]
-    ]
+    df = df[["entity", "year", "cost_per_mb", "cost_per_genome"]]
+
+    df["cost_per_gb"] = df.cost_per_mb * 1000
+    df = df.drop(columns="cost_per_mb")
+    df[["cost_per_gb", "cost_per_genome"]] = df[
+        ["cost_per_gb", "cost_per_genome"]
+    ].round(2)
 
     df.to_csv("NIH - DNA Sequencing Costs.csv", index=False)
 
