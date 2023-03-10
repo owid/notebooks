@@ -22,10 +22,11 @@ use "democracy/datasets/refined/lied_refined.dta", clear
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
+tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied*, by(year)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied
+collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied*, by(year)
+drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 generate country_name = "World"
@@ -53,6 +54,10 @@ rename polyarchy_age_group_lied9 number_poly_30_lied
 rename polyarchy_age_group_lied10 number_poly_60_lied
 rename polyarchy_age_group_lied11 number_poly_90_lied
 
+rename suffrage_lied1 number_unisuffrage_none
+rename suffrage_lied2 number_unisuffrage_men
+rename suffrage_lied3 number_unisuffrage_all
+
 * Temporarily save data:
 save "democracy/datasets/final/lied_aggregated.dta", replace
 
@@ -67,20 +72,28 @@ merge 1:1 country_name year using "Our World in Data/owid_population_cleaned.dta
 tab country_name if _merge == 1 // Unmerged observations are historical countries (Sicily, East Germany) or current countries without population data (Kosovo, Palestine/Gaza, Palestine/West Bank, Somaliland).
 drop _merge
 
+* Remove population data for year when regime data is not yet available:
+drop if year == 2022
+
 * Recode regime classification such that it includes a category for when population data is available, but regime data is missing:
 replace regime_lied = 9 if regime_lied == . & population_owid != .
 label values regime_lied regime_lied
 label define regime_lied 9 "no regime data", add
+
+replace suffrage_lied = 4 if suffrage_lied == . & population_owid != .
+label values suffrage_lied suffrage_lied
+label define suffrage_lied 4 "no suffrage data", add
 drop if population_owid == .
 
 * Create indicator variables for specific regime categories:
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
+tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* [fweight = population_owid], by(year)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied
+collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied* [fweight = population_owid], by(year)
+drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 generate country_name = "World"
@@ -108,6 +121,11 @@ rename polyarchy_age_group_lied8 pop_poly_18_lied
 rename polyarchy_age_group_lied9 pop_poly_30_lied
 rename polyarchy_age_group_lied10 pop_poly_60_lied
 rename polyarchy_age_group_lied11 pop_poly_90_lied
+
+rename suffrage_lied1 pop_unisuffrage_none
+rename suffrage_lied2 pop_unisuffrage_men
+rename suffrage_lied3 pop_unisuffrage_all
+rename suffrage_lied4 pop_unisuffrage_miss
 
 * Temporarily save data:
 save "democracy/datasets/final/lied_aggregated_popweighted.dta", replace
@@ -148,10 +166,11 @@ drop _merge
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
+tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied*, by(year region)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied
+collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied*, by(year region)
+drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 rename region country_name
@@ -179,6 +198,10 @@ rename polyarchy_age_group_lied9 number_poly_30_lied
 rename polyarchy_age_group_lied10 number_poly_60_lied
 rename polyarchy_age_group_lied11 number_poly_90_lied
 
+rename suffrage_lied1 number_unisuffrage_none
+rename suffrage_lied2 number_unisuffrage_men
+rename suffrage_lied3 number_unisuffrage_all
+
 * Temporarily save data:
 save "democracy/datasets/final/lied_aggregated_regions.dta", replace
 
@@ -192,6 +215,9 @@ use "democracy/datasets/refined/lied_refined.dta", clear
 merge 1:1 country_name year using "Our World in Data/owid_population_cleaned.dta"
 tab country_name if _merge == 1 & year >= 1800 // Unmerged observations are historical countries (Sicily, East Germany) or current countries without population data (Kosovo, Palestine/Gaza, Palestine/West Bank, Somaliland).
 drop _merge
+
+* Remove population data for year when regime data is not yet available:
+drop if year == 2022
 
 * Add regional identifiers:
 merge m:1 country_name using "Our World in Data/countries_regions_pairs.dta"
@@ -208,16 +234,21 @@ drop _merge
 replace regime_lied = 9 if regime_lied == . & population_owid != .
 label values regime_lied regime_lied
 label define regime_lied 9 "no regime data", add
+
+replace suffrage_lied = 4 if suffrage_lied == . & population_owid != .
+label values suffrage_lied suffrage_lied
+label define suffrage_lied 4 "no suffrage data", add
 drop if population_owid == .
 
 * Create indicator variables for specific regime categories:
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
+tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* [fweight = population_owid], by(year region)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied
+collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied* [fweight = population_owid], by(year region)
+drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 rename region country_name
@@ -245,6 +276,11 @@ rename polyarchy_age_group_lied8 pop_poly_18_lied
 rename polyarchy_age_group_lied9 pop_poly_30_lied
 rename polyarchy_age_group_lied10 pop_poly_60_lied
 rename polyarchy_age_group_lied11 pop_poly_90_lied
+
+rename suffrage_lied1 pop_unisuffrage_none
+rename suffrage_lied2 pop_unisuffrage_men
+rename suffrage_lied3 pop_unisuffrage_all
+rename suffrage_lied4 pop_unisuffrage_miss
 
 * Temporarily save data:
 save "democracy/datasets/final/lied_aggregated_popweighted_regions.dta", replace
@@ -319,6 +355,15 @@ label variable pop_poly_18_lied "People living in polyarchies aged 1-18 years (L
 label variable pop_poly_30_lied "People living in polyarchies aged 19-30 years (LIED)"
 label variable pop_poly_60_lied "People living in polyarchies aged 31-60 years (LIED)"
 label variable pop_poly_90_lied "People living in polyarchies aged 61-90 years (LIED)"
+
+label variable number_unisuffrage_none "Number of countries without universal suffrage (LIED)"
+label variable number_unisuffrage_men "Number of countries with universal suffrage for men (LIED)"
+label variable number_unisuffrage_all "Number of countries with universal suffrage for men and women (LIED)"
+
+label variable pop_unisuffrage_none "People living in countries without universal suffrage (LIED)"
+label variable pop_unisuffrage_men "People living in countries with universal suffrage for men (LIED)"
+label variable pop_unisuffrage_all "People living in countries with universal suffrage for men and women (LIED)"
+label variable pop_unisuffrage_miss "People living in countries with no data on universal suffrage (LIED)"
 
 label variable region "Region"
 

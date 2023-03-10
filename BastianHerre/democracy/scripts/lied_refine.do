@@ -1,6 +1,6 @@
 *****  This Stata do-file refines the variables in the LIED dataset
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  March 9, 2023
 
 version 14
 clear all
@@ -84,7 +84,7 @@ replace electdem_age_group_lied = 7 if electdem_age_lied > 18 & electdem_age_lie
 replace electdem_age_group_lied = 8 if electdem_age_lied > 30 & electdem_age_lied <= 60
 replace electdem_age_group_lied = 9 if electdem_age_lied > 60 & electdem_age_lied <= 90
 replace electdem_age_group_lied = 10 if electdem_age_lied > 90 & electdem_age_lied < .
-label variable electdem_age_group_lied "Electoral democracy age group (Regimes of the World, OWID)"
+label variable electdem_age_group_lied "Electoral democracy age group (Lexical Index)"
 label define electdem_age_group_lied 0 "non-electoral autocracy" 1 "one-party autocracy" 2 "multi-party autocracy without elected executive" 3 "multi-party autocracy" 4 "exclusive democracy" 5 "male democracy" 6 "1-18 years" 7 "19-30 years" 8 "31-60 years" 9 "61-90 years" 10 "91+ years"
 label values electdem_age_group_lied electdem_age_group_lied
 order electdem_age_group_lied, after(electdem_age_lied)
@@ -104,10 +104,21 @@ replace polyarchy_age_group_lied = 8 if polyarchy_age_lied > 18 & polyarchy_age_
 replace polyarchy_age_group_lied = 9 if polyarchy_age_lied > 30 & polyarchy_age_lied <= 60
 replace polyarchy_age_group_lied = 10 if polyarchy_age_lied > 60 & polyarchy_age_lied <= 90
 replace polyarchy_age_group_lied = 11 if polyarchy_age_lied > 90 & polyarchy_age_lied < .
-label variable polyarchy_age_group_lied "Polyarchy age group (Regimes of the World, OWID)"
+label variable polyarchy_age_group_lied "Polyarchy age group (Lexical Index)"
 label define polyarchy_age_group_lied 0 "non-electoral autocracy" 1 "one-party autocracy" 2 "multi-party autocracy without elected executive" 3 "multi-party autocracy" 4 "exclusive democracy" 5 "male democracy" 6 "electoral democracy" 7 "1-18 years" 8 "19-30 years" 9 "31-60 years" 10 "61-90 years" 11 "91+ years"
 label values polyarchy_age_group_lied polyarchy_age_group_lied
 order polyarchy_age_group_lied, after(polyarchy_age_lied)
+
+
+** Create variable for universal suffrage:
+generate suffrage_lied = .
+replace suffrage_lied = 0 if male_suffrage_lied == 0 & female_suffrage_lied == 0
+replace suffrage_lied = 1 if male_suffrage_lied == 1 & female_suffrage_lied == 0
+replace suffrage_lied = 2 if male_suffrage_lied == 1 & female_suffrage_lied == 1
+label variable suffrage_lied "Universal suffrage (Lexical Index)"
+label define suffrage_lied 0 "no universal suffrage" 1 "universal suffrage only for men" 2 "universal suffrage for men and women"
+label values suffrage_lied suffrage_lied
+order suffrage_lied, after(female_suffrage_lied)
 
 
 ** Add labels for ages of electoral democracies and polyarchies to optimize use in the OWID grapher:

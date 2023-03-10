@@ -1,6 +1,6 @@
 *****  This Stata do-file cleans the Episodes of Regime Transformation (ERT) dataset
 *****  Author: Bastian Herre
-*****  August 31, 2022
+*****  March 3, 2023
 
 version 14
 clear all
@@ -13,9 +13,9 @@ cd "/Users/bastianherre/Dropbox/Data/"
 global project "/Users/bastianherre/Dropbox/Data/"
 
 
-** Download data from https://github.com/vdeminstitute/ERT/blob/master/inst/ERT.csv and move it into the folder "Episodes of Regime Transformation v4"
+** Download data from https://github.com/vdeminstitute/ERT/blob/master/inst/ert.csv and move it into the folder "Episodes of Regime Transformation v13"
 ** Import data:
-import delimited "Episodes of Regime Transformation v4/ERT.csv", clear varnames(1)
+import delimited "Episodes of Regime Transformation v13/ert.csv", clear varnames(1)
 
 
 ** Keep variables of interest:
