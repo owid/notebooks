@@ -1,0 +1,183 @@
+{
+    "regions": {
+        "region": {
+            "region_id": "GB",
+            "parent_id": null,
+            "name": "United Kingdom",
+            "type": "Country",
+            "continent": "Europe",
+            "region": "British Islands",
+            "slug": "united-kingdom",
+            "url": "http://www.equaldex.com/region/united-kingdom",
+            "region_parent": [],
+            "issues": {
+                "homosexuality": {
+                    "id": "1",
+                    "label": "Homosexual activity",
+                    "label_short": "Homosexuality",
+                    "description": "Consensual sexual activity between individuals of the same sex.",
+                    "current_status": {
+                        "id": "1",
+                        "value": "Legal",
+                        "value_formatted": "Legal",
+                        "start_date_formatted": "November 30, 2000",
+                        "description": "The Sexual Offences Act was successfully challenged in the European Court of Human Rights in the case of ADT v. UK in 2000.  The court determined the provisions making sexual acts between more than two men illegal would be in violation of privacy laws, and therefore, those portions of the Act became unenforceable.  Essentially, this was the last barrier to legalizing same-sex activity within the UK."
+                    }
+                },
+                "marriage": {
+                    "id": "3",
+                    "label": "Same-sex marriage",
+                    "label_short": "Gay Marriage",
+                    "description": "Marriage and marriage recognition between two people of the same biological sex and/or gender identity.",
+                    "current_status": {
+                        "id": "8",
+                        "value": "Legal",
+                        "value_formatted": "Legal",
+                        "start_date_formatted": "January 13, 2020",
+                        "description": "Marriage equality in Northern Ireland was brought into line with the rest of the UK via the Northern Ireland (Executive Formation etc) Act 2019."
+                    }
+                },
+                "censorship": {
+                    "id": "15",
+                    "label": "Censorship of LGBT Issues",
+                    "label_short": "Censorship",
+                    "description": "Censorship or prohibition of discussing, promoting, or teaching LGBTQ+ topics in media, schools, and in the general public.",
+                    "current_status": {
+                        "id": "56",
+                        "value": "No censorship",
+                        "value_formatted": "No censorship",
+                        "start_date_formatted": "November 18, 2003",
+                        "description": "Previous law repealed by section 122 of the Local Government Act 2003."
+                    }
+                },
+                "changing-gender": {
+                    "id": "7",
+                    "label": "Right to change legal gender",
+                    "label_short": "Changing Gender",
+                    "description": "Legal recognition of sex reassignment by permitting a change of legal gender on an individual's birth certificate.",
+                    "current_status": {
+                        "id": "21",
+                        "value": "Legal, surgery not required",
+                        "value_formatted": "Legal, surgery not required",
+                        "start_date_formatted": "April 4, 2005",
+                        "description": "Surgery is not required"
+                    }
+                },
+                "non-binary-gender-recognition": {
+                    "id": "16",
+                    "label": "Legal recognition of non-binary gender",
+                    "label_short": "Non-binary gender recognition",
+                    "description": "Legal recognition of non-binary, genderqueer, or third gender identities.",
+                    "current_status": {
+                        "id": "58",
+                        "value": "Not legally recognized",
+                        "value_formatted": "Not legally recognized",
+                        "description": "In 2021 the UK government said (in response to a petition) that legal recognition of non-binary gender identity would have \"complex practical consequences for other areas of the law, service provision and public life\", and said that they felt existing legislation allowing people to change their legal gender went far enough. Courts have, however, ruled that people with non-binary identities are protected from discrimination by the Equality Act."
+                    }
+                },
+                "discrimination": {
+                    "id": "6",
+                    "label": "LGBT discrimination",
+                    "label_short": "Discrimination",
+                    "description": "Prohibition of discrimination based on sexual orientation and/or gender identity.",
+                    "current_status": {
+                        "id": "19",
+                        "value": "Illegal",
+                        "value_formatted": "Illegal",
+                        "start_date_formatted": "October 1, 2010",
+                        "description": "The Equality Act 2010 says you mustn\u2019t be discriminated against because you\u2019re gay, lesbian, bisexual or heterosexual. This is called discrimination because of sexual orientation.<br />\r\n<br />\r\nDiscrimination which is against the Equality Act is unlawful."
+                    }
+                },
+                "employment-discrimination": {
+                    "id": "12",
+                    "label": "LGBT employment discrimination",
+                    "label_short": "Employment Discrimination",
+                    "description": "Prohibition of discrimination based on sexual orientation and/or gender identity in employment, including hiring, promotion, termination, harassment, etc.",
+                    "current_status": {
+                        "id": "42",
+                        "value": "Sexual orientation and gender identity",
+                        "value_formatted": "Sexual orientation and gender identity",
+                        "description": ""
+                    }
+                },
+                "housing-discrimination": {
+                    "id": "13",
+                    "label": "LGBT housing discrimination",
+                    "label_short": "Housing Discrimination",
+                    "description": "Prohibition of discrimination based on sexual orientation and/or gender identity when applying for housing or discrimination by landlords / property owners.",
+                    "current_status": {
+                        "id": "45",
+                        "value": "Sexual orientation and gender identity",
+                        "value_formatted": "Sexual orientation and gender identity",
+                        "start_date_formatted": "October 1, 2010",
+                        "description": "For Local Authorities they would be bound by Equality Act 2010 and have a duty under Public Sector Equality Duty. For private landlords would be bound by Equality Act 2010"
+                    }
+                },
+                "adoption": {
+                    "id": "4",
+                    "label": "Same-sex adoption",
+                    "label_short": "Adoption",
+                    "description": "The ability for same-sex couples to legally adopt a child.",
+                    "current_status": {
+                        "id": "3",
+                        "value": "Legal",
+                        "value_formatted": "Legal",
+                        "start_date_formatted": "November 7, 2002",
+                        "description": "IVF treatment is available for lesbian couples too."
+                    }
+                },
+                "military": {
+                    "id": "5",
+                    "label": "Serving openly in military",
+                    "label_short": "Military",
+                    "description": "The ability for homosexuals to serve in the military and be open about their sexuality.",
+                    "current_status": {
+                        "id": "16",
+                        "value": "Legal",
+                        "value_formatted": "Legal",
+                        "start_date_formatted": "January 12, 2000",
+                        "description": "The Ministry of Defence were forced to change their stance on when the European Court of Human Rights ruled in September 1999 that the then current ban on gays in the military was unlawful."
+                    }
+                },
+                "blood": {
+                    "id": "8",
+                    "label": "Blood donations by MSMs",
+                    "label_short": "Donating Blood",
+                    "description": "The ability for MSMs (men who have sex with men) to donate blood or tissue for organ transplants. A deferral period refers to a waiting time before a man can donate after having sex.",
+                    "current_status": {
+                        "id": "25",
+                        "value": "Legal",
+                        "value_formatted": "Legal",
+                        "start_date_formatted": "June 14, 2021",
+                        "description": "The 3-month deferral for MSM has been dropped in England, Wales and Scotland. Instead, donors of any gender will be asked about their recent sexual activity, and those who have only had one sexual partner within the last 3-months will be eligible to donate. <br />\r\nNorthern Ireland is due to follow suit with these changes in September 2021."
+                    }
+                },
+                "conversion-therapy": {
+                    "id": "14",
+                    "label": "Conversion therapy",
+                    "label_short": "Conversion Therapy",
+                    "description": "Legal status of conducting sexual orientation changing therapy (\"ex-gay\" therapy)",
+                    "current_status": {
+                        "id": "49",
+                        "value": "Not banned",
+                        "value_formatted": "Not banned",
+                        "description": "Conversion therapy ban has been discussed for many years. Prime Minister Boris Johnson promised to ban conversion therapy in July 2020 and this was reiterated in the 2021 Queen's Speech. In March 2022, the plans were dropped, only for a partial U-turn just hours later when the government announced that the ban would go ahead but not cover trans people.<br />\r\n<br />\r\nOn January 17 2023, the government announced they'd pass a new law to include transgender people in the conversion therapy ban."
+                    }
+                },
+                "age-of-consent": {
+                    "id": "11",
+                    "label": "Equal age of consent",
+                    "label_short": "Age of Consent",
+                    "description": "The difference between legal age of consent for homosexual sex and heterosexual sex.",
+                    "current_status": {
+                        "id": "27",
+                        "value": "Equal",
+                        "value_formatted": "Equal",
+                        "start_date_formatted": "August 1, 2001",
+                        "description": "On November 30, 2000 a bill was signed to make the ages of consent equitable, regardless of gender.  The law came into effect on August 1, 2001.  The age of consent for men who have sex with men was reduced from 18 to 16, on par with different sex individuals."
+                    }
+                }
+            }
+        }
+    }
+}
