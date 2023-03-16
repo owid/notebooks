@@ -88,7 +88,8 @@ rename wom_parl_gr_vdem_owid2 number_less10women_vdem_owid
 rename wom_parl_gr_vdem_owid3 number_less20women_vdem_owid
 rename wom_parl_gr_vdem_owid4 number_less30women_vdem_owid
 rename wom_parl_gr_vdem_owid5 number_less40women_vdem_owid
-rename wom_parl_gr_vdem_owid6 number_more40women_vdem_owid
+rename wom_parl_gr_vdem_owid6 number_less50women_vdem_owid
+rename wom_parl_gr_vdem_owid7 number_more50women_vdem_owid
 
 rename wom_hog_vdem_owid1 number_hog_men_vdem_owid
 rename wom_hog_vdem_owid2 number_hog_women_vdem_owid
@@ -123,9 +124,9 @@ label values regime_amb_row_owid regime_row_owid
 label define regime_amb_row_owid 10 "no regime data", add
 drop if population_owid == .
 
-replace wom_parl_gr_vdem_owid = 6 if wom_parl_gr_vdem_owid == . & population_owid != .
+replace wom_parl_gr_vdem_owid = 7 if wom_parl_gr_vdem_owid == . & population_owid != .
 label values wom_parl_gr_vdem_owid wom_parl_gr_vdem_owid
-label define wom_parl_gr_vdem_owid 6 "no women's representation data", add
+label define wom_parl_gr_vdem_owid 7 "no women's representation data", add
 
 replace wom_hog_vdem_owid = 3 if wom_hog_vdem_owid == . & population_owid != .
 label values wom_hog_vdem_owid wom_hog_vdem_owid
@@ -202,8 +203,9 @@ rename wom_parl_gr_vdem_owid2 pop_less10women_vdem_owid
 rename wom_parl_gr_vdem_owid3 pop_less20women_vdem_owid
 rename wom_parl_gr_vdem_owid4 pop_less30women_vdem_owid
 rename wom_parl_gr_vdem_owid5 pop_less40women_vdem_owid
-rename wom_parl_gr_vdem_owid6 pop_more40women_vdem_owid
-rename wom_parl_gr_vdem_owid7 pop_misswomen_vdem_owid
+rename wom_parl_gr_vdem_owid6 pop_less50women_vdem_owid
+rename wom_parl_gr_vdem_owid7 pop_more50women_vdem_owid
+rename wom_parl_gr_vdem_owid8 pop_misswomen_vdem_owid
 
 rename wom_hog_vdem_owid1 pop_hog_men_vdem_owid
 rename wom_hog_vdem_owid2 pop_hog_women_vdem_owid
@@ -429,7 +431,8 @@ rename wom_parl_gr_vdem_owid2 number_less10women_vdem_owid
 rename wom_parl_gr_vdem_owid3 number_less20women_vdem_owid
 rename wom_parl_gr_vdem_owid4 number_less30women_vdem_owid
 rename wom_parl_gr_vdem_owid5 number_less40women_vdem_owid
-rename wom_parl_gr_vdem_owid6 number_more40women_vdem_owid
+rename wom_parl_gr_vdem_owid6 number_less50women_vdem_owid
+rename wom_parl_gr_vdem_owid7 number_more50women_vdem_owid
 
 rename wom_hog_vdem_owid1 number_hog_men_vdem_owid
 rename wom_hog_vdem_owid2 number_hog_women_vdem_owid
@@ -472,9 +475,9 @@ label values regime_amb_row_owid regime_row_owid
 label define regime_amb_row_owid 10 "no regime data", add
 drop if population_owid == .
 
-replace wom_parl_gr_vdem_owid = 6 if wom_parl_gr_vdem_owid == . & population_owid != .
+replace wom_parl_gr_vdem_owid = 7 if wom_parl_gr_vdem_owid == . & population_owid != .
 label values wom_parl_gr_vdem_owid wom_parl_gr_vdem_owid
-label define wom_parl_gr_vdem_owid 6 "no women's representation data", add
+label define wom_parl_gr_vdem_owid 7 "no women's representation data", add
 
 replace wom_hog_vdem_owid = 3 if wom_hog_vdem_owid == . & population_owid != .
 label values wom_hog_vdem_owid wom_hog_vdem_owid
@@ -599,8 +602,9 @@ rename wom_parl_gr_vdem_owid2 pop_less10women_vdem_owid
 rename wom_parl_gr_vdem_owid3 pop_less20women_vdem_owid
 rename wom_parl_gr_vdem_owid4 pop_less30women_vdem_owid
 rename wom_parl_gr_vdem_owid5 pop_less40women_vdem_owid
-rename wom_parl_gr_vdem_owid6 pop_more40women_vdem_owid
-rename wom_parl_gr_vdem_owid7 pop_misswomen_vdem_owid
+rename wom_parl_gr_vdem_owid6 pop_less50women_vdem_owid
+rename wom_parl_gr_vdem_owid7 pop_more50women_vdem_owid
+rename wom_parl_gr_vdem_owid8 pop_misswomen_vdem_owid
 
 rename wom_emp_vdem_owid popw_wom_emp_vdem_owid
 rename wom_emp_vdem_high_owid popw_wom_emp_vdem_high_owid
@@ -712,14 +716,16 @@ replace number_less10women_vdem_owid = . if year < 1900
 replace number_less20women_vdem_owid = . if year < 1900
 replace number_less30women_vdem_owid = . if year < 1900
 replace number_less40women_vdem_owid = . if year < 1900
-replace number_more40women_vdem_owid = . if year < 1900
+replace number_less50women_vdem_owid = . if year < 1900
+replace number_more50women_vdem_owid = . if year < 1900
 
 replace pop_nowomen_vdem_owid = . if year < 1900
 replace pop_less10women_vdem_owid = . if year < 1900
 replace pop_less20women_vdem_owid = . if year < 1900
 replace pop_less30women_vdem_owid = . if year < 1900
 replace pop_less40women_vdem_owid = . if year < 1900
-replace pop_more40women_vdem_owid = . if year < 1900
+replace pop_less50women_vdem_owid = . if year < 1900
+replace pop_more50women_vdem_owid = . if year < 1900
 replace pop_misswomen_vdem_owid = . if year < 1900
 
 
@@ -822,14 +828,16 @@ label variable number_less10women_vdem_owid "Number of countries with 0-10% wome
 label variable number_less20women_vdem_owid "Number of countries with 10-20% women in parliament (V-Dem, OWID)"
 label variable number_less30women_vdem_owid "Number of countries with 20-30% women in parliament (V-Dem, OWID)"
 label variable number_less40women_vdem_owid "Number of countries with 30-40% women in parliament (V-Dem, OWID)"
-label variable number_more40women_vdem_owid "Number of countries with more than 40% women in parliament (V-Dem, OWID)"
+label variable number_less50women_vdem_owid "Number of countries with 40-50% women in parliament (V-Dem, OWID)"
+label variable number_more50women_vdem_owid "Number of countries with more than 50% women in parliament (V-Dem, OWID)"
 
 label variable pop_nowomen_vdem_owid "People living in countries with less no women in parliament (V-Dem, OWID)"
 label variable pop_less10women_vdem_owid "People living in countries with 0-10% women in parliament (V-Dem, OWID)"
 label variable pop_less20women_vdem_owid "People living in countries with 10-20% women in parliament (V-Dem, OWID)"
 label variable pop_less30women_vdem_owid "People living in countries with 20-30% women in parliament (V-Dem, OWID)"
 label variable pop_less40women_vdem_owid "People living in countries with 30-40% women in parliament (V-Dem, OWID)"
-label variable pop_more40women_vdem_owid "People living in countries with more than 40% women in parliament (V-Dem, OWID)"
+label variable pop_less50women_vdem_owid "People living in countries with 40-50% women in parliament (V-Dem, OWID)"
+label variable pop_more50women_vdem_owid "People living in countries with more than 50% women in parliament (V-Dem, OWID)"
 label variable pop_misswomen_vdem_owid "People living in countries without data on women's representation in parliament (V-Dem, OWID)"
 
 label variable number_hog_men_vdem_owid "Number of countries in which head of government is a woman (V-Dem)"

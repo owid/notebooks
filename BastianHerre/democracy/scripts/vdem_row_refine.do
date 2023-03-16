@@ -122,9 +122,10 @@ replace wom_parl_gr_vdem_owid = 1 if wom_parl_vdem_owid > 0 & wom_parl_vdem_owid
 replace wom_parl_gr_vdem_owid = 2 if wom_parl_vdem_owid >= 10 & wom_parl_vdem_owid < 20
 replace wom_parl_gr_vdem_owid = 3 if wom_parl_vdem_owid >= 20 & wom_parl_vdem_owid < 30
 replace wom_parl_gr_vdem_owid = 4 if wom_parl_vdem_owid >= 30 & wom_parl_vdem_owid < 40
-replace wom_parl_gr_vdem_owid = 5 if wom_parl_vdem_owid >= 40 & wom_parl_vdem_owid < .
+replace wom_parl_gr_vdem_owid = 5 if wom_parl_vdem_owid >= 40 & wom_parl_vdem_owid < 50
+replace wom_parl_gr_vdem_owid = 6 if wom_parl_vdem_owid >= 50 & wom_parl_vdem_owid < .
 label variable wom_parl_gr_vdem_owid "Women's political representation (grouped, V-Dem, OWID)"
-label define wom_parl_gr_vdem_owid 0 "no women" 1 "0-10% women" 2 "10%-20% women" 3 "20%-30% women" 4 "30%-40% women" 5 "40%+ women"
+label define wom_parl_gr_vdem_owid 0 "no women" 1 "0-10% women" 2 "10%-20% women" 3 "20%-30% women" 4 "30%-40% women" 5 "40%-50% women" 6 "50%+ women"
 
 
 ** Export data:
