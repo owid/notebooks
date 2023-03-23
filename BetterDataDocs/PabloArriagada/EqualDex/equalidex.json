@@ -22,7 +22,33 @@
                         "value_formatted": "Legal",
                         "start_date_formatted": "November 30, 2000",
                         "description": "The Sexual Offences Act was successfully challenged in the European Court of Human Rights in the case of ADT v. UK in 2000.  The court determined the provisions making sexual acts between more than two men illegal would be in violation of privacy laws, and therefore, those portions of the Act became unenforceable.  Essentially, this was the last barrier to legalizing same-sex activity within the UK."
-                    }
+                    },
+                    "history": [
+                        {
+                            "id": "1",
+                            "value": "Legal",
+                            "value_formatted": "Legal",
+                            "start_date_formatted": "July 27, 1967",
+                            "end_date_formatted": "November 30, 2000",
+                            "description": "**LEGAL, WITH RESTRICTIONS**<br />\r\nThe Sexual Offences Act of 1967 legalized sexual acts between two men who were 21 or older (Excluding men serving in the military), but it placed new restrictions on sex for men who have sex with men.  The act prohibited sex in places where a third party was likely to be present."
+                        },
+                        {
+                            "id": "36",
+                            "value": "Illegal (up to life in prison as punishment)",
+                            "value_formatted": "Illegal (up to life in prison as punishment)",
+                            "start_date_formatted": "January 1, 1885",
+                            "end_date_formatted": "January 1, 1967",
+                            "description": "The Labouchere Amendment passed making sex between two men a gross indecency, punishable by imprisonment.  Female homosexuality and sexual acts were not addressed in the law, and therefore, they technically would have been legal, though the law often applied the law towards women."
+                        },
+                        {
+                            "id": "35",
+                            "value": "Illegal (death penalty as punishment)",
+                            "value_formatted": "Illegal (death penalty as punishment)",
+                            "start_date_formatted": "January 1, 1533",
+                            "end_date_formatted": "January 1, 1861",
+                            "description": "Under the 1533 Buggery Act, homosexuality in the UK was punishable by death until 1861."
+                        }
+                    ]
                 },
                 "marriage": {
                     "id": "3",
@@ -35,7 +61,33 @@
                         "value_formatted": "Legal",
                         "start_date_formatted": "January 13, 2020",
                         "description": "Marriage equality in Northern Ireland was brought into line with the rest of the UK via the Northern Ireland (Executive Formation etc) Act 2019."
-                    }
+                    },
+                    "history": [
+                        {
+                            "id": null,
+                            "value": "varies",
+                            "value_formatted": "Varies by Region",
+                            "start_date_formatted": "July 17, 2013",
+                            "end_date_formatted": "June 12, 2020",
+                            "description": "Came into force as of March 29th, 2014 . Same-sex marriage is still unrecognized fully in some parts of the UK (such as Northern Ireland)."
+                        },
+                        {
+                            "id": "8",
+                            "value": "Legal",
+                            "value_formatted": "Legal",
+                            "start_date_formatted": "July 17, 2013",
+                            "end_date_formatted": "January 1, 2014",
+                            "description": "The legislation allowed religious organisations to opt in to marry same-sex couples should they wish to do so and protected religious organisations and their representatives from successful legal challenge if they did not wish to marry same-sex couples."
+                        },
+                        {
+                            "id": "33",
+                            "value": "Civil unions",
+                            "value_formatted": "Civil unions",
+                            "start_date_formatted": "December 5, 2005",
+                            "end_date_formatted": "July 16, 2013",
+                            "description": "The Civil Partnership Act (2004).<br />\r\n<br />\r\nUnder the Act, same-sex couples can register a civil partnership, which has almost the same legal effects, rights and obligations as marriage does for mixed-sex couples. For that reason, civil partnership is sometimes called \u2018gay marriage\u2019. However, legally, it is not marriage, but is a separate, segregated system"
+                        }
+                    ]
                 },
                 "censorship": {
                     "id": "15",
@@ -48,7 +100,17 @@
                         "value_formatted": "No censorship",
                         "start_date_formatted": "November 18, 2003",
                         "description": "Previous law repealed by section 122 of the Local Government Act 2003."
-                    }
+                    },
+                    "history": [
+                        {
+                            "id": "55",
+                            "value": "Other punishment",
+                            "value_formatted": "Other punishment",
+                            "start_date_formatted": "March 24, 1988",
+                            "end_date_formatted": "November 17, 2003",
+                            "description": "Section 28 of the Local Government Act 1988 stated that local authorities could not \"intentionally promote homosexuality or publish material with the intention of promoting homosexuality\" or \"promote the teaching in any maintained school of the acceptability of homosexuality as a pretended family relationship\". The law did not create a criminal offence, leaving staff to fear losing their jobs if they breached the rules. "
+                        }
+                    ]
                 },
                 "changing-gender": {
                     "id": "7",
@@ -137,7 +199,24 @@
                         "value_formatted": "Legal",
                         "start_date_formatted": "January 12, 2000",
                         "description": "The Ministry of Defence were forced to change their stance on when the European Court of Human Rights ruled in September 1999 that the then current ban on gays in the military was unlawful."
-                    }
+                    },
+                    "history": [
+                        {
+                            "id": "18",
+                            "value": "Illegal",
+                            "value_formatted": "Illegal",
+                            "start_date_formatted": "January 1, 1967",
+                            "end_date_formatted": "January 11, 2000",
+                            "description": "The Sexual Offences Act of 1967 explicitly made serving in the military as an openly gay/bi man illegal.  Prior to this act, it was illegal for a man to have sex with another man entirely, and therefore, it was also illegal."
+                        },
+                        {
+                            "id": "18",
+                            "value": "Illegal",
+                            "value_formatted": "Illegal",
+                            "end_date_formatted": "January 1, 1967",
+                            "description": "Same-sex sexual activity was illegal for men, and therefore, these individuals were not permitted in the military."
+                        }
+                    ]
                 },
                 "blood": {
                     "id": "8",
@@ -150,7 +229,25 @@
                         "value_formatted": "Legal",
                         "start_date_formatted": "June 14, 2021",
                         "description": "The 3-month deferral for MSM has been dropped in England, Wales and Scotland. Instead, donors of any gender will be asked about their recent sexual activity, and those who have only had one sexual partner within the last 3-months will be eligible to donate. <br />\r\nNorthern Ireland is due to follow suit with these changes in September 2021."
-                    }
+                    },
+                    "history": [
+                        {
+                            "id": "52",
+                            "value": "Banned (3-month deferral)",
+                            "value_formatted": "Banned (3-month deferral)",
+                            "start_date_formatted": "January 1, 2017",
+                            "end_date_formatted": "June 13, 2021",
+                            "description": "In 2017, the 3-month blood donation rule came into force at blood donation centres in Scotland in November, and in early 2018 in England."
+                        },
+                        {
+                            "id": "40",
+                            "value": "Banned (1-year deferral)",
+                            "value_formatted": "Banned (1-year deferral)",
+                            "start_date_formatted": "January 1, 2011",
+                            "end_date_formatted": "November 1, 2017",
+                            "description": " "
+                        }
+                    ]
                 },
                 "conversion-therapy": {
                     "id": "14",
@@ -162,7 +259,16 @@
                         "value": "Not banned",
                         "value_formatted": "Not banned",
                         "description": "Conversion therapy ban has been discussed for many years. Prime Minister Boris Johnson promised to ban conversion therapy in July 2020 and this was reiterated in the 2021 Queen's Speech. In March 2022, the plans were dropped, only for a partial U-turn just hours later when the government announced that the ban would go ahead but not cover trans people.<br />\r\n<br />\r\nOn January 17 2023, the government announced they'd pass a new law to include transgender people in the conversion therapy ban."
-                    }
+                    },
+                    "history": [
+                        {
+                            "id": "49",
+                            "value": "Not banned",
+                            "value_formatted": "Not banned",
+                            "end_date_formatted": "January 1, 2017",
+                            "description": "Conversion therapies are reportedly a major issue in the UK, but it's rarely discussed. A ban is being discussed by British leaders."
+                        }
+                    ]
                 },
                 "age-of-consent": {
                     "id": "11",
@@ -175,7 +281,32 @@
                         "value_formatted": "Equal",
                         "start_date_formatted": "August 1, 2001",
                         "description": "On November 30, 2000 a bill was signed to make the ages of consent equitable, regardless of gender.  The law came into effect on August 1, 2001.  The age of consent for men who have sex with men was reduced from 18 to 16, on par with different sex individuals."
-                    }
+                    },
+                    "history": [
+                        {
+                            "id": "28",
+                            "value": "Unequal",
+                            "value_formatted": "Unequal",
+                            "start_date_formatted": "January 1, 1994",
+                            "end_date_formatted": "July 31, 2001",
+                            "description": "A bill was signed to reduce the age of consent for men who have sex with men from 21 to 18."
+                        },
+                        {
+                            "id": "28",
+                            "value": "Unequal",
+                            "value_formatted": "Unequal",
+                            "start_date_formatted": "January 1, 1967",
+                            "end_date_formatted": "January 1, 1994",
+                            "description": "The Sexual Offenses Act made sex between two men legal in 1967*, but it was only legal between consenting men who were 21 or older, whereas the age of consent for different sex couples was 16.<br />\r\n<br />\r\n*Sex between more than two men remained illegal until later."
+                        },
+                        {
+                            "id": "28",
+                            "value": "Unequal",
+                            "value_formatted": "Unequal",
+                            "end_date_formatted": "January 1, 1967",
+                            "description": "Sexual activities between two or more men were illegal prior to 1967, and therefore, the age of consent was irrelevant; it was all illegal."
+                        }
+                    ]
                 }
             }
         }
