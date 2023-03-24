@@ -2,12 +2,13 @@ import json
 from pathlib import Path
 
 import requests
+from access_key import API_KEY
 
 PARENT_DIR = Path(__file__).parent.absolute()
 
 url = "https://www.equaldex.com/api/region"
 
-querystring = {"regionid": "gb", "apiKey": "487549175181c7bcaeef608e90b1cb46916bc734"}
+querystring = {"regionid": "gb", "apiKey": API_KEY}
 
 headers = {"Content-Type": "application/json"}
 
