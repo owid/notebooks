@@ -111,6 +111,7 @@ def extract_from_api(country_list: list) -> pd.DataFrame:
         cols_to_move + [col for col in df_historical.columns if col not in cols_to_move]
     ]
 
+    # Export files
     df.to_csv(PARENT_DIR / "current.csv", index=False)
     df_historical.to_csv(PARENT_DIR / "historical.csv", index=False)
 
