@@ -104,6 +104,12 @@ def extract_from_api(country_list: list) -> pd.DataFrame:
             )
             df = pd.concat([df, current_data], ignore_index=True)
 
+    # Error message with a summary of countries with no data
+    if countries_no_data:
+        log.error(
+            f"Data was not found for the following {len(countries_no_data)} countries: \n{countries_no_data}"
+        )
+
     # Move country and issue to the beginning
     cols_to_move = ["country", "issue"]
     df = df[cols_to_move + [col for col in df.columns if col not in cols_to_move]]
@@ -111,16 +117,19 @@ def extract_from_api(country_list: list) -> pd.DataFrame:
         cols_to_move + [col for col in df_historical.columns if col not in cols_to_move]
     ]
 
+    df_complete = pd.concat([df, df_historical], ignore_index=True)
+
     # Export files
     df.to_csv(PARENT_DIR / "current.csv", index=False)
     df_historical.to_csv(PARENT_DIR / "historical.csv", index=False)
+    df_complete.to_csv(PARENT_DIR / "complete.csv", index=False)
 
-    # Error message with a summary of countries with no data
-    if countries_no_data:
-        log.error(
-            f"Data was not found for the following {len(countries_no_data)} countries: \n{countries_no_data}"
-        )
+    return df, df_historical, df_complete
 
+
+# Create dataset with countries and years as index
+# def create_dataset(df: pd.DataFrame) -> pd.DataFrame:
+#     df[]
 
 # Define country list
 # country_list = ["gb", "us", "cl", "querty", "sa", "il", "asdf"]
