@@ -1,6 +1,6 @@
 *****  This Stata do-file cleans the democracy dataset by the Varieties of Democracy (V-Dem) project, including the Regimes of the World (RoW) data
 *****  Author: Bastian Herre
-*****  October 25, 2022
+*****  March 7, 2023
 
 version 14
 clear all
@@ -15,7 +15,7 @@ global project "/Users/bastianherre/Dropbox/Data/"
 
 ** Download V-Dem dataset from https://www.v-dem.net/vdemds.html and move it into the folder "Varieties of Democracy v12"
 ** Import V-Dem dataset:
-use "Varieties of Democracy v12/V-Dem-CY-Full+Others-v12.dta", clear
+use "Varieties of Democracy v13/V-Dem-CY-Full+Others-v13.dta", clear
 
 
 ** Keep variables of interest:
@@ -26,6 +26,11 @@ keep country_name year v2x_regime v2x_regime_amb v2elmulpar_osp v2elmulpar_osp_c
 	v2x_delibdem v2xdl_delib v2dlreason v2dlcommon v2dlcountr v2dlconslt v2dlengage v2x_delibdem_codelow v2xdl_delib_codelow v2dlreason_codelow v2dlcommon_codelow v2dlcountr_codelow v2dlconslt_codelow v2dlengage_codelow v2x_delibdem_codehigh v2xdl_delib_codehigh v2dlreason_codehigh v2dlcommon_codehigh v2dlcountr_codehigh v2dlconslt_codehigh v2dlengage_codehigh ///
 	v2x_egaldem v2x_egal v2xeg_eqprotec v2xeg_eqaccess v2xeg_eqdr v2x_egaldem_codelow v2x_egal_codelow v2xeg_eqprotec_codelow v2xeg_eqaccess_codelow v2xeg_eqdr_codelow v2x_egaldem_codehigh v2x_egal_codehigh v2xeg_eqprotec_codehigh v2xeg_eqaccess_codehigh v2xeg_eqdr_codehigh ///
 	v2x_civlib v2x_civlib_codehigh v2x_civlib_codelow v2x_clphy v2x_clphy_codehigh v2x_clphy_codelow v2x_clpol v2x_clpol_codehigh v2x_clpol_codelow v2x_clpriv v2x_clpriv_codehigh v2x_clpriv_codelow ///
+	v2x_gender v2x_gender_codehigh v2x_gender_codelow v2x_gencl v2x_gencl_codehigh v2x_gencl_codelow v2x_gencs v2x_gencs_codehigh v2x_gencs_codelow v2x_genpp v2x_genpp_codehigh v2x_genpp_codelow v2lgfemleg v2exfemhos v2exfemhog ///
+	v2clsocgrp v2clsocgrp_codehigh v2clsocgrp_codelow v2pepwrsoc v2pepwrsoc_codehigh v2pepwrsoc_codelow ///
+	v2svstterr v2svstterr_codehigh v2svstterr_codelow v2x_rule v2x_rule_codehigh v2x_rule_codelow v2clrspct v2clrspct_codehigh v2clrspct_codelow v2svinlaut v2svinlaut_codehigh v2svinlaut_codelow v2svdomaut v2svdomaut_codehigh v2svdomaut_codelow ///
+	v2x_corr v2x_corr_codehigh v2x_corr_codelow v2x_pubcorr v2x_pubcorr_codehigh v2x_pubcorr_codelow v2x_execorr v2x_execorr_codehigh v2x_execorr_codelow v2lgcrrpt v2lgcrrpt_codehigh v2lgcrrpt_codelow v2jucorrdc v2jucorrdc_codehigh v2jucorrdc_codelow e_ti_cpi ///
+	v2xnp_pres v2xnp_pres_codehigh v2xnp_pres_codelow v2xcs_ccsi v2xcs_ccsi_codehigh v2xcs_ccsi_codelow ///
 	v2eltrnout e_wbgi_gee
 
 ** Drop superfluous observations:
@@ -46,6 +51,8 @@ replace v2ex_hosw = 1 if country_name == "Haiti" & year >= 1991 & year <= 1993
 replace v2ex_hogw = 0 if country_name == "Haiti" & year >= 1991 & year <= 1993
 replace v2exaphogp = 0 if country_name == "Haiti" & year >= 1991 & year <= 1993
 * Goemans et al.'s (2009) Archigos dataset, rulers.org, and worldstatesmen.org identify non-elected General Raoul Cédras as the de-facto leader of Haiti from 1991 until 1994.
+
+replace v2exfemhog = 0 if v2exnamhog == "Rishi Sunak"
 
 
 ** Create expanded and refined Regimes of the World indicator:
@@ -305,17 +312,14 @@ label values regime_row_owid regime_row_owid
 ** Compare our and standard RoW coding:
 tab regime_row_owid v2x_regime if year >= 1900, m
 
-* Observations own classification identifies as electoral autocracies, whereas RoW identifies them as electoral democracies:
+* 5 observations own classification identifies as electoral autocracies, whereas RoW identifies them as electoral democracies:
 list country_name year if regime_row_owid == 1 & v2x_regime == 2
 list v2x_polyarchy if regime_row_owid == 1 & v2x_regime == 2
 * Observations are coded differently because v2x_polyarchy in V-Dem's input dataset is barely above 0.5, whereas in the released dataset it is rounded to 0.5 and therefore is not above the coding threshold (conversation with Marcus Tannenberg and Johannes von Römer).
 replace regime_row_owid = 2 if regime_row_owid == 1 & v2x_regime == 2
 
-* Observations own classification identifies as electoral democracies, whereas RoW identifies them as liberal democracies:
+* No observations own classification identifies as electoral democracies, whereas RoW identifies them as liberal democracies:
 list country_name year if regime_row_owid == 2 & v2x_regime == 3
-list v2x_liberal v2clacjstm_osp v2clacjstw_osp v2cltrnslw_osp if regime_row_owid == 2 & v2x_regime == 3
-* Observations most likely coded differently because v2cltrnslw_osp in V-Dem's input dataset is barely above 3, whereas in the released dataset it is rounded to 3 and therefore is not above the coding threshold.
-replace regime_row_owid = 3 if regime_row_owid == 2 & v2x_regime == 3
 
 * 18 observations own classification identifies as closed autocracies, whereas RoW does not provide data:
 list country_name year if regime_row_owid == 0 & v2x_regime == . & year >= 1900
@@ -329,7 +333,7 @@ list country_name year if regime_row_owid == 1 & v2x_regime == . & year >= 1900
 * Observations can be coded because I use information from the other criteria for democracies and autocracies in the absence of information from v2x_polyarchy:
 list v2x_polyarchy v2elfrfair_osp_imp_dich v2elmulpar_osp_imp_dich v2elmulpar_osp_hoe_imp v2elmulpar_osp_leg_imp_dich if regime_row_owid == 1 & v2x_regime == . & year >= 1900
 
-* Observations own classification identifies as closed autocracies, whereas RoW identifies them as electoral autocracies:
+* 161 bservations own classification identifies as closed autocracies, whereas RoW identifies them as electoral autocracies:
 list country_name year if regime_row_owid == 0 & v2x_regime == 1
 
 * Belgium in 1919 is hard-recoded in RoW code, though Marcus Tannenberg does not know why that happens even if the errors in a previous version of the V-Dem dataset should by now be remedied; it only continues to make a difference for Belgium in 1919; I keep the recode.
@@ -338,14 +342,12 @@ replace regime_row_owid = 1 if country_name == "Belgium" & year == 1919
 label define v2expathhg 0 "Force" 1 "Foreign power" 2 "Ruling party" 3 "Royal council" 4 "Hereditary succession" 5 "Military" 6 "Head of state" 7 "Legislature" 8 "Directly" 9 "Other"
 label values v2expathhg v2expathhg
 list country_name year v2elmulpar_osp_exleg_imp v2elmulpar_osp_hoe_imp v2expathhs v2ex_legconhos v2elmulpar_osp_leg_imp if regime_row_owid == 0 & v2x_regime == 1 & v2ex_hosw <= 1 & v2ex_hosw > 0.5 & v2ex_legconhos == 0
-* 100 observations with multi-party elections for legislature and executive (hence the RoW coding); but which had chief executive which were heads of state that were neither directly or indirectly chosen through multiparty elections, nor were they accountable to a legislature chosen through multi-party elections; I therefore do not recode them.
+
+* 117 observations with multi-party elections for legislature and executive (hence the RoW coding); but which had chief executive which were heads of state that were neither directly or indirectly chosen through multiparty elections, nor were they accountable to a legislature chosen through multi-party elections; I therefore do not recode them.
 list country_name year v2exnamhos if regime_row_owid < v2x_regime & v2x_regime !=. & v2ex_hosw <= 1 & v2ex_hosw > 0.5
-* Examples include many prominent heads of state which came to office in coup d'etats or rebellions, such as Boumedienne (Algeria 1965), Anez (Bolivia 2019), Buyoya (Burundi 1987), Batista (Cuba 1952), Ankrah (Ghana 1966), Khomeini (Iran 1980), Buhari (Nigeria 1983), Jammeh (Gambia 1994), and Eyadema (1967 Togo):
+* Examples include many prominent heads of state which came to office in coup d'etats or rebellions, such as Boumedienne (Algeria 1965), Anez (Bolivia 2019), Buyoya (Burundi 1987), Batista (Cuba 1952), Ankrah (Ghana 1966), Khomeini (Iran 1980), Buhari (Nigeria 1983), Jammeh (The Gambia 1994), and Eyadema (1967 Togo):
 
-list country_name year v2elmulpar_osp_exleg_imp v2elmulpar_osp_hoe_imp v2expathhs v2ex_legconhos v2elmulpar_osp_leg_imp_dich if regime_row_owid == 0 & v2x_regime == 1 & v2ex_hosw <= 1 & v2ex_hosw > 0.5 & v2ex_legconhos != 0
-* Nicaragua in 1901 and 1905 with head of state appointed by the legislature, but missing value for v2elmulpar_osp_leg_imp; v2elmulpar_osp_exleg_imp and v2elmulpar_osp_hoe_imp are only not missing because its coding as 0 is based on v2ex_hosw. I leave the coding as is because the coding is the same in adjacent years.
-
-* 37 observations which had multi-party elections for legislature and executive (hence the RoW coding); but which had chief executives which were heads of government that were neither directly or indirectly chosen through multiparty elections, nor were they accountable to a legislature chosen through multi-party elections:
+* 40 observations which had multi-party elections for legislature and executive (hence the RoW coding); but which had chief executives which were heads of government that were neither directly or indirectly chosen through multiparty elections, nor were they accountable to a legislature chosen through multi-party elections:
 list country_name year v2elmulpar_osp_exleg_imp v2expathhg v2ex_legconhog v2expathhs v2ex_legconhos if regime_row_owid == 0 & v2x_regime == 1 & v2elmulpar_osp_exleg_imp == 1 & v2ex_hosw <= 0.5
 * Examples include prominent heads of government which came to office in a rebellion or were appointed by a foreign power, such as Castro (Cuba 1959) and Paul Vories McNutt (Philippines 1937):
 list country_name year v2exnamhog if regime_row_owid < v2x_regime & v2x_regime !=. & v2ex_hosw <= 0.5
@@ -354,17 +356,17 @@ list country_name year v2exnamhog if regime_row_owid < v2x_regime & v2x_regime !
 list country_name year v2expathhg v2ex_legconhog v2exaphogp if regime_row_owid == 0 & v2x_regime == 1 & v2elmulpar_osp_exleg_imp == 0 & v2ex_hosw <= 0.5
 replace regime_row_owid = 1 if regime_row_owid == 0 & v2x_regime == 1 & v2elmulpar_osp_exleg_imp == 0 & v2ex_hosw <= 0.5
 
-* Observations own classification identifies as electoral autocracies, whereas RoW identifies them as closed autocracies:
+* 136 bservations own classification identifies as electoral autocracies, whereas RoW identifies them as closed autocracies:
 list country_name year if regime_row_owid == 1 & v2x_regime == 0
 
-* 120 observations with chief executives that were heads of state directly or indirectly elected chief executive and at least moderately multi-party elections for legislative, but which are affected by RoW's different standard filter (2elmulpar_osp_ex_imp instead of v2elmulpar_osp_leg_imp) above:
+* 130 observations with chief executives that were heads of state directly or indirectly elected chief executive and at least moderately multi-party elections for legislative, but which are affected by RoW's different standard filter (2elmulpar_osp_ex_imp instead of v2elmulpar_osp_leg_imp) above:
 list v2elmulpar_osp_leg_imp_dich v2elmulpar_osp_hoe_imp v2elmulpar_osp_ex_imp v2elmulpar_osp_leg_imp if regime_row_owid == 1 & v2x_regime == 0 & v2ex_hosw <= 1 & v2ex_hosw > 0.5
 
-* 3 observations with chief executives that were heads of government directly or indirectly elected chief executive and at least moderately multi-party elections for legislative, but which are affected by RoW's different standard filter (v2elmulpar_osp_imp instead of v2xlg_elecreg) above:
+* 6 observations with chief executives that were heads of government directly or indirectly elected chief executive and at least moderately multi-party elections for legislative, but which are affected by RoW's different standard filter (v2elmulpar_osp_imp instead of v2xlg_elecreg) above:
 list v2elmulpar_osp_leg_imp v2elmulpar_osp_hoe_imp v2elmulpar_osp_imp v2xlg_elecreg if regime_row_owid == 1 & v2x_regime == 0 & v2ex_hosw <= 0.5
 
-* 83 observations which RoW identifies as electoral autocracies, but which own classification identifies as missing:
-list v2x_elecreg v2elfrfair_osp_imp_dich v2elmulpar_osp_imp_dich v2x_polyarchy_dich v2elmulpar_osp_hoe_imp v2elmulpar_osp_leg_imp_dich v2eltype_0 v2eltype_1 v2eltype_4 v2eltype_5 if regime_row_owid == . & v2x_regime == 1 // All observations have missing values for multi-party legislative elections, sometimes also for free and fair as well as multi-party elections in general. One could say that if v2x_electreg == 0 — or v2eltype_0/1/4/5 are all zero — this means that were no (multi-party legislative) elections - but this would make these regimes closed autocracies, not electoral autociraces. So this better stay as is.
+* 81 observations which RoW identifies as electoral autocracies, but which own classification identifies as missing:
+list country_name year v2x_elecreg v2elfrfair_osp_imp_dich v2elmulpar_osp_imp_dich v2x_polyarchy_dich v2elmulpar_osp_hoe_imp v2elmulpar_osp_leg_imp_dich v2eltype_0 v2eltype_1 v2eltype_4 v2eltype_5 if regime_row_owid == . & v2x_regime == 1 // All observations have missing values for multi-party legislative elections, sometimes also for free and fair as well as multi-party elections in general. One could say that if v2x_elecreg == 0 — or v2eltype_0/1/4/5 are all zero — this means that were no (multi-party legislative) elections - but this would make these regimes closed autocracies, not electoral autociraces. So this better stay as is.
 
 * 1 observation which RoW identifies as closed autocracy, but which own classification identifies as missing:
 list v2elfrfair_osp_imp_dich v2elmulpar_osp_imp_dich v2x_polyarchy_dich v2elmulpar_osp_hoe_imp v2elmulpar_osp_leg_imp_dich if regime_row_owid == . & v2x_regime == 0
@@ -401,7 +403,7 @@ tab regime_amb_row_owid v2x_regime_amb if year >= 1900 & regime_row_owid == v2x_
 
 
 ** Drop now superfluous variables:
-drop country_number v2x_regime v2x_regime_amb v2x_elecreg v2xex_elecreg v2xlg_elecreg v2eltype* v2elmulpar_osp v2elfrfair_osp v2elmulpar_osp_imp v2elmulpar_osp_leg_imp v2elfrfair_osp_imp v2exnamhos v2exhoshog v2expathhs v2exnamhog v2exaphogp v2ex_hogw v2expathhg v2ex_hosw v2ex_legconhog v2ex_legconhos v2elmulpar_osp_ex v2elmulpar_osp_ex_imp v2elmulpar_osp_leg v2elmulpar_osp_hos_imp v2elmulpar_osp_hog_imp v2elmulpar_osp_exleg_imp v2cltrnslw_osp v2clacjstm_osp v2clacjstw_osp v2elmulpar_osp_codehigh v2elmulpar_osp_codelow v2elfrfair_osp_codehigh v2elfrfair_osp_codelow v2elmulpar_osp_high_imp v2elmulpar_osp_low_imp v2elfrfair_osp_high_imp v2elfrfair_osp_low_imp v2elmulpar_osp_ex_high v2elmulpar_osp_ex_high_imp v2elmulpar_osp_ex_low v2elmulpar_osp_ex_low_imp v2elmulpar_osp_leg_high v2elmulpar_osp_leg_high_imp v2elmulpar_osp_leg_low v2elmulpar_osp_leg_low_imp v2elmulpar_osp_hos_high_imp v2elmulpar_osp_hos_low_imp v2elmulpar_osp_hog_high_imp v2elmulpar_osp_hog_low_imp v2elmulpar_osp_exleg_high_imp v2elmulpar_osp_exleg_low_imp v2cltrnslw_osp_codehigh v2cltrnslw_osp_codelow v2clacjstm_osp_codehigh v2clacjstm_osp_codelow v2clacjstw_osp_codehigh v2clacjstw_osp_codelow
+drop country_number v2x_regime v2x_regime_amb v2x_elecreg v2xex_elecreg v2xlg_elecreg v2eltype* v2elmulpar_osp v2elfrfair_osp v2elmulpar_osp_imp v2elmulpar_osp_leg_imp v2elfrfair_osp_imp v2exnamhos v2expathhs v2exnamhog v2exaphogp v2expathhg v2ex_legconhog v2ex_legconhos v2elmulpar_osp_ex v2elmulpar_osp_ex_imp v2elmulpar_osp_leg v2elmulpar_osp_hos_imp v2elmulpar_osp_hog_imp v2elmulpar_osp_exleg_imp v2cltrnslw_osp v2clacjstm_osp v2clacjstw_osp v2elmulpar_osp_codehigh v2elmulpar_osp_codelow v2elfrfair_osp_codehigh v2elfrfair_osp_codelow v2elmulpar_osp_high_imp v2elmulpar_osp_low_imp v2elfrfair_osp_high_imp v2elfrfair_osp_low_imp v2elmulpar_osp_ex_high v2elmulpar_osp_ex_high_imp v2elmulpar_osp_ex_low v2elmulpar_osp_ex_low_imp v2elmulpar_osp_leg_high v2elmulpar_osp_leg_high_imp v2elmulpar_osp_leg_low v2elmulpar_osp_leg_low_imp v2elmulpar_osp_hos_high_imp v2elmulpar_osp_hos_low_imp v2elmulpar_osp_hog_high_imp v2elmulpar_osp_hog_low_imp v2elmulpar_osp_exleg_high_imp v2elmulpar_osp_exleg_low_imp v2cltrnslw_osp_codehigh v2cltrnslw_osp_codelow v2clacjstm_osp_codehigh v2clacjstm_osp_codelow v2clacjstw_osp_codehigh v2clacjstw_osp_codelow
 
 
 ** Create reduced version of political regimes, only distinguishing between closed autocracies, electoral autocracies, and electoral democracies (including liberal democracies):
@@ -575,6 +577,84 @@ rename v2x_clpriv priv_libs_vdem
 rename v2x_clpriv_codehigh priv_libs_vdem_high
 rename v2x_clpriv_codelow priv_libs_vdem_low
 
+rename v2x_gender wom_emp_vdem
+rename v2x_gender_codehigh wom_emp_vdem_high
+rename v2x_gender_codelow wom_emp_vdem_low
+
+rename v2x_gencl wom_civ_libs_vdem
+rename v2x_gencl_codehigh wom_civ_libs_vdem_high
+rename v2x_gencl_codelow wom_civ_libs_vdem_low
+
+rename v2x_gencs wom_civ_soc_vdem
+rename v2x_gencs_codehigh wom_civ_soc_vdem_high
+rename v2x_gencs_codelow wom_civ_soc_vdem_low
+
+rename v2x_genpp wom_pol_par_vdem
+rename v2x_genpp_codehigh wom_pol_par_vdem_high
+rename v2x_genpp_codelow wom_pol_par_vdem_low
+
+rename v2lgfemleg wom_parl_vdem
+rename v2exfemhos wom_hos_vdem
+rename v2exfemhog wom_hog_vdem
+
+rename v2clsocgrp socgr_civ_libs_vdem
+rename v2clsocgrp_codehigh socgr_civ_libs_vdem_high
+rename v2clsocgrp_codelow socgr_civ_libs_vdem_low
+
+rename v2pepwrsoc socgr_pow_vdem
+rename v2pepwrsoc_codehigh socgr_pow_vdem_high
+rename v2pepwrsoc_codelow socgr_pow_vdem_low
+
+rename v2svstterr terr_contr_vdem
+rename v2svstterr_codehigh terr_contr_vdem_high
+rename v2svstterr_codelow terr_contr_vdem_low
+
+rename v2x_rule rule_of_law_vdem
+rename v2x_rule_codehigh rule_of_law_vdem_high
+rename v2x_rule_codelow rule_of_law_vdem_low
+
+rename v2clrspct public_admin_vdem
+rename v2clrspct_codehigh public_admin_vdem_high
+rename v2clrspct_codelow public_admin_vdem_low
+
+rename v2svinlaut int_auton_vdem
+rename v2svinlaut_codehigh int_auton_vdem_high
+rename v2svinlaut_codelow int_auton_vdem_low
+
+rename v2svdomaut dom_auton_vdem
+rename v2svdomaut_codehigh dom_auton_vdem_high
+rename v2svdomaut_codelow dom_auton_vdem_low
+
+rename v2x_corr corruption_vdem
+rename v2x_corr_codehigh corruption_vdem_high
+rename v2x_corr_codelow corruption_vdem_low
+
+rename v2x_pubcorr corr_publsec_vdem
+rename v2x_pubcorr_codehigh corr_publsec_vdem_high
+rename v2x_pubcorr_codelow corr_publsec_vdem_low
+
+rename v2x_execorr corr_exec_vdem
+rename v2x_execorr_codehigh corr_exec_vdem_high
+rename v2x_execorr_codelow corr_exec_vdem_low
+
+rename v2lgcrrpt corr_leg_vdem
+rename v2lgcrrpt_codehigh corr_leg_vdem_high
+rename v2lgcrrpt_codelow corr_leg_vdem_low
+
+rename v2jucorrdc corr_jud_vdem
+rename v2jucorrdc_codehigh corr_jud_vdem_high
+rename v2jucorrdc_codelow corr_jud_vdem_low
+
+rename e_ti_cpi corruption_cpi
+
+rename v2xnp_pres personalism_vdem
+rename v2xnp_pres_codehigh personalism_vdem_high
+rename v2xnp_pres_codelow personalism_vdem_low
+
+rename v2xcs_ccsi civ_soc_str_vdem
+rename v2xcs_ccsi_codehigh civ_soc_str_vdem_high
+rename v2xcs_ccsi_codelow civ_soc_str_vdem_low
+
 rename v2eltrnout turnout_vdem
 rename e_wbgi_gee goveffective_vdem_wbgi
 
@@ -744,6 +824,91 @@ label variable priv_libs_vdem_low "Private civil liberties (lower bound, V-Dem)"
 label variable priv_libs_vdem_high "Private civil liberties (upper bound, V-Dem)"
 
 
+label variable wom_emp_vdem "Women's political empowerment (V-Dem)"
+label variable wom_emp_vdem_high "Women's political empowerment (upper bound, V-Dem)"
+label variable wom_emp_vdem_low "Women's political empowerment (lower bound, V-Dem)"
+
+label variable wom_civ_libs_vdem "Women's civil rights (V-Dem)"
+label variable wom_civ_libs_vdem_high "Women's civil rights (upper bound, V-Dem)"
+label variable wom_civ_libs_vdem_low "Women's civil rights (lower bound, V-Dem)"
+
+label variable wom_civ_soc_vdem "Women's civil society participation (V-Dem)"
+label variable wom_civ_soc_vdem_high "Women's civil society participation (upper bound, V-Dem)"
+label variable wom_civ_soc_vdem_low "Women's civil society participation (lower bound, V-Dem)"
+
+label variable wom_pol_par_vdem "Women's political participation (V-Dem)"
+label variable wom_pol_par_vdem_high "Women's political participation (upper bound, V-Dem)"
+label variable wom_pol_par_vdem_low "Women's political participation (lower bound, V-Dem)"
+
+label variable wom_parl_vdem "Women in parliament (percent, V-Dem)"
+
+label variable wom_hos_vdem "Woman head of state (V-Dem)"
+label variable wom_hog_vdem "Woman head of government (V-Dem)"
+
+
+label variable socgr_civ_libs_vdem "Equality of civil liberties across social groups (V-Dem)"
+label variable socgr_civ_libs_vdem_high "Equality of civil liberties across social groups (upper bound, V-Dem)"
+label variable socgr_civ_libs_vdem_low "Equality of civil liberties across social groups (lower bound, V-Dem)"
+
+label variable socgr_pow_vdem "Equality of political power across social groups (V-Dem)"
+label variable socgr_pow_vdem_high "Equality of political power across social groups (upper bound, V-Dem)"
+label variable socgr_pow_vdem_low "Equality of political power across social groups (lower bound, V-Dem)"
+
+
+label variable terr_contr_vdem "Territory under state control (V-Dem)"
+label variable terr_contr_vdem_high "Territory under state control (upper bound, V-Dem)"
+label variable terr_contr_vdem_low "Territory under state control (lower bound, V-Dem)"
+
+label variable rule_of_law_vdem "Rule of Law (V-Dem)"
+label variable rule_of_law_vdem_high "Rule of Law (upper bound, V-Dem)"
+label variable rule_of_law_vdem_low "Rule of Law (lower bound, V-Dem)"
+
+label variable public_admin_vdem "Rigorous and impartial public administration (V-Dem)"
+label variable public_admin_vdem_high "Rigorous and impartial public administration (upper bound, V-Dem)"
+label variable public_admin_vdem_low "Rigorous and impartial public administration (lower bound, V-Dem)"
+
+label variable int_auton_vdem "Foreign policymaking free from foreign influence (V-Dem)"
+label variable int_auton_vdem_high "Foreign policymaking free from foreign influence (upper bound, V-Dem)"
+label variable int_auton_vdem_low "Foreign policymaking free from foreign influence (lower bound, V-Dem)"
+
+label variable dom_auton_vdem "Domestic policymaking free from foreign influence (V-Dem)"
+label variable dom_auton_vdem_high "Domestic policymaking free from foreign influence (upper bound, V-Dem)"
+label variable dom_auton_vdem_low "Domestic policymaking free from foreign influence (lower bound, V-Dem)"
+
+
+label variable corruption_vdem "Political corruption (V-Dem)"
+label variable corruption_vdem_high "Political corruption (upper bound, V-Dem)"
+label variable corruption_vdem_low "Political corruption (lower bound, V-Dem)"
+
+label variable corr_publsec_vdem "Public sector corruption (V-Dem)"
+label variable corr_publsec_vdem_high "Public sector corruption (upper bound, V-Dem)"
+label variable corr_publsec_vdem_low "Public sector corruption (lower bound, V-Dem)"
+
+label variable corr_exec_vdem "Executive corruption (V-Dem)"
+label variable corr_exec_vdem_high "Executive corruption (upper bound, V-Dem)"
+label variable corr_exec_vdem_low "Executive corruption (lower bound, V-Dem)"
+
+label variable corr_leg_vdem "Legislative corruption (V-Dem)"
+label variable corr_leg_vdem_high "Legislative corruption (upper bound, V-Dem)"
+label variable corr_leg_vdem_low "Legislative corruption (lower bound, V-Dem)"
+
+label variable corr_jud_vdem "Judicial corruption (V-Dem)"
+label variable corr_jud_vdem_high "Judicial corruption (upper bound, V-Dem)"
+label variable corr_jud_vdem_low "Judicial corruption (lower bound, V-Dem)"
+
+label variable corruption_cpi "Corruption perceptions (Transparency International)"
+
+
+label variable personalism_vdem "Personalism (V-Dem)"
+label variable personalism_vdem_high "Personalism (upper bound, V-Dem)"
+label variable personalism_vdem_low "Personalism (lower bound, V-Dem)"
+
+
+label variable civ_soc_str_vdem "Civil society strength (V-Dem)"
+label variable civ_soc_str_vdem_high "Civil society strength (upper bound, V-Dem)"
+label variable civ_soc_str_vdem_low "Civil society strength (lower bound, V-Dem)"
+
+
 label variable turnout_vdem "Voter turnout (V-Dem)"
 label variable goveffective_vdem_wbgi "Government effectiveness (World Bank Governance Indicators, V-Dem)"
 
@@ -765,6 +930,26 @@ replace country_name = "Hesse Grand Ducal" if country_name == "Hesse-Darmstadt"
 replace country_name = "Yemen People's Republic" if country_name == "South Yemen"
 
 replace suffr_vdem = suffr_vdem * 100
+
+
+** Create variable identifying gender of chief executive:
+generate wom_hoe_vdem = . 
+replace wom_hoe_vdem = 0 if v2ex_hosw <= 1 & v2ex_hosw > 0.5 &  wom_hos_vdem == 0 // If head of state is more powerful than head of government, head of state is the head of the executive.
+replace wom_hoe_vdem = 0 if v2ex_hosw <= 0.5 & wom_hog_vdem == 0 // If head of state is as or less powerful than head of government, head of government is the head of the executive.
+replace wom_hoe_vdem = 1 if v2ex_hosw <= 1 & v2ex_hosw > 0.5 &  wom_hos_vdem == 1
+replace wom_hoe_vdem = 1 if v2ex_hosw <= 0.5 & wom_hog_vdem == 1
+replace wom_hoe_vdem = 0 if v2exhoshog == 1 & wom_hos_vdem == 0 // If head of state is also head of government, they are the head of the executive.
+replace wom_hoe_vdem = 0 if v2ex_hogw == 0 & wom_hos_vdem == 0 // If head of government is less powerful than head of state, head of state must be more powerful than head of government.
+replace wom_hoe_vdem = 1 if v2exhoshog == 1 & wom_hos_vdem == 1
+replace wom_hoe_vdem = 1 if v2ex_hogw == 0 & wom_hos_vdem == 1 
+drop v2ex_hosw v2ex_hogw
+label variable wom_hoe_vdem "Woman head of executive (V-Dem)"
+
+
+** Refine variable identifying gender of head of government:
+replace wom_hog_vdem = 0 if wom_hos_vdem == 0 & v2exhoshog == 1
+replace wom_hog_vdem = 1 if wom_hos_vdem == 1 & v2exhoshog == 1
+drop v2exhoshog
 
 
 ** Order variables and observations:

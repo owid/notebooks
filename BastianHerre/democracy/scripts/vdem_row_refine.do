@@ -1,6 +1,6 @@
 *****  This Stata do-file refines the variables in the V-Dem and RoW data
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  March 1, 2023
 
 version 14
 clear all
@@ -113,6 +113,19 @@ replace libdem_age_row_owid = "no data" if libdem_age_row_owid == "."
 replace libdem_age_row_owid = "closed autocracy" if regime_row_owid == 0
 replace libdem_age_row_owid = "electoral autocracy" if regime_row_owid == 1
 replace libdem_age_row_owid = "electoral democracy" if regime_row_owid == 2
+
+
+** Create variable for women's political representation:
+generate wom_parl_gr_vdem_owid = .
+replace wom_parl_gr_vdem_owid = 0 if wom_parl_vdem_owid == 0
+replace wom_parl_gr_vdem_owid = 1 if wom_parl_vdem_owid > 0 & wom_parl_vdem_owid < 10
+replace wom_parl_gr_vdem_owid = 2 if wom_parl_vdem_owid >= 10 & wom_parl_vdem_owid < 20
+replace wom_parl_gr_vdem_owid = 3 if wom_parl_vdem_owid >= 20 & wom_parl_vdem_owid < 30
+replace wom_parl_gr_vdem_owid = 4 if wom_parl_vdem_owid >= 30 & wom_parl_vdem_owid < 40
+replace wom_parl_gr_vdem_owid = 5 if wom_parl_vdem_owid >= 40 & wom_parl_vdem_owid < 50
+replace wom_parl_gr_vdem_owid = 6 if wom_parl_vdem_owid >= 50 & wom_parl_vdem_owid < .
+label variable wom_parl_gr_vdem_owid "Women's political representation (grouped, V-Dem, OWID)"
+label define wom_parl_gr_vdem_owid 0 "no women" 1 "0-10% women" 2 "10%-20% women" 3 "20%-30% women" 4 "30%-40% women" 5 "40%-50% women" 6 "50%+ women"
 
 
 ** Export data:
