@@ -1,737 +1,745 @@
-Year|Noms de mesures|Valeurs de mesures
-1929|Cargo RTKs (mils)|
-1930|Cargo RTKs (mils)|
-1931|Cargo RTKs (mils)|
-1932|Cargo RTKs (mils)|
-1933|Cargo RTKs (mils)|
-1934|Cargo RTKs (mils)|
-1935|Cargo RTKs (mils)|
-1936|Cargo RTKs (mils)|
-1937|Cargo RTKs (mils)|
-1938|Cargo RTKs (mils)|
-1939|Cargo RTKs (mils)|
-1940|Cargo RTKs (mils)|
-1941|Cargo RTKs (mils)|
-1942|Cargo RTKs (mils)|
-1943|Cargo RTKs (mils)|
-1944|Cargo RTKs (mils)|
-1945|Cargo RTKs (mils)|240
-1946|Cargo RTKs (mils)|220
-1947|Cargo RTKs (mils)|400
-1948|Cargo RTKs (mils)|590
-1949|Cargo RTKs (mils)|760
-1950|Cargo RTKs (mils)|930
-1951|Cargo RTKs (mils)|1100
-1952|Cargo RTKs (mils)|1200
-1953|Cargo RTKs (mils)|1270
-1954|Cargo RTKs (mils)|1370
-1955|Cargo RTKs (mils)|1610
-1956|Cargo RTKs (mils)|1800
-1957|Cargo RTKs (mils)|1960
-1958|Cargo RTKs (mils)|2040
-1959|Cargo RTKs (mils)|2350
-1960|Cargo RTKs (mils)|2650
-1961|Cargo RTKs (mils)|3080
-1962|Cargo RTKs (mils)|3580
-1963|Cargo RTKs (mils)|3970
-1964|Cargo RTKs (mils)|4670
-1965|Cargo RTKs (mils)|5900
-1966|Cargo RTKs (mils)|7230
-1967|Cargo RTKs (mils)|8420
-1968|Cargo RTKs (mils)|10503
-1969|Cargo RTKs (mils)|12286
-1970|Cargo RTKs (mils)|15087
-1971|Cargo RTKs (mils)|16125
-1972|Cargo RTKs (mils)|17801
-1973|Cargo RTKs (mils)|20408
-1974|Cargo RTKs (mils)|21900
-1975|Cargo RTKs (mils)|22270
-1976|Cargo RTKs (mils)|24571
-1977|Cargo RTKs (mils)|26805
-1978|Cargo RTKs (mils)|29205
-1979|Cargo RTKs (mils)|31436
-1980|Cargo RTKs (mils)|33057
-1981|Cargo RTKs (mils)|34675
-1982|Cargo RTKs (mils)|35413
-1983|Cargo RTKs (mils)|39112
-1984|Cargo RTKs (mils)|43978
-1985|Cargo RTKs (mils)|44236
-1986|Cargo RTKs (mils)|47735
-1987|Cargo RTKs (mils)|53021
-1988|Cargo RTKs (mils)|58099
-1989|Cargo RTKs (mils)|62202
-1990|Cargo RTKs (mils)|64121
-1991|Cargo RTKs (mils)|63630
-1992|Cargo RTKs (mils)|67761
-1993|Cargo RTKs (mils)|73671
-1994|Cargo RTKs (mils)|82626
-1995|Cargo RTKs (mils)|88765
-1996|Cargo RTKs (mils)|94996
-1997|Cargo RTKs (mils)|108870
-1998|Cargo RTKs (mils)|107575
-1999|Cargo RTKs (mils)|114373
-2000|Cargo RTKs (mils)|133572,011601439
-2001|Cargo RTKs (mils)|124941,687325198
-2002|Cargo RTKs (mils)|134058,705507334
-2003|Cargo RTKs (mils)|140372,649676671
-2004|Cargo RTKs (mils)|154838,346907101
-2005|Cargo RTKs (mils)|158674,075645018
-2006|Cargo RTKs (mils)|169365,03407414
-2007|Cargo RTKs (mils)|177261,473473968
-2008|Cargo RTKs (mils)|176052,338460738
-2009|Cargo RTKs (mils)|160439,169902364
-2010|Cargo RTKs (mils)|193101,243457865
-2011|Cargo RTKs (mils)|195603
-2012|Cargo RTKs (mils)|193799
-2013|Cargo RTKs (mils)|194934
-2014|Cargo RTKs (mils)|204234
-2015|Cargo RTKs (mils)|207243
-2016|Cargo RTKs (mils)|214559
-2017|Cargo RTKs (mils)|234475
-2018|Cargo RTKs (mils)|241044
-2019|Cargo RTKs (mils)|235486
-2020|Cargo RTKs (mils)|195059
-1929|Freight Tonnes (mils)|
-1930|Freight Tonnes (mils)|
-1931|Freight Tonnes (mils)|
-1932|Freight Tonnes (mils)|
-1933|Freight Tonnes (mils)|
-1934|Freight Tonnes (mils)|
-1935|Freight Tonnes (mils)|
-1936|Freight Tonnes (mils)|
-1937|Freight Tonnes (mils)|
-1938|Freight Tonnes (mils)|
-1939|Freight Tonnes (mils)|
-1940|Freight Tonnes (mils)|
-1941|Freight Tonnes (mils)|
-1942|Freight Tonnes (mils)|
-1943|Freight Tonnes (mils)|
-1944|Freight Tonnes (mils)|
-1945|Freight Tonnes (mils)|
-1946|Freight Tonnes (mils)|
-1947|Freight Tonnes (mils)|
-1948|Freight Tonnes (mils)|
-1949|Freight Tonnes (mils)|
-1950|Freight Tonnes (mils)|
-1951|Freight Tonnes (mils)|
-1952|Freight Tonnes (mils)|
-1953|Freight Tonnes (mils)|
-1954|Freight Tonnes (mils)|
-1955|Freight Tonnes (mils)|
-1956|Freight Tonnes (mils)|
-1957|Freight Tonnes (mils)|
-1958|Freight Tonnes (mils)|
-1959|Freight Tonnes (mils)|
-1960|Freight Tonnes (mils)|
-1961|Freight Tonnes (mils)|
-1962|Freight Tonnes (mils)|
-1963|Freight Tonnes (mils)|
-1964|Freight Tonnes (mils)|
-1965|Freight Tonnes (mils)|
-1966|Freight Tonnes (mils)|
-1967|Freight Tonnes (mils)|
-1968|Freight Tonnes (mils)|
-1969|Freight Tonnes (mils)|3,97
-1970|Freight Tonnes (mils)|6,083
-1971|Freight Tonnes (mils)|6,673
-1972|Freight Tonnes (mils)|7,284
-1973|Freight Tonnes (mils)|8,223
-1974|Freight Tonnes (mils)|8,651
-1975|Freight Tonnes (mils)|8,68
-1976|Freight Tonnes (mils)|9,336
-1977|Freight Tonnes (mils)|10,046
-1978|Freight Tonnes (mils)|10,625
-1979|Freight Tonnes (mils)|10,996
-1980|Freight Tonnes (mils)|11,089
-1981|Freight Tonnes (mils)|10,915
-1982|Freight Tonnes (mils)|11,568
-1983|Freight Tonnes (mils)|12,257
-1984|Freight Tonnes (mils)|13,416
-1985|Freight Tonnes (mils)|13,742
-1986|Freight Tonnes (mils)|14,687
-1987|Freight Tonnes (mils)|16,058
-1988|Freight Tonnes (mils)|17,215
-1989|Freight Tonnes (mils)|18,088
-1990|Freight Tonnes (mils)|18,423
-1991|Freight Tonnes (mils)|17,465
-1992|Freight Tonnes (mils)|17,647
-1993|Freight Tonnes (mils)|18,053
-1994|Freight Tonnes (mils)|20,522
-1995|Freight Tonnes (mils)|22,189
-1996|Freight Tonnes (mils)|23,234
-1997|Freight Tonnes (mils)|26,36
-1998|Freight Tonnes (mils)|26,496
-1999|Freight Tonnes (mils)|28,103
-2000|Freight Tonnes (mils)|29,622079923
-2001|Freight Tonnes (mils)|28,052109687
-2002|Freight Tonnes (mils)|30,576799559
-2003|Freight Tonnes (mils)|32,625445129
-2004|Freight Tonnes (mils)|35,757487862
-2005|Freight Tonnes (mils)|36,651425058
-2006|Freight Tonnes (mils)|38,976326138
-2007|Freight Tonnes (mils)|41,374427069
-2008|Freight Tonnes (mils)|39,928453381
-2009|Freight Tonnes (mils)|39,977335128
-2010|Freight Tonnes (mils)|48,007146382
-2011|Freight Tonnes (mils)|49,3
-2012|Freight Tonnes (mils)|48,6
-2013|Freight Tonnes (mils)|49,7
-2014|Freight Tonnes (mils)|51,3
-2015|Freight Tonnes (mils)|51,6
-2016|Freight Tonnes (mils)|53,5
-2017|Freight Tonnes (mils)|57,3
-2018|Freight Tonnes (mils)|59,1
-2019|Freight Tonnes (mils)|58,1
-2020|Freight Tonnes (mils)|48,9
-1929|PLF|
-1930|PLF|
-1931|PLF|
-1932|PLF|
-1933|PLF|
-1934|PLF|
-1935|PLF|
-1936|PLF|
-1937|PLF|
-1938|PLF|
-1939|PLF|
-1940|PLF|
-1941|PLF|
-1942|PLF|
-1943|PLF|
-1944|PLF|
-1945|PLF|
-1946|PLF|
-1947|PLF|
-1948|PLF|
-1949|PLF|
-1950|PLF|0,608695652
-1951|PLF|0,636363636
-1952|PLF|0,625
-1953|PLF|0,626666667
-1954|PLF|0,604651163
-1955|PLF|0,616161616
-1956|PLF|0,622807018
-1957|PLF|0,616541353
-1958|PLF|0,582191781
-1959|PLF|0,604938272
-1960|PLF|0,592391304
-1961|PLF|0,551886792
-1962|PLF|0,534979424
-1963|PLF|0,536496350
-1964|PLF|0,558823529
-1965|PLF|0,559322034
-1966|PLF|0,576826196
-1967|PLF|0,569937370
-1968|PLF|0,534513764
-1969|PLF|0,519871165
-1970|PLF|0,548237353
-1971|PLF|0,540589889
-1972|PLF|0,571061803
-1973|PLF|0,576342137
-1974|PLF|0,592692581
-1975|PLF|0,591480897
-1976|PLF|0,601475018
-1977|PLF|0,607832068
-1978|PLF|0,645233134
-1979|PLF|0,659683870
-1980|PLF|0,631780326
-1981|PLF|0,637085769
-1982|PLF|0,636444736
-1983|PLF|0,642392262
-1984|PLF|0,648064996
-1985|PLF|0,657056787
-1986|PLF|0,649767533
-1987|PLF|0,671360303
-1988|PLF|0,675661049
-1989|PLF|0,680088848
-1990|PLF|0,676312212
-1991|PLF|0,663940271
-1992|PLF|0,658293589
-1993|PLF|0,646915074
-1994|PLF|0,662577910
-1995|PLF|0,669390321
-1996|PLF|0,682337039
-1997|PLF|0,690203600
-1998|PLF|0,684810923
-1999|PLF|0,690682024
-2000|PLF|0,710701581
-2001|PLF|0,692407769
-2002|PLF|0,713362113
-2003|PLF|0,715767847
-2004|PLF|0,733911550
-2005|PLF|0,749427571
-2006|PLF|0,758150692
-2007|PLF|0,768047272
-2008|PLF|0,760138426
-2009|PLF|0,766817019
-2010|PLF|0,781701864
-2011|PLF|0,780066119
-2012|PLF|0,788622512
-2013|PLF|0,794820542
-2014|PLF|0,797185104
-2015|PLF|0,802386422
-2016|PLF|0,802855156
-2017|PLF|0,814775349
-2018|PLF|0,817223425
-2019|PLF|0,823933181
-2020|PLF|0,652863383
-1929|ASKs (mils)|
-1930|ASKs (mils)|
-1931|ASKs (mils)|
-1932|ASKs (mils)|
-1933|ASKs (mils)|
-1934|ASKs (mils)|
-1935|ASKs (mils)|
-1936|ASKs (mils)|
-1937|ASKs (mils)|
-1938|ASKs (mils)|
-1939|ASKs (mils)|
-1940|ASKs (mils)|
-1941|ASKs (mils)|
-1942|ASKs (mils)|
-1943|ASKs (mils)|
-1944|ASKs (mils)|
-1945|ASKs (mils)|
-1946|ASKs (mils)|
-1947|ASKs (mils)|
-1948|ASKs (mils)|
-1949|ASKs (mils)|
-1950|ASKs (mils)|46000
-1951|ASKs (mils)|55000
-1952|ASKs (mils)|64000
-1953|ASKs (mils)|75000
-1954|ASKs (mils)|86000
-1955|ASKs (mils)|99000
-1956|ASKs (mils)|114000
-1957|ASKs (mils)|133000
-1958|ASKs (mils)|146000
-1959|ASKs (mils)|162000
-1960|ASKs (mils)|184000
-1961|ASKs (mils)|212000
-1962|ASKs (mils)|243000
-1963|ASKs (mils)|274000
-1964|ASKs (mils)|306000
-1965|ASKs (mils)|354000
-1966|ASKs (mils)|397000
-1967|ASKs (mils)|479000
-1968|ASKs (mils)|578885
-1969|ASKs (mils)|674973
-1970|ASKs (mils)|839930
-1971|ASKs (mils)|914070
-1972|ASKs (mils)|980766
-1973|ASKs (mils)|1072599
-1974|ASKs (mils)|1107532
-1975|ASKs (mils)|1178880
-1976|ASKs (mils)|1269815
-1977|ASKs (mils)|1346260
-1978|ASKs (mils)|1451184
-1979|ASKs (mils)|1607188
-1980|ASKs (mils)|1723903
-1981|ASKs (mils)|1756539
-1982|ASKs (mils)|1794646
-1983|ASKs (mils)|1852088
-1984|ASKs (mils)|1972296
-1985|ASKs (mils)|2081018
-1986|ASKs (mils)|2234730
-1987|ASKs (mils)|2367532
-1988|ASKs (mils)|2524094
-1989|ASKs (mils)|2608046
-1990|ASKs (mils)|2800844
-1991|ASKs (mils)|2779494
-1992|ASKs (mils)|2930185
-1993|ASKs (mils)|3013411
-1994|ASKs (mils)|3169342
-1995|ASKs (mils)|3358601
-1996|ASKs (mils)|3563774
-1997|ASKs (mils)|3727900
-1998|ASKs (mils)|3837725
-1999|ASKs (mils)|4050783
-2000|ASKs (mils)|4504515,27158603
-2001|ASKs (mils)|4489444,87146598
-2002|ASKs (mils)|4379359,48704653
-2003|ASKs (mils)|4443203,75533752
-2004|ASKs (mils)|4944362,87006881
-2005|ASKs (mils)|5229355,27624414
-2006|ASKs (mils)|5500959,42629592
-2007|ASKs (mils)|5876065,25247317
-2008|ASKs (mils)|6062667,1393241
-2009|ASKs (mils)|5948502,61783718
-2010|ASKs (mils)|6307072,09694799
-2011|ASKs (mils)|6747537
-2012|ASKs (mils)|7031359
-2013|ASKs (mils)|7359728
-2014|ASKs (mils)|7776485
-2015|ASKs (mils)|8305406
-2016|ASKs (mils)|8914050
-2017|ASKs (mils)|9486923
-2018|ASKs (mils)|10147668
-2019|ASKs (mils)|10530769
-2020|ASKs (mils)|4579828
-1929|RPKs (mils)|170
-1930|RPKs (mils)|270
-1931|RPKs (mils)|330
-1932|RPKs (mils)|405
-1933|RPKs (mils)|545
-1934|RPKs (mils)|650
-1935|RPKs (mils)|920
-1936|RPKs (mils)|1225
-1937|RPKs (mils)|1410
-1938|RPKs (mils)|1685
-1939|RPKs (mils)|2030
-1940|RPKs (mils)|2530
-1941|RPKs (mils)|3280
-1942|RPKs (mils)|3580
-1943|RPKs (mils)|4265
-1944|RPKs (mils)|5490
-1945|RPKs (mils)|8000
-1946|RPKs (mils)|16000
-1947|RPKs (mils)|19000
-1948|RPKs (mils)|21000
-1949|RPKs (mils)|24000
-1950|RPKs (mils)|28000
-1951|RPKs (mils)|35000
-1952|RPKs (mils)|40000
-1953|RPKs (mils)|47000
-1954|RPKs (mils)|52000
-1955|RPKs (mils)|61000
-1956|RPKs (mils)|71000
-1957|RPKs (mils)|82000
-1958|RPKs (mils)|85000
-1959|RPKs (mils)|98000
-1960|RPKs (mils)|109000
-1961|RPKs (mils)|117000
-1962|RPKs (mils)|130000
-1963|RPKs (mils)|147000
-1964|RPKs (mils)|171000
-1965|RPKs (mils)|198000
-1966|RPKs (mils)|229000
-1967|RPKs (mils)|273000
-1968|RPKs (mils)|309422
-1969|RPKs (mils)|350899
-1970|RPKs (mils)|460481
-1971|RPKs (mils)|494137
-1972|RPKs (mils)|560078
-1973|RPKs (mils)|618184
-1974|RPKs (mils)|656426
-1975|RPKs (mils)|697285
-1976|RPKs (mils)|763762
-1977|RPKs (mils)|818300
-1978|RPKs (mils)|936352
-1979|RPKs (mils)|1060236
-1980|RPKs (mils)|1089128
-1981|RPKs (mils)|1119066
-1982|RPKs (mils)|1142193
-1983|RPKs (mils)|1189767
-1984|RPKs (mils)|1278176
-1985|RPKs (mils)|1367347
-1986|RPKs (mils)|1452055
-1987|RPKs (mils)|1589467
-1988|RPKs (mils)|1705432
-1989|RPKs (mils)|1773703
-1990|RPKs (mils)|1894245
-1991|RPKs (mils)|1845418
-1992|RPKs (mils)|1928922
-1993|RPKs (mils)|1949421
-1994|RPKs (mils)|2099936
-1995|RPKs (mils)|2248215
-1996|RPKs (mils)|2431695
-1997|RPKs (mils)|2573010
-1998|RPKs (mils)|2628116
-1999|RPKs (mils)|2797803
-2000|RPKs (mils)|3201366,12411332
-2001|RPKs (mils)|3108526,50651403
-2002|RPKs (mils)|3124069,1390466
-2003|RPKs (mils)|3180302,38354944
-2004|RPKs (mils)|3628725,01962991
-2005|RPKs (mils)|3919023,0212003
-2006|RPKs (mils)|4170556,1959147
-2007|RPKs (mils)|4513095,88653466
-2008|RPKs (mils)|4608466,25816926
-2009|RPKs (mils)|4561413,04271906
-2010|RPKs (mils)|4930250,01571544
-2011|RPKs (mils)|5263525
-2012|RPKs (mils)|5545088
-2013|RPKs (mils)|5849663
-2014|RPKs (mils)|6199298
-2015|RPKs (mils)|6664145
-2016|RPKs (mils)|7156691
-2017|RPKs (mils)|7729711
-2018|RPKs (mils)|8292912
-2019|RPKs (mils)|8676650
-2020|RPKs (mils)|2990002
-1929|Passengers (mils)|
-1930|Passengers (mils)|
-1931|Passengers (mils)|
-1932|Passengers (mils)|
-1933|Passengers (mils)|
-1934|Passengers (mils)|
-1935|Passengers (mils)|
-1936|Passengers (mils)|
-1937|Passengers (mils)|
-1938|Passengers (mils)|
-1939|Passengers (mils)|
-1940|Passengers (mils)|
-1941|Passengers (mils)|
-1942|Passengers (mils)|
-1943|Passengers (mils)|
-1944|Passengers (mils)|
-1945|Passengers (mils)|9
-1946|Passengers (mils)|18
-1947|Passengers (mils)|21
-1948|Passengers (mils)|24
-1949|Passengers (mils)|27
-1950|Passengers (mils)|31
-1951|Passengers (mils)|42
-1952|Passengers (mils)|46
-1953|Passengers (mils)|53
-1954|Passengers (mils)|59
-1955|Passengers (mils)|68
-1956|Passengers (mils)|77
-1957|Passengers (mils)|86
-1958|Passengers (mils)|88
-1959|Passengers (mils)|98
-1960|Passengers (mils)|106
-1961|Passengers (mils)|111
-1962|Passengers (mils)|121
-1963|Passengers (mils)|135
-1964|Passengers (mils)|155
-1965|Passengers (mils)|177
-1966|Passengers (mils)|200
-1967|Passengers (mils)|233
-1968|Passengers (mils)|260,277
-1969|Passengers (mils)|293,23
-1970|Passengers (mils)|382,954
-1971|Passengers (mils)|410,919
-1972|Passengers (mils)|450,136
-1973|Passengers (mils)|488,514
-1974|Passengers (mils)|514,496
-1975|Passengers (mils)|534,024
-1976|Passengers (mils)|576,421
-1977|Passengers (mils)|610,322
-1978|Passengers (mils)|678,645
-1979|Passengers (mils)|754,117
-1980|Passengers (mils)|748,288
-1981|Passengers (mils)|752,271
-1982|Passengers (mils)|765,806
-1983|Passengers (mils)|797,81
-1984|Passengers (mils)|847,931
-1985|Passengers (mils)|899,218
-1986|Passengers (mils)|960,012
-1987|Passengers (mils)|1027,856
-1988|Passengers (mils)|1082,474
-1989|Passengers (mils)|1109,478
-1990|Passengers (mils)|1165,156
-1991|Passengers (mils)|1135,185
-1992|Passengers (mils)|1145,553
-1993|Passengers (mils)|1142,382
-1994|Passengers (mils)|1233,341
-1995|Passengers (mils)|1303,645
-1996|Passengers (mils)|1391,085
-1997|Passengers (mils)|1456,69
-1998|Passengers (mils)|1471,47
-1999|Passengers (mils)|1562,324
-2000|Passengers (mils)|1774,388417916
-2001|Passengers (mils)|1740,675037975
-2002|Passengers (mils)|1738,934362937
-2003|Passengers (mils)|1794,580262551
-2004|Passengers (mils)|2002,751573007
-2005|Passengers (mils)|2144,946934691
-2006|Passengers (mils)|2263,250105760
-2007|Passengers (mils)|2461,986320262
-2008|Passengers (mils)|2500,044331773
-2009|Passengers (mils)|2488,281562028
-2010|Passengers (mils)|2707,866526709
-2011|Passengers (mils)|2883
-2012|Passengers (mils)|3016
-2013|Passengers (mils)|3151
-2014|Passengers (mils)|3330
-2015|Passengers (mils)|3571
-2016|Passengers (mils)|3810
-2017|Passengers (mils)|4079
-2018|Passengers (mils)|4345
-2019|Passengers (mils)|4494
-2020|Passengers (mils)|1792
-1929|Aircraft KMs (mils)|90
-1930|Aircraft KMs (mils)|120
-1931|Aircraft KMs (mils)|135
-1932|Aircraft KMs (mils)|140
-1933|Aircraft KMs (mils)|155
-1934|Aircraft KMs (mils)|160
-1935|Aircraft KMs (mils)|200
-1936|Aircraft KMs (mils)|230
-1937|Aircraft KMs (mils)|265
-1938|Aircraft KMs (mils)|300
-1939|Aircraft KMs (mils)|295
-1940|Aircraft KMs (mils)|300
-1941|Aircraft KMs (mils)|340
-1942|Aircraft KMs (mils)|320
-1943|Aircraft KMs (mils)|325
-1944|Aircraft KMs (mils)|415
-1945|Aircraft KMs (mils)|600
-1946|Aircraft KMs (mils)|940
-1947|Aircraft KMs (mils)|1140
-1948|Aircraft KMs (mils)|1270
-1949|Aircraft KMs (mils)|1350
-1950|Aircraft KMs (mils)|1440
-1951|Aircraft KMs (mils)|1620
-1952|Aircraft KMs (mils)|1780
-1953|Aircraft KMs (mils)|1950
-1954|Aircraft KMs (mils)|2060
-1955|Aircraft KMs (mils)|2290
-1956|Aircraft KMs (mils)|2540
-1957|Aircraft KMs (mils)|2840
-1958|Aircraft KMs (mils)|2930
-1959|Aircraft KMs (mils)|3090
-1960|Aircraft KMs (mils)|3110
-1961|Aircraft KMs (mils)|3120
-1962|Aircraft KMs (mils)|3240
-1963|Aircraft KMs (mils)|3430
-1964|Aircraft KMs (mils)|3700
-1965|Aircraft KMs (mils)|4100
-1966|Aircraft KMs (mils)|4480
-1967|Aircraft KMs (mils)|5280
-1968|Aircraft KMs (mils)|5993
-1969|Aircraft KMs (mils)|6704
-1970|Aircraft KMs (mils)|7004
-1971|Aircraft KMs (mils)|7054
-1972|Aircraft KMs (mils)|7209
-1973|Aircraft KMs (mils)|7520
-1974|Aircraft KMs (mils)|7375
-1975|Aircraft KMs (mils)|7516
-1976|Aircraft KMs (mils)|7840
-1977|Aircraft KMs (mils)|8089
-1978|Aircraft KMs (mils)|8498
-1979|Aircraft KMs (mils)|9147
-1980|Aircraft KMs (mils)|9350
-1981|Aircraft KMs (mils)|9113
-1982|Aircraft KMs (mils)|9140
-1983|Aircraft KMs (mils)|9395
-1984|Aircraft KMs (mils)|10102
-1985|Aircraft KMs (mils)|10598
-1986|Aircraft KMs (mils)|11491
-1987|Aircraft KMs (mils)|12266
-1988|Aircraft KMs (mils)|13017
-1989|Aircraft KMs (mils)|13493
-1990|Aircraft KMs (mils)|14371
-1991|Aircraft KMs (mils)|14262
-1992|Aircraft KMs (mils)|15690
-1993|Aircraft KMs (mils)|17118
-1994|Aircraft KMs (mils)|18249
-1995|Aircraft KMs (mils)|19470
-1996|Aircraft KMs (mils)|20601
-1997|Aircraft KMs (mils)|21630
-1998|Aircraft KMs (mils)|22438
-1999|Aircraft KMs (mils)|23742
-2000|Aircraft KMs (mils)|25981,555983434
-2001|Aircraft KMs (mils)|26157,107037377
-2002|Aircraft KMs (mils)|25506,535484532
-2003|Aircraft KMs (mils)|26559,841808185
-2004|Aircraft KMs (mils)|30122,495549952
-2005|Aircraft KMs (mils)|31857,353024203
-2006|Aircraft KMs (mils)|33179,149195062
-2007|Aircraft KMs (mils)|34934,659734483
-2008|Aircraft KMs (mils)|35768,812336525
-2009|Aircraft KMs (mils)|34893,659618745
-2010|Aircraft KMs (mils)|38394,979480867
-2011|Aircraft KMs (mils)|40470,837184599
-2012|Aircraft KMs (mils)|41484,586110406
-2013|Aircraft KMs (mils)|42771,821187685
-2014|Aircraft KMs (mils)|44493,683181101
-2015|Aircraft KMs (mils)|46738,799001277
-2016|Aircraft KMs (mils)|49240,375643156
-2017|Aircraft KMs (mils)|51832,068338580
-2018|Aircraft KMs (mils)|54278,578733847
-2019|Aircraft KMs (mils)|56199
-2020|Aircraft KMs (mils)|28013
-1929|Aircraft Departures (000)|
-1930|Aircraft Departures (000)|
-1931|Aircraft Departures (000)|
-1932|Aircraft Departures (000)|
-1933|Aircraft Departures (000)|
-1934|Aircraft Departures (000)|
-1935|Aircraft Departures (000)|
-1936|Aircraft Departures (000)|
-1937|Aircraft Departures (000)|
-1938|Aircraft Departures (000)|
-1939|Aircraft Departures (000)|
-1940|Aircraft Departures (000)|
-1941|Aircraft Departures (000)|
-1942|Aircraft Departures (000)|
-1943|Aircraft Departures (000)|
-1944|Aircraft Departures (000)|
-1945|Aircraft Departures (000)|
-1946|Aircraft Departures (000)|
-1947|Aircraft Departures (000)|
-1948|Aircraft Departures (000)|
-1949|Aircraft Departures (000)|
-1950|Aircraft Departures (000)|
-1951|Aircraft Departures (000)|
-1952|Aircraft Departures (000)|
-1953|Aircraft Departures (000)|
-1954|Aircraft Departures (000)|
-1955|Aircraft Departures (000)|
-1956|Aircraft Departures (000)|
-1957|Aircraft Departures (000)|
-1958|Aircraft Departures (000)|
-1959|Aircraft Departures (000)|
-1960|Aircraft Departures (000)|6600
-1961|Aircraft Departures (000)|6600
-1962|Aircraft Departures (000)|6600
-1963|Aircraft Departures (000)|6700
-1964|Aircraft Departures (000)|7100
-1965|Aircraft Departures (000)|7500
-1966|Aircraft Departures (000)|7800
-1967|Aircraft Departures (000)|8600
-1968|Aircraft Departures (000)|9074
-1969|Aircraft Departures (000)|9473
-1970|Aircraft Departures (000)|9486
-1971|Aircraft Departures (000)|9546
-1972|Aircraft Departures (000)|9646
-1973|Aircraft Departures (000)|9889
-1974|Aircraft Departures (000)|9613
-1975|Aircraft Departures (000)|9683
-1976|Aircraft Departures (000)|9986
-1977|Aircraft Departures (000)|10118
-1978|Aircraft Departures (000)|10379
-1979|Aircraft Departures (000)|10666
-1980|Aircraft Departures (000)|10691
-1981|Aircraft Departures (000)|10250
-1982|Aircraft Departures (000)|10379
-1983|Aircraft Departures (000)|10820
-1984|Aircraft Departures (000)|11453
-1985|Aircraft Departures (000)|11952
-1986|Aircraft Departures (000)|12698
-1987|Aircraft Departures (000)|13306
-1988|Aircraft Departures (000)|13942
-1989|Aircraft Departures (000)|13945
-1990|Aircraft Departures (000)|14661
-1991|Aircraft Departures (000)|14269
-1992|Aircraft Departures (000)|14819
-1993|Aircraft Departures (000)|15777
-1994|Aircraft Departures (000)|17038
-1995|Aircraft Departures (000)|17816
-1996|Aircraft Departures (000)|18758
-1997|Aircraft Departures (000)|19320
-1998|Aircraft Departures (000)|19686
-1999|Aircraft Departures (000)|20739
-2000|Aircraft Departures (000)|24143,465946258
-2001|Aircraft Departures (000)|24233,637621127
-2002|Aircraft Departures (000)|23095,220225902
-2003|Aircraft Departures (000)|23816,593624857
-2004|Aircraft Departures (000)|26780,987436185
-2005|Aircraft Departures (000)|28077,205262432
-2006|Aircraft Departures (000)|28776,035742669
-2007|Aircraft Departures (000)|29869,367300459
-2008|Aircraft Departures (000)|29988,856031948
-2009|Aircraft Departures (000)|29372,403867587
-2010|Aircraft Departures (000)|30754,207128909
-2011|Aircraft Departures (000)|31767,566386975
-2012|Aircraft Departures (000)|32192,986845690
-2013|Aircraft Departures (000)|32583,099281708
-2014|Aircraft Departures (000)|33272,692564072
-2015|Aircraft Departures (000)|34193,299481808
-2016|Aircraft Departures (000)|35515,014001
-2017|Aircraft Departures (000)|36543,132058
-2018|Aircraft Departures (000)|37822,685904009
-2019|Aircraft Departures (000)|38299
-2020|Aircraft Departures (000)|20290
+Year	Noms de mesures	Valeurs de mesures
+1929	Cargo RTKs (mils)	
+1930	Cargo RTKs (mils)	
+1931	Cargo RTKs (mils)	
+1932	Cargo RTKs (mils)	
+1933	Cargo RTKs (mils)	
+1934	Cargo RTKs (mils)	
+1935	Cargo RTKs (mils)	
+1936	Cargo RTKs (mils)	
+1937	Cargo RTKs (mils)	
+1938	Cargo RTKs (mils)	
+1939	Cargo RTKs (mils)	
+1940	Cargo RTKs (mils)	
+1941	Cargo RTKs (mils)	
+1942	Cargo RTKs (mils)	
+1943	Cargo RTKs (mils)	
+1944	Cargo RTKs (mils)	
+1945	Cargo RTKs (mils)	240
+1946	Cargo RTKs (mils)	220
+1947	Cargo RTKs (mils)	400
+1948	Cargo RTKs (mils)	590
+1949	Cargo RTKs (mils)	760
+1950	Cargo RTKs (mils)	930
+1951	Cargo RTKs (mils)	1100
+1952	Cargo RTKs (mils)	1200
+1953	Cargo RTKs (mils)	1270
+1954	Cargo RTKs (mils)	1370
+1955	Cargo RTKs (mils)	1610
+1956	Cargo RTKs (mils)	1800
+1957	Cargo RTKs (mils)	1960
+1958	Cargo RTKs (mils)	2040
+1959	Cargo RTKs (mils)	2350
+1960	Cargo RTKs (mils)	2650
+1961	Cargo RTKs (mils)	3080
+1962	Cargo RTKs (mils)	3580
+1963	Cargo RTKs (mils)	3970
+1964	Cargo RTKs (mils)	4670
+1965	Cargo RTKs (mils)	5900
+1966	Cargo RTKs (mils)	7230
+1967	Cargo RTKs (mils)	8420
+1968	Cargo RTKs (mils)	10503
+1969	Cargo RTKs (mils)	12286
+1970	Cargo RTKs (mils)	15087
+1971	Cargo RTKs (mils)	16125
+1972	Cargo RTKs (mils)	17801
+1973	Cargo RTKs (mils)	20408
+1974	Cargo RTKs (mils)	21900
+1975	Cargo RTKs (mils)	22270
+1976	Cargo RTKs (mils)	24571
+1977	Cargo RTKs (mils)	26805
+1978	Cargo RTKs (mils)	29205
+1979	Cargo RTKs (mils)	31436
+1980	Cargo RTKs (mils)	33057
+1981	Cargo RTKs (mils)	34675
+1982	Cargo RTKs (mils)	35413
+1983	Cargo RTKs (mils)	39112
+1984	Cargo RTKs (mils)	43978
+1985	Cargo RTKs (mils)	44236
+1986	Cargo RTKs (mils)	47735
+1987	Cargo RTKs (mils)	53021
+1988	Cargo RTKs (mils)	58099
+1989	Cargo RTKs (mils)	62202
+1990	Cargo RTKs (mils)	64121
+1991	Cargo RTKs (mils)	63630
+1992	Cargo RTKs (mils)	67761
+1993	Cargo RTKs (mils)	73671
+1994	Cargo RTKs (mils)	82626
+1995	Cargo RTKs (mils)	88765
+1996	Cargo RTKs (mils)	94996
+1997	Cargo RTKs (mils)	108870
+1998	Cargo RTKs (mils)	107575
+1999	Cargo RTKs (mils)	114373
+2000	Cargo RTKs (mils)	133572,011601439
+2001	Cargo RTKs (mils)	124941,687325198
+2002	Cargo RTKs (mils)	134058,705507334
+2003	Cargo RTKs (mils)	140372,649676671
+2004	Cargo RTKs (mils)	154838,346907101
+2005	Cargo RTKs (mils)	158674,075645018
+2006	Cargo RTKs (mils)	169365,03407414
+2007	Cargo RTKs (mils)	177261,473473968
+2008	Cargo RTKs (mils)	176052,338460738
+2009	Cargo RTKs (mils)	160439,169902364
+2010	Cargo RTKs (mils)	193101,243457865
+2011	Cargo RTKs (mils)	195603
+2012	Cargo RTKs (mils)	193861
+2013	Cargo RTKs (mils)	195000
+2014	Cargo RTKs (mils)	204305
+2015	Cargo RTKs (mils)	207319
+2016	Cargo RTKs (mils)	214638
+2017	Cargo RTKs (mils)	234560
+2018	Cargo RTKs (mils)	241130
+2019	Cargo RTKs (mils)	235570
+2020	Cargo RTKs (mils)	197724
+2021	Cargo RTKs (mils)	235900
+1929	Freight Tonnes (mils)	
+1930	Freight Tonnes (mils)	
+1931	Freight Tonnes (mils)	
+1932	Freight Tonnes (mils)	
+1933	Freight Tonnes (mils)	
+1934	Freight Tonnes (mils)	
+1935	Freight Tonnes (mils)	
+1936	Freight Tonnes (mils)	
+1937	Freight Tonnes (mils)	
+1938	Freight Tonnes (mils)	
+1939	Freight Tonnes (mils)	
+1940	Freight Tonnes (mils)	
+1941	Freight Tonnes (mils)	
+1942	Freight Tonnes (mils)	
+1943	Freight Tonnes (mils)	
+1944	Freight Tonnes (mils)	
+1945	Freight Tonnes (mils)	
+1946	Freight Tonnes (mils)	
+1947	Freight Tonnes (mils)	
+1948	Freight Tonnes (mils)	
+1949	Freight Tonnes (mils)	
+1950	Freight Tonnes (mils)	
+1951	Freight Tonnes (mils)	
+1952	Freight Tonnes (mils)	
+1953	Freight Tonnes (mils)	
+1954	Freight Tonnes (mils)	
+1955	Freight Tonnes (mils)	
+1956	Freight Tonnes (mils)	
+1957	Freight Tonnes (mils)	
+1958	Freight Tonnes (mils)	
+1959	Freight Tonnes (mils)	
+1960	Freight Tonnes (mils)	
+1961	Freight Tonnes (mils)	
+1962	Freight Tonnes (mils)	
+1963	Freight Tonnes (mils)	
+1964	Freight Tonnes (mils)	
+1965	Freight Tonnes (mils)	
+1966	Freight Tonnes (mils)	
+1967	Freight Tonnes (mils)	
+1968	Freight Tonnes (mils)	
+1969	Freight Tonnes (mils)	3,97
+1970	Freight Tonnes (mils)	6,083
+1971	Freight Tonnes (mils)	6,673
+1972	Freight Tonnes (mils)	7,284
+1973	Freight Tonnes (mils)	8,223
+1974	Freight Tonnes (mils)	8,651
+1975	Freight Tonnes (mils)	8,68
+1976	Freight Tonnes (mils)	9,336
+1977	Freight Tonnes (mils)	10,046
+1978	Freight Tonnes (mils)	10,625
+1979	Freight Tonnes (mils)	10,996
+1980	Freight Tonnes (mils)	11,089
+1981	Freight Tonnes (mils)	10,915
+1982	Freight Tonnes (mils)	11,568
+1983	Freight Tonnes (mils)	12,257
+1984	Freight Tonnes (mils)	13,416
+1985	Freight Tonnes (mils)	13,742
+1986	Freight Tonnes (mils)	14,687
+1987	Freight Tonnes (mils)	16,058
+1988	Freight Tonnes (mils)	17,215
+1989	Freight Tonnes (mils)	18,088
+1990	Freight Tonnes (mils)	18,423
+1991	Freight Tonnes (mils)	17,465
+1992	Freight Tonnes (mils)	17,647
+1993	Freight Tonnes (mils)	18,053
+1994	Freight Tonnes (mils)	20,522
+1995	Freight Tonnes (mils)	22,189
+1996	Freight Tonnes (mils)	23,234
+1997	Freight Tonnes (mils)	26,36
+1998	Freight Tonnes (mils)	26,496
+1999	Freight Tonnes (mils)	28,103
+2000	Freight Tonnes (mils)	29,622079923
+2001	Freight Tonnes (mils)	28,052109687
+2002	Freight Tonnes (mils)	30,576799559
+2003	Freight Tonnes (mils)	32,625445129
+2004	Freight Tonnes (mils)	35,757487862
+2005	Freight Tonnes (mils)	36,651425058
+2006	Freight Tonnes (mils)	38,976326138
+2007	Freight Tonnes (mils)	41,374427069
+2008	Freight Tonnes (mils)	39,928453381
+2009	Freight Tonnes (mils)	39,977335128
+2010	Freight Tonnes (mils)	48,007146382
+2011	Freight Tonnes (mils)	49,3
+2012	Freight Tonnes (mils)	48,5
+2013	Freight Tonnes (mils)	49,6
+2014	Freight Tonnes (mils)	51,2
+2015	Freight Tonnes (mils)	51,5
+2016	Freight Tonnes (mils)	53,4
+2017	Freight Tonnes (mils)	57,2
+2018	Freight Tonnes (mils)	59
+2019	Freight Tonnes (mils)	58
+2020	Freight Tonnes (mils)	49,4
+2021	Freight Tonnes (mils)	56,5
+1929	PLF	
+1930	PLF	
+1931	PLF	
+1932	PLF	
+1933	PLF	
+1934	PLF	
+1935	PLF	
+1936	PLF	
+1937	PLF	
+1938	PLF	
+1939	PLF	
+1940	PLF	
+1941	PLF	
+1942	PLF	
+1943	PLF	
+1944	PLF	
+1945	PLF	
+1946	PLF	
+1947	PLF	
+1948	PLF	
+1949	PLF	
+1950	PLF	0,608695652
+1951	PLF	0,636363636
+1952	PLF	0,625
+1953	PLF	0,626666667
+1954	PLF	0,604651163
+1955	PLF	0,616161616
+1956	PLF	0,622807018
+1957	PLF	0,616541353
+1958	PLF	0,582191781
+1959	PLF	0,604938272
+1960	PLF	0,592391304
+1961	PLF	0,551886792
+1962	PLF	0,534979424
+1963	PLF	0,536496350
+1964	PLF	0,558823529
+1965	PLF	0,559322034
+1966	PLF	0,576826196
+1967	PLF	0,569937370
+1968	PLF	0,534513764
+1969	PLF	0,519871165
+1970	PLF	0,548237353
+1971	PLF	0,540589889
+1972	PLF	0,571061803
+1973	PLF	0,576342137
+1974	PLF	0,592692581
+1975	PLF	0,591480897
+1976	PLF	0,601475018
+1977	PLF	0,607832068
+1978	PLF	0,645233134
+1979	PLF	0,659683870
+1980	PLF	0,631780326
+1981	PLF	0,637085769
+1982	PLF	0,636444736
+1983	PLF	0,642392262
+1984	PLF	0,648064996
+1985	PLF	0,657056787
+1986	PLF	0,649767533
+1987	PLF	0,671360303
+1988	PLF	0,675661049
+1989	PLF	0,680088848
+1990	PLF	0,676312212
+1991	PLF	0,663940271
+1992	PLF	0,658293589
+1993	PLF	0,646915074
+1994	PLF	0,662577910
+1995	PLF	0,669390321
+1996	PLF	0,682337039
+1997	PLF	0,690203600
+1998	PLF	0,684810923
+1999	PLF	0,690682024
+2000	PLF	0,710701581
+2001	PLF	0,692407769
+2002	PLF	0,713362113
+2003	PLF	0,715767847
+2004	PLF	0,733911550
+2005	PLF	0,749427571
+2006	PLF	0,758150692
+2007	PLF	0,768047272
+2008	PLF	0,760138426
+2009	PLF	0,766817019
+2010	PLF	0,781701864
+2011	PLF	0,780066119
+2012	PLF	0,788622465
+2013	PLF	0,794820537
+2014	PLF	0,797185022
+2015	PLF	0,802386545
+2016	PLF	0,802855180
+2017	PLF	0,814775397
+2018	PLF	0,816034876
+2019	PLF	0,823832715
+2020	PLF	0,652404788
+2021	PLF	0,676752312
+1929	ASKs (mils)	
+1930	ASKs (mils)	
+1931	ASKs (mils)	
+1932	ASKs (mils)	
+1933	ASKs (mils)	
+1934	ASKs (mils)	
+1935	ASKs (mils)	
+1936	ASKs (mils)	
+1937	ASKs (mils)	
+1938	ASKs (mils)	
+1939	ASKs (mils)	
+1940	ASKs (mils)	
+1941	ASKs (mils)	
+1942	ASKs (mils)	
+1943	ASKs (mils)	
+1944	ASKs (mils)	
+1945	ASKs (mils)	
+1946	ASKs (mils)	
+1947	ASKs (mils)	
+1948	ASKs (mils)	
+1949	ASKs (mils)	
+1950	ASKs (mils)	46000
+1951	ASKs (mils)	55000
+1952	ASKs (mils)	64000
+1953	ASKs (mils)	75000
+1954	ASKs (mils)	86000
+1955	ASKs (mils)	99000
+1956	ASKs (mils)	114000
+1957	ASKs (mils)	133000
+1958	ASKs (mils)	146000
+1959	ASKs (mils)	162000
+1960	ASKs (mils)	184000
+1961	ASKs (mils)	212000
+1962	ASKs (mils)	243000
+1963	ASKs (mils)	274000
+1964	ASKs (mils)	306000
+1965	ASKs (mils)	354000
+1966	ASKs (mils)	397000
+1967	ASKs (mils)	479000
+1968	ASKs (mils)	578885
+1969	ASKs (mils)	674973
+1970	ASKs (mils)	839930
+1971	ASKs (mils)	914070
+1972	ASKs (mils)	980766
+1973	ASKs (mils)	1072599
+1974	ASKs (mils)	1107532
+1975	ASKs (mils)	1178880
+1976	ASKs (mils)	1269815
+1977	ASKs (mils)	1346260
+1978	ASKs (mils)	1451184
+1979	ASKs (mils)	1607188
+1980	ASKs (mils)	1723903
+1981	ASKs (mils)	1756539
+1982	ASKs (mils)	1794646
+1983	ASKs (mils)	1852088
+1984	ASKs (mils)	1972296
+1985	ASKs (mils)	2081018
+1986	ASKs (mils)	2234730
+1987	ASKs (mils)	2367532
+1988	ASKs (mils)	2524094
+1989	ASKs (mils)	2608046
+1990	ASKs (mils)	2800844
+1991	ASKs (mils)	2779494
+1992	ASKs (mils)	2930185
+1993	ASKs (mils)	3013411
+1994	ASKs (mils)	3169342
+1995	ASKs (mils)	3358601
+1996	ASKs (mils)	3563774
+1997	ASKs (mils)	3727900
+1998	ASKs (mils)	3837725
+1999	ASKs (mils)	4050783
+2000	ASKs (mils)	4504515,27158603
+2001	ASKs (mils)	4489444,87146598
+2002	ASKs (mils)	4379359,48704653
+2003	ASKs (mils)	4443203,75533752
+2004	ASKs (mils)	4944362,87006881
+2005	ASKs (mils)	5229355,27624414
+2006	ASKs (mils)	5500959,42629592
+2007	ASKs (mils)	5876065,25247317
+2008	ASKs (mils)	6062667,1393241
+2009	ASKs (mils)	5948502,61783718
+2010	ASKs (mils)	6307072,09694799
+2011	ASKs (mils)	6747537
+2012	ASKs (mils)	7021134
+2013	ASKs (mils)	7349025
+2014	ASKs (mils)	7765176
+2015	ASKs (mils)	8293327
+2016	ASKs (mils)	8901086
+2017	ASKs (mils)	9473126
+2018	ASKs (mils)	10147668
+2019	ASKs (mils)	10516737
+2020	ASKs (mils)	4540566
+2021	ASKs (mils)	5357978
+1929	RPKs (mils)	170
+1930	RPKs (mils)	270
+1931	RPKs (mils)	330
+1932	RPKs (mils)	405
+1933	RPKs (mils)	545
+1934	RPKs (mils)	650
+1935	RPKs (mils)	920
+1936	RPKs (mils)	1225
+1937	RPKs (mils)	1410
+1938	RPKs (mils)	1685
+1939	RPKs (mils)	2030
+1940	RPKs (mils)	2530
+1941	RPKs (mils)	3280
+1942	RPKs (mils)	3580
+1943	RPKs (mils)	4265
+1944	RPKs (mils)	5490
+1945	RPKs (mils)	8000
+1946	RPKs (mils)	16000
+1947	RPKs (mils)	19000
+1948	RPKs (mils)	21000
+1949	RPKs (mils)	24000
+1950	RPKs (mils)	28000
+1951	RPKs (mils)	35000
+1952	RPKs (mils)	40000
+1953	RPKs (mils)	47000
+1954	RPKs (mils)	52000
+1955	RPKs (mils)	61000
+1956	RPKs (mils)	71000
+1957	RPKs (mils)	82000
+1958	RPKs (mils)	85000
+1959	RPKs (mils)	98000
+1960	RPKs (mils)	109000
+1961	RPKs (mils)	117000
+1962	RPKs (mils)	130000
+1963	RPKs (mils)	147000
+1964	RPKs (mils)	171000
+1965	RPKs (mils)	198000
+1966	RPKs (mils)	229000
+1967	RPKs (mils)	273000
+1968	RPKs (mils)	309422
+1969	RPKs (mils)	350899
+1970	RPKs (mils)	460481
+1971	RPKs (mils)	494137
+1972	RPKs (mils)	560078
+1973	RPKs (mils)	618184
+1974	RPKs (mils)	656426
+1975	RPKs (mils)	697285
+1976	RPKs (mils)	763762
+1977	RPKs (mils)	818300
+1978	RPKs (mils)	936352
+1979	RPKs (mils)	1060236
+1980	RPKs (mils)	1089128
+1981	RPKs (mils)	1119066
+1982	RPKs (mils)	1142193
+1983	RPKs (mils)	1189767
+1984	RPKs (mils)	1278176
+1985	RPKs (mils)	1367347
+1986	RPKs (mils)	1452055
+1987	RPKs (mils)	1589467
+1988	RPKs (mils)	1705432
+1989	RPKs (mils)	1773703
+1990	RPKs (mils)	1894245
+1991	RPKs (mils)	1845418
+1992	RPKs (mils)	1928922
+1993	RPKs (mils)	1949421
+1994	RPKs (mils)	2099936
+1995	RPKs (mils)	2248215
+1996	RPKs (mils)	2431695
+1997	RPKs (mils)	2573010
+1998	RPKs (mils)	2628116
+1999	RPKs (mils)	2797803
+2000	RPKs (mils)	3201366,12411332
+2001	RPKs (mils)	3108526,50651403
+2002	RPKs (mils)	3124069,1390466
+2003	RPKs (mils)	3180302,38354944
+2004	RPKs (mils)	3628725,01962991
+2005	RPKs (mils)	3919023,0212003
+2006	RPKs (mils)	4170556,1959147
+2007	RPKs (mils)	4513095,88653466
+2008	RPKs (mils)	4608466,25816926
+2009	RPKs (mils)	4561413,04271906
+2010	RPKs (mils)	4930250,01571544
+2011	RPKs (mils)	5263525
+2012	RPKs (mils)	5537024
+2013	RPKs (mils)	5841156
+2014	RPKs (mils)	6190282
+2015	RPKs (mils)	6654454
+2016	RPKs (mils)	7146283
+2017	RPKs (mils)	7718470
+2018	RPKs (mils)	8280851
+2019	RPKs (mils)	8664032
+2020	RPKs (mils)	2962287
+2021	RPKs (mils)	3626024
+1929	Passengers (mils)	
+1930	Passengers (mils)	
+1931	Passengers (mils)	
+1932	Passengers (mils)	
+1933	Passengers (mils)	
+1934	Passengers (mils)	
+1935	Passengers (mils)	
+1936	Passengers (mils)	
+1937	Passengers (mils)	
+1938	Passengers (mils)	
+1939	Passengers (mils)	
+1940	Passengers (mils)	
+1941	Passengers (mils)	
+1942	Passengers (mils)	
+1943	Passengers (mils)	
+1944	Passengers (mils)	
+1945	Passengers (mils)	9
+1946	Passengers (mils)	18
+1947	Passengers (mils)	21
+1948	Passengers (mils)	24
+1949	Passengers (mils)	27
+1950	Passengers (mils)	31
+1951	Passengers (mils)	42
+1952	Passengers (mils)	46
+1953	Passengers (mils)	53
+1954	Passengers (mils)	59
+1955	Passengers (mils)	68
+1956	Passengers (mils)	77
+1957	Passengers (mils)	86
+1958	Passengers (mils)	88
+1959	Passengers (mils)	98
+1960	Passengers (mils)	106
+1961	Passengers (mils)	111
+1962	Passengers (mils)	121
+1963	Passengers (mils)	135
+1964	Passengers (mils)	155
+1965	Passengers (mils)	177
+1966	Passengers (mils)	200
+1967	Passengers (mils)	233
+1968	Passengers (mils)	260,277
+1969	Passengers (mils)	293,23
+1970	Passengers (mils)	382,954
+1971	Passengers (mils)	410,919
+1972	Passengers (mils)	450,136
+1973	Passengers (mils)	488,514
+1974	Passengers (mils)	514,496
+1975	Passengers (mils)	534,024
+1976	Passengers (mils)	576,421
+1977	Passengers (mils)	610,322
+1978	Passengers (mils)	678,645
+1979	Passengers (mils)	754,117
+1980	Passengers (mils)	748,288
+1981	Passengers (mils)	752,271
+1982	Passengers (mils)	765,806
+1983	Passengers (mils)	797,81
+1984	Passengers (mils)	847,931
+1985	Passengers (mils)	899,218
+1986	Passengers (mils)	960,012
+1987	Passengers (mils)	1027,856
+1988	Passengers (mils)	1082,474
+1989	Passengers (mils)	1109,478
+1990	Passengers (mils)	1165,156
+1991	Passengers (mils)	1135,185
+1992	Passengers (mils)	1145,553
+1993	Passengers (mils)	1142,382
+1994	Passengers (mils)	1233,341
+1995	Passengers (mils)	1303,645
+1996	Passengers (mils)	1391,085
+1997	Passengers (mils)	1456,69
+1998	Passengers (mils)	1471,47
+1999	Passengers (mils)	1562,324
+2000	Passengers (mils)	1774,388417916
+2001	Passengers (mils)	1740,675037975
+2002	Passengers (mils)	1738,934362937
+2003	Passengers (mils)	1794,580262551
+2004	Passengers (mils)	2002,751573007
+2005	Passengers (mils)	2144,946934691
+2006	Passengers (mils)	2263,250105760
+2007	Passengers (mils)	2461,986320262
+2008	Passengers (mils)	2500,044331773
+2009	Passengers (mils)	2488,281562028
+2010	Passengers (mils)	2707,866526709
+2011	Passengers (mils)	2883
+2012	Passengers (mils)	3013
+2013	Passengers (mils)	3148
+2014	Passengers (mils)	3327
+2015	Passengers (mils)	3567
+2016	Passengers (mils)	3806
+2017	Passengers (mils)	4075
+2018	Passengers (mils)	4341
+2019	Passengers (mils)	4490
+2020	Passengers (mils)	1782
+2021	Passengers (mils)	2284
+1929	Aircraft KMs (mils)	90
+1930	Aircraft KMs (mils)	120
+1931	Aircraft KMs (mils)	135
+1932	Aircraft KMs (mils)	140
+1933	Aircraft KMs (mils)	155
+1934	Aircraft KMs (mils)	160
+1935	Aircraft KMs (mils)	200
+1936	Aircraft KMs (mils)	230
+1937	Aircraft KMs (mils)	265
+1938	Aircraft KMs (mils)	300
+1939	Aircraft KMs (mils)	295
+1940	Aircraft KMs (mils)	300
+1941	Aircraft KMs (mils)	340
+1942	Aircraft KMs (mils)	320
+1943	Aircraft KMs (mils)	325
+1944	Aircraft KMs (mils)	415
+1945	Aircraft KMs (mils)	600
+1946	Aircraft KMs (mils)	940
+1947	Aircraft KMs (mils)	1140
+1948	Aircraft KMs (mils)	1270
+1949	Aircraft KMs (mils)	1350
+1950	Aircraft KMs (mils)	1440
+1951	Aircraft KMs (mils)	1620
+1952	Aircraft KMs (mils)	1780
+1953	Aircraft KMs (mils)	1950
+1954	Aircraft KMs (mils)	2060
+1955	Aircraft KMs (mils)	2290
+1956	Aircraft KMs (mils)	2540
+1957	Aircraft KMs (mils)	2840
+1958	Aircraft KMs (mils)	2930
+1959	Aircraft KMs (mils)	3090
+1960	Aircraft KMs (mils)	3110
+1961	Aircraft KMs (mils)	3120
+1962	Aircraft KMs (mils)	3240
+1963	Aircraft KMs (mils)	3430
+1964	Aircraft KMs (mils)	3700
+1965	Aircraft KMs (mils)	4100
+1966	Aircraft KMs (mils)	4480
+1967	Aircraft KMs (mils)	5280
+1968	Aircraft KMs (mils)	5993
+1969	Aircraft KMs (mils)	6704
+1970	Aircraft KMs (mils)	7004
+1971	Aircraft KMs (mils)	7054
+1972	Aircraft KMs (mils)	7209
+1973	Aircraft KMs (mils)	7520
+1974	Aircraft KMs (mils)	7375
+1975	Aircraft KMs (mils)	7516
+1976	Aircraft KMs (mils)	7840
+1977	Aircraft KMs (mils)	8089
+1978	Aircraft KMs (mils)	8498
+1979	Aircraft KMs (mils)	9147
+1980	Aircraft KMs (mils)	9350
+1981	Aircraft KMs (mils)	9113
+1982	Aircraft KMs (mils)	9140
+1983	Aircraft KMs (mils)	9395
+1984	Aircraft KMs (mils)	10102
+1985	Aircraft KMs (mils)	10598
+1986	Aircraft KMs (mils)	11491
+1987	Aircraft KMs (mils)	12266
+1988	Aircraft KMs (mils)	13017
+1989	Aircraft KMs (mils)	13493
+1990	Aircraft KMs (mils)	14371
+1991	Aircraft KMs (mils)	14262
+1992	Aircraft KMs (mils)	15690
+1993	Aircraft KMs (mils)	17118
+1994	Aircraft KMs (mils)	18249
+1995	Aircraft KMs (mils)	19470
+1996	Aircraft KMs (mils)	20601
+1997	Aircraft KMs (mils)	21630
+1998	Aircraft KMs (mils)	22438
+1999	Aircraft KMs (mils)	23742
+2000	Aircraft KMs (mils)	25981,555983434
+2001	Aircraft KMs (mils)	26157,107037377
+2002	Aircraft KMs (mils)	25506,535484532
+2003	Aircraft KMs (mils)	26559,841808185
+2004	Aircraft KMs (mils)	30122,495549952
+2005	Aircraft KMs (mils)	31857,353024203
+2006	Aircraft KMs (mils)	33179,149195062
+2007	Aircraft KMs (mils)	34934,659734483
+2008	Aircraft KMs (mils)	35768,812336525
+2009	Aircraft KMs (mils)	34893,659618745
+2010	Aircraft KMs (mils)	38394,979480867
+2011	Aircraft KMs (mils)	40470,837184599
+2012	Aircraft KMs (mils)	41484,586110406
+2013	Aircraft KMs (mils)	42771,821187685
+2014	Aircraft KMs (mils)	44493,683181101
+2015	Aircraft KMs (mils)	46738,799001277
+2016	Aircraft KMs (mils)	49240,375643156
+2017	Aircraft KMs (mils)	51832,068338580
+2018	Aircraft KMs (mils)	54278,578733847
+2019	Aircraft KMs (mils)	56199
+2020	Aircraft KMs (mils)	28013
+2021	Aircraft KMs (mils)	33705
+1929	Aircraft Departures (000)	
+1930	Aircraft Departures (000)	
+1931	Aircraft Departures (000)	
+1932	Aircraft Departures (000)	
+1933	Aircraft Departures (000)	
+1934	Aircraft Departures (000)	
+1935	Aircraft Departures (000)	
+1936	Aircraft Departures (000)	
+1937	Aircraft Departures (000)	
+1938	Aircraft Departures (000)	
+1939	Aircraft Departures (000)	
+1940	Aircraft Departures (000)	
+1941	Aircraft Departures (000)	
+1942	Aircraft Departures (000)	
+1943	Aircraft Departures (000)	
+1944	Aircraft Departures (000)	
+1945	Aircraft Departures (000)	
+1946	Aircraft Departures (000)	
+1947	Aircraft Departures (000)	
+1948	Aircraft Departures (000)	
+1949	Aircraft Departures (000)	
+1950	Aircraft Departures (000)	
+1951	Aircraft Departures (000)	
+1952	Aircraft Departures (000)	
+1953	Aircraft Departures (000)	
+1954	Aircraft Departures (000)	
+1955	Aircraft Departures (000)	
+1956	Aircraft Departures (000)	
+1957	Aircraft Departures (000)	
+1958	Aircraft Departures (000)	
+1959	Aircraft Departures (000)	
+1960	Aircraft Departures (000)	6600
+1961	Aircraft Departures (000)	6600
+1962	Aircraft Departures (000)	6600
+1963	Aircraft Departures (000)	6700
+1964	Aircraft Departures (000)	7100
+1965	Aircraft Departures (000)	7500
+1966	Aircraft Departures (000)	7800
+1967	Aircraft Departures (000)	8600
+1968	Aircraft Departures (000)	9074
+1969	Aircraft Departures (000)	9473
+1970	Aircraft Departures (000)	9486
+1971	Aircraft Departures (000)	9546
+1972	Aircraft Departures (000)	9646
+1973	Aircraft Departures (000)	9889
+1974	Aircraft Departures (000)	9613
+1975	Aircraft Departures (000)	9683
+1976	Aircraft Departures (000)	9986
+1977	Aircraft Departures (000)	10118
+1978	Aircraft Departures (000)	10379
+1979	Aircraft Departures (000)	10666
+1980	Aircraft Departures (000)	10691
+1981	Aircraft Departures (000)	10250
+1982	Aircraft Departures (000)	10379
+1983	Aircraft Departures (000)	10820
+1984	Aircraft Departures (000)	11453
+1985	Aircraft Departures (000)	11952
+1986	Aircraft Departures (000)	12698
+1987	Aircraft Departures (000)	13306
+1988	Aircraft Departures (000)	13942
+1989	Aircraft Departures (000)	13945
+1990	Aircraft Departures (000)	14661
+1991	Aircraft Departures (000)	14269
+1992	Aircraft Departures (000)	14819
+1993	Aircraft Departures (000)	15777
+1994	Aircraft Departures (000)	17038
+1995	Aircraft Departures (000)	17816
+1996	Aircraft Departures (000)	18758
+1997	Aircraft Departures (000)	19320
+1998	Aircraft Departures (000)	19686
+1999	Aircraft Departures (000)	20739
+2000	Aircraft Departures (000)	24143,465946258
+2001	Aircraft Departures (000)	24233,637621127
+2002	Aircraft Departures (000)	23095,220225902
+2003	Aircraft Departures (000)	23816,593624857
+2004	Aircraft Departures (000)	26780,987436185
+2005	Aircraft Departures (000)	28077,205262432
+2006	Aircraft Departures (000)	28776,035742669
+2007	Aircraft Departures (000)	29869,367300459
+2008	Aircraft Departures (000)	29988,856031948
+2009	Aircraft Departures (000)	29372,403867587
+2010	Aircraft Departures (000)	30754,207128909
+2011	Aircraft Departures (000)	31767,566386975
+2012	Aircraft Departures (000)	32192,986845690
+2013	Aircraft Departures (000)	32583,099281708
+2014	Aircraft Departures (000)	33272,692564072
+2015	Aircraft Departures (000)	34193,299481808
+2016	Aircraft Departures (000)	35515,014001
+2017	Aircraft Departures (000)	36543,132058
+2018	Aircraft Departures (000)	37822,685904009
+2019	Aircraft Departures (000)	38299
+2020	Aircraft Departures (000)	20290
+2021	Aircraft Departures (000)	24189
