@@ -34,4 +34,4 @@ country_mapping <- fread("wellcome_country_standardized.csv")
 df <- merge(country_mapping, df, by = "entity")
 df[, entity := NULL]
 setnames(df, "owid_entity", "entity")
-fwrite(df, "Wellcome Global Monitor - Trust.csv")
+fwrite(df, "Wellcome Global Monitor 2020: Covid-19 - Trust questions.csv")
