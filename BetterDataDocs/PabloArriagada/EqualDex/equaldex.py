@@ -1,3 +1,18 @@
+"""
+This script extracts data from the EqualDex API and creates two datasets:
+- current.csv: current status of the issues in each country
+- historical.csv: historical status of the issues in each country
+
+The script also creates a long dataset that merges and expands the two previous datasets for each year.
+This long dataset is saved as long.csv and it is indexed by country, year and issue.
+
+To run this script, you need to create a file called access_key.py with the following content:
+API_KEY = "your_api_key"
+You can obtain your API key by registering at https://www.equaldex.com/ and then copying it from your account settings: https://www.equaldex.com/settings
+
+"""
+
+import datetime
 import json
 from pathlib import Path
 
@@ -9,7 +24,11 @@ from structlog import get_logger
 # Set directory path
 PARENT_DIR = Path(__file__).parent.absolute()
 
+# Set parameter to extract data from the API or not (this is useful to avoid running the API query every time)
+GET_DATA_FROM_API = True
 
+
+# Function to extract data from the EqualDex API
 def extract_from_api(country_list: list) -> pd.DataFrame:
     # Initialize logger.
     log = get_logger()
@@ -18,8 +37,8 @@ def extract_from_api(country_list: list) -> pd.DataFrame:
     url = "https://www.equaldex.com/api/region"
     headers = {"Content-Type": "application/json"}
 
-    # Define empty dataframes. df is for current data and df_historical for historical data
-    df = pd.DataFrame()
+    # Define empty dataframes. df_current is for current data and df_historical for historical data
+    df_current = pd.DataFrame()
     df_historical = pd.DataFrame()
 
     # Create an empty list of the countries with no data
@@ -102,7 +121,7 @@ def extract_from_api(country_list: list) -> pd.DataFrame:
             df_historical = pd.concat(
                 [df_historical, historical_data], ignore_index=True
             )
-            df = pd.concat([df, current_data], ignore_index=True)
+            df_current = pd.concat([df_current, current_data], ignore_index=True)
 
     # Error message with a summary of countries with no data
     if countries_no_data:
@@ -112,27 +131,138 @@ def extract_from_api(country_list: list) -> pd.DataFrame:
 
     # Move country and issue to the beginning
     cols_to_move = ["country", "issue"]
-    df = df[cols_to_move + [col for col in df.columns if col not in cols_to_move]]
+    df_current = df_current[
+        cols_to_move + [col for col in df_current.columns if col not in cols_to_move]
+    ]
     df_historical = df_historical[
         cols_to_move + [col for col in df_historical.columns if col not in cols_to_move]
     ]
 
-    df_complete = pd.concat([df, df_historical], ignore_index=True)
-
     # Export files
-    df.to_csv(PARENT_DIR / "current.csv", index=False)
+    df_current.to_csv(PARENT_DIR / "current.csv", index=False)
     df_historical.to_csv(PARENT_DIR / "historical.csv", index=False)
-    df_complete.to_csv(PARENT_DIR / "complete.csv", index=False)
 
-    return df, df_historical, df_complete
+    return df_current, df_historical
 
 
-# Create dataset with countries and years as index
-# def create_dataset(df: pd.DataFrame) -> pd.DataFrame:
-#     df[]
+# Function to create a long dataset from current and historical data
+def create_long_dataset(df_current, df_historical):
+    # HISTORICAL DATA
+
+    # Remove empty start_data_formatted and end_date_formatted
+    df_historical = df_historical[
+        ~(df_historical["start_date_formatted"].isnull())
+        & ~(df_historical["end_date_formatted"].isnull())
+    ].reset_index(drop=True)
+
+    # Get year after comma in the column name start_date_formatted and end_date_formatted
+    df_historical["year_start"] = (
+        df_historical["start_date_formatted"]
+        .str.split(",")
+        .str[1]
+        .str.strip()
+        .astype(int)
+    )
+    df_historical["year_end"] = (
+        df_historical["end_date_formatted"]
+        .str.split(",")
+        .str[1]
+        .str.strip()
+        .astype(int)
+    )
+
+    # Show countries with year_start or year_end equal to -1
+    print(
+        df_historical[
+            (df_historical["year_start"] == -1) | (df_historical["year_end"] == -1)
+        ]["country"].unique()
+    )
+
+    # Drop rows where year_start or year_end is -1
+    df_historical = df_historical[
+        (df_historical["year_start"] != -1) & (df_historical["year_end"] != -1)
+    ]
+
+    # Create dataframe filling the years between year_start and year_end
+
+    df_historical_long = pd.DataFrame()
+    for i in range(len(df_historical)):
+        df_country_issue = pd.DataFrame(
+            {
+                "country": df_historical.iloc[i]["country"],
+                "year": range(
+                    df_historical.iloc[i]["year_start"],
+                    df_historical.iloc[i]["year_end"],
+                ),
+                "issue": df_historical.iloc[i]["issue"],
+                "id": df_historical.iloc[i]["id"],
+                "value": df_historical.iloc[i]["value"],
+                "value_formatted": df_historical.iloc[i]["value_formatted"],
+                "description": df_historical.iloc[i]["description"],
+            }
+        )
+        df_historical_long = pd.concat(
+            [df_historical_long, df_country_issue], ignore_index=True
+        )
+
+    # CURRENT DATA
+    # The code for the current data is actually similar to the one for the historical data, but there are some differences, as end data is commonly null and the years are filled until current year
+    # In the future, it would be good to create a function that can be used for both datasets
+
+    # Remove empty start_data_formatted
+    df_current = df_current[~df_current["start_date_formatted"].isnull()].reset_index(
+        drop=True
+    )
+
+    # Get year after comma in the column name start_date_formatted
+    df_current["year_start"] = (
+        df_current["start_date_formatted"].str.split(",").str[1].str.strip().astype(int)
+    )
+
+    # Show countries with year_start or year_end equal to -1
+    print(df_current[df_current["year_start"] == -1]["country"].unique())
+
+    # Drop rows where year_start or year_end is -1
+    df_current = df_current[df_current["year_start"] != -1]
+
+    # Obtain current year
+    current_year = datetime.datetime.now().year
+
+    # Create dataframe filling the years between year_start and year_end
+
+    df_current_long = pd.DataFrame()
+    for i in range(len(df_current)):
+        df_country_issue = pd.DataFrame(
+            {
+                "country": df_current.iloc[i]["country"],
+                "year": range(df_current.iloc[i]["year_start"], current_year + 1),
+                "issue": df_current.iloc[i]["issue"],
+                "id": df_current.iloc[i]["id"],
+                "value": df_current.iloc[i]["value"],
+                "value_formatted": df_current.iloc[i]["value_formatted"],
+                "description": df_current.iloc[i]["description"],
+            }
+        )
+        df_current_long = pd.concat(
+            [df_current_long, df_country_issue], ignore_index=True
+        )
+
+    # Concatenate historical and current data
+    df_long = pd.concat([df_historical_long, df_current_long], ignore_index=True)
+
+    df_long.to_csv(PARENT_DIR / "long.csv", index=False)
+
+    # Set index as country, year and issue and verify that there are no duplicates
+    df_long = df_long.set_index(
+        ["country", "year", "issue"], verify_integrity=False
+    ).sort_index()
+
+    # Show rows with duplicated index
+    df_duplicated = df_long[df_long.index.duplicated(keep=False)]
+    df_duplicated.to_csv(PARENT_DIR / "duplicated.csv", index=True)
+
 
 # Define country list
-# country_list = ["gb", "us", "cl", "querty", "sa", "il", "asdf"]
 country_list = [
     "AF",
     "AL",
@@ -385,4 +515,15 @@ country_list = [
     "AX",
 ]
 
-extract_from_api(country_list)
+# Define if data should be extracted from API or read from file
+if GET_DATA_FROM_API:
+    # Run API to extract data
+    df_current, df_historical = extract_from_api(country_list)
+
+else:
+    # Read data from file
+    df_current = pd.read_csv(PARENT_DIR / "current.csv")
+    df_historical = pd.read_csv(PARENT_DIR / "historical.csv")
+
+# Create long dataset, with country, year and issue as index. It also generates a file with duplicated rows
+create_long_dataset(df_current, df_historical)
