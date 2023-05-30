@@ -20,6 +20,16 @@ get_sheet_data <- function(age_group) {
     c("All adults", "18-24y", "25-49y", "50-64y", "65y+"),
     warn_missing = FALSE
   )]
+  
+  df[, total := `Plant-based / Vegan` + Vegetarian + Flexitarian + Pescetarian + `Meat eater` + `None of these`]
+  df[, `Plant-based / Vegan` := round(`Plant-based / Vegan` / total, 2)]
+  df[, Vegetarian := round(Vegetarian / total, 2)]
+  df[, Flexitarian := round(Flexitarian / total, 2)]
+  df[, Pescetarian := round(Pescetarian / total, 2)]
+  df[, `Meat eater` := round(`Meat eater` / total, 2)]
+  df[, `None of these` := round(`None of these` / total, 2)]
+  df[, total := NULL]
+  
   return(df)
 }
 
