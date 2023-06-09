@@ -1,9 +1,11 @@
 rm(list = ls())
+library(data.table)
+library(lubridate)
 
 # Go to https://www.space-track.org and log in
 # Go to Query Builder
 # Use the following parameters: Class = gp, Order by = OBJECT_ID, Format = CSV
-# Click on BUILD QUERY to download the CSV
+# Click on BUILD QUERY then RUN QUERY to download the CSV
 # Move the CSV file to the script's folder
 data <- fread("https __www.space-track.org_basicspacedata_query_class_gp_orderby_object_id asc_format_csv_emptyresult_show.csv")
 
