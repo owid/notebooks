@@ -67,4 +67,5 @@ df[, ENTITY := plyr::mapvalues(
 )]
 setnames(df, "N", "Number of objects")
 setcolorder(df, c("ENTITY", "YEAR"))
+setorder(df, ENTITY, YEAR)
 fwrite(df, "Space-Track - Number of objects in space.csv")
