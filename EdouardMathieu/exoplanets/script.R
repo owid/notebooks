@@ -1,3 +1,4 @@
+library(stringr)
 library(tidyr)
 library(lubridate)
 library(data.table)
