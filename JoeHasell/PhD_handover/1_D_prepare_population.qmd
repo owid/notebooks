@@ -1,0 +1,107 @@
+---
+title: "Appendix 1.D: Preparing population data"
+format: html
+warning: false
+
+---
+
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Packages and settings
+```{python}
+from owid import catalog
+import pandas as pd
+
+
+pd.set_option('display.max_rows', None)
+```
+:::
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Load population data from Our World in Data
+
+I grab the main population series prepared by Our World in Data.
+```{python}
+
+results = catalog.find('population')
+owid_pop = results[results['path'] == 'garden/owid/latest/key_indicators/population']
+
+df_pop = owid_pop.iloc[0].load().reset_index().rename(columns={'year':'Year', 'country': 'Entity'})
+
+df_pop.head()
+
+```
+:::
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Check there is population data for each country in WID, PIP, and LIS.
+
+All countries in the PIP data are matched:
+```{python}
+
+df_pip = pd.read_csv("data/clean/pip.csv")
+
+check_pip = pd.merge(df_pip, df_pop, how = 'left')
+check_pip[check_pip['population'].isna()]
+
+```
+
+There is no population data for Zanzibar, present in the WID data.
+
+```{python}
+df_wid = pd.read_csv("data/clean/wid.csv")
+
+check_wid = pd.merge(df_wid, df_pop, how = 'left')
+check_wid[check_wid['population'].isna()]
+
+```
+
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Add in Zanzibar population
+
+WID release their own population data, but this currently insn't gathered in our data pipeline. For now I make up a population series for Zanzibar based on two data points from Wikipedia. At some point I will come back and replaces this with the WID population data.
+
+```{python}
+zanz_pop_1978 = 476111
+zanz_pop_2022 = 1889773
+
+# Assume a constant growth rate
+zanz_g = pow(zanz_pop_2022/zanz_pop_1978, 1/(2022-1978))-1
+
+year = 2022
+pop = zanz_pop_1978 * pow(1+zanz_g, year - 1978)
+
+df_zanz_pop = df_wid[df_wid['Entity'] == "Zanzibar"].copy()
+df_zanz_pop['population'] = zanz_pop_1978 * pow(1+zanz_g, df_zanz_pop['Year'] - 1978)
+
+df_zanz_pop = df_zanz_pop[['Entity', 'Year', 'population']]
+
+df_pop = pd.concat([df_pop, df_zanz_pop])
+
+```
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### See the prepared data
+
+The first 100 rows of the dataframe looks like this:
+```{python}
+df_pop.head(100)
+```
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Save
+```{python}
+df_pop.to_csv('data/clean/population.csv')
+
+```
+
+:::

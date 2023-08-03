@@ -1,0 +1,1325 @@
+---
+title: "Appendix 1.F: Analysing global trends in within-country inequality"
+format: html
+warning: false
+filters:
+  - shinylive
+sidebar: false
+execute:
+  eval: false
+---
+
+:::{.column-page}
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 1000
+
+## file: app.py
+
+import jinja2
+from shiny import *
+import pandas as pd
+from pyodide.http import open_url
+import numpy as np
+from plotnine import *
+
+
+
+
+
+#  ---------------------------------
+#  ---------- SECTION 1: Data prep functions -------------
+#  ----------------------------------
+
+#  Function get matching for ref years
+def closest_to_reference(df, reference_val, max_dist_from_ref, reference_col, group_by_col, value_col, tie_break):
+  
+  df = df.loc[:, [reference_col, group_by_col, value_col]]
+
+  # Drop NAs
+  df = df.dropna()
+
+  # Calculate absolute distance from reference value
+  df['ref_diff'] = abs(df[reference_col] - reference_val)
+
+  # Drop any rows with a distance beyond threshold
+  if not pd.isna(max_dist_from_ref):
+    df = df.loc[df['ref_diff'] <= max_dist_from_ref]
+
+  # Keep closest observation to reference value – including tie-breaks (where there is a match above and below the ref value)
+  df = df[df.groupby(group_by_col)['ref_diff'].transform('min') == df['ref_diff']].reset_index(drop=True)
+
+  # Settle tie-breaks
+  if tie_break == 'below':
+    df = df[df.groupby(group_by_col)[reference_col].transform('min') == df[reference_col]].reset_index(drop=True)
+    
+  elif tie_break == 'above':
+    df = df[df.groupby(group_by_col)[reference_col].transform('max') == df[reference_col]].reset_index(drop=True)
+
+  df = df.drop('ref_diff', axis=1)
+
+  df = df\
+    .rename(columns={value_col: "value"})
+
+
+  return df
+
+
+
+
+# Merge matches for different reference points
+def merge_two_ref_matches(df, reference_vals, max_dist_from_refs, min_dist_between, reference_col, group_by_col, value_col):
+
+# Make sure the pair of reference values are in ascending order
+  reference_vals.sort()
+
+# Maximise distance between two refs by settling tie-breaks below the lowest ref and above the highest ref 
+
+# Find matches for lower reference value
+  lower_ref_matches = closest_to_reference(df, reference_vals[0], max_dist_from_refs, reference_col, group_by_col, value_col, 'below')
+
+# Find matches for higher reference value
+  higher_ref_matches = closest_to_reference(df, reference_vals[1], max_dist_from_refs, reference_col, group_by_col, value_col, 'above')
+
+# Merge the two sets of matches
+  merged_df = pd.merge(lower_ref_matches, higher_ref_matches, on=group_by_col, suffixes=(reference_vals[0], reference_vals[1]))
+
+# Drop obs that do not have data for both ref values
+  merged_df = merged_df.dropna()
+
+# Drop obs where the matched data does not meet the min distance requirement
+  if not pd.isna(min_dist_between):
+  
+  # Store the names of the reference column returned from the two matches
+    ref_var_high = f'{reference_col}{reference_vals[1]}'
+    ref_var_low = f'{reference_col}{reference_vals[0]}'
+
+  # Keep only rows >= to the min distance
+    merged_df = merged_df.loc[(merged_df[ref_var_high] - merged_df[ref_var_low]) >= min_dist_between, :]
+
+
+
+  return merged_df
+
+
+
+  # For PIP run this three times – first filtering data for just consumpion only, then with income only, then with a dataset that prefers income over consumption
+def pip_welfare_routine(df, reference_vals, max_dist_from_refs, min_dist_between, reference_col, group_by_col, value_col):
+
+  # Specify the name of the column in which the income/consumption welfare definition is stored
+  welfare_colname = 'welfare_type'
+
+  # Creat dataframes for thee scenarios:
+  # Scenario 1: only allow income data
+  df_inc_filter = df.loc[df[welfare_colname] == "income", :]
+  df_inc_filter.name = "Income"
+
+  # Scenario 2: only allow consumption data
+  df_cons_filter = df.loc[df[welfare_colname] == "consumption", :]
+  df_cons_filter.name = "Consumption"
+  # Scenario 3: allow a mix – dropping consumption data where income data is available in the same year
+  df_mixed = df.copy()
+
+  df_mixed['welfare_count'] = df_mixed.groupby([reference_col, group_by_col])[welfare_colname].transform('count')
+
+  df_mixed = df_mixed.loc[(df_mixed['welfare_count'] == 1) | (df_mixed[welfare_colname] == "income")]
+
+  df_mixed.name = "Mixed"
+  #  Store the scneario dataframes in a list
+  df_scenarios = [df_inc_filter, df_cons_filter, df_mixed]
+
+  # Run the matching function on each scenario
+  scenario_matches = [merge_two_ref_matches(
+    df_scenario, 
+    reference_vals, 
+    max_dist_from_refs, 
+    min_dist_between, 
+    reference_col, 
+    group_by_col, 
+    value_col) for df_scenario in df_scenarios]
+  
+  # Combine the first two scenarios.
+  df_combined_matches = pd.concat([scenario_matches[0], scenario_matches[1]], keys=[df_scenarios[0].name, df_scenarios[1].name])
+
+  # Tidy up indexes
+  df_combined_matches = df_combined_matches.reset_index()
+  
+  df_combined_matches = df_combined_matches.drop('level_1', axis=1)
+
+  df_combined_matches = df_combined_matches\
+    .rename(columns={"level_0": "pip_welfare"})
+
+  # Add in third scenario.
+  df_combined_matches = pd.concat([df_combined_matches, scenario_matches[2]])
+
+  # add scenario name to te pip_welfare column
+  df_combined_matches['pip_welfare'] = df_combined_matches['pip_welfare'].fillna(df_scenarios[2].name)
+
+  # Keep only one match per group (e.g. per Country) - in the priority laid out in the df_scenarios list above (income only -> consumption only -> mixed)
+    # First count the matches
+  df_combined_matches['match_count'] = df_combined_matches.groupby(group_by_col)['pip_welfare'].transform('count')
+    # Then drop any matches from the lowest priority where there are multiple matches
+  df_combined_matches = df_combined_matches.loc[(df_combined_matches['match_count']==1) | ~(df_combined_matches['pip_welfare']==df_scenarios[2].name)]
+    #  Repeat at the next level of priority
+  df_combined_matches['match_count'] = df_combined_matches.groupby(group_by_col)['pip_welfare'].transform('count')
+  df_combined_matches = df_combined_matches.loc[(df_combined_matches['match_count']==1) | ~(df_combined_matches['pip_welfare']==df_scenarios[1].name)]
+  
+  # Drop the match count column
+  df_combined_matches = df_combined_matches.drop('match_count', axis=1)
+
+
+  return df_combined_matches
+
+
+
+
+def prep_selected_vars(selected_vars):
+
+  # selected_vars = [
+  #   'LIS: Top_10_share_equiv_market',
+  #   'WID: Bottom_50_share_posttax_dis',
+  #   'PIP: Top_10_share']
+
+  selected_sources = [var.split(sep, 1)[0] for var in selected_vars]
+  selected_var_names = [var.split(sep, 1)[1] for var in selected_vars]
+
+
+  match_data = {
+    "sources": selected_sources,
+    "var_names": selected_var_names
+          }
+
+
+  return match_data
+
+
+
+
+
+
+
+def prep_data(
+      data_to_match,
+      reference_vals,
+      max_dist_from_refs,
+      min_dist_between,
+      all_metrics_requirement,
+      reference_col,
+      group_by_col,
+      tolerance,
+      outlier_cut_off_upper):
+
+  # Combine the source and varname strings element-wise to produce keys that will be used for the concat later
+  source_var_keys = [i + j for i, j in zip(data_to_match["sources"], data_to_match["var_names"])]
+
+  matches = []
+
+  for i in range(len(data_to_match['sources'])):
+    
+    source = data_to_match["sources"][i]
+    var = data_to_match["var_names"][i]
+
+    df = data[source]
+
+    if source == "PIP":
+
+      matched = pip_welfare_routine(
+          df = df,
+          reference_vals = reference_vals,
+          max_dist_from_refs = max_dist_from_refs,
+          min_dist_between = min_dist_between,
+          reference_col = reference_col,
+          group_by_col = group_by_col,
+          value_col = var
+        )
+
+    else:
+
+      matched = merge_two_ref_matches(
+          df = df,
+          reference_vals = reference_vals,
+          max_dist_from_refs = max_dist_from_refs,
+          min_dist_between = min_dist_between,
+          reference_col = reference_col,
+          group_by_col = group_by_col,
+          value_col = var
+        )
+
+    matches.append(matched)
+
+
+  plot_data = pd.concat(matches, keys=source_var_keys)
+
+  # Tidy up indexes
+  plot_data = plot_data.reset_index()
+  
+  plot_data = plot_data.drop('level_1', axis=1)
+
+  plot_data = plot_data\
+    .rename(columns={"level_0": "source_var"})
+
+
+
+
+  # Store the names of the columns to be used onthe X and Y axis
+  x_axis = f'value{reference_vals[0]}'
+  y_axis = f'value{reference_vals[1]}'
+
+  x_ref_val = f'{reference_col}{reference_vals[0]}'
+  y_ref_val = f'{reference_col}{reference_vals[1]}'
+
+
+  # Apply outlier cut off, if specified
+  if not pd.isna(outlier_cut_off_upper):
+    plot_data = plot_data.loc[plot_data[x_axis] <= outlier_cut_off_upper]
+    plot_data = plot_data.loc[plot_data[y_axis] <= outlier_cut_off_upper]
+
+
+  # Add a count by country – counting whether data is available from each source or not
+  plot_data['source_count'] = plot_data.groupby(group_by_col)['source_var'].transform('count')
+
+
+  # Apply metrics requirement (whether to include only observations with data from all metrics)
+  if all_metrics_requirement:
+    plot_data = plot_data.loc[plot_data['source_count'] == plot_data['source_count'].max()]
+
+  # Drop source_count column
+  plot_data = plot_data.drop('source_count', axis=1)
+
+  # Add in region classification
+  plot_data = pd.merge(plot_data, df_regions, how = 'left')
+
+  # Add in population data
+    # For first ref
+  df_pop_ref = df_pop.loc[df_pop['Year'] == reference_vals[0], ['Entity', 'population'] ]
+
+  plot_data = pd.merge(plot_data, df_pop_ref, how = 'left')
+
+  plot_data = plot_data.rename(columns={'population':'population_ref1'})
+
+    # For second ref
+  df_pop_ref = df_pop.loc[df_pop['Year'] == reference_vals[1], ['Entity', 'population'] ]
+
+  plot_data = pd.merge(plot_data, df_pop_ref, how = 'left')
+
+  plot_data = plot_data.rename(columns={'population':'population_ref2'})
+
+    # Calculate average population two reference periods
+  plot_data['avg_pop'] = (plot_data['population_ref1'] + plot_data['population_ref2'])/2
+
+
+
+  #  PREP SUMMARY TABLE
+
+
+  # Calculate the change between the two ref periods
+  plot_data['change'] = (plot_data[y_axis] - plot_data[x_axis])
+
+
+  group_yes_vars = ['source_var', region_col]
+  group_no_vars = ['source_var']
+
+  group_scenarios = [group_no_vars, group_yes_vars] 
+
+  aggs = []
+  
+  for group_vars in group_scenarios:
+  
+  # Prepare pop-weighted average change
+    agg_level = plot_data.copy()
+
+    # Calulate pop weights by source and region
+    agg_level['regional_pop_weights'] = agg_level.groupby(group_vars)['avg_pop'].transform(lambda x: x/x.sum()) 
+
+    agg_level['global_pop_weights'] = agg_level.groupby('source_var')['avg_pop'].transform(lambda x: x/x.sum()) 
+
+    # Multiply the change by the pop weights 
+    agg_level['region_weighted_change'] = agg_level['change'] * agg_level['regional_pop_weights']
+
+
+  # Prepare fall/stable/rise categories
+    agg_level['fall'] = agg_level['change'] < -tolerance
+
+    agg_level['stable'] = (agg_level['change'] <= tolerance) & (agg_level['change'] >= -tolerance)
+
+    agg_level['rise'] = agg_level['change'] > tolerance
+
+    agg_level[['fall', 'stable', 'rise']] = agg_level[['fall', 'stable', 'rise']].astype(int)
+
+    agg_level = agg_level.groupby(group_vars)[['change', 'region_weighted_change', 'global_pop_weights', 'fall', 'stable', 'rise']]\
+      .agg(['sum', 'mean', 'count'])
+
+  # Aggregate by source and region
+    if group_vars == group_yes_vars:
+
+      agg_level = agg_level\
+        .unstack().T.reset_index()
+
+    elif group_vars == group_no_vars: 
+
+      agg_level = agg_level\
+        .T.reset_index()
+
+      agg_level[region_col] = "World"
+
+    aggs.append(agg_level) 
+
+  
+  df_summary = pd.concat(aggs)
+
+    # filter for the aggregations we need and label in the 'summary' column
+  df_summary.loc[(df_summary['level_0'] == 'change') & (df_summary['level_1'] == 'mean'), 'summary'] = 'avg change'
+
+  df_summary.loc[(df_summary['level_0'] == 'region_weighted_change') & (df_summary['level_1'] == 'sum'), 'summary'] = 'Regional pop-weighted avg change'
+
+  df_summary.loc[(df_summary['level_0'] == 'global_pop_weights') & (df_summary['level_1'] == 'sum'), 'summary'] = 'Global pop weights'
+
+  df_summary.loc[(df_summary['level_0'] == 'change') & (df_summary['level_1'] == 'count'), 'summary'] = 'n'
+
+  df_summary.loc[(df_summary['level_0'] == 'fall') & (df_summary['level_1'] == 'sum'), 'summary'] = 'fall'
+
+  df_summary.loc[(df_summary['level_0'] == 'stable') & (df_summary['level_1'] == 'sum'), 'summary'] = 'stable'
+
+  df_summary.loc[(df_summary['level_0'] == 'rise') & (df_summary['level_1'] == 'sum'), 'summary'] = 'rise'
+
+  df_summary = df_summary[df_summary['summary'].notnull()]
+
+
+  df_summary = df_summary.drop(['level_0', 'level_1'], axis = 1)
+
+
+  df_summary['summary'] = pd.Categorical(df_summary['summary'], categories=['fall', 'stable', 'rise','n', 'avg change', 'Regional pop-weighted avg change', 'Global pop weights'], ordered=True)
+
+
+  df_summary = df_summary.sort_values([region_col,'summary']).set_index([region_col,'summary'])
+  
+  
+  # format to show appropriate d.p. I run a loop over each row for want of figuring out a better way!
+  repeat_length = 7
+  for i in range(0, len(df_summary.index.levels[0].unique())):
+    df_summary.iloc[i*repeat_length,:] = df_summary.iloc[i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[1 + i*repeat_length,:] = df_summary.iloc[1 + i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[2 + i*repeat_length,:] = df_summary.iloc[2 + i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[3 + i*repeat_length,:] = df_summary.iloc[3 + i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[4 + i*repeat_length,:] = df_summary.iloc[4 + i*repeat_length,:].map('{:.2f}'.format)
+    df_summary.iloc[5 + i*repeat_length,:] = df_summary.iloc[5 + i*repeat_length,:].map('{:.2f}'.format)
+    df_summary.iloc[6 + i*repeat_length,:] = df_summary.iloc[6 + i*repeat_length,:].map('{:.2f}'.format)
+  
+  return plot_data, df_summary
+
+
+
+
+#  ---------------------------------
+#  ---------- SECTION 2: Specifications -------------
+#  ----------------------------------
+# These parameters are not controlled in the app.
+
+reference_col = 'Year'
+group_by_col = 'Entity'
+
+tolerance = 1
+outlier_cut_off_upper = None
+region_col = 'region_alt'
+
+
+
+
+#  ---------------------------------
+#  ---------- SECTION 3: Read in data -------------
+#  ----------------------------------
+# Note when testing outside of shinylive, this needs to be adjusted to a normal pd_read, without the pyodide step.
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/pip.csv'
+        
+df_pip = pd.read_csv(open_url(url))
+
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/wid.csv'
+
+df_wid = pd.read_csv(open_url(url))
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/lis.csv'
+
+df_lis = pd.read_csv(open_url(url))
+
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/region_mapping.csv'
+
+df_regions = pd.read_csv(open_url(url))
+
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/population.csv'
+
+df_pop = pd.read_csv(open_url(url))
+
+
+
+
+
+
+#  ---------------------------------
+#  ---------- SECTION 4: Gather data into dictionary and collete varnames -------------
+#  ----------------------------------
+
+data = {"PIP": df_pip,
+        "WID": df_wid,
+        "LIS": df_lis}
+
+# make an empty list to add all the varnames
+all_vars = list()
+
+# A string to use to separate the source name from the var name
+sep = ": "
+
+# for each df in 'data'
+for k,v in data.items():
+  
+  # make a list of varnames
+  vars = list(v.columns)
+
+  # remove the id cols
+  vars.remove(reference_col)
+  vars.remove(group_by_col)
+
+  # append the name of the source (the key of 'data') at the front
+  vars = [f'{k}{sep}' + var for var in vars]
+
+  # append to the running list
+  all_vars = all_vars + vars
+
+
+
+
+
+#  ---------------------------------
+#  ---------------------------------
+
+
+
+
+
+
+#  ---------------------------------
+#  ---------- App code -------------
+#  ----------------------------------
+
+def panel_box(*args, **kwargs):
+    return ui.div(
+        ui.div(*args, class_="card-body"),
+        **kwargs,
+        class_="card mb-3",
+    )
+
+app_ui = ui.page_fluid(
+    {"class": "p-4"},
+    ui.row(
+        ui.column(
+            4,
+            panel_box(
+                ui.input_slider("reference_vals", "Reference years", 1975, 2020, value=[1990,2018]),
+                ui.input_numeric(
+                            "max_dist_from_refs",
+                            "=/- (years)",
+                            4,
+                        ),
+                ui.input_numeric(
+                            "min_dist_between",
+                            "Min distance between observations (years)",
+                            23,
+                        ),
+                ui.input_selectize(
+                  "metrics", "Metrics", all_vars, multiple=True
+                  ),
+                ui.input_checkbox("all_metrics_requirement", "Show only countries with data for all metrics", True),
+                ui.input_action_button(
+                    "download", "Download data and image", class_="btn-primary w-100"
+                ),
+            ),
+        ),
+        ui.column(
+            8,
+            ui.output_plot("plot"),
+            ui.output_table("table")
+            ),
+    ),
+)
+
+
+
+
+
+def server(input, output, session):
+
+    @reactive.Calc
+    def reactive_data():
+
+      data_to_match = prep_selected_vars(input.metrics())
+
+      reference_vals = list(input.reference_vals())
+
+      max_dist_from_refs = input.max_dist_from_refs()
+      min_dist_between = input.min_dist_between()
+      all_metrics_requirement = input.all_metrics_requirement()
+
+      prepped_data = prep_data(
+        data_to_match = data_to_match,
+        reference_vals = reference_vals,
+        max_dist_from_refs = max_dist_from_refs,
+        min_dist_between = min_dist_between,
+        all_metrics_requirement = all_metrics_requirement,
+        reference_col = reference_col,
+        group_by_col = group_by_col,
+        tolerance = tolerance,
+        outlier_cut_off_upper = outlier_cut_off_upper)
+
+      return prepped_data
+
+
+    @output
+    @render.plot
+    def plot():
+
+        reference_vals = list(input.reference_vals())
+
+        
+        prepped_data = reactive_data()
+    
+        plot_data = prepped_data[0]
+
+        
+        # Store the names of the columns to be used onthe X and Y axis
+        x_axis = f'value{reference_vals[0]}'
+        y_axis = f'value{reference_vals[1]}'
+
+
+        # I grab what I am guessing to be the max and min tick marks on the x axist, in order to define the coordinates of a 'tolerance' ribbon.
+        x_min = plot_data[x_axis].min()
+        x_min_floor = np.floor(x_min * 10) / 10
+
+        x_max = plot_data[x_axis].max()
+        x_max_ceiling = np.ceil(x_max * 10) / 10
+
+
+        plot = (ggplot(plot_data
+        , aes(x_axis, y_axis, alpha=0.5))
+        + geom_point(aes(color=region_col, size='avg_pop', alpha = 0.6))
+        + geom_abline(intercept=0,slope=1) 
+        + facet_wrap('~ source_var')
+        + theme_light()
+        + theme(legend_position='none')
+        )
+        
+        return plot
+
+
+    @output
+    @render.table
+    def table():
+
+        
+        prepped_data = reactive_data()
+    
+        summary = prepped_data[1].reset_index()
+
+        
+        return summary
+
+app = App(app_ui, server)
+
+
+## file: requirements.txt
+Jinja2
+
+```
+
+:::
+
+
+
+
+
+
+
+
+
+TESTING!!!
+These are the same sections as above, to be used for testing.
+
+```{python}
+
+from plotnine import *
+import plotly.express as px
+import pandas as pd
+import numpy as np
+
+
+
+```
+
+
+```{python}
+
+
+
+
+#  ---------------------------------
+#  ---------- SECTION 1: Data prep functions -------------
+#  ----------------------------------
+
+#  Function get matching for ref years
+def closest_to_reference(df, reference_val, max_dist_from_ref, reference_col, group_by_col, value_col, tie_break):
+  
+  df = df.loc[:, [reference_col, group_by_col, value_col]]
+
+  # Drop NAs
+  df = df.dropna()
+
+  # Calculate absolute distance from reference value
+  df['ref_diff'] = abs(df[reference_col] - reference_val)
+
+  # Drop any rows with a distance beyond threshold
+  if not pd.isna(max_dist_from_ref):
+    df = df.loc[df['ref_diff'] <= max_dist_from_ref]
+
+  # Keep closest observation to reference value – including tie-breaks (where there is a match above and below the ref value)
+  df = df[df.groupby(group_by_col)['ref_diff'].transform('min') == df['ref_diff']].reset_index(drop=True)
+
+  # Settle tie-breaks
+  if tie_break == 'below':
+    df = df[df.groupby(group_by_col)[reference_col].transform('min') == df[reference_col]].reset_index(drop=True)
+    
+  elif tie_break == 'above':
+    df = df[df.groupby(group_by_col)[reference_col].transform('max') == df[reference_col]].reset_index(drop=True)
+
+  df = df.drop('ref_diff', axis=1)
+
+  df = df\
+    .rename(columns={value_col: "value"})
+
+
+  return df
+
+
+
+
+# Merge matches for different reference points
+def merge_two_ref_matches(df, reference_vals, max_dist_from_refs, min_dist_between, reference_col, group_by_col, value_col):
+
+# Make sure the pair of reference values are in ascending order
+  reference_vals.sort()
+
+# Maximise distance between two refs by settling tie-breaks below the lowest ref and above the highest ref 
+
+# Find matches for lower reference value
+  lower_ref_matches = closest_to_reference(df, reference_vals[0], max_dist_from_refs, reference_col, group_by_col, value_col, 'below')
+
+# Find matches for higher reference value
+  higher_ref_matches = closest_to_reference(df, reference_vals[1], max_dist_from_refs, reference_col, group_by_col, value_col, 'above')
+
+# Merge the two sets of matches
+  merged_df = pd.merge(lower_ref_matches, higher_ref_matches, on=group_by_col, suffixes=(reference_vals[0], reference_vals[1]))
+
+# Drop obs that do not have data for both ref values
+  merged_df = merged_df.dropna()
+
+# Drop obs where the matched data does not meet the min distance requirement
+  if not pd.isna(min_dist_between):
+  
+  # Store the names of the reference column returned from the two matches
+    ref_var_high = f'{reference_col}{reference_vals[1]}'
+    ref_var_low = f'{reference_col}{reference_vals[0]}'
+
+  # Keep only rows >= to the min distance
+    merged_df = merged_df.loc[(merged_df[ref_var_high] - merged_df[ref_var_low]) >= min_dist_between, :]
+
+
+
+  return merged_df
+
+
+
+  # For PIP run this three times – first filtering data for just consumpion only, then with income only, then with a dataset that prefers income over consumption
+def pip_welfare_routine(df, reference_vals, max_dist_from_refs, min_dist_between, reference_col, group_by_col, value_col):
+
+  # Specify the name of the column in which the income/consumption welfare definition is stored
+  welfare_colname = 'welfare_type'
+
+  # Creat dataframes for thee scenarios:
+  # Scenario 1: only allow income data
+  df_inc_filter = df.loc[df[welfare_colname] == "income", :]
+  df_inc_filter.name = "Income"
+
+  # Scenario 2: only allow consumption data
+  df_cons_filter = df.loc[df[welfare_colname] == "consumption", :]
+  df_cons_filter.name = "Consumption"
+  # Scenario 3: allow a mix – dropping consumption data where income data is available in the same year
+  df_mixed = df.copy()
+
+  df_mixed['welfare_count'] = df_mixed.groupby([reference_col, group_by_col])[welfare_colname].transform('count')
+
+  df_mixed = df_mixed.loc[(df_mixed['welfare_count'] == 1) | (df_mixed[welfare_colname] == "income")]
+
+  df_mixed.name = "Mixed"
+  #  Store the scneario dataframes in a list
+  df_scenarios = [df_inc_filter, df_cons_filter, df_mixed]
+
+  # Run the matching function on each scenario
+  scenario_matches = [merge_two_ref_matches(
+    df_scenario, 
+    reference_vals, 
+    max_dist_from_refs, 
+    min_dist_between, 
+    reference_col, 
+    group_by_col, 
+    value_col) for df_scenario in df_scenarios]
+  
+  # Combine the first two scenarios.
+  df_combined_matches = pd.concat([scenario_matches[0], scenario_matches[1]], keys=[df_scenarios[0].name, df_scenarios[1].name])
+
+  # Tidy up indexes
+  df_combined_matches = df_combined_matches.reset_index()
+  
+  df_combined_matches = df_combined_matches.drop('level_1', axis=1)
+
+  df_combined_matches = df_combined_matches\
+    .rename(columns={"level_0": "pip_welfare"})
+
+  # Add in third scenario.
+  df_combined_matches = pd.concat([df_combined_matches, scenario_matches[2]])
+
+  # add scenario name to te pip_welfare column
+  df_combined_matches['pip_welfare'] = df_combined_matches['pip_welfare'].fillna(df_scenarios[2].name)
+
+  # Keep only one match per group (e.g. per Country) - in the priority laid out in the df_scenarios list above (income only -> consumption only -> mixed)
+    # First count the matches
+  df_combined_matches['match_count'] = df_combined_matches.groupby(group_by_col)['pip_welfare'].transform('count')
+    # Then drop any matches from the lowest priority where there are multiple matches
+  df_combined_matches = df_combined_matches.loc[(df_combined_matches['match_count']==1) | ~(df_combined_matches['pip_welfare']==df_scenarios[2].name)]
+    #  Repeat at the next level of priority
+  df_combined_matches['match_count'] = df_combined_matches.groupby(group_by_col)['pip_welfare'].transform('count')
+  df_combined_matches = df_combined_matches.loc[(df_combined_matches['match_count']==1) | ~(df_combined_matches['pip_welfare']==df_scenarios[1].name)]
+  
+  # Drop the match count column
+  df_combined_matches = df_combined_matches.drop('match_count', axis=1)
+
+
+  return df_combined_matches
+
+
+
+
+def prep_selected_vars(selected_vars):
+
+  # selected_vars = [
+  #   'LIS: Top_10_share_equiv_market',
+  #   'WID: Bottom_50_share_posttax_dis',
+  #   'PIP: Top_10_share']
+
+  selected_sources = [var.split(sep, 1)[0] for var in selected_vars]
+  selected_var_names = [var.split(sep, 1)[1] for var in selected_vars]
+
+
+  match_data = {
+    "sources": selected_sources,
+    "var_names": selected_var_names
+          }
+
+
+  return match_data
+
+
+
+
+# Specify the tolerances for each kind of metric
+def return_tolerance_for_var(var):
+
+  if 'Gini' in var:
+    tolerance = 1
+
+  elif 'Top_10_share' in var:
+    tolerance = 1
+
+  elif 'Bottom_50_share' in var:
+    tolerance = 1
+
+  else:
+    tolerance = None
+
+  return tolerance
+
+
+
+
+
+def prep_data(
+      data_to_match,
+      reference_vals,
+      max_dist_from_refs,
+      min_dist_between,
+      all_metrics_requirement,
+      reference_col,
+      group_by_col,
+      outlier_cut_off_upper):
+
+  # Combine the source and varname strings element-wise to produce keys that will be used for the concat later
+  source_var_keys = [i + j for i, j in zip(data_to_match["sources"], data_to_match["var_names"])]
+
+  matches = []
+
+  for i in range(len(data_to_match['sources'])):
+    
+    source = data_to_match["sources"][i]
+    var = data_to_match["var_names"][i]
+
+    tolerance = return_tolerance_for_var(
+      data_to_match["var_names"][i]
+    )
+
+    df = data[source]
+
+    if source == "PIP":
+
+      matched = pip_welfare_routine(
+          df = df,
+          reference_vals = reference_vals,
+          max_dist_from_refs = max_dist_from_refs,
+          min_dist_between = min_dist_between,
+          reference_col = reference_col,
+          group_by_col = group_by_col,
+          value_col = var
+        )
+
+    else:
+
+      matched = merge_two_ref_matches(
+          df = df,
+          reference_vals = reference_vals,
+          max_dist_from_refs = max_dist_from_refs,
+          min_dist_between = min_dist_between,
+          reference_col = reference_col,
+          group_by_col = group_by_col,
+          value_col = var
+        )
+
+    matches.append(matched)
+
+
+  plot_data = pd.concat(matches, keys=source_var_keys)
+
+  # Tidy up indexes
+  plot_data = plot_data.reset_index()
+  
+  plot_data = plot_data.drop('level_1', axis=1)
+
+  plot_data = plot_data\
+    .rename(columns={"level_0": "source_var"})
+
+
+
+
+  # Store the names of the columns to be used onthe X and Y axis
+  x_axis = f'value{reference_vals[0]}'
+  y_axis = f'value{reference_vals[1]}'
+
+  x_ref_val = f'{reference_col}{reference_vals[0]}'
+  y_ref_val = f'{reference_col}{reference_vals[1]}'
+
+
+  # Apply outlier cut off, if specified
+  if not pd.isna(outlier_cut_off_upper):
+    plot_data = plot_data.loc[plot_data[x_axis] <= outlier_cut_off_upper]
+    plot_data = plot_data.loc[plot_data[y_axis] <= outlier_cut_off_upper]
+
+
+  # Add a count by country – counting whether data is available from each source or not
+  plot_data['source_count'] = plot_data.groupby(group_by_col)['source_var'].transform('count')
+
+
+  # Apply metrics requirement (whether to include only observations with data from all metrics)
+  if all_metrics_requirement:
+    plot_data = plot_data.loc[plot_data['source_count'] == plot_data['source_count'].max()]
+
+  # Drop source_count column
+  plot_data = plot_data.drop('source_count', axis=1)
+
+  # Add in region classification
+  plot_data = pd.merge(plot_data, df_regions, how = 'left')
+
+  # Add in population data
+    # For first ref
+  df_pop_ref = df_pop.loc[df_pop['Year'] == reference_vals[0], ['Entity', 'population'] ]
+
+  plot_data = pd.merge(plot_data, df_pop_ref, how = 'left')
+
+  plot_data = plot_data.rename(columns={'population':'population_ref1'})
+
+    # For second ref
+  df_pop_ref = df_pop.loc[df_pop['Year'] == reference_vals[1], ['Entity', 'population'] ]
+
+  plot_data = pd.merge(plot_data, df_pop_ref, how = 'left')
+
+  plot_data = plot_data.rename(columns={'population':'population_ref2'})
+
+    # Calculate average population two reference periods
+  plot_data['avg_pop'] = (plot_data['population_ref1'] + plot_data['population_ref2'])/2
+
+
+
+  #  PREP SUMMARY TABLE
+
+
+  # Calculate the change between the two ref periods
+  plot_data['change'] = (plot_data[y_axis] - plot_data[x_axis])
+
+
+  group_yes_vars = ['source_var', region_col]
+  group_no_vars = ['source_var']
+
+  group_scenarios = [group_no_vars, group_yes_vars] 
+
+  aggs = []
+  
+  for group_vars in group_scenarios:
+  
+  # Prepare pop-weighted average change
+    agg_level = plot_data.copy()
+
+    # Calulate pop weights by source and region
+    agg_level['regional_pop_weights'] = agg_level.groupby(group_vars)['avg_pop'].transform(lambda x: x/x.sum()) 
+
+    agg_level['global_pop_weights'] = agg_level.groupby('source_var')['avg_pop'].transform(lambda x: x/x.sum()) 
+
+    # Multiply the change by the pop weights 
+    agg_level['region_weighted_change'] = agg_level['change'] * agg_level['regional_pop_weights']
+
+
+  # Prepare fall/stable/rise categories
+    agg_level['fall'] = agg_level['change'] < -tolerance
+
+    agg_level['stable'] = (agg_level['change'] <= tolerance) & (agg_level['change'] >= -tolerance)
+
+    agg_level['rise'] = agg_level['change'] > tolerance
+
+    agg_level[['fall', 'stable', 'rise']] = agg_level[['fall', 'stable', 'rise']].astype(int)
+
+    agg_level = agg_level.groupby(group_vars)[['change', 'region_weighted_change', 'global_pop_weights', 'fall', 'stable', 'rise']]\
+      .agg(['sum', 'mean', 'count'])
+
+  # Aggregate by source and region
+    if group_vars == group_yes_vars:
+
+      agg_level = agg_level\
+        .unstack().T.reset_index()
+
+    elif group_vars == group_no_vars: 
+
+      agg_level = agg_level\
+        .T.reset_index()
+
+      agg_level[region_col] = "World"
+
+    aggs.append(agg_level) 
+
+  
+  df_summary = pd.concat(aggs)
+
+    # filter for the aggregations we need and label in the 'summary' column
+  df_summary.loc[(df_summary['level_0'] == 'change') & (df_summary['level_1'] == 'mean'), 'summary'] = 'avg change'
+
+  df_summary.loc[(df_summary['level_0'] == 'region_weighted_change') & (df_summary['level_1'] == 'sum'), 'summary'] = 'Regional pop-weighted avg change'
+
+  df_summary.loc[(df_summary['level_0'] == 'global_pop_weights') & (df_summary['level_1'] == 'sum'), 'summary'] = 'Global pop weights'
+
+  df_summary.loc[(df_summary['level_0'] == 'change') & (df_summary['level_1'] == 'count'), 'summary'] = 'n'
+
+  df_summary.loc[(df_summary['level_0'] == 'fall') & (df_summary['level_1'] == 'sum'), 'summary'] = 'fall'
+
+  df_summary.loc[(df_summary['level_0'] == 'stable') & (df_summary['level_1'] == 'sum'), 'summary'] = 'stable'
+
+  df_summary.loc[(df_summary['level_0'] == 'rise') & (df_summary['level_1'] == 'sum'), 'summary'] = 'rise'
+
+  df_summary = df_summary[df_summary['summary'].notnull()]
+
+
+  df_summary = df_summary.drop(['level_0', 'level_1'], axis = 1)
+
+
+  df_summary['summary'] = pd.Categorical(df_summary['summary'], categories=['fall', 'stable', 'rise','n', 'avg change', 'Regional pop-weighted avg change', 'Global pop weights'], ordered=True)
+
+
+  df_summary = df_summary.sort_values([region_col,'summary']).set_index([region_col,'summary'])
+  
+  
+  # format to show appropriate d.p. I run a loop over each row for want of figuring out a better way!
+  repeat_length = 7
+  for i in range(0, len(df_summary.index.levels[0].unique())):
+    df_summary.iloc[i*repeat_length,:] = df_summary.iloc[i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[1 + i*repeat_length,:] = df_summary.iloc[1 + i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[2 + i*repeat_length,:] = df_summary.iloc[2 + i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[3 + i*repeat_length,:] = df_summary.iloc[3 + i*repeat_length,:].map('{:.0f}'.format)
+    df_summary.iloc[4 + i*repeat_length,:] = df_summary.iloc[4 + i*repeat_length,:].map('{:.2f}'.format)
+    df_summary.iloc[5 + i*repeat_length,:] = df_summary.iloc[5 + i*repeat_length,:].map('{:.2f}'.format)
+    df_summary.iloc[6 + i*repeat_length,:] = df_summary.iloc[6 + i*repeat_length,:].map('{:.2f}'.format)
+  
+  return plot_data, df_summary
+
+
+
+```
+
+
+
+
+
+```{python}
+
+#  ---------------------------------
+#  ---------- SECTION 2: Specifications -------------
+#  ----------------------------------
+# These parameters are not controlled in the app.
+
+reference_col = 'Year'
+group_by_col = 'Entity'
+
+outlier_cut_off_upper = None
+region_col = 'region_alt'
+
+
+
+
+```
+
+
+
+```{python}
+
+#  ---------------------------------
+#  ---------- SECTION 3: Read in data -------------
+#  ----------------------------------
+
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/pip.csv'
+        
+df_pip = pd.read_csv(url)
+
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/wid.csv'
+
+df_wid = pd.read_csv(url)
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/lis.csv'
+
+df_lis = pd.read_csv(url)
+
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/region_mapping.csv'
+
+df_regions = pd.read_csv(url)
+
+
+url = 'https://raw.githubusercontent.com/JoeHasell/personal_site/main/PhD_pages/data_appendices/data/clean/population.csv'
+
+df_pop = pd.read_csv(url)
+
+
+
+
+```
+
+
+```{python}
+
+
+#  ---------------------------------
+#  ---------- SECTION 4: Gather data into dictionary and collete varnames -------------
+#  ----------------------------------
+
+data = {"PIP": df_pip,
+        "WID": df_wid,
+        "LIS": df_lis}
+
+# make an empty list to add all the varnames
+all_vars = list()
+
+# A string to use to separate the source name from the var name
+sep = ": "
+
+# for each df in 'data'
+for k,v in data.items():
+  
+  # make a list of varnames
+  vars = list(v.columns)
+
+  # remove the id cols
+  vars.remove(reference_col)
+  vars.remove(group_by_col)
+
+  # append the name of the source (the key of 'data') at the front
+  vars = [f'{k}{sep}' + var for var in vars]
+
+  # append to the running list
+  all_vars = all_vars + vars
+
+
+
+```
+
+
+We don't run this reactive step in the testing. We just run the prep data function in the plot and table functions below.
+
+```{python}
+# def reactive_data():
+
+#   # For testing we define manually, rather than picked up from the app inputs
+#   data_to_match = prep_selected_vars(input.metrics())
+
+#   reference_vals = list(input.reference_vals())
+
+#   max_dist_from_refs = input.max_dist_from_refs()
+#   min_dist_between = input.min_dist_between()
+#   all_metrics_requirement = input.all_metrics_requirement()
+
+
+
+#   prepped_data = prep_data(
+#       data_to_match = data_to_match,
+#       reference_vals = reference_vals,
+#       max_dist_from_refs = max_dist_from_refs,
+#       min_dist_between = min_dist_between,
+#       all_metrics_requirement = all_metrics_requirement,
+#       reference_col = reference_col,
+#       group_by_col = group_by_col,
+#       tolerance = tolerance,
+#       outlier_cut_off_upper = outlier_cut_off_upper)
+
+#   return prepped_data
+
+```
+
+```{python}
+
+def interactive_plot(
+  selected_vars,
+  reference_vals,
+  max_dist_from_refs,
+  min_dist_between,
+  all_metrics_requirement):
+
+  data_to_match = prep_selected_vars(selected_vars)
+
+  prepped_data = prep_data(
+      data_to_match = data_to_match,
+      reference_vals = reference_vals,
+      max_dist_from_refs = max_dist_from_refs,
+      min_dist_between = min_dist_between,
+      all_metrics_requirement = all_metrics_requirement,
+      reference_col = reference_col,
+      group_by_col = group_by_col,
+      outlier_cut_off_upper = outlier_cut_off_upper)
+
+  plot_data = prepped_data[0]
+
+  fig = px.scatter(
+    plot_data, 
+    x=f'value{reference_vals[0]}', 
+    y=f'value{reference_vals[1]}',
+    color=region_col, 
+    facet_col='source_var', 
+    facet_col_wrap=1, 
+    size='avg_pop',
+    hover_name=group_by_col,
+    hover_data={
+      f'value{reference_vals[0]}':':.2f',
+      f'{reference_col}{reference_vals[0]}':True,
+      f'value{reference_vals[1]}':':.2f',
+      f'{reference_col}{reference_vals[1]}':True,
+      region_col: True,
+      'avg_pop': False,
+      'source_var': False},
+      height=1000
+    )
+
+
+  fig.update_layout(legend=dict(
+      orientation="h",
+      yanchor="bottom",
+      y=1.02,
+      xanchor="right",
+      x=1
+  ))
+
+  fig.for_each_annotation(lambda a: a.update(text=a.text.split("=",1)[1]))
+
+  fig.update_layout(
+      legend_title=""
+  )
+
+
+
+  return fig
+
+
+
+```
+
+
+
+```{python}
+def table_test(selected_vars,
+  reference_vals,
+  max_dist_from_refs,
+  min_dist_between,
+  all_metrics_requirement):
+
+  data_to_match = prep_selected_vars(selected_vars)
+
+  prepped_data = prep_data(
+    data_to_match = data_to_match,
+    reference_vals = reference_vals,
+    max_dist_from_refs = max_dist_from_refs,
+    min_dist_between = min_dist_between,
+    all_metrics_requirement = all_metrics_requirement,
+    reference_col = reference_col,
+    group_by_col = group_by_col,
+    outlier_cut_off_upper = outlier_cut_off_upper)
+
+
+  summary = prepped_data[1].reset_index()
+  
+  return summary
+
+```
+
+```{python}
+
+fig = interactive_plot(
+  selected_vars = [
+      'WID: Top_10_share_pretax',
+      'PIP: Top_10_share'],
+  reference_vals = [1990,2015],
+  max_dist_from_refs = 5,
+  min_dist_between = 10,
+  all_metrics_requirement = True
+)
+
+fig.show()
+
+```
+
+```{python}
+
+summary_table = table_test(
+  selected_vars = [
+      'WID: Top_10_share_pretax',
+      'PIP: Top_10_share'],
+  reference_vals = [1990,2015],
+  max_dist_from_refs = 5,
+  min_dist_between = 10,
+  all_metrics_requirement = True
+)
+
+summary_table
+
+```

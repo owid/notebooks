@@ -1,0 +1,153 @@
+---
+title: "Appendix 1.E: Preparing region classifications"
+format: html
+warning: false
+---
+
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Packages and settings
+```{python}
+import pandas as pd
+pd.set_option('display.max_rows', None)
+```
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Load WID region classifications
+
+For regional classifications I take WID definitions, as specified on their website [here](https://wid.world/codes-dictionary/#country-code).
+
+I read in a csv prepared from the table in that webpage, which has been mapped to the Our World in Data standarized country names used throughout this project.
+
+```{python}
+
+df_regions = pd.read_csv("data/original/WID_regions_country_standardized.csv")
+
+```
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Define two region classifications
+
+I create a clean region mapping table using two regional definitions.
+
+One is the 'standard' definitions used by WID. 
+
+In an alternative set I split Western and Eastern Europe, ccombining the latter with Russia & Central Asia to make a joint Eastern Europe and Central Asia region. 
+
+```{python}
+
+df_regions = df_regions.rename(columns={
+    'Our World In Data Name': 'Entity', 
+    'region (standard)': 'standard', 
+    'region (continental)': 'continental'})
+
+
+df_regions = df_regions[['Entity', 'standard', 'continental', 'sub-region']]
+
+# Drop entities without a standard region from WID (USSR and Czechoslovakia)
+df_regions = df_regions[df_regions['standard'].notnull()]
+
+
+# Oceania excluding New Zeland and Australia
+df_regions.loc[df_regions['sub-region'] == 'Oceania (excl. Australia and New Zealand)','region'] = 'Other Oceania'
+
+
+# Western offshoots
+df_regions.loc[df_regions['Entity'].isin([
+    "United States",
+    "Canada",
+    "New Zealand",
+    "Australia"]),
+    'region'] = 'W. Offshoots'
+
+# North Ameica (excluing USA and Canada)
+df_regions.loc[(df_regions['sub-region'] == 'North America') & (df_regions['region'].isnull()), 'region'] = 'Other N. America'
+
+# South & South-East Asia
+df_regions.loc[df_regions['standard'] == 'South & South-East Asia','region'] = 'S & SE Asia'
+
+# Sub saharan Africa
+df_regions.loc[df_regions['standard'] == 'Sub-Saharan Africa','region'] = 'SS Africa'
+
+# Western Europe
+df_regions.loc[df_regions['sub-region'] == 'Western Europe','region'] = 'W. Europe'
+
+# Latin America and Carribean 
+df_regions.loc[df_regions['standard'] == 'Latin America','region'] = 'LAC'
+
+#  Add Monserrat to LAC
+df_regions.loc[df_regions['Entity'] == 'Montserrat','region'] = 'LAC'
+
+
+# Eastern Europe and Central Asia
+df_regions.loc[(df_regions['sub-region'] == 'Eastern Europe') | (df_regions['standard'] == 'Russia & Central Asia'),'region'] = 'EE & CA'
+
+# MENA
+df_regions.loc[df_regions['standard'] == 'MENA','region'] = 'MENA'
+
+# East Asia
+df_regions.loc[df_regions['standard'] == 'East Asia','region'] = 'East Asia'
+
+
+# Check no country is without a region
+df_regions['region'].isna().sum()
+
+# Select needed vars
+df_regions = df_regions[["Entity", "region"]]
+
+```
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### See the prepared data
+
+```{python}
+df_regions
+```
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Save region classification
+```{python}
+df_regions.to_csv('data/clean/region_mapping.csv')
+
+```
+
+:::
+
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Calculate regional population totals
+```{python}
+
+df_pop = pd.read_csv('data/clean/population.csv')
+
+df_pop = df_pop.merge(df_regions, on = 'Entity', how='left')
+
+df_pop.loc[df_pop['Entity'] == 'World','region'] = 'World'
+
+df_pop_regions = df_pop.groupby(['region', 'Year']).sum().reset_index()
+
+df_pop_regions = df_pop_regions.drop('world_pop_share', axis=1)
+
+
+
+```
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Save region population aggregates
+```{python}
+df_pop_regions.to_csv('data/clean/region_population.csv')
+
+```
+
+:::
+

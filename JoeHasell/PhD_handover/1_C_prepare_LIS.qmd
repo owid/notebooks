@@ -1,0 +1,366 @@
+---
+title: "Appendix 1.C: Preparing LIS inequality data"
+format: html
+warning: false
+
+---
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Packages and settings
+
+```{python}
+import pandas as pd
+import numpy as np
+pd.set_option('display.max_rows', None)
+```
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Save a local copy of the LIS data prepared by Our World in Data
+
+```{python}
+
+reload_original = False
+
+if reload_original:
+    df = pd.read_csv('https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/poverty_inequality_dataexplorer/LIS/data/lis_distribution_pc.csv')
+
+    df.to_csv('data/original/lis_deciles_pc.csv')
+
+
+    df = pd.read_csv('https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/poverty_inequality_dataexplorer/LIS/data/lis_distribution_equivalized.csv')
+
+    df.to_csv('data/original/lis_deciles_equiv.csv')
+
+
+    df = pd.read_csv('https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/poverty_inequality_dataexplorer/LIS/data/lis_keyvars_pc.csv')
+
+    df.to_csv('data/original/lis_keyvars_pc.csv')
+
+
+    df = pd.read_csv('https://raw.githubusercontent.com/owid/notebooks/main/PabloArriagada/poverty_inequality_dataexplorer/LIS/data/lis_keyvars_equivalized.csv')
+
+    df.to_csv('data/original/lis_keyvars_equiv.csv')
+
+```
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Load LIS decile data
+
+We load a local file downloaded from Our World in Data
+
+
+```{python}
+
+
+df_percentiles_eq= pd.read_csv('data/original/lis_deciles_equiv.csv')
+
+df_percentiles_pc= pd.read_csv('data/original/lis_deciles_pc.csv')
+
+
+```
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Recode year and standardize coutry names in the decile data
+Split the two-letter country code from the year
+
+```{python}
+
+def tidy_year(df):
+    
+    # The first two characters of 'dataset' are the two-letter country code
+    df['country_code'] = df['dataset'].str[0:2]
+
+    # The second two characters are the year in YY format
+    df['Year_str'] = df['dataset'].str[2:4]
+    df['Year'] = df['Year_str'].astype(int)
+
+    # Conver year to YYYY format by adding '19' or '20'
+    df['Year_prefix'] = np.where(df['Year']<=23, '20', '19')
+
+    df['Year_str'] = df['Year_prefix'] + df['Year_str']
+
+    df['Year'] = df['Year_str'].astype(int)
+
+    # Drop columns used in the construction of the Year column
+    df = df.drop(columns=['Year_str', 'Year_prefix'])
+
+    return df
+
+df_percentiles_eq = tidy_year(df_percentiles_eq)
+df_percentiles_pc = tidy_year(df_percentiles_pc)
+
+
+```
+
+
+Standardize country names
+```{python}
+# Save a list of countries to csv and manually run this through Our World in Data's country standardization tool
+
+# df_lis_countries = df_lis\
+#     .rename(columns = {'country_code': 'country'})
+    
+# df_lis_countries = df_lis_countries['country'].drop_duplicates()
+
+# df_lis_countries.to_csv('data/original/lis_countries.csv') 
+
+```
+
+
+Read in country name mapping
+```{python}
+
+# Read in country name mapping
+lis_country_mapping = pd.read_csv('data/original/lis_countries_country_standardized.csv')
+
+
+def standardize_countries(df):
+
+    # Merge mapping into data
+
+    df = pd.merge(df, lis_country_mapping, left_on='country_code', right_on='country', how = 'left')
+
+    df = df.rename(columns = {'Our World In Data Name': 'Entity'})
+
+    # Drop columns used in the construction of the Entity column
+    df = df.drop(columns=['country', 'country_code'])
+
+    return df
+
+df_percentiles_eq = standardize_countries(df_percentiles_eq)
+df_percentiles_pc = standardize_countries(df_percentiles_pc)
+
+
+```
+:::
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Merge equivalised and per capita decile data, select needed variables and bring together
+```{python}
+
+df_percentiles = pd.concat([df_percentiles_eq,df_percentiles_pc])
+
+selected_vars ={
+    'varname': [
+        'Top 10pc share – equiv_disposable',
+        'Top 10pc share – percap_disposable',
+        'Top 10pc share – equiv_market',
+        'Top 10pc share – percap_market'
+    ],
+    'eq': [
+        1,
+        0,
+        1,
+        0
+    ],
+    'variable': [
+        'dhi',
+        'dhi',
+        'mi',
+        'mi'
+    ],
+    'percentile': [
+        100,
+        100,
+        100,
+        100
+
+    ] 
+}
+
+
+df_long = pd.DataFrame()
+
+for i in range(len(selected_vars['varname'])):
+
+    varname = selected_vars['varname'][i]
+    eq = selected_vars['eq'][i]
+    variable = selected_vars['variable'][i]
+    percentile = selected_vars['percentile'][i]
+
+
+    df_var = df_percentiles[
+        (df_percentiles['eq'] == eq) &\
+        (df_percentiles['variable'] == variable) &\
+        (df_percentiles['percentile'] == percentile)
+        ].copy()
+
+    df_var['varname'] = varname 
+
+    df_var = df_var.rename(columns = {'share': 'value'})
+
+    df_var = df_var[['Entity', 'Year', 'varname', 'value']] 
+
+    df_long = pd.concat([df_long, df_var])
+
+```
+
+:::
+
+
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Load LIS key variables data
+
+We load a local file downloaded from Our World in Data
+
+
+```{python}
+
+
+df_keyvars_eq= pd.read_csv('data/original/lis_keyvars_equiv.csv')
+
+df_keyvars_pc= pd.read_csv('data/original/lis_keyvars_pc.csv')
+
+
+```
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Recode year and standardize country names in the key vars data
+Split the two-letter country code from the year
+
+```{python}
+
+df_keyvars_eq = tidy_year(df_keyvars_eq)
+df_keyvars_pc = tidy_year(df_keyvars_pc)
+
+
+```
+
+
+Standardize country names
+
+```{python}
+
+df_keyvars_eq = standardize_countries(df_keyvars_eq)
+df_keyvars_pc = standardize_countries(df_keyvars_pc)
+
+
+```
+:::
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Merge equivalised and per capita key vars data, select needed variables and bring together
+```{python}
+
+df_keyvars = pd.concat([df_keyvars_eq,df_keyvars_pc])
+
+
+#  Some columns got converted to object type along the way... converty back to numeric
+cols_to_convert = ['gini', 'Year']
+df_keyvars[cols_to_convert] = df_keyvars[cols_to_convert].apply(pd.to_numeric, errors='coerce')
+
+
+# Express gini as percent
+df_keyvars['gini'] = df_keyvars['gini']*100
+
+# Grab Gini and append to long dataframe
+
+selected_vars ={
+    'varname': [
+        'Gini – equiv_disposable',
+        'Gini – percap_disposable',
+        'Gini – equiv_market',
+        'Gini – percap_market'
+    ],
+    'eq': [
+        1,
+        0,
+        1,
+        0
+    ],
+    'variable': [
+        'dhi',
+        'dhi',
+        'mi',
+        'mi'
+    ]
+}
+
+for i in range(len(selected_vars['varname'])):
+
+    varname = selected_vars['varname'][i]
+    eq = selected_vars['eq'][i]
+    variable = selected_vars['variable'][i]
+
+
+    df_var = df_keyvars[
+        (df_keyvars['eq'] == eq) &\
+        (df_keyvars['variable'] == variable) 
+        ].copy()
+
+    df_var['varname'] = varname 
+
+    df_var = df_var.rename(columns = {'gini': 'value'})
+
+    df_var = df_var[['Entity', 'Year', 'varname', 'value']] 
+
+    df_long = pd.concat([df_long, df_var])
+
+
+
+```
+
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Pivot to wide format
+
+```{python}
+
+df_lis = df_long.pivot(index=['Entity', 'Year'], columns='varname', values='value').reset_index()
+
+```
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Convert back to numeric data
+
+Some columns got converted to object type along the way. Here we convert them back to numeric.
+```{python}
+#  
+cols_to_convert = [
+        'Top 10pc share – equiv_disposable',
+        'Top 10pc share – percap_disposable',
+        'Top 10pc share – equiv_market',
+        'Top 10pc share – percap_market',
+        'Gini – equiv_disposable',
+        'Gini – percap_disposable',
+        'Gini – equiv_market',
+        'Gini – percap_market'
+]
+
+df_lis[cols_to_convert] = df_lis[cols_to_convert].apply(pd.to_numeric, errors='coerce')
+
+```
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+### Inspect and save
+
+The resulting dataframe looks like this:
+```{python}
+df_lis.head(50)
+```
+
+
+
+```{python}
+
+df_lis.to_csv('data/clean/lis.csv', index=False)
+```
+
+:::
+
+
