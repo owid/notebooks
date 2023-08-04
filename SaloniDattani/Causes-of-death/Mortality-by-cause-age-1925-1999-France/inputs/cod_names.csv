@@ -1,0 +1,33 @@
+---
+title: ICD-9 Code Table
+source: The table is based on
+  <https://en.wikipedia.org/wiki/List_of_ICD-9_codes>
+variables:
+    id    : Identifier
+    code  : ICD-9 code range
+    long  : cause of death category (long)
+    short : cause of death category (short)
+author: Jonas Schöley <jonas.schoeley@kolabnow.com>
+date: 2015-08-19
+...
+
+id,code,long,short
+1,000*-999*,"Total causes","Total"
+2,001*-139*,"Infectious and parasitic diseases","Infections"
+3,140*-239*,"Neoplasms","Neoplasms"
+4,240*-279*,"Endocrine, nutritional and metabolic diseases, and immunity disorders","Metabolic diseases"
+5,280*-289*,"Diseases of the blood and blood-forming organs","Blood(-forming) diseases"
+6,290*-319*,"Mental disorders","Mental disorders"
+7,320*-359*,"Diseases of the nervous system","Diseases of nervous system"
+8,360*-389*,"Diseases of the sense organs","Diseases of sense organs"
+9,390*-459*,"Diseases of the circulatory system","Circulatory diseases"
+10,460*-519*,"Diseases of the respiratory system","Respiratory diseases"
+11,520*-579*,"Diseases of the digestive system","Digestive diseases"
+12,580*-629*,"Diseases of the genitourinary system","Genitourinary diseases"
+13,630*-679*,"Complications of pregnancy, childbirth, and the puerperium","Maternal/feternal complications"
+14,680*-709*,"Diseases of the skin and subcutaneous tissue","Skin/tissue diseases"
+15,710*-739*,"Diseases of the musculoskeletal system and connective tissue","Muscosceletal diseases"
+16,740*-759*,"Congenital anomalies","Congenital anomalies"
+17,760*-779*,"Certain conditions originating in the perinatal period","Perinatal conditions"
+18,780*-799*,"Symptoms, signs, and ill-defined conditions","Ill-defined"
+19,800*-999*,"Injury and poisoning","External"
