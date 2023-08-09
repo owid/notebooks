@@ -6,21 +6,18 @@ from functions import *
 #%% Load clean data
 df = pd.read_csv('data/clean/indicators_dataset.csv')
 
+
+
+
+
 #%% select series
 selection_dict = {
-    'series_short_name': ['WID gini', 'Lis Gini'],
+    'series_short_name': ['WID Gini', 'LIS Gini'],
     'source': ['wid', 'lis'],
     'indicator_name': ['Gini', 'Gini'],
     'welfare': ['Pre-tax national income', 'Disposable income'],
     'unit_resource_sharing': ['Household or tax unit, per adult', 'eq']
 }
-#%%
-closest_to_reference(
-    df = df,
-    selection_dict = selection_dict,
-    reference_year = 2011,
-    max_dist_from_ref = 2,
-    tie_break = 'below')
 
 #%%
 matches = matched_pairs_not_pip(
