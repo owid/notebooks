@@ -19,6 +19,7 @@ infant_2020['Death_rate'] = infant_2020['Death_rate'].str.replace(r' \(Unreliabl
 # Convert Death_rate to numeric
 infant_2020['Death_rate'] = pd.to_numeric(infant_2020['Death_rate'], errors='coerce')
 
+# PLOT 1: Daily mortality rates across the first year, per 1,000 births
 # Plotting
 fig, ax = plt.subplots(figsize=(15, 12))
 
@@ -45,3 +46,42 @@ ax.annotate("Source: US Centers for Disease Control and Prevention.", (0,0), (0,
 plt.tight_layout()
 plt.savefig(file_path + "daily_infant_mortality_US.png")
 plt.show()
+
+
+# Cumulative deaths calculation
+infant_2020['Cumulative_deaths'] = infant_2020['Deaths'].cumsum()
+
+# PLOT 2: Cumulative share of infants who have died by a given age
+# Plotting
+fig, ax = plt.subplots(figsize=(15, 12))
+
+# Plot the line
+ax.plot(infant_2020['Age_code'], infant_2020['Cumulative_deaths'] / infant_2020['Births'], color="#b16214", linewidth=1.5)
+
+# Setting y-axis to percent format
+def to_percent(y, position):
+    return f"{100 * y:.3f}%"
+
+from matplotlib.ticker import FuncFormatter
+formatter = FuncFormatter(to_percent)
+ax.yaxis.set_major_formatter(formatter)
+
+# Setting breaks for y and x axis
+ax.set_yticks(np.arange(0, 0.0061, 0.001))
+ax.set_xticks(np.arange(0, 361, 60))
+
+# Axis labels and title
+ax.set_xlabel("Age (days)")
+ax.set_ylabel("")
+ax.set_title("Share of infants who have died over the first year", fontweight='bold')
+ax.text(0, -0.0008, "The cumulative share of infants who have died by a given age.\nBased on US infant mortality rates between 2017-2020, using death certificates.", fontsize=10)
+ax.text(0, -0.0011, "Source: US Centers for Disease Control and Prevention.", fontsize=9)
+
+# Ensure data view limits are set
+ax.set_xlim(0, 360)
+ax.set_ylim(0, 0.006)
+
+plt.tight_layout()
+plt.savefig(file_path + "cumulative_infant_mortality_US.svg")
+plt.show()
+
