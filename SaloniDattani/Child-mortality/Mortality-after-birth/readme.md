@@ -14,4 +14,4 @@ This plot shows data for infants in the United States of America, across 2017-20
 
 Data comes from the US Centers for Disease Control and Prevention, via the CDC Wonder.
 
-The python script plots per-day mortality rates over the first 360 days of birth.
+The python script plots per-day mortality rates over the first 360 days of life. Then it plots the cumulative share of infants who have died over the first 360 days of life.
