@@ -38,7 +38,7 @@ ax.set_xticks([0, 60, 120, 180, 240, 300, 360])
 ax.set_title("Infant mortality rates decline sharply after birth", fontsize=16, fontweight='bold')
 ax.set_xlabel("Age (days)", fontsize=14)
 ax.set_ylabel("Mortality rate (per 1,000)", fontsize=14)
-subtitle = "The chances of dying are highest during the first few days of an infant's life.\nOver the following days, weeks and months, their chances of dying decrease sharply.\nOver time, the mortality rate has declined across the entire first year of an infant's life."
+subtitle = "The chances of dying are highest during the first few days of an infant's life.\nOver the following days, weeks and months, their chances of dying decrease sharply."
 fig.text(0.5, -0.08, subtitle, ha='center', fontsize=12)
 ax.annotate("Source: US Centers for Disease Control and Prevention.", (0,0), (0, -45), xycoords='axes fraction', textcoords='offset points', va='top', fontsize=10)
 
