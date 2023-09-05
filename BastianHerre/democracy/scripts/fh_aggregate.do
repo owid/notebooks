@@ -1,6 +1,6 @@
 *****  This Stata do-file aggregates some of the variables in the Freedom-of-the-World dataset
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  September 5, 2023
 
 version 14
 clear all

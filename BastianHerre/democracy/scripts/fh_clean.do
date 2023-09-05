@@ -1,6 +1,6 @@
-*****  This Stata do-file cleans the Freedom-in-the-World (2022) dataset:
+*****  This Stata do-file cleans the Freedom-in-the-World (2023) dataset:
 *****  Author: Bastian Herre
-*****  June 28, 2022
+*****  September 5, 2023
 
 
 version 14
@@ -15,11 +15,11 @@ cd "/Users/bastianherre/Dropbox/Data/"
 global project "/Users/bastianherre/Dropbox/Data/"
 
 
-** Download dataset from https://freedomhouse.org/sites/default/files/2022-03/Country_and_Territory_Ratings_and_Statuses_FIW_1973-2022%20.xlsx and move it into the folder "Freedom in the World 2022":
+** Download dataset from https://freedomhouse.org/sites/default/files/2022-03/Country_and_Territory_Ratings_and_Statuses_FIW_1973-2023 .xlsx and move it into the folder "Freedom in the World 2023":
 
 
 ** Import Freedom House territory dataset:
-import excel "Freedom in the World 2022/Country_and_Territory_Ratings_and_Statuses_FIW_1973-2022 .xlsx", sheet("Territory Ratings, Statuses")
+import excel "Freedom in the World 2023/Country_and_Territory_Ratings_and_Statuses_FIW_1973-2023 .xlsx", sheet("Territory Ratings, Statuses")
 
 ** Drop rows that are not observations:
 drop in 1/3
@@ -176,7 +176,9 @@ rename EO y2020_st
 rename EP y2021_pr
 rename EQ y2021_cl
 rename ER y2021_st
-
+rename ES y2022_pr
+rename ET y2022_cl
+rename EU y2022_st
 
 ** Generate variable indicating whether an entity is a country or not, i.e. a territory:
 generate country_fh = 0
@@ -191,7 +193,7 @@ save "democracy/datasets/cleaned/fh_territories.dta", replace
 
 
 ** Import Freedom House country dataset:
-import excel "Freedom in the World 2022/Country_and_Territory_Ratings_and_Statuses_FIW_1973-2022 .xlsx", sheet("Country Ratings, Statuses ") clear
+import excel "Freedom in the World 2023/Country_and_Territory_Ratings_and_Statuses_FIW_1973-2023 .xlsx", sheet("Country Ratings, Statuses ") clear
 
 
 ** Drop rows that are not observations:
@@ -349,10 +351,11 @@ rename EO y2020_st
 rename EP y2021_pr
 rename EQ y2021_cl
 rename ER y2021_st
-
+rename ES y2022_pr
+rename ET y2022_cl
+rename EU y2022_st
 
 ** Keep variables and observations of interest:
-keep country_name y*
 keep if country_name != ""
 
 
@@ -436,11 +439,11 @@ replace country_name = "Cape Verde" if country_name == "Cabo Verde"
 save "democracy/datasets/cleaned/fh.dta", replace
 
 
-** Download dataset from https://freedomhouse.org/sites/default/files/2022-02/Aggregate_Category_and_Subcategory_Scores_FIW_2003-2022.xlsx and move it into the folder "Freedom in the World 2022":
+** Download dataset from https://freedomhouse.org/sites/default/files/2022-02/Aggregate_Category_and_Subcategory_Scores_FIW_2003-2023.xlsx and move it into the folder "Freedom in the World 2023":
 
 
 ** Import Freedom House subcategory dataset:
-import excel "Freedom in the World 2022/Aggregate_Category_and_Subcategory_Scores_FIW_2003-2022.xlsx", sheet("FIW06-22") clear firstrow
+import excel "Freedom in the World 2023/Aggregate_Category_and_Subcategory_Scores_FIW_2003-2023.xlsx", sheet("FIW06-23") clear firstrow
 
 
 ** Recode edition year such that it becomes observation year:
@@ -476,8 +479,6 @@ order electdem_fh, after(year)
 replace country_name = "Cape Verde" if country_name == "Cabo Verde"
 replace country_name = "Israeli-Occupied Territories" if country_name == "Israeli Occupied Territories"
 replace country_name = "Palestinian Authority-Administered Territories" if country_name == "Palestinian Authority Administered Territories"
-replace country_name = "North Macedonia" if country_name == "Macedonia"
-replace country_name = "Eswatini" if country_name == "Swaziland"
 
 
 ** Merge with long-term dataset:
@@ -506,7 +507,8 @@ replace country_name = "West Germany" if country_name == "Germany, W. "
 replace country_name = "Yemen Arab Republic" if country_name == "Yemen, N."
 replace country_name = "Micronesia (country)" if country_name == "Micronesia"
 replace country_name = "Gambia" if country_name == "The Gambia"
-replace country_name = "Timor" if country_name == "Timor-Leste"
+replace country_name = "Palestine" if country_name == "West Bank and Gaza Strip"
+replace country_name = "East Timor" if country_name == "Timor-Leste"
 
 sort country_name year
 
@@ -514,9 +516,6 @@ sort country_name year
 
 
 ** Format country names and eliminate duplicate observations:
-*** This could be considered imputation, and should perhaps be left for imputation do-file.
-
-
 drop if country_name == "Yemen" & regime_fh == .
 drop if country_name == "Germany" & regime_fh == .
 drop if country_name == "Vietnam" & regime_fh == .
