@@ -72,9 +72,6 @@ merge 1:1 country_name year using "Our World in Data/owid_population_cleaned.dta
 tab country_name if _merge == 1 // Unmerged observations are historical countries (Sicily, East Germany) or current countries without population data (Kosovo, Palestine/Gaza, Palestine/West Bank, Somaliland).
 drop _merge
 
-* Remove population data for year when regime data is not yet available:
-drop if year == 2022
-
 * Recode regime classification such that it includes a category for when population data is available, but regime data is missing:
 replace regime_lied = 9 if regime_lied == . & population_owid != .
 label values regime_lied regime_lied
@@ -215,9 +212,6 @@ use "democracy/datasets/refined/lexical_refined.dta", clear
 merge 1:1 country_name year using "Our World in Data/owid_population_cleaned.dta"
 tab country_name if _merge == 1 & year >= 1800 // Unmerged observations are historical countries (Sicily, East Germany) or current countries without population data (Kosovo, Palestine/Gaza, Palestine/West Bank, Somaliland).
 drop _merge
-
-* Remove population data for year when regime data is not yet available:
-drop if year == 2022
 
 * Add regional identifiers:
 merge m:1 country_name using "Our World in Data/countries_regions_pairs.dta"
