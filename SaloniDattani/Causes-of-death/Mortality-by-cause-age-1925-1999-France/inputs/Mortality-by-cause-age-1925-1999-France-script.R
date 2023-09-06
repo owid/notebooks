@@ -199,7 +199,7 @@ plot_mortality_rates <-
 
 scale_fill_manual(values = getPalette(colourCount),
                   guide = guide_legend(reverse = TRUE),
-                  na.value = "#fff7fb",
+                  na.value = "#FFFFFF",
                   labels = c("1-2",
                              "2-5",
                              "5-10",
