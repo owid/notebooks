@@ -158,7 +158,7 @@ selection_dict = {
 pip_selection_dict = {
     'series_short_name': ['PIP gini', 'PIP palma'],
     'source': ['pip', 'pip'],
-    'indicator_name': ['Gini', 'Palma ratio'],
+    'indicator_name': ['Gini', 'Palma rat       io'],
     'unit_resource_sharing': ['Household, per capita', 'Household, per capita']
 }
 
