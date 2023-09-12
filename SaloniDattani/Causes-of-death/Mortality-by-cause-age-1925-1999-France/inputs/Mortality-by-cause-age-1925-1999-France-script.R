@@ -16,16 +16,7 @@
 
 # This script loads the French cause of death data set which contains death
 # counts by period, age, sex and cause of death. Within each period-age-sex
-# combination the cause of death proportions are calculated.
-#
-# Subsequently three data sets are derived, namely proportions among
-# 2, 4, and 9 select causes of death (and all "other" causes of death).
-#
-# These data constitute the basis for the compositional Lexis surface plots
-# in the paper.
-#
-# Additionaly the overall mortality rates for each period, age, sex are
-# prepared.
+# combination the cause of death proportions and mortality rates are calculated.
 
 # Init --------------------------------------------------------------------
 
@@ -34,19 +25,18 @@ library(scales)
 
 # INED COD ----------------------------------------------------------------
 
-path <- "./demographic-research.36-21/data/"
+path <- "" # fill this in with the path to the folder containing the data files called cod_names.csv and ined-cod-fra-1925-1999-rates.csv
 
-
-# icd-9 codes and labels
+# import icd-9 codes and labels
 cbook_cod <- read_csv(paste0(path, "cod_names.csv"), skip = 13)
 
-# age levels in correct order
+# select age levels in correct order
 lev_age <- c("<1","1-4","5-9","10-14","15-19","20-24","25-29",
              "30-34","35-39","40-44","45-49","50-54","55-59",
              "60-64","65-69","70-74","75-79","80-84","85-89",
              "90-94","95-99","100+")
 
-# read data on deaths by year, sex, age & cause of death
+# import data on deaths by year, sex, age & cause of death
 read_csv(paste0(path, "ined-cod-fra-1925-1999-rates.csv"), skip  = 19) %>%
   filter(age != "total") %>%
   # apply factors
@@ -161,6 +151,7 @@ cod10$cod[cod10$cod == "Total"] <- "All causes"
 cod10$cod[cod10$cod == "Neoplasms"] <- "Cancers"
 cod10$cod[cod10$cod == "External"] <- "External causes"
 
+# Reorder cause categories for the plot
 cod10 <- cod10 %>%
             mutate(cod = factor(cod)) %>%
             mutate(cod = fct_relevel(cod,
@@ -171,9 +162,10 @@ cod10 <- cod10 %>%
                                        "Respiratory diseases",
                                        "Ill-defined")))
 
+# PLOT
 plot_mortality_rates <-
   ggplot() +
-  # Lexis surface heatmap
+  # Lexis surface - heatmap with custom breaks
   geom_tile(aes(x = year+0.5, y = age_start+age_width/2,
                 width = 1, height = age_width,
                 fill = cut(mx, breaks=c(1,2,5,
@@ -197,6 +189,7 @@ plot_mortality_rates <-
 #    breaks = 10^(1:10),
 #    size = 2.5, straight = TRUE, text_only = T) +
 
+# Fill in the heatmap with the colour palette and add a legend with labels
 scale_fill_manual(values = getPalette(colourCount),
                   guide = guide_legend(reverse = TRUE),
                   na.value = "#FFFFFF",
@@ -219,18 +212,18 @@ scale_fill_manual(values = getPalette(colourCount),
                      breaks = seq(1940, 2000, 20)) +
   scale_y_continuous("Age", expand = c(0, 0),
                      breaks = seq(0, 100, 20)) +
-  # Facet
+  # Facet - arrange them in three columns
   facet_wrap(~ cod, ncol = 3, as.table = TRUE) +
-  # Lexis grid
+  # Lexis grid - diagonal, horizontal and vertical lines
   geom_hline(yintercept = seq(20, 100, 20),
              alpha = 0.2, lty = "dotted") +
   geom_vline(xintercept = seq(1940, 1980, 20),
              alpha = 0.2, lty = "dotted") +
   geom_abline(intercept = seq(-100, 100, 20)-1940,
               alpha = 0.2, lty = "dotted") +
-
+  # Select yaxis limits
   coord_equal(ylim=c(0,100)) +
-  # theme
+  # Theme minimal and select font sizes
   theme_minimal() +
   theme(
     axis.text   = element_text(colour = "black"),
@@ -240,12 +233,14 @@ scale_fill_manual(values = getPalette(colourCount),
     panel.margin = unit(0.3, "cm"),
     plot.title = element_text(size = 20)
   ) +
+# Add titles
   labs(title = "Causes of death have changed over time and vary by age",
        subtitle = "Shown are the annual number of deaths per 100,000 people in each age group in France.",
-       caption = "Adapted from Jonas Schoëley and Frans Willekens (2017)",
+       caption = "Source: Institut National d'Études Démographiques.\nAdapted from Jonas Schoëley and Frans Willekens (2017)",
        fill = "Mortality rate",
        x="",
        y="Age")
 
+# Save to svg format
 ggsave(paste0(path,"mortality_bycause.svg"), plot_mortality_rates,
        width = 13, height = 8)
