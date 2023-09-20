@@ -64,6 +64,7 @@ g.map_dataframe(sns.lineplot, x='Age', y='Rate', hue='Year', palette=color_dict,
 g.map_dataframe(sns.scatterplot, data=age_zero_data, x='Age', y='Rate', hue='Year', palette=color_dict, edgecolor='black', legend=False)
 g.set(yscale="log", base=2)
 g.set(yticks=[0.0001, 0.001, 0.01, 0.1, 1], yticklabels=['0.01%', '0.1%', '1%', '10%', '100%'])
+g.legend(title='Birth cohort')
 
 plt.show()
 
