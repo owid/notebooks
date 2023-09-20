@@ -18,7 +18,7 @@ mortality <- list()
 for (country in countries) {
   
   # Import and rename cols
-  mortality[[country]] <- read_table(paste0(data_folder, "cMx_1x1_", country, ".txt"), skip=2)
+  mortality[[country]] <- read_table(paste0(data_folder, "cMx_1x10_", country, ".txt"), skip=2)
   colnames(mortality[[country]]) <- c("Year", "Age", "Female", "Male", "Total")
   
   mortality[[country]] <- mortality[[country]] %>%
