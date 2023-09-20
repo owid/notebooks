@@ -2,4 +2,4 @@ This contains a script to generate a plot to show how mortality rates vary with 
 
 It uses period data from 2017–2020, from the US CDC Wonder database.
 
-The data can be downloaded from the CDC Wonder database. The scripts to generate the plot have been saved in both R or python format.
+The data can be downloaded from the CDC Wonder database. Scripts to generate the plot are available in either R or python format - you can choose whichever is easier for you.
