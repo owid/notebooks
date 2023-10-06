@@ -59,7 +59,7 @@ def match_ref_years(
         ].reset_index(drop=True)
 
         assert not df_year.empty, log.error(
-            f"No data found for reference year {y}. Please check `maximum_distance`."
+            f"No data found for reference year {y}. Please check `maximum_distance` ({reference_years[y]['maximum_distance']})."
         )
 
         df_year["distance"] = abs(df_year["year"] - y)
