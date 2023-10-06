@@ -27,7 +27,7 @@ series = ["gini_wid_pretaxNational_perAdult", "gini_lis_market_perCapita"]
 # - tie_break_strategy: the strategy to use to break ties when there are multiple series that match the reference year. The options are "lower" (select the series with the lowest distance to the reference year) or "higher" (select the series with the highest distance to the reference year)
 # - min_interval: the minimum distance between reference years. The value of min_interval for the last reference year is ignored.
 reference_years = {
-    1980: {"maximum_distance": 0, "tie_break_strategy": "lower", "min_interval": 10},
+    1980: {"maximum_distance": 2, "tie_break_strategy": "lower", "min_interval": 10},
     1990: {"maximum_distance": 3, "tie_break_strategy": "higher", "min_interval": 7},
     2000: {"maximum_distance": 0, "tie_break_strategy": "higher", "min_interval": 8},
     2010: {"maximum_distance": 3, "tie_break_strategy": "lower", "min_interval": 5},
