@@ -46,6 +46,7 @@ mortality_g_total <- mortality_g_total %>%
                       filter(Year %in% paste0(decades, "-", decades + 9))
 
 # Get number of time periods shown for colour scale
+n_colours <- length(decades)
 colors <- rev(turbo(n_colours))
 
 # Plot
