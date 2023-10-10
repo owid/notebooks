@@ -3,20 +3,28 @@ library(tidyverse)
 
 data_folder <- ""
 
-# Data can be downloaded from: https://ourworldindata.org/grapher/female-and-male-life-expectancy-at-birth-in-years
-le <- read_csv(paste0(data_folder, "female-and-male-life-expectancy-at-birth-in-years.csv"))
+# Data comes from the Human Mortality Database (pre-1950) and the UN World Population Projections (1950 onwards)
+le_hmd <- read_csv(paste0(data_folder, "life-expectancy-males-vs-females.csv"))
+le_unwpp <- read_csv(paste0(data_folder, "female-and-male-life-expectancy-at-birth-in-years.csv"))
 
 # List of countries in the Human Mortality Database with high quality data on mortality
 hmd_countries <- c("Australia", "Austria", "Belarus", "Belgium", "Canada", "Chile", "Croatia", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hong Kong", "Hungary", "Iceland", "Ireland", "Israel", "Italy", "Japan", "Latvia", "Lithuania", "Luxembourg", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal", "South Korea", "Russia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Taiwan", "United Kingdom", "United States", "Ukraine")
 
 # Rename cols
-colnames(le) <- c("Entity", "Code", "Year", "LE_Male", "LE_Female")
+colnames(le_hmd) <- c("Entity", "Code", "Year", "LE_Female", "LE_Male")
+colnames(le_unwpp) <- c("Entity", "Code", "Year", "LE_Male", "LE_Female")
+
+# Since recent years are missing from the HMD database, use this only for estimates pre 1950
+le_hmd <- le_hmd %>% filter(Year < 1950)
+le_unwpp <- le_unwpp %>% filter(Year >= 1950)
+
+le_joined <- bind_rows(le_hmd, le_unwpp)
 
 # Create dataframe of country with highest life expectancy among females each year:
 # Select only females
-# Select only countries in the Human Mortality Database
-# For each year, select the row (country) with the highest life expectancy
-le_record <- le %>%
+# Select only countries in the Human Mortality Database, which have high quality mortality data
+# For each year, select the row (country) with the highest life expectancy in females
+le_record <- le_joined %>%
               dplyr::select(-LE_Male) %>%
               filter(Entity %in% hmd_countries) %>%
               group_by(Year) %>%
@@ -28,11 +36,15 @@ write_csv(le_record, paste0(data_folder, "life-expectancy-record.csv"))
 
 # Set country colours
 country.colors <- c("Hong Kong" = "#00894b", 
-                  "Iceland" = "#ec7333", 
-                  "Japan" ="#be2856",
-                  "Netherlands" = "#ffca30",
-                  "Norway" = "#e43638",
-                  "Sweden" = "#00a5cc")
+                    "Iceland" = "#ec7333", 
+                    "Japan" ="#be2856",
+                    "Netherlands" = "#ffca30",
+                    "Norway" = "#e43638",
+                    "Sweden" = "#00a5cc",
+                    "Denmark" = "#ffe086",
+                    "Switzerland" = "#c15065",
+                    "Belarus" = "#58ac8c",
+                    "Australia" = "#578145")
 
 # Create dataframe with predictions of the limit of life expectancy
 predictions <- data.frame(Prediction_maker = c("UN", 
@@ -113,11 +125,10 @@ ggplot() +
 
 ggsave(paste0(data_folder, "record_female_life_expectancy_since_1950.svg"))
 
-# Additional: When was LE_x exceeded?
+# Additional: When was a given female life expectancy record exceeded?
 le_record %>% 
   filter(LE_Female >= 88) %>%  #replace with life expectancy of interest
   arrange(Year) %>% 
   head(n=1)
-
 
 
