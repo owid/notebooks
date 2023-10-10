@@ -1,0 +1,103 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Read data
+data_folder = ""
+le = pd.read_csv(data_folder + "female-and-male-life-expectancy-at-birth-in-years.csv")
+
+hmd_countries = ["Australia", "Austria", "Belarus", "Belgium", "Canada", "Chile", "Croatia", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hong Kong", "Hungary", "Iceland", "Ireland", "Israel", "Italy", "Japan", "Latvia", "Lithuania", "Luxembourg", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal", "South Korea", "Russia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Taiwan", "United Kingdom", "United States", "Ukraine"]
+
+# Rename columns
+le.columns = ["Entity", "Code", "Year", "LE_Male", "LE_Female"]
+
+# Filter and process data
+le_record = (le.drop(columns=["LE_Male"])
+              .loc[le["Entity"].isin(hmd_countries) & (le["Year"] > 1840)]
+              .sort_values(by=["Year", "LE_Female"])
+              .groupby("Year").tail(1))
+
+le_record.to_csv(data_folder + "life-expectancy-record.csv", index=False)
+
+# Set country colors
+country_colors = {
+    "Hong Kong": "#00894b",
+    "Iceland": "#ec7333",
+    "Japan": "#be2856",
+    "Netherlands": "#ffca30",
+    "Norway": "#e43638",
+    "Sweden": "#00a5cc"
+}
+
+predictions = pd.DataFrame({
+    "Prediction_maker": ["UN", 
+                                               "Frejka",
+                                                  "Bourgeois-Pichat",
+                                                  "Siegel",
+                                                  "UN",
+                                                  "Bourgeois-Pichat",
+                                                  "World Bank", 
+                                                  "UN",
+                                                  "Coale & Guo",
+                                                  "Coale",
+                                                  "UN",
+                                                  "Olshansky et al.",
+                                                  "World Bank",
+                                                  "UN"],
+    "Prediction_limit": [77.5,
+                                                  77.5,
+                                                  78.2,
+                                                  79.4,
+                                                  80,
+                                                  80.3,
+                                                  82.5,
+                                                  82.5,
+                                                  84.9,
+                                                  84.2,
+                                                  87.5,
+                                                  88,
+                                                  90,
+                                                  92.5],
+    "Prediction_year_made": [1973,
+                                                     1981,
+                                                     1952,
+                                                     1980,
+                                                     1979,
+                                                     1978,
+                                                     1984,
+                                                     1985,
+                                                     1955,
+                                                     1955,
+                                                     1989,
+                                                     2001,
+                                                     1989,
+                                                     1998]
+})
+
+# Add new columns
+predictions["Year_Broken"] = predictions["Prediction_limit"].apply(
+    lambda limit: le_record["Year"][le_record["LE_Female"] > limit].iloc[0] if len(le_record["LE_Female"][le_record["LE_Female"] > limit]) > 0 else None)
+
+predictions["LE_Record_YearMade"] = predictions["Prediction_year_made"].apply(
+    lambda year_made: le_record["LE_Female"][le_record["Year"] == year_made].iloc[0] if len(le_record["LE_Female"][le_record["Year"] == year_made]) > 0 else None)
+
+# Plot
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Plot records
+ax.scatter(le_record["Year"], le_record["LE_Female"], c=le_record["Entity"].map(country_colors), edgecolors="black", linewidths=0.3)
+# Plot predictions
+ax.scatter(predictions["Prediction_year_made"], predictions["Prediction_limit"], marker="x", color="black")
+
+ax.set_xlim([1950, 2025])
+ax.set_ylim([70, 95])
+ax.set_title("Record female life expectancy")
+ax.set_ylabel("Life expectancy")
+
+plt.legend(handles=[plt.Line2D([0], [0], marker='o', color='w', label=key, markersize=10, markerfacecolor=value) for key, value in country_colors.items()])
+
+plt.savefig(data_folder + "record_female_life_expectancy_since_1950-v1.svg")
+plt.show()
+
+# When was LE_x exceeded?
+le_x = 88
+print(le_record[le_record["LE_Female"] >= le_x].sort_values(by="Year").head(1))
