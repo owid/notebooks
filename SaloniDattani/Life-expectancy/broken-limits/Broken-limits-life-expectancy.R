@@ -12,15 +12,18 @@ hmd_countries <- c("Australia", "Austria", "Belarus", "Belgium", "Canada", "Chil
 # Rename cols
 colnames(le) <- c("Entity", "Code", "Year", "LE_Male", "LE_Female")
 
-# Create dataframe of country with highest life expectancy among females each year
+# Create dataframe of country with highest life expectancy among females each year:
+# Select only females
+# Select only countries in the Human Mortality Database
+# For each year, select the row (country) with the highest life expectancy
 le_record <- le %>%
               dplyr::select(-LE_Male) %>%
               filter(Entity %in% hmd_countries) %>%
-              filter(Year > 1840) %>%
               group_by(Year) %>%
               dplyr::arrange(Year, LE_Female) %>%
               top_n(1)
 
+# Save this csv:
 write_csv(le_record, paste0(data_folder, "life-expectancy-record.csv"))
 
 # Set country colours
