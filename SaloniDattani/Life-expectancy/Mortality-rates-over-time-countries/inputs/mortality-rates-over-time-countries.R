@@ -40,7 +40,7 @@ mortality_g <- gather(mortality, "Demographic", "Rate", 3:5)
 mortality_g_total <- filter(mortality_g, Demographic == "Total")
 
 # Select decades to show
-decades <- seq(1800, 2000, by=20)
+decades <- seq(1800, 2000, by=10)
 
 mortality_g_total <- mortality_g_total %>%
                       filter(Year %in% paste0(decades, "-", decades + 9))
