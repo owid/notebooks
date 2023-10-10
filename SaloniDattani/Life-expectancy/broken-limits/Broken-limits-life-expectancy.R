@@ -3,12 +3,16 @@ library(tidyverse)
 
 data_folder <- ""
 
+# Data can be downloaded from: https://ourworldindata.org/grapher/female-and-male-life-expectancy-at-birth-in-years
 le <- read_csv(paste0(data_folder, "female-and-male-life-expectancy-at-birth-in-years.csv"))
 
+# List of countries in the Human Mortality Database with high quality data on mortality
 hmd_countries <- c("Australia", "Austria", "Belarus", "Belgium", "Canada", "Chile", "Croatia", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hong Kong", "Hungary", "Iceland", "Ireland", "Israel", "Italy", "Japan", "Latvia", "Lithuania", "Luxembourg", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal", "South Korea", "Russia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Taiwan", "United Kingdom", "United States", "Ukraine")
 
+# Rename cols
 colnames(le) <- c("Entity", "Code", "Year", "LE_Male", "LE_Female")
 
+# Create dataframe of country with highest life expectancy among females each year
 le_record <- le %>%
               dplyr::select(-LE_Male) %>%
               filter(Entity %in% hmd_countries) %>%
@@ -27,6 +31,7 @@ country.colors <- c("Hong Kong" = "#00894b",
                   "Norway" = "#e43638",
                   "Sweden" = "#00a5cc")
 
+# Create dataframe with predictions of the limit of life expectancy
 predictions <- data.frame(Prediction_maker = c("UN", 
                                                "Frejka",
                                                   "Bourgeois-Pichat",
@@ -91,7 +96,6 @@ predictions$LE_Record_YearMade <- sapply(predictions$Prediction_year_made, funct
 })
 
 
-
 # Plot
 ggplot() +
   # Plot records
@@ -106,7 +110,7 @@ ggplot() +
 
 ggsave(paste0(data_folder, "record_female_life_expectancy_since_1950.svg"))
 
-# When was LE_x exceeded?
+# Additional: When was LE_x exceeded?
 le_record %>% 
   filter(LE_Female >= 88) %>%  #replace with life expectancy of interest
   arrange(Year) %>% 
