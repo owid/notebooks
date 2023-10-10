@@ -3,15 +3,24 @@ import matplotlib.pyplot as plt
 
 # Read data
 data_folder = ""
-le = pd.read_csv(data_folder + "female-and-male-life-expectancy-at-birth-in-years.csv")
+# Data comes from the Human Mortality Database (pre-1950) and the UN World Population Projections (1950 onwards)
+le_hmd = pd.read_csv(data_folder + "life-expectancy-males-vs-females.csv")
+le_unwpp = pd.read_csv(data_folder + "female-and-male-life-expectancy-at-birth-in-years.csv")
 
 hmd_countries = ["Australia", "Austria", "Belarus", "Belgium", "Canada", "Chile", "Croatia", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hong Kong", "Hungary", "Iceland", "Ireland", "Israel", "Italy", "Japan", "Latvia", "Lithuania", "Luxembourg", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal", "South Korea", "Russia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Taiwan", "United Kingdom", "United States", "Ukraine"]
 
-# Rename columns
-le.columns = ["Entity", "Code", "Year", "LE_Male", "LE_Female"]
+# Rename cols
+le_hmd.columns = ["Entity", "Code", "Year", "LE_Female", "LE_Male"]
+le_unwpp.columns = ["Entity", "Code", "Year", "LE_Male", "LE_Female"]
+
+# Since recent years are missing from the HMD database, use this only for estimates pre 1950
+le_hmd = le_hmd[le_hmd["Year"] < 1950]
+le_unwpp = le_unwpp[le_unwpp["Year"] >= 1950]
+
+le_joined = pd.concat([le_hmd, le_unwpp])
 
 # Filter and process data
-le_record = (le.drop(columns=["LE_Male"])
+le_record = (le_joined.drop(columns=["LE_Male"])
               .loc[le["Entity"].isin(hmd_countries) & (le["Year"] > 1840)]
               .sort_values(by=["Year", "LE_Female"])
               .groupby("Year").tail(1))
@@ -25,7 +34,11 @@ country_colors = {
     "Japan": "#be2856",
     "Netherlands": "#ffca30",
     "Norway": "#e43638",
-    "Sweden": "#00a5cc"
+    "Sweden": "#00a5cc",
+    "Denmark": "#ffe086",
+    "Switzerland": "#c15065",
+    "Belarus": "#58ac8c",
+    "Australia": "#578145"
 }
 
 predictions = pd.DataFrame({
@@ -95,7 +108,7 @@ ax.set_ylabel("Life expectancy")
 
 plt.legend(handles=[plt.Line2D([0], [0], marker='o', color='w', label=key, markersize=10, markerfacecolor=value) for key, value in country_colors.items()])
 
-plt.savefig(data_folder + "record_female_life_expectancy_since_1950-v1.svg")
+plt.savefig(data_folder + "record_female_life_expectancy-v1.svg")
 plt.show()
 
 # When was LE_x exceeded?
