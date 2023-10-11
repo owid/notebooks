@@ -26,7 +26,7 @@ le_joined = pd.concat([le_hmd, le_unwpp])
 # Only include female life expectancy
 # Only include HMD countries
 # Only include data from after 1840
-# Sort by Year, Life expectancy females, and retain only the country with the highest life expectancy.
+# Sort by Year, Life expectancy females, and retain only the row with the highest life expectancy in each year
 le_record = (le_joined.drop(columns=["LE_Male"])
               .loc[le["Entity"].isin(hmd_countries) & (le["Year"] > 1840)]
               .sort_values(by=["Year", "LE_Female"])
