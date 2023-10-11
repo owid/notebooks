@@ -13,7 +13,10 @@ hmd_countries = ["Australia", "Austria", "Belarus", "Belgium", "Canada", "Chile"
 le_hmd.columns = ["Entity", "Code", "Year", "LE_Female", "LE_Male"]
 le_unwpp.columns = ["Entity", "Code", "Year", "LE_Male", "LE_Female"]
 
-# Since recent years are missing from the HMD database, use this only for estimates pre 1950
+# Use HMD dataset for life expectancy before 1950
+# Use UN WPP dataset for life expectancy 1950 onwards
+# Note that HMD dataset is missing some countries for very recent years because of delays - maybe because the website isnt fully updated or lifetables arent calculated yet, but we can use the UN WPP data for the same HMD countries anyway
+# Otherwise it would wrongly look like the record life expectancy is always falling in the most recent years, due to delays.
 le_hmd = le_hmd[le_hmd["Year"] < 1950]
 le_unwpp = le_unwpp[le_unwpp["Year"] >= 1950]
 
