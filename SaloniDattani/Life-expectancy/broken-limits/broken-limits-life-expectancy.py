@@ -20,27 +20,20 @@ le_unwpp = le_unwpp[le_unwpp["Year"] >= 1950]
 le_joined = pd.concat([le_hmd, le_unwpp])
 
 # Filter and process data
+# Only include female life expectancy
+# Only include HMD countries
+# Only include data from after 1840
+# Sort by Year, Life expectancy females, and retain only the country with the highest life expectancy.
 le_record = (le_joined.drop(columns=["LE_Male"])
               .loc[le["Entity"].isin(hmd_countries) & (le["Year"] > 1840)]
               .sort_values(by=["Year", "LE_Female"])
               .groupby("Year").tail(1))
 
+# Save dataset
 le_record.to_csv(data_folder + "life-expectancy-record.csv", index=False)
 
-# Set country colors
-country_colors = {
-    "Hong Kong": "#00894b",
-    "Iceland": "#ec7333",
-    "Japan": "#be2856",
-    "Netherlands": "#ffca30",
-    "Norway": "#e43638",
-    "Sweden": "#00a5cc",
-    "Denmark": "#ffe086",
-    "Switzerland": "#c15065",
-    "Belarus": "#58ac8c",
-    "Australia": "#578145"
-}
-
+### Horizontal lines
+# Create dataframe of predictions of life expectancy: it contains the source of the prediction, their predicted limit of life expectancy, the year the prediction was made
 predictions = pd.DataFrame({
     "Prediction_maker": ["UN", 
                                                "Frejka",
@@ -86,12 +79,28 @@ predictions = pd.DataFrame({
                                                      1998]
 })
 
-# Add new columns
+# Add new columns 
+# - year when prediction was broken
 predictions["Year_Broken"] = predictions["Prediction_limit"].apply(
     lambda limit: le_record["Year"][le_record["LE_Female"] > limit].iloc[0] if len(le_record["LE_Female"][le_record["LE_Female"] > limit]) > 0 else None)
 
+# - the current life expectancy record when the prediction was made
 predictions["LE_Record_YearMade"] = predictions["Prediction_year_made"].apply(
     lambda year_made: le_record["LE_Female"][le_record["Year"] == year_made].iloc[0] if len(le_record["LE_Female"][le_record["Year"] == year_made]) > 0 else None)
+
+# Set country colors
+country_colors = {
+    "Hong Kong": "#00894b",
+    "Iceland": "#ec7333",
+    "Japan": "#be2856",
+    "Netherlands": "#ffca30",
+    "Norway": "#e43638",
+    "Sweden": "#00a5cc",
+    "Denmark": "#ffe086",
+    "Switzerland": "#c15065",
+    "Belarus": "#58ac8c",
+    "Australia": "#578145"
+}
 
 # Plot
 fig, ax = plt.subplots(figsize=(10, 6))
