@@ -24,7 +24,7 @@ le_unwpp = le_unwpp[le_unwpp["Year"] >= 1950]
 le_unwpp = le_unwpp[["Entity", "Code", "Year", "LE_Female", "LE_Male"]]
 
 # 2. Concatenate the datasets by rows
-result = pd.concat([le_hmd, le_unwpp], ignore_index=True)
+le_joined = pd.concat([le_hmd, le_unwpp], ignore_index=True)
 
 # Filter and process data
 # Only include female life expectancy
