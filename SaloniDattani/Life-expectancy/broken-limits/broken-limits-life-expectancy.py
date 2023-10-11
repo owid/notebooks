@@ -95,25 +95,12 @@ predictions["Year_Broken"] = predictions["Prediction_limit"].apply(
 predictions["LE_Record_YearMade"] = predictions["Prediction_year_made"].apply(
     lambda year_made: le_record["LE_Female"][le_record["Year"] == year_made].iloc[0] if len(le_record["LE_Female"][le_record["Year"] == year_made]) > 0 else None)
 
-# Set country colors
-country_colors = {
-    "Hong Kong": "#00894b",
-    "Iceland": "#ec7333",
-    "Japan": "#be2856",
-    "Netherlands": "#ffca30",
-    "Norway": "#e43638",
-    "Sweden": "#00a5cc",
-    "Denmark": "#ffe086",
-    "Switzerland": "#c15065",
-    "Belarus": "#58ac8c",
-    "Australia": "#578145"
-}
-
 # Plot
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Plot records
-ax.scatter(le_record["Year"], le_record["LE_Female"], c=le_record["Entity"].map(country_colors), edgecolors="black", linewidths=0.3)
+# Plot records without custom colors
+ax.scatter(le_record["Year"], le_record["LE_Female"], edgecolors="black", linewidths=0.3)
+
 # Plot predictions
 ax.scatter(predictions["Prediction_year_made"], predictions["Prediction_limit"], marker="x", color="black")
 
@@ -121,8 +108,6 @@ ax.set_xlim([1950, 2025])
 ax.set_ylim([70, 95])
 ax.set_title("Record female life expectancy")
 ax.set_ylabel("Life expectancy")
-
-plt.legend(handles=[plt.Line2D([0], [0], marker='o', color='w', label=key, markersize=10, markerfacecolor=value) for key, value in country_colors.items()])
 
 plt.savefig(data_folder + "record_female_life_expectancy-v1.svg")
 plt.show()
