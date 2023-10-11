@@ -22,7 +22,7 @@ le_unwpp <- le_unwpp %>% filter(Year >= 1950)
 le_unwpp <- le_unwpp %>% select(Entity, Code, Year, LE_Female, LE_Male)
 
 # Concatenate the datasets by rows
-result <- bind_rows(le_hmd, le_unwpp)
+le_joined <- bind_rows(le_hmd, le_unwpp)
 
 # Create dataframe of country with highest life expectancy among females each year:
 # Select only females
