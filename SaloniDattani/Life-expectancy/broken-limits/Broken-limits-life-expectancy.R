@@ -39,17 +39,6 @@ le_record <- le_joined %>%
 # Save this csv:
 write_csv(le_record, paste0(data_folder, "life-expectancy-record.csv"))
 
-# Set country colours
-country.colors <- c("Hong Kong" = "#00894b", 
-                    "Iceland" = "#ec7333", 
-                    "Japan" ="#be2856",
-                    "Netherlands" = "#ffca30",
-                    "Norway" = "#e43638",
-                    "Sweden" = "#00a5cc",
-                    "Denmark" = "#ffe086",
-                    "Switzerland" = "#c15065",
-                    "Belarus" = "#58ac8c",
-                    "Australia" = "#578145")
 
 # Create dataframe with predictions of the limit of life expectancy
 predictions <- data.frame(Prediction_maker = c("UN", 
@@ -122,9 +111,8 @@ ggplot() +
   geom_point(data=le_record, aes(x=Year, y=LE_Female, fill=Entity),
              shape=21, color="black", stroke=0.3) +
   # Plot prediction limit and year when prediction was made
-  geom_point(data=predictions, aes(x=Prediction_year_made,y=Prediction_limit), shape=3, color="black", stroke=1) +
+ # geom_point(data=predictions, aes(x=Prediction_year_made,y=Prediction_limit), shape=3, color="black", stroke=1) +
   theme_classic() +
-  scale_fill_manual(values=country.colors) +
   scale_y_continuous(breaks=seq(40,95,by=5)) +
   scale_x_continuous(breaks=seq(1840,2020,by=20)) +
   coord_cartesian(xlim=c(1840,2025),ylim=c(40,95)) +
