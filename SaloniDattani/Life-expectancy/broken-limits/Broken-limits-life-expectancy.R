@@ -30,6 +30,7 @@ result <- bind_rows(le_hmd, le_unwpp)
 # For each year, select the row (country) with the highest life expectancy in females
 le_record <- le_joined %>%
               dplyr::select(-LE_Male) %>%
+              filter(Year >= 1840) %>%
               filter(Entity %in% hmd_countries) %>%
               group_by(Year) %>%
               dplyr::arrange(Year, LE_Female) %>%
@@ -124,7 +125,9 @@ ggplot() +
   geom_point(data=predictions, aes(x=Prediction_year_made,y=Prediction_limit), shape=3, color="black", stroke=1) +
   theme_classic() +
   scale_fill_manual(values=country.colors) +
-  coord_cartesian(xlim=c(1950,2025),ylim=c(70,95)) +
+  scale_y_continuous(breaks=seq(40,95,by=5)) +
+  scale_x_continuous(breaks=seq(1840,2020,by=20)) +
+  coord_cartesian(xlim=c(1840,2025),ylim=c(40,95)) +
   labs(title = "Record female life expectancy", y="Life expectancy", fill="Country")
 
 ggsave(paste0(data_folder, "record_female_life_expectancy_since_1950.svg"))
