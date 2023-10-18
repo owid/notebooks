@@ -13,7 +13,7 @@ log = get_logger()
 PARENT_DIR = Path(__file__).parent.absolute()
 
 df = pd.read_feather(f"{PARENT_DIR}/tb.feather")
-df_percentiles = pd.read_feather(f"{PARENT_DIR}/tb_percentiles.feather")
+# df_percentiles = pd.read_feather(f"{PARENT_DIR}/tb_percentiles.feather")
 
 ##############################################
 # FUNCTION SETTINGS
