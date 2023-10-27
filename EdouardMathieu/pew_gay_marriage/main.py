@@ -65,6 +65,7 @@ def explode_country_years(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
+    # Load population data from catalog
     pop = (
         catalog.find(dataset="key_indicators", table="population")
         .iloc[0]
@@ -72,9 +73,14 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
         .reset_index()
         .drop(columns="world_pop_share")
     )
+
+    # Get world population data
     world_pop = pop[pop.country == "World"]
+
+    # Merge population data with input DataFrame
     df = df.merge(pop, on=["country", "year"], validate="1:1")
 
+    # Group by year and calculate metrics
     df = (
         df.groupby("year", as_index=False)
         .agg({"country": "count", "population": "sum"})
@@ -82,6 +88,7 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
         .assign(entity="World")[["entity", "year", "number_of_countries", "population"]]
     )
 
+    # Merge with world population data and calculate population without rights
     df = df.merge(
         world_pop,
         left_on=["entity", "year"],
