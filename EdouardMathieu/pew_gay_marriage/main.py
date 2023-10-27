@@ -1,8 +1,6 @@
 import datetime
-import requests
 
 import pandas as pd
-from bs4 import BeautifulSoup
 
 from owid import catalog
 
@@ -11,39 +9,21 @@ MAPPING = "country_mapping.csv"
 
 
 def scrape_data(url: str) -> pd.DataFrame:
-    soup = BeautifulSoup(requests.get(url).text, "html.parser")
-    country_list = soup.select("[data-title='Alphabetical list of countries']")[
-        0
-    ].find_all("li")
-    return pd.DataFrame({"country": [c.text for c in country_list]})
-
-
-def clean_data(df: pd.DataFrame) -> pd.DataFrame:
-    df["year"] = df.country.str.extract("\((\d{4})\)").astype(int)
-    df["country"] = df.country.str.replace(" \(\d{4}\)", "", regex=True)
+    df = pd.read_html(url)[0]
+    df = df[["Country", "Year"]].rename(columns={"Country": "country", "Year": "year"})
     return df
-
-
-def add_manual_points(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Sometimes the source is not perfectly up to date yet. In this case, we add the latest data
-    points manually here.
-    """
-    manual = pd.DataFrame(
-        {"country": ["Chile", "Slovenia", "Switzerland"], "year": [2022, 2022, 2022]}
-    )
-
-    common = set(manual.country).intersection(set(df.country))
-    if len(common) > 0:
-        raise Exception(
-            f"The following countries are included both by the source and added manually: {common}"
-        )
-
-    return pd.concat([df, manual]).drop_duplicates()
 
 
 def rename_countries(df: pd.DataFrame) -> pd.DataFrame:
     mapping = pd.read_csv(MAPPING)
+
+    # Check that we have a 1:1 mapping
+    missing = set(df.country.unique()) - set(mapping.source.unique())
+    if missing:
+        raise ValueError(
+            f"Missing countries in mapping: {missing}. Please update {MAPPING}."
+        )
+
     df = (
         df.merge(mapping, left_on="country", right_on="source", validate="1:1")
         .drop(columns=["country", "source"])
@@ -119,9 +99,7 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
 def main():
     (
         scrape_data(URL)
-        .pipe(clean_data)
         .pipe(rename_countries)
-        .pipe(add_manual_points)
         .pipe(explode_country_years)
         .pipe(calculate_metrics)
         .to_csv(
