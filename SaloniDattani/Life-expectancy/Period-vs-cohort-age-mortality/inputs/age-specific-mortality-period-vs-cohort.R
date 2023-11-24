@@ -84,7 +84,7 @@ ggplot(data=mortality_y, aes(color=Year, x=Age, y=Rate)) +
        x = "Age",
        color = "Year or birth cohort", 
        caption = "Period vs cohort age-specific death rates. Source: Source: Max Planck Institute for Demographic Research (Germany), University of California, Berkeley (USA), and French Institute for Demographic Studies (France).\n(data downloaded on 24 Sep 2023)") +
-    scale_color_manual(values = cc) +
+    scale_color_manual(values = colors) +
     scale_x_continuous(breaks = seq(0, 100, by=10)) +
     scale_y_continuous(labels = scales::percent, trans='log2', breaks = c(0.0001, 0.001, 0.01, 0.1, 1)) 
 
