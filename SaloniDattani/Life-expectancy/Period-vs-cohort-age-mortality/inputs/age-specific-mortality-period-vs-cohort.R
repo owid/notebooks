@@ -59,6 +59,7 @@ mortality$Rate <- as.numeric(mortality$Rate)
 mortality$Country <- as.factor(mortality$Country)
 mortality$Sex <- as.factor(mortality$Sex)
 mortality$Type <- as.factor(mortality$Type)
+mortality$Year <- as.factor(mortality$Year)
 
 # Select years to show, retain only Total
 years <- c(1910,1918,1920,1930,1940)
@@ -66,7 +67,6 @@ mortality_y <- mortality %>%
                   filter(Year %in% years) %>%
                   filter(Sex == 'Total')
 
-mortality_y$Year <- as.factor(mortality_y$Year)
 
 # Get number of time periods shown for colour scale
 n_colours <- nrow(count(mortality_y, Year))
