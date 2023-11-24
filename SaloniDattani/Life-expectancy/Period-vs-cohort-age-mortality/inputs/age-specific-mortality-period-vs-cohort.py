@@ -49,13 +49,15 @@ mortality_years = mortality_df[(mortality_df['Year'].isin(years)) & (mortality_d
 n_colors = mortality_years['Year'].nunique()
 
 # Create a palette
-palette = sns.color_palette("Spectral", n_colors)
+palette = sns.color_palette("Set2", n_colors)
 
 # Plot comparison between cohort and period mortality rates
-plt.figure(figsize=(12, 6))
-
 # Plot with Seaborn and use facetting with 'Type' to separate Cohort and Period data
-sns.relplot(data=mortality_years, x='Age', y='Rate', hue='Year', col='Type', kind='line', palette=palette, facet_kws={'xlim': (0, 95)})
+g = sns.relplot(data=mortality_years, x='Age', y='Rate', hue='Year', col='Type', kind='line', palette=palette, facet_kws={'xlim': (0, 95)})
+
+# Set y-axis to log scale
+for ax in g.axes.flat:
+    ax.set_yscale('log')
 
 plt.suptitle('Annual death rate by age')
 plt.subplots_adjust(top=0.9)  # Adjust title position
