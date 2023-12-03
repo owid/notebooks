@@ -11,7 +11,7 @@ setDT(df)
 
 df[, year := as.integer(str_extract(`Release date`, "20\\d{2}"))]
 
-df[, qubits := str_extract(`Qubits (Logical)`, "^\\d+ qb")]
+df[, qubits := str_extract(`Qubits (physical)`, "^\\d+")]
 df[, qubits := as.integer(str_extract(qubits, "\\d+"))]
 
 df <- df[!is.na(year) & year < year(today()), .(qubits = max(qubits)), year]
