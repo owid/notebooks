@@ -13,7 +13,6 @@ log = get_logger()
 PARENT_DIR = Path(__file__).parent.absolute()
 
 df = pd.read_feather(f"{PARENT_DIR}/tb.feather")
-# df_percentiles = pd.read_feather(f"{PARENT_DIR}/tb_percentiles.feather")
 
 df_regions = pd.read_csv(f"{PARENT_DIR}/region_mapping.csv")
 df_regions = df_regions.rename(columns={'Entity': 'country'})
