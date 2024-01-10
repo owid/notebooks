@@ -46,9 +46,10 @@ series = [
 # - tie_break_strategy: the strategy to use to break ties when there are multiple series that match the reference year. The options are "lower" (select the series with the lowest distance to the reference year) or "higher" (select the series with the highest distance to the reference year)
 # - min_interval: the minimum distance between reference years. The value of min_interval for the last reference year is ignored.
 reference_years = {
-    1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 7},
-    # 1993: {"maximum_distance": 3, "tie_break_strategy": "lower", "min_interval": 15},
-    2015: {"maximum_distance": 3, "tie_break_strategy": "higher", "min_interval": 0}
+    # 1993: {"maximum_distance": 3, "tie_break_strategy": "lower", "min_interval": 0},
+    # 2015: {"maximum_distance": 3, "tie_break_strategy": "higher", "min_interval": 0},    
+    1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
+    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
 }
 
 ##############################################
@@ -247,6 +248,17 @@ def match_ref_years(
 
         df_match = df_match.rename(columns={'population': f'population_{y}'})
 
+        # Calculate pop-weights and pop-weighted values
+
+        # Group by 'series_code' and calculate total population for each group
+        grouped_totals = df_match.groupby('series_code')[f'population_{y}'].sum().rename(f'population_{y}_total')
+
+        # Merge the total populations back to the original DataFrame
+        df_match = df_match.merge(grouped_totals, on='series_code', suffixes=('', '_total'))
+
+        # Calculate the weight and weighted-value for each country within its 'series_code' group for both years
+        df_match[f'weight_{y}'] = df_match[f'population_{y}'] / df_match[f'population_{y}_total']
+        df_match[f'weightedvalue_{y}'] = df_match[f'weight_{y}'] * df_match[f'value_{y}']
 
 
     df_match.to_csv(f"{PARENT_DIR}/df_match.csv", index=False)
