@@ -1,8 +1,24 @@
 library(tidyverse)
 library(gpinter)
 
-df_percentiles<- read.csv("percentiles.csv")
+# load OWID main PIP pov file, to obtain mean 
+df_main<- read.csv("poverty_inc_or_cons.csv")
 
+df_main<- df_main %>%
+  select(Entity, Year, reporting_level, welfare_type, mean)
+
+# add a country-year-reporting-level-welfare col
+df_main$distr_id <- paste(
+    df_main$Entity,
+    df_main$Year,
+    df_main$reporting_level,
+    df_main$welfare_type,
+    sep = ' - ')
+
+# print(head(df_main))
+
+# Load scraped percentile data
+df_percentiles<- read.csv("percentiles.csv")
 
 # Filter out regional aggregates – which do not have reporting_level
 df_percentiles<- df_percentiles %>%
@@ -27,9 +43,36 @@ distr_id_list<- unique(df_percentiles$distr_id)
 
 
 
+#### Test Gpinter flow on one country year
+# id<- 'Zambia - 1993 - national - consumption'
+
+# selected_perc_df<- df_percentiles %>%
+#   filter(distr_id == id)
+
+# selected_main_df<- df_main %>%
+#   filter(distr_id == id)
+
+# p<- selected_perc_df$headcount
+# q<- selected_perc_df$percentile_value
+# avg<- selected_main_df$mean
+# print(p)
+
+# gpinter_obj <- thresholds_fit(p, q, average=avg)
+
+#     p <- c(seq(0,99,1))/100
+
+#     q<- fitted_quantile(gpinter_obj, p)
+
+#     shares<- top_share(gpinter_obj, p)
+
+#     output <- data.frame(p, q, shares)
+
+# print(output)
+
+######
 
 
-
+#### Make a function to run flow over all country years
 align_distr<- function(distr, id){
 
     #choose the lower bracket thresholds, begin from 0
@@ -47,43 +90,33 @@ align_distr<- function(distr, id){
 }
 
 
-# id<- 'Zambia 1993 national consumption'
-
-# selected_df<- df_percentiles %>%
-#   filter(distr_id == id)
-
-# p<- selected_df$headcount
-# q<- selected_df$percentile_value
-
-# print(q)
-
-
-# # Original distribution
-# gpinter_obj <- thresholds_fit(p, q)
-
-# aligned_distr<- align_distr(gpinter_obj)
-
-
 
 # list to store aligned distributions
 aligned_distr_list<- list()
 
+# For each country year (+ reporting level + welfare)
 for (id in distr_id_list){
     print(paste0('Processing: ',id))
 
     result <- try({
     
-
+        #  Grab the percentiles/quantiles
         selected_df<- df_percentiles %>%
         filter(distr_id == id)
 
         p<- selected_df$headcount
         q<- selected_df$percentile_value
 
-        # Create Gpinter distribution object using the percentile values in percentiles.csv
-        gpinter_obj <- thresholds_fit(p, q)
+        #Grab the mean income
+        selected_main_df<- df_main %>%
+          filter(distr_id == id)
 
-        # Output alined percentiles
+        avg<- selected_main_df$mean
+
+        # Create Gpinter distribution object using the percentiles and avg
+        gpinter_obj <- thresholds_fit(p, q, average = avg)
+
+        # Output alined percentiles and income shares
         aligned_distr_list[[id]]<- align_distr(gpinter_obj, id)
     }, silent = TRUE)
 

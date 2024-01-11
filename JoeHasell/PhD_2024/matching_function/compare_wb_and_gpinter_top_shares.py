@@ -48,8 +48,13 @@ df_compare = pd.merge(
 # %% Calculate a comparison column
 df_compare['ratio']= df_compare['top1_share_gpinter']/df_compare['top1_share_wb']
 
-# %% Calculate a comparison column
+# %% plot the top shares against each other
+# NB they are very closely correlated
 plt.scatter(df_compare['top1_share_gpinter'], df_compare['top1_share_wb'])
+
+# %% plot the ratio against WB percentile data
+# NB There are some outliers where GPinter-alighned data is ~30% higher or lower. But it doesn't look like there's a systematic effect
+plt.scatter(df_compare['ratio'], df_compare['top1_share_wb'])
 
 # %%
 check = df_compare[df_compare['ratio']>1]
