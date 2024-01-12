@@ -1,6 +1,6 @@
 *****  This Stata do-file prepares the monadic version of the Strategic Nuclear Forces Dataset by Kyungwon Suh for analysis
 *****  Author: Bastian Herre
-*****  September 5, 2023
+*****  September 20, 2023
 
 version 14
 clear all
@@ -13,13 +13,8 @@ cd "/Users/bastianherre/Dropbox/Data/"
 global project "/Users/bastianherre/Dropbox/Data/"
 
 
-** Download V-Dem dataset from https://www.v-dem.net/vdemds.html and move it into the folder "Varieties of Democracy v12"
-** Import V-Dem dataset:
+** Import Suh monadic dataset (received via email):
 import excel "Suh 2022 strategic nuclear forces/snforce_monadic.xlsx", firstrow clear
-
-
-** Keep variables of interest:
-drop monadicCMP
 
 
 ** Rename variables of interest:
