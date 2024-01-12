@@ -19,7 +19,7 @@ df_wb = pd.merge(
     right_on="country"
 )
 
-# Drop original country column and rename new country column
+#%% # Drop original country column and rename new country column
 df_wb.drop(['country','country_code'], axis=1, inplace=True)
 
 df_wb.rename(columns={'Our World In Data Name': 'country'}, inplace=True)
@@ -28,6 +28,8 @@ df_wb.rename(columns={'Our World In Data Name': 'country'}, inplace=True)
 df_wb_top_shares = df_wb.loc[df_wb['percentile']==100].copy()
 df_wb_top_shares.rename(columns={'welfare_share': 'top1_share_wb'}, inplace=True)
 
+# Save the top 1 shares 
+df_wb_top_shares.to_csv("top1shares_from_WB_percentile_file.csv", index=False)
 
 
 # %% Read aligned gpinter data
@@ -36,6 +38,9 @@ df_gpinter = pd.read_csv("gpinter_aligned_percentiles_and_shares.csv")
 # %% Keep top 1% shares and rename cols
 df_gpinter_top_shares = df_gpinter.loc[df_gpinter['p']==0.99].copy()
 df_gpinter_top_shares.rename(columns={'shares': 'top1_share_gpinter'}, inplace=True)
+
+# Save the top 1 shares 
+df_gpinter_top_shares.to_csv("top1shares_from_Gpinter.csv", index=False)
 
 
 # %% Merge gpinter and wb top shares

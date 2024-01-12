@@ -2,42 +2,46 @@
 If the file doesn't execute correctly, try
 pip install requirements.txt
 """
-from pathlib import Path
+#%% 
 
 import pandas as pd
-from structlog import get_logger
 
-# Initialize logger.
-log = get_logger()
+#%% The main dataset prepared by Pablo
+df = pd.read_feather("tb.feather")
 
-PARENT_DIR = Path(__file__).parent.absolute()
+#%% Add in dataset with top1 shares from PIP
+df_top1pip = pd.read_csv("prepared_pip_top1shares.csv")
+df = pd.concat([df, df_top1pip], ignore_index=True)
 
-df = pd.read_feather(f"{PARENT_DIR}/tb.feather")
-
-df_regions = pd.read_csv(f"{PARENT_DIR}/region_mapping.csv")
+#%% Load region categorization and popualtion data
+df_regions = pd.read_csv("region_mapping.csv")
 df_regions = df_regions.rename(columns={'Entity': 'country'})
 
 
-df_pop = pd.read_csv(f"{PARENT_DIR}/population.csv")
+df_pop = pd.read_csv("population.csv")
 df_pop = df_pop.drop(columns='world_pop_share')
 df_pop = df_pop.rename(columns={'Entity': 'country'})
 
 
 
+#%% 
+
+
 ##############################################
-# FUNCTION SETTINGS
+#%% FUNCTION SETTINGS
 
 series_type = "series_code"  # series_name or series_code
 
 # `series` depends on series_type: if series_type is series_name, series is a list of series names, e.g. ["WID Gini", "PIP Top 1% share"]; if series_type is series_code, series is a list of series codes, e.g. ["gini_wid_pretaxNational_perAdult", "p99p100Share_pip_disposable_perCapita"]
 series = [
     "gini_pip_disposable_perCapita",
+    "p99p100Share_pip_disposable_perCapita",
     "p90p100Share_pip_disposable_perCapita",
     "headcountRatio50Median_pip_disposable_perCapita",    
     "gini_widExtrapolated_pretaxNational_perAdult",
-    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
-    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult",  
     "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
+    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
+    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult" 
 ]
 
 # reference_years is the list of years to match the series to. Each year is a dictionary with the year as key and a dictionary of parameters as value. The parameters are:
@@ -45,14 +49,14 @@ series = [
 # - tie_break_strategy: the strategy to use to break ties when there are multiple series that match the reference year. The options are "lower" (select the series with the lowest distance to the reference year) or "higher" (select the series with the highest distance to the reference year)
 # - min_interval: the minimum distance between reference years. The value of min_interval for the last reference year is ignored.
 reference_years = {
-    # 1993: {"maximum_distance": 3, "tie_break_strategy": "lower", "min_interval": 0},
-    # 2015: {"maximum_distance": 3, "tie_break_strategy": "higher", "min_interval": 0},    
-    1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
-    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
+    1993: {"maximum_distance": 3, "tie_break_strategy": "lower", "min_interval": 0},
+    2015: {"maximum_distance": 3, "tie_break_strategy": "higher", "min_interval": 0},    
+    # 1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
+    # 2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
 }
 
 ##############################################
-# AUXILIARY FUNCTIONS
+#%% AUXILIARY FUNCTIONS
 
 def cat_welfare(row,col1,col2):
     if row[col1] == 'income' and row[col2] == 'income':
@@ -179,7 +183,7 @@ def match_ref_years(
     )
    
     
-    df_match.to_csv(f"{PARENT_DIR}/df_match_raw.csv", index=False)
+    df_match.to_csv("df_match_raw.csv", index=False)
 
     # Filter df_match according to tie_break_strategy
     for y in reference_years_list:
@@ -260,7 +264,7 @@ def match_ref_years(
         df_match[f'weightedvalue_{y}'] = df_match[f'weight_{y}'] * df_match[f'value_{y}']
 
 
-    df_match.to_csv(f"{PARENT_DIR}/df_match.csv", index=False)
+    df_match.to_csv("df_match.csv", index=False)
 
     return df_match
 
@@ -268,3 +272,4 @@ def match_ref_years(
 df_match = match_ref_years(df, series_type, series, reference_years)
 
 
+#%%
