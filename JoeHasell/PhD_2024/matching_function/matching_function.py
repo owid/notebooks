@@ -49,10 +49,10 @@ series = [
 # - tie_break_strategy: the strategy to use to break ties when there are multiple series that match the reference year. The options are "lower" (select the series with the lowest distance to the reference year) or "higher" (select the series with the highest distance to the reference year)
 # - min_interval: the minimum distance between reference years. The value of min_interval for the last reference year is ignored.
 reference_years = {
-    1993: {"maximum_distance": 3, "tie_break_strategy": "lower", "min_interval": 0},
-    2015: {"maximum_distance": 3, "tie_break_strategy": "higher", "min_interval": 0},    
-    # 1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
-    # 2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
+    # 1993: {"maximum_distance": 3, "tie_break_strategy": "lower", "min_interval": 0},
+    # 2015: {"maximum_distance": 3, "tie_break_strategy": "higher", "min_interval": 0},    
+    1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
+    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
 }
 
 ##############################################
@@ -187,16 +187,23 @@ def match_ref_years(
 
     # Filter df_match according to tie_break_strategy
     for y in reference_years_list:
+
+        # Calculate the minimum of distance for each country-series_code
+        min_per_group = df_match.groupby(["country", "series_code"])[f"distance_{y}"].transform('min')
+
+        # Keep only the rows where distance is equal to the group minimum
+        df_match = df_match[df_match[f"distance_{y}"] == min_per_group]
+
+        # count how many different years got matched to the reference year
+        df_match['unique_years_count'] = df_match.groupby(["country", "series_code"])[f"year_{y}"].transform('nunique')
+
         if reference_years[y]["tie_break_strategy"] == "lower":
-            # Remove duplicates and keep the row with the minimum distance
-            df_match = df_match.sort_values(by=f"distance_{y}").drop_duplicates(
-                subset=["country", "series_code"], keep="first"
-            )
+            # drop observations where the year is above the reference year, when there is more than one year that has been matched
+            df_match = df_match[(df_match['unique_years_count']==1) | (df_match[f"year_{y}"]<y)]
+
         elif reference_years[y]["tie_break_strategy"] == "higher":
-            # Remove duplicates and keep the row with the maximum distance
-            df_match = df_match.sort_values(by=f"distance_{y}").drop_duplicates(
-                subset=["country", "series_code"], keep="last"
-            )
+             # drop observations where the year is below the reference year, when there is more than one year that has been matched
+            df_match = df_match[(df_match['unique_years_count']==1) | (df_match[f"year_{y}"]>y)]
         else:
             raise ValueError("tie_break_strategy must be either 'lower' or 'higher'")
 
