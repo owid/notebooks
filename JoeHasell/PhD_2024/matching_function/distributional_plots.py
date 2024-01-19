@@ -1,9 +1,10 @@
+#%% 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def plot_income_distribution(file_path, *country_years):
+def plot_income_distribution(file_path, save_file_path, *country_years):
     # Load the data from the CSV file
     income_data = pd.read_csv(file_path)
 
@@ -33,8 +34,15 @@ def plot_income_distribution(file_path, *country_years):
             axes[i].set_xlabel('Income')
 
     plt.tight_layout()
+
+    # Save the plot as an SVG file
+    plt.savefig(save_file_path, format='svg')
+
     plt.show()
 
+#%% 
 # Example usage of the function
 file_path = 'percentiles.csv'  # Replace with your file path
-plot_income_distribution(file_path, ("Ethiopia", 2015), ("Bangladesh", 2016), ("Vietnam", 2018), ("Turkiye", 2017), ("United States", 2019))
+save_to = 'dist_plot.svg'
+plot_income_distribution(file_path, save_to, ("Ethiopia", 2015), ("Bangladesh", 2016), ("Vietnam", 2018), ("Turkiye", 2017), ("United States", 2019))
+#%% 
