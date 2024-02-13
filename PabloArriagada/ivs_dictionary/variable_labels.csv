@@ -1,0 +1,819 @@
+position,name,type,isnumeric,format,vallab,varlab
+1,studyno,int,1,%8.0g,STUDYNO,Study number
+4,stdyno_w,int,1,%8.0g,STDYNO_W,Study number (wave)
+6,S001,byte,1,%19.0g,S001,Study
+7,S002,byte,1,%19.0g,S002,WVS-wave
+8,S002EVS,byte,1,%19.0g,S002EVS,EVS-wave
+9,S002VS,byte,1,%22.0g,S002VS,Chronology of EVS-WVS waves
+10,S003,int,1,%23.0g,S003,Country (ISO 3166-1 Numeric code)
+11,COW_NUM,int,1,%25.0g,COW_NUM,Country (CoW Numeric code)
+13,S004,byte,1,%19.0g,S004,Set
+17,S008,long,1,%19.0g,S008,Interviewer number
+19,mode,byte,1,%8.0g,MODE,Mode of data collection
+20,S010,double,1,%19.0g,S010,Total length of interview
+21,S011A,double,1,%19.0g,S011A,Time of the interview - Start [hh.mm]
+22,S011B,double,1,%19.0g,S011B,Time of the interview - End [hh.mm]
+23,S012,long,1,%19.0g,S012,Date interview [YYYYMMDD]
+24,S013,byte,1,%19.0g,S013,Respondent interested during the interview
+25,S013B,byte,1,%64.0g,S013B,Interview privacy
+26,S016,int,1,%33.0g,S016,Language of the interview (WVS/EVS list of languages)
+28,S017,double,1,%20.0g,S017,Weight
+30,S019,double,1,%19.0g,S019,Equilibrated weight-1500
+32,S020,int,1,%20.0g,S020,Year survey
+34,S022,long,1,%19.0g,S022,Year/month of start-fieldwork
+35,S023,long,1,%19.0g,S023,Year/month of end-fieldwork
+36,S024,int,1,%28.0g,S024,Country - wave
+37,S025,long,1,%31.0g,S025,Country - year
+38,S036,byte,1,%19.0g,S036,Flag variable: Duplicate Cases
+39,mm_fw_end_fu_EVS5,long,1,%12.0g,MM_FW_EN,Year/month of end-fieldwork (matrix design) (EVS5)
+40,mm_fw_start_fu_EVS5,long,1,%12.0g,MM_FW_ST,Year/month of start-fieldwork (matrix design) (EVS5)
+41,mm_matrix_group_EVS5,byte,1,%8.0g,MM_MATRI,Matrix attribution (group/variable bloc) (EVS5)
+42,mm_mixed_mode_EVS5,byte,1,%8.0g,MM_MIXED,Mixed mode/matrix design (EVS5)
+43,mm_mode_fu_EVS5,byte,1,%8.0g,MM_MODE,Mode of data collection (follow-up) (EVS5)
+44,mm_v277_fu_EVS5,long,1,%12.0g,MM_V277,Date of interview (follow-up) (EVS5)
+45,mm_v278a_fu_r_EVS5,double,1,%12.0g,MM_V278A,Time of the interview -Start (constructed) (follow-up) (EVS5)
+46,mm_v279a_fu_r_EVS5,double,1,%12.0g,MM_V279A,Time of the interview -End (constructed) (follow-up) (EVS5)
+47,mm_year_fu_EVS5,int,1,%8.0g,MM_YEAR,Survey year (follow-up) (EVS5)
+48,A001,byte,1,%20.0g,A001,Important in life: Family
+49,A002,byte,1,%20.0g,A002,Important in life: Friends
+50,A003,byte,1,%20.0g,A003,Important in life: Leisure time
+51,A004,byte,1,%20.0g,A004,Important in life: Politics
+52,A005,byte,1,%20.0g,A005,Important in life: Work
+53,A006,byte,1,%20.0g,A006,Important in life: Religion
+54,A007,byte,1,%20.0g,A007,Service to others important in life
+55,A008,byte,1,%19.0g,A008,Feeling of happiness
+56,A009,byte,1,%19.0g,A009,State of health (subjective)
+57,A010,byte,1,%19.0g,A010,Ever felt very excited or interested
+58,A011,byte,1,%19.0g,A011,Ever felt restless
+59,A012,byte,1,%19.0g,A012,Ever felt proud because someone complimented you
+60,A013,byte,1,%19.0g,A013,Ever felt very lonely or remote from other people
+61,A014,byte,1,%19.0g,A014,Ever felt pleased about having accomplished something
+62,A015,byte,1,%19.0g,A015,Ever felt bored
+63,A016,byte,1,%19.0g,A016,Ever felt on top of the world
+64,A017,byte,1,%19.0g,A017,Ever felt depressed or very unhappy
+65,A018,byte,1,%19.0g,A018,Ever felt that things were going your way
+66,A019,byte,1,%19.0g,A019,Ever felt upset because somebody criticized you
+67,A025,byte,1,%19.0g,A025,Respect and love for parents
+68,A026,byte,1,%120.0g,A026,Parents responsibilities to their children
+69,A027,byte,1,%19.0g,A027,Important child qualities: good manners
+70,A029,byte,1,%19.0g,A029,Important child qualities: independence
+71,A030,byte,1,%19.0g,A030,Important child qualities: hard work
+72,A032,byte,1,%19.0g,A032,Important child qualities: feeling of responsibility
+73,A034,byte,1,%19.0g,A034,Important child qualities: imagination
+74,A035,byte,1,%19.0g,A035,Important child qualities: tolerance and respect for other people
+75,A038,byte,1,%19.0g,A038,Important child qualities: thrift saving money and things
+76,A039,byte,1,%19.0g,A039,Important child qualities: determination perseverance
+77,A040,byte,1,%19.0g,A040,Important child qualities: religious faith
+78,A041,byte,1,%19.0g,A041,Important child qualities: unselfishness
+79,A042,byte,1,%19.0g,A042,Important child qualities: obedience
+80,A043_01,byte,1,%19.0g,A043_01,Important child qualities: none
+81,A046,byte,1,%19.0g,A046,Abortion when the mothers health is at risk
+82,A047,byte,1,%19.0g,A047,Abortion when child physically handicapped
+83,A048,byte,1,%19.0g,A048,Abortion when woman not married
+84,A049,byte,1,%19.0g,A049,Abortion if not wanting more children
+85,A058,byte,1,%23.0g,A058,Spend time with friends
+86,A059,byte,1,%23.0g,A059,Spend time with colleagues from work
+87,A060,byte,1,%23.0g,A060,"Spend time with people at your church, mosque or synagogue"
+88,A061,byte,1,%23.0g,A061,"Spend time with people at sport, culture, communal organization"
+89,A062,byte,1,%19.0g,A062,How often discusses political matters with friends
+90,A063,byte,1,%19.0g,A063,"Persuading friends, relatives or fellow workers"
+91,A064,byte,1,%19.0g,A064,"Member: Belong to social welfare service for elderly, handicapped or deprived pe"
+92,A065,byte,1,%19.0g,A065,Member: Belong to religious organization
+93,A066,byte,1,%19.0g,A066,"Member: Belong to education, arts, music or cultural activities"
+94,A067,byte,1,%19.0g,A067,Member: Belong to labour unions
+95,A068,byte,1,%19.0g,A068,Member: Belong to political parties
+96,A069,byte,1,%19.0g,A069,Member: Belong to local political actions
+97,A070,byte,1,%19.0g,A070,Member: Belong to human rights
+98,A071,byte,1,%19.0g,A071,"Member: Belong to conservation, the environment, ecology, animal rights"
+99,A071B,byte,1,%19.0g,A071B,"Member: Belong to conservation, the environment, ecology"
+100,A071C,byte,1,%19.0g,A071C,Member: Belong to animal rights
+101,A072,byte,1,%19.0g,A072,Member: Belong to professional associations
+102,A073,byte,1,%19.0g,A073,Member: Belong to youth work
+103,A074,byte,1,%19.0g,A074,Member: Belong to sports or recreation
+104,A075,byte,1,%19.0g,A075,Member: Belong to women´s group
+105,A076,byte,1,%19.0g,A076,Member: Belong to peace movement
+106,A077,byte,1,%19.0g,A077,Member: Belong to organization concerned with health
+107,A078,byte,1,%19.0g,A078,Member: Belong to consumer groups
+108,A079,byte,1,%19.0g,A079,Member: Belong to other groups
+109,A080,byte,1,%19.0g,A080,Member: Belong to none
+110,A080_01,byte,1,%8.0g,LABA,Member: Belong to humanitarian or charitable organization
+111,A080_02,byte,1,%8.0g,LABA,"Member:  Belong to self-help group, mutual aid group"
+112,A081,byte,1,%19.0g,A081,"Voluntary work: Unpaid work social welfare service for elderly, handicapped or d"
+113,A082,byte,1,%19.0g,A082,Voluntary work: Unpaid work religious or church organization
+114,A083,byte,1,%19.0g,A083,"Voluntary work: Unpaid work education, arts, music or cultural activities"
+115,A084,byte,1,%19.0g,A084,Voluntary work: Unpaid work labour unions
+116,A085,byte,1,%19.0g,A085,Voluntary work: Unpaid work political parties or groups
+117,A086,byte,1,%19.0g,A086,Voluntary work: Unpaid work local political action groups
+118,A087,byte,1,%19.0g,A087,Voluntary work: Unpaid work human rights
+119,A088,byte,1,%19.0g,A088,"Voluntary work: Unpaid work environment, conservation, animal rights"
+120,A088B,byte,1,%19.0g,A088B,"Voluntary work: Unpaid work environment, conservation, ecology"
+121,A088C,byte,1,%19.0g,A088C,Voluntary work: Unpaid work animal rights
+122,A089,byte,1,%19.0g,A089,Voluntary work: Unpaid work professional associations
+123,A090,byte,1,%19.0g,A090,Voluntary work: Unpaid work youth work
+124,A091,byte,1,%19.0g,A091,Voluntary work: Unpaid work sports or recreation
+125,A092,byte,1,%19.0g,A092,Voluntary work: Unpaid work women´s group
+126,A093,byte,1,%19.0g,A093,Voluntary work: Unpaid work peace movement
+127,A094,byte,1,%19.0g,A094,Voluntary work: Unpaid work organization concerned with health
+128,A096,byte,1,%19.0g,A096,Voluntary work: Unpaid work other groups
+129,A097,byte,1,%19.0g,A097,Voluntary work: Unpaid work none
+130,A098,byte,1,%19.0g,A098,Active/Inactive membership of church or religious organization
+131,A099,byte,1,%19.0g,A099,Active/Inactive membership of sport or recreation
+132,A100,byte,1,%19.0g,A100,"Active/Inactive membership of art, music, educational"
+133,A101,byte,1,%19.0g,A101,Active/Inactive membership of labour unions
+134,A102,byte,1,%19.0g,A102,Active/Inactive membership of political party
+135,A103,byte,1,%19.0g,A103,Active/Inactive membership of environmental organization
+136,A104,byte,1,%19.0g,A104,Active/Inactive membership of professional organization
+137,A105,byte,1,%19.0g,A105,Active/Inactive membership of charitable/humanitarian organization
+138,A106,byte,1,%19.0g,A106,Active/Inactive membership of any other organization
+139,A106B,byte,1,%19.0g,A106B,Active/Inactive membership: Consumer organization
+140,A106C,byte,1,%19.0g,A106C,"Active/Inactive membership: Self-help group, mutual aid group"
+141,A107,byte,1,%19.0g,A107,Reasons voluntary work: Solidarity with the poor and disadvantaged
+142,A108,byte,1,%19.0g,A108,Reasons voluntary work: Compassion for those in need
+143,A109,byte,1,%19.0g,A109,Reasons voluntary work: Opportunity to repay something
+144,A110,byte,1,%19.0g,A110,"Reasons voluntary work: Sense of duty, moral, obligation"
+145,A111,byte,1,%19.0g,A111,Reasons voluntary work: Identifying with people who suffer
+146,A112,byte,1,%19.0g,A112,Reasons voluntary work: Time on my hands
+147,A113,byte,1,%19.0g,A113,Reasons voluntary work: Personal satisfaction
+148,A114,byte,1,%19.0g,A114,Reasons voluntary work: Religious belief
+149,A115,byte,1,%19.0g,A115,Reasons voluntary work: Help disadvantaged people
+150,A116,byte,1,%19.0g,A116,Reasons voluntary work: Make a contribution to my local community
+151,A117,byte,1,%19.0g,A117,Reasons voluntary work: Bring about social or political change
+152,A118,byte,1,%19.0g,A118,Reasons voluntary work: For social reasons
+153,A119,byte,1,%19.0g,A119,Reasons voluntary work: Gain new skills and useful experience
+154,A120,byte,1,%19.0g,A120,"Reasons voluntary work: Did not want to, but could not refuse"
+155,A124_01,byte,1,%19.0g,A124_01,Neighbours: People with a criminal record
+156,A124_02,byte,1,%19.0g,A124_02,Neighbours: People of a different race
+157,A124_03,byte,1,%19.0g,A124_03,Neighbours: Heavy drinkers
+158,A124_04,byte,1,%19.0g,A124_04,Neighbours: Emotionally unstable people
+159,A124_05,byte,1,%19.0g,A124_05,Neighbours: Muslims
+160,A124_06,byte,1,%19.0g,A124_06,Neighbours: Immigrants/foreign workers
+161,A124_07,byte,1,%19.0g,A124_07,Neighbours: People who have AIDS
+162,A124_08,byte,1,%19.0g,A124_08,Neighbours: Drug addicts
+163,A124_09,byte,1,%19.0g,A124_09,Neighbours: Homosexuals
+164,A124_10,byte,1,%19.0g,A124_10,Neighbours: Jews
+165,A124_11,byte,1,%19.0g,A124_11,Neighbours: Evangelists
+166,A124_12,byte,1,%19.0g,A124_12,Neighbours: People of a different religion
+167,A124_14,byte,1,%19.0g,A124_14,Neighbours: Militant minority
+168,A124_16,byte,1,%19.0g,A124_16,Neighbours: People not from country of origin
+169,A124_17,byte,1,%19.0g,A124_17,Neighbours: Gypsies
+170,A124_18,byte,1,%19.0g,A124_18,Neighbours: Political Extremists
+171,A124_19,byte,1,%19.0g,A124_19,Neighbours: Trafficants
+172,A124_24,byte,1,%19.0g,A124_24,Neighbours: Christians
+173,A124_26,byte,1,%19.0g,A124_26,Neighbours: Left wing extremists
+174,A124_27,byte,1,%19.0g,A124_27,Neighbours: Right wing extremists
+175,A124_28,byte,1,%19.0g,A124_28,Neighbours: People with large families
+176,A124_29,byte,1,%19.0g,A124_29,Neighbours: Hindus
+177,A124_30,byte,1,%19.0g,A124_30,Neighbours: North-American persons
+178,A124_34,byte,1,%19.0g,A124_34,Neighbours: Black people
+179,A124_35,byte,1,%19.0g,A124_35,Neighbours: White people
+180,A124_36,byte,1,%19.0g,A124_36,Neighbours: Coloured people
+181,A124_37,byte,1,%19.0g,A124_37,Neighbours: Indians
+182,A124_38,byte,1,%19.0g,A124_38,"Neighbours: Kurds, Esids"
+183,A124_42,byte,1,%22.0g,A124_42,Neighbours: Unmarried couples living together
+184,A124_43,byte,1,%22.0g,A124_43,Neighbours: People who speak a different language
+185,A124_45,byte,1,%19.0g,A124_45,Neighbours: Sunnis
+186,A124_46,byte,1,%19.0g,A124_46,Neighbours: Shia
+187,A124_47,byte,1,%19.0g,A124_47,Neighbours: French
+188,A124_48,byte,1,%19.0g,A124_48,Neighbours: British
+189,A124_49,byte,1,%19.0g,A124_49,Neighbours: Iranian
+190,A124_50,byte,1,%19.0g,A124_50,Neighbours: Kuwaiti
+191,A124_51,byte,1,%19.0g,A124_51,Neighbours: Turkish
+192,A124_52,byte,1,%19.0g,A124_52,Neighbours: Jordanian
+193,A165,byte,1,%26.0g,A165,Most people can be trusted
+194,A168,byte,1,%20.0g,A168,Do you think most people try to take advantage of you
+195,A168A,byte,1,%39.0g,A168A,Do you think most people try to take advantage of you (10-point scale)
+196,A169,byte,1,%31.0g,A169,Good human relationships
+197,A170,byte,1,%19.0g,A170,Satisfaction with your life
+198,A173,byte,1,%19.0g,A173,How much freedom of choice and control
+199,A189,byte,1,%19.0g,A189,Schwartz: It is important to this person to think up new ideas and be creative
+200,A190,byte,1,%19.0g,A190,Schwartz: It is important to this person to be rich
+201,A191,byte,1,%19.0g,A191,Schwartz: It is important to this person living in secure surroundings
+202,A192,byte,1,%19.0g,A192,Schwartz: It is important to this person to have a good time
+203,A193,byte,1,%19.0g,A193,Schwartz: It is important to this person to help the people nearby
+204,A194,byte,1,%19.0g,A194,Schwartz: It is important to this person being very successful
+205,A195,byte,1,%19.0g,A195,Schwartz: It is important to this person adventure and taking risks
+206,A196,byte,1,%19.0g,A196,Schwartz: It is important to this person to always behave properly
+207,A197,byte,1,%19.0g,A197,Schwartz: It is important to this person looking after the environment
+208,A198,byte,1,%19.0g,A198,Schwartz: It is important to this person tradition
+209,B001,byte,1,%19.0g,B001,Would give part of my income for the environment (4-point scale)
+210,B002,byte,1,%19.0g,B002,Increase in taxes if used to prevent environmental pollution
+211,B003,byte,1,%19.0g,B003,Government should reduce environmental pollution
+212,B005,byte,1,%19.0g,B005,All talk about the environment make people anxious
+213,B006,byte,1,%19.0g,B006,"Combatting unemployment, we have to accept environmental problems"
+214,B007,byte,1,%19.0g,B007,Protecting environment and fighting pollution is less urgent than suggested
+215,B008,byte,1,%32.0g,B008,Protecting environment vs. Economic growth
+216,B009,byte,1,%39.0g,B009,Human & nature
+217,C001,byte,1,%19.0g,C001,Jobs scarce: Men should have more right to a job than women (3 categories)
+218,C001_01,byte,1,%8.0g,LABB,Jobs scarce: Men should have more right to a job than women (5-point scale)
+219,C002,byte,1,%19.0g,C002,Jobs scarce: Employers should give priority to (nation) people than immigrants (
+220,C002_01,byte,1,%8.0g,LABB,Jobs scarce: Employers should give priority to (nation) people than immigrants (
+221,C004,byte,1,%19.0g,C004,Jobs scarce: older people should be forced to retire
+222,C005,byte,1,%19.0g,C005,Unfair to give work to handicapped people when able bodied people can´t find job
+223,C006,byte,1,%19.0g,C006,Satisfaction with financial situation of household
+224,C008,byte,1,%51.0g,C008,Work compared with Leisure
+225,C009,byte,1,%28.0g,C009,"First choice, if looking for a job"
+226,C010,byte,1,%28.0g,C010,Second choice if looking for a job
+227,C011,byte,1,%19.0g,C011,Important in a job: good pay
+228,C012,byte,1,%19.0g,C012,Important in a job: not too much pressure
+229,C013,byte,1,%19.0g,C013,Important in a job: good job security
+230,C014,byte,1,%19.0g,C014,Important in a job: a respected job
+231,C015,byte,1,%19.0g,C015,Important in a job: good hours
+232,C016,byte,1,%19.0g,C016,Important in a job: an opportunity to use initiative
+233,C017,byte,1,%19.0g,C017,Important in a job: generous holidays
+234,C018,byte,1,%19.0g,C018,Important in a job: that you can achieve something
+235,C019,byte,1,%19.0g,C019,Important in a job: a responsible job
+236,C020,byte,1,%19.0g,C020,Important in a job: a job that is interesting
+237,C021,byte,1,%19.0g,C021,Important in a job: a job that meets one´s abilities
+238,C022,byte,1,%19.0g,C022,Important in a job: pleasant people to work with
+239,C023,byte,1,%19.0g,C023,Important in a job: good chances for promotion
+240,C024,byte,1,%19.0g,C024,Important in a job: a useful job for society
+241,C025,byte,1,%19.0g,C025,Important in a job: meeting people
+242,C027_90,byte,1,%19.0g,C027_90,Important in a job: none of these
+243,C029,byte,1,%19.0g,C029,Employed
+244,C031,byte,1,%19.0g,C031,Degree of pride in your work
+245,C033,byte,1,%19.0g,C033,Job satisfaction
+246,C034,byte,1,%19.0g,C034,Freedom decision taking in job
+247,C036,byte,1,%26.0g,C036,To develop talents you need to have a job
+248,C037,byte,1,%26.0g,C037,Humiliating to receive money without having to work for it
+249,C038,byte,1,%26.0g,C038,People who don´t work turn lazy
+250,C039,byte,1,%26.0g,C039,Work is a duty towards society
+251,C040,byte,1,%26.0g,C040,People should not have to work if they don´t want to
+252,C041,byte,1,%26.0g,C041,Work should come first even if it means less spare time
+253,C042B1,byte,1,%19.0g,C042B1,Why people work: work is like a business transaction
+254,C042B2,byte,1,%19.0g,C042B2,Why people work: I do the best I can regardless of pay
+255,C042B3,byte,1,%19.0g,C042B3,Why people work: I wouldn’t work if I didn’t have to
+256,C042B4,byte,1,%19.0g,C042B4,Why people work: I wouldn´t work if work interfered my life
+257,C042B5,byte,1,%19.0g,C042B5,Why people work: work most important in my life
+258,C042B6,byte,1,%19.0g,C042B6,Why people work: I never had a paid job
+259,C042B7,byte,1,%19.0g,C042B7,Why people work: don’t know
+260,C059,byte,1,%19.0g,C059,Fairness: One secretary is paid more
+261,C060,byte,1,%53.0g,C060,How business and industry should be managed
+262,C061,byte,1,%23.0g,C061,Following instructions at work
+263,D001,byte,1,%31.0g,D001,How much do you trust your family (5-point scale)
+264,D001_B,byte,1,%22.0g,D001_B,How much do you trust your family (4-point scale)
+265,D002,byte,1,%19.0g,D002,Satisfaction with home life
+266,D003,byte,1,%19.0g,D003,Sharing with partner: attitudes towards religion
+267,D004,byte,1,%19.0g,D004,Sharing with partner: moral standards
+268,D005,byte,1,%19.0g,D005,Sharing with partner: social attitudes
+269,D006,byte,1,%19.0g,D006,Sharing with partner: political views
+270,D007,byte,1,%19.0g,D007,Sharing with partner: sexual attitudes
+271,D008,byte,1,%19.0g,D008,Sharing with partner: no sharing attitudes
+272,D009,byte,1,%19.0g,D009,Sharing with partner: don´t know or missing
+273,D010,byte,1,%19.0g,D010,Sharing with parents: attitudes towards religion
+274,D011,byte,1,%19.0g,D011,Sharing with parents: moral standards
+275,D012,byte,1,%19.0g,D012,Sharing with parents: social attitudes
+276,D013,byte,1,%19.0g,D013,Sharing with parents: political views
+277,D014,byte,1,%19.0g,D014,Sharing with parents: sexual attitudes
+278,D015,byte,1,%19.0g,D015,Sharing with parents: no sharing attitudes
+279,D016,byte,1,%19.0g,D016,Sharing with parents: don´t know or missing
+280,D017,byte,1,%19.0g,D017,Ideal number of children
+281,D018,byte,1,%19.0g,D018,Child needs a home with father and mother
+282,D019,byte,1,%19.0g,D019,A woman has to have children to be fulfilled
+283,D020,byte,1,%26.0g,D020,A man has to have children to be fulfilled
+284,D022,byte,1,%19.0g,D022,Marriage is an out-dated institution
+285,D023,byte,1,%19.0g,D023,Woman as a single parent
+286,D024,byte,1,%19.0g,D024,Enjoy sexual freedom
+287,D026,byte,1,%26.0g,D026,Long-term relationship is necessary to be happy
+288,D026_03,byte,1,%19.0g,D026_03,Duty towards society to have children
+289,D026_05,byte,1,%19.0g,D026_05,It is childs duty to take care of ill parent
+290,D027,byte,1,%19.0g,D027,Important for successful marriage: Faithfulness
+291,D028,byte,1,%19.0g,D028,Important for successful marriage: Adequate income
+292,D029,byte,1,%19.0g,D029,Important for successful marriage: Same social background
+293,D030,byte,1,%19.0g,D030,Important for successful marriage: Respect and appreciation
+294,D031,byte,1,%19.0g,D031,Important for successful marriage: Religious beliefs
+295,D032,byte,1,%19.0g,D032,Important for successful marriage: Good housing
+296,D033,byte,1,%19.0g,D033,Important for successful marriage: Agreement on politics
+297,D034,byte,1,%19.0g,D034,Important for successful marriage: Understanding and tolerance
+298,D035,byte,1,%19.0g,D035,Important for successful marriage: Apart from in-laws
+299,D036,byte,1,%19.0g,D036,Important for successful marriage: Happy sexual relationship
+300,D037,byte,1,%19.0g,D037,Important for successful marriage: Sharing household chores
+301,D038,byte,1,%19.0g,D038,Important for successful marriage: Children
+302,D039,byte,1,%19.0g,D039,Important for successful marriage: Discussing problems
+303,D043,byte,1,%19.0g,D043,Important for successful marriage: Tastes and interests in common
+304,D043_01,byte,1,%19.0g,D043_01,Important for successful marriage: Time for friends and personal hobbies
+305,D054,byte,1,%19.0g,D054,One of main goals in life has been to make my parents proud
+306,D055,byte,1,%19.0g,D055,Make effort to live up to what my friends expect
+307,D056,byte,1,%19.0g,D056,Relationship working mother
+308,D057,byte,1,%19.0g,D057,Being a housewife just as fulfilling
+309,D058,byte,1,%19.0g,D058,Husband and wife should both contribute to income
+310,D059,byte,1,%19.0g,D059,Men make better political leaders than women do
+311,D060,byte,1,%19.0g,D060,University is more important for a boy than for a girl
+312,D061,byte,1,%19.0g,D061,Pre-school child suffers with working mother
+313,D062,byte,1,%19.0g,D062,Women want a home and children
+314,D063,byte,1,%19.0g,D063,Job best way for women to be independent (4 categories)
+315,D064,byte,1,%19.0g,D064,Fathers are well suited for looking after children
+316,D066_B,byte,1,%19.0g,D066_B,Problem if women have more income than husband (3 categories)
+317,D078,byte,1,%19.0g,D078,Men make better business executives than women do
+318,D081,byte,1,%26.0g,D081,Homosexual couples are as good parents as other couples
+319,E001,byte,1,%56.0g,E001,Aims of country: first choice
+320,E002,byte,1,%56.0g,E002,Aims of country: second choice
+321,E003,byte,1,%31.0g,E003,Aims of respondent: first choice
+322,E004,byte,1,%31.0g,E004,Aims of respondent: second choice
+323,E005,byte,1,%58.0g,E005,Most important: first choice
+324,E006,byte,1,%58.0g,E006,Most important: second choice
+325,E012,byte,1,%19.0g,E012,Willingness to fight for country
+326,E014,byte,1,%19.0g,E014,Future changes: Less emphasis on money and material possessions
+327,E015,byte,1,%19.0g,E015,Future changes: Less importance placed on work
+328,E016,byte,1,%19.0g,E016,Future changes: More emphasis on technology
+329,E017,byte,1,%19.0g,E017,Future changes: More emphasis on individual
+330,E018,byte,1,%19.0g,E018,Future changes: Greater respect for authority
+331,E019,byte,1,%19.0g,E019,Future changes: More emphasis on family life
+332,E020,byte,1,%19.0g,E020,Future changes: A simple and more natural lifestyle
+333,E022,byte,1,%19.0g,E022,Opinion about scientific advances
+334,E023,byte,1,%21.0g,E023,Interest in politics
+335,E025,byte,1,%19.0g,E025,Political action: signing a petition
+336,E025B,byte,1,%19.0g,E025B,Political action recently done: signing a petition
+337,E026,byte,1,%19.0g,E026,Political action: joining in boycotts
+338,E026B,byte,1,%19.0g,E026B,Political action recently done: joining in boycotts
+339,E027,byte,1,%19.0g,E027,Political action: attending lawful/peaceful demonstrations
+340,E028,byte,1,%19.0g,E028,Political action: joining unofficial strikes
+341,E029,byte,1,%19.0g,E029,Political action: occupying buildings or factories
+342,E032,byte,1,%22.0g,E032,Freedom or equality
+343,E033,byte,1,%19.0g,E033,Self positioning in political scale
+344,E034,byte,1,%45.0g,E034,Basic kinds of attitudes concerning society
+345,E035,byte,1,%47.0g,E035,Income equality
+346,E036,byte,1,%52.0g,E036,Private vs state ownership of business
+347,E037,byte,1,%46.0g,E037,Government responsibility
+348,E038,byte,1,%39.0g,E038,Job taking of the unemployed
+349,E039,byte,1,%22.0g,E039,Competition good or harmful
+350,E040,byte,1,%55.0g,E040,Hard work brings success
+351,E041,byte,1,%49.0g,E041,Wealth accumulation
+352,E042,byte,1,%43.0g,E042,Firms and freedom
+353,E045,byte,1,%50.0g,E045,Major changes in life
+354,E046,byte,1,%48.0g,E046,New and old ideas
+355,E047,byte,1,%55.0g,E047,"Personal characteristics: changes, worry or welcome possibility"
+356,E048,byte,1,%19.0g,E048,Personal characteristics: I usually count on being successful in everything I do
+357,E049,byte,1,%19.0g,E049,Personal characteristics: I enjoy convincing others of my opinion
+358,E050,byte,1,%19.0g,E050,Personal characteristics: I serve as a model for others
+359,E051,byte,1,%19.0g,E051,Personal characteristics: I am good at getting what I want
+360,E052,byte,1,%19.0g,E052,Personal characteristics: I own many things others envy me for
+361,E053,byte,1,%19.0g,E053,Personal characteristics: I like to assume responsibility
+362,E054,byte,1,%19.0g,E054,Personal characteristics: I am rarely unsure about how I should behave
+363,E055,byte,1,%19.0g,E055,Personal characteristics: I often give others advice
+364,E056,byte,1,%19.0g,E056,Personal characteristics: none of the above
+365,E057,byte,1,%26.0g,E057,The economic system needs fundamental changes
+366,E058,byte,1,%26.0g,E058,Our government should be made much more open to the public
+367,E059,byte,1,%26.0g,E059,Allow more freedom for individuals
+368,E060,byte,1,%26.0g,E060,I could do nothing about an unjust law
+369,E061,byte,1,%26.0g,E061,Political reform is moving too rapidly
+370,E069_01,byte,1,%19.0g,E069_01,Confidence: Churches
+371,E069_02,byte,1,%19.0g,E069_02,Confidence: Armed Forces
+372,E069_03,byte,1,%19.0g,E069_03,Confidence: Education System
+373,E069_04,byte,1,%19.0g,E069_04,Confidence: The Press
+374,E069_05,byte,1,%19.0g,E069_05,Confidence: Labour Unions
+375,E069_06,byte,1,%19.0g,E069_06,Confidence: The Police
+376,E069_07,byte,1,%19.0g,E069_07,Confidence: Parliament
+377,E069_08,byte,1,%19.0g,E069_08,Confidence: The Civil Services
+378,E069_09,byte,1,%19.0g,E069_09,Confidence: Social Security System
+379,E069_10,byte,1,%19.0g,E069_10,Confidence: Television
+380,E069_11,byte,1,%19.0g,E069_11,Confidence: The Government
+381,E069_12,byte,1,%19.0g,E069_12,Confidence: The Political Parties
+382,E069_13,byte,1,%19.0g,E069_13,Confidence: Major Companies
+383,E069_14,byte,1,%19.0g,E069_14,Confidence: The Environmental Protection Movement
+384,E069_15,byte,1,%19.0g,E069_15,Confidence: The Women´s Movement
+385,E069_16,byte,1,%19.0g,E069_16,Confidence: Health Care System
+386,E069_17,byte,1,%19.0g,E069_17,Confidence: Justice System/Courts
+387,E069_18,byte,1,%19.0g,E069_18,Confidence: The European Union
+388,E069_18A,byte,1,%19.0g,E069_18A,Confidence: Major regional organization (combined from country-specific)
+389,E069_19,byte,1,%19.0g,E069_19,Confidence: NATO
+390,E069_20,byte,1,%19.0g,E069_20,Confidence: The United Nations
+391,E069_21,byte,1,%19.0g,E069_21,Confidence: The Arab League
+392,E069_22,byte,1,%19.0g,E069_22,Confidence: The Association of South East Asian Nations -ASEAN
+393,E069_23,byte,1,%19.0g,E069_23,Confidence: The Organization for African Unity-OAU
+394,E069_24,byte,1,%19.0g,E069_24,Confidence: The NAFTA
+395,E069_25,byte,1,%19.0g,E069_25,Confidence: The Andean pact
+396,E069_26,byte,1,%19.0g,E069_26,Confidence: The Mercosur
+397,E069_27,byte,1,%19.0g,E069_27,Confidence: The SAARC
+398,E069_29,byte,1,%19.0g,E069_29,Confidence: The APEC
+399,E069_30,byte,1,%19.0g,E069_30,Confidence: The Free Commerce Treaty (Tratado de libre comercio)
+400,E069_31,byte,1,%19.0g,E069_31,Confidence: The United American States Organization (Organización de Estados Un
+401,E069_33,byte,1,%19.0g,E069_33,Confidence: Local/Regional Government
+402,E069_40,byte,1,%19.0g,E069_40,Confidence: Charitable or humanitarian organizations
+403,E069_41,byte,1,%19.0g,E069_41,Confidence: Banks
+404,E069_42,byte,1,%19.0g,E069_42,Confidence: CARICOM
+405,E069_43,byte,1,%19.0g,E069_43,Confidence: CIS
+406,E069_44,byte,1,%19.0g,E069_44,Confidence: Confidence in CER with Australia
+407,E069_45,byte,1,%19.0g,E069_45,Confidence: International Monetary Found (IMF)
+408,E069_54,byte,1,%19.0g,E069_54,Confidence: Universities
+409,E069_55,byte,1,%19.0g,E069_55,Confidence: The Organization of the Islamic World
+410,E069_56,byte,1,%19.0g,E069_56,Confidence: The Organization of American States (OAE)
+411,E069_59,byte,1,%19.0g,E069_59,Confidence: Cooperation Council for the Arab states of Gulf (GCC)
+412,E104,byte,1,%19.0g,E104,Approval: Ecology movement or nature protection
+413,E105,byte,1,%19.0g,E105,Approval: Anti-nuclear energy movement
+414,E106,byte,1,%19.0g,E106,Approval: Disarmament movement
+415,E107,byte,1,%19.0g,E107,Approval: Human rights movement
+416,E108,byte,1,%19.0g,E108,Approval: Women’s movement
+417,E109,byte,1,%19.0g,E109,Approval: Anti-apartheid movement
+418,E110,byte,1,%20.0g,E110,Satisfaction with the way democracy develops
+419,E111,byte,1,%19.0g,E111,Rate political system for governing country
+420,E111_01,byte,1,%20.0g,E111_01,Satisfaction with the political system
+421,E112,byte,1,%19.0g,E112,Rate political system as it was before
+422,E113,byte,1,%19.0g,E113,Rate political system in ten years
+423,E114,byte,1,%19.0g,E114,Political system: Having a strong leader
+424,E115,byte,1,%19.0g,E115,Political system: Having experts make decisions
+425,E116,byte,1,%19.0g,E116,Political system: Having the army rule
+426,E117,byte,1,%19.0g,E117,Political system: Having a democratic political system
+427,E118,byte,1,%24.0g,E118,Firm party leader vs. Cooperating party leader
+428,E119,byte,1,%36.0g,E119,Government order vs. freedom
+429,E120,byte,1,%19.0g,E120,"In democracy, the economic system runs badly"
+430,E121,byte,1,%19.0g,E121,Democracies are indecisive and have too much squabbling
+431,E122,byte,1,%19.0g,E122,Democracies aren´t good at maintaining order
+432,E123,byte,1,%19.0g,E123,Democracy may have problems but is better
+433,E124,byte,1,%53.0g,E124,Respect for individual human rights nowadays
+434,E125,byte,1,%19.0g,E125,Satisfaction with the people in national office
+435,E128,byte,1,%26.0g,E128,Country is run by big interest vs. for all people’s benefit
+436,E129,byte,1,%28.0g,E129,Economic aid to poorer countries
+437,E135,byte,1,%43.0g,E135,Who should decide: international peacekeeping
+438,E136,byte,1,%43.0g,E136,Who should decide: protection of the environment
+439,E137,byte,1,%43.0g,E137,Who should decide: aid to developing countries
+440,E138,byte,1,%43.0g,E138,Who should decide: refugees
+441,E139,byte,1,%43.0g,E139,Who should decide: human rights
+442,E140,byte,1,%19.0g,E140,Country cannot solve environmental problems by itself
+443,E141,byte,1,%19.0g,E141,Country cannot solve crime problems by itself
+444,E142,byte,1,%19.0g,E142,Country cannot solve employment problems by itself
+445,E143,byte,1,%48.0g,E143,Immigrant policy
+446,E144,byte,1,%19.0g,E144,Living day to day because of uncertain future
+447,E150,byte,1,%20.0g,E150,How often follows politics in the news
+448,E151,byte,1,%26.0g,E151,Give authorities information to help justice
+449,E152,byte,1,%26.0g,E152,Stick to own affairs
+450,E153,byte,1,%19.0g,E153,Feel concerned about immediate family
+451,E154,byte,1,%19.0g,E154,Feel concerned about people in the neighbourhood
+452,E155,byte,1,%19.0g,E155,Feel concerned about people in the region
+453,E156,byte,1,%19.0g,E156,Feel concerned about fellow countrymen
+454,E157,byte,1,%19.0g,E157,Feel concerned about Europeans
+455,E158,byte,1,%19.0g,E158,Feel concerned about human kind
+456,E159,byte,1,%19.0g,E159,Feel concerned about elderly people
+457,E160,byte,1,%19.0g,E160,Feel concerned about unemployed people
+458,E161,byte,1,%19.0g,E161,Feel concerned about immigrants
+459,E162,byte,1,%19.0g,E162,Feel concerned about sick and disabled people
+460,E179,long,1,%120.0g,E179,Which political party would you vote for first choice (ISO 3166-1)
+461,E179WVS,long,1,%133.0g,E179WVS,Which party would you vote for: first choice (WVS)
+462,E180WVS,long,1,%133.0g,E180WVS,Which party would you vote for: second choice (WVS)
+463,E181,long,1,%120.0g,E181,"If don´t know, which party appeals to you most (ISO 3166-1)"
+464,E181A,long,1,%120.0g,E181A,Which political party appeals to you most (ISO 3166-1)
+465,E181C,byte,1,%19.0g,E181C,Which political party would you vote for/appeals to you - left/right scale
+466,E182,long,1,%133.0g,E182,Party that would never vote
+467,E188,byte,1,%25.0g,E188,Frequency watches TV
+468,E189,byte,1,%19.0g,E189,TV most important entertainment
+469,E190,byte,1,%29.0g,E190,Why are there people living in need: first
+470,E191,byte,1,%29.0g,E191,Why are there people living in need: second
+471,E197,byte,1,%37.0g,E197,Opinion on terrorism
+472,E217,byte,1,%19.0g,E217,"Science and technology are making our lives healthier, easier, and more comforta"
+473,E218,byte,1,%19.0g,E218,"Because of science and technology, there will be more opportunities for the next"
+474,E220,byte,1,%19.0g,E220,We depend too much on science and not enough on faith
+475,E221B,byte,1,%19.0g,E221B,Political action recently done: Attending peaceful/lawful demonstrations
+476,E222,byte,1,%19.0g,E222,Political action: Other
+477,E222B,byte,1,%19.0g,E222B,Political action recently done: Other
+478,E224,byte,1,%44.0g,E224,Democracy: Governments tax the rich and subsidize the poor.
+479,E225,byte,1,%44.0g,E225,Democracy: Religious authorities interpret the laws.
+480,E226,byte,1,%44.0g,E226,Democracy: People choose their leaders in free elections.
+481,E227,byte,1,%44.0g,E227,Democracy: People receive state aid for unemployment.
+482,E228,byte,1,%44.0g,E228,Democracy: The army takes over when government is incompetent.
+483,E229,byte,1,%44.0g,E229,Democracy: Civil rights protect people’s liberty against oppression.
+484,E233,byte,1,%44.0g,E233,Democracy: Women have the same rights as men.
+485,E233A,byte,1,%44.0g,E233A,Democracy: The state makes people's incomes equal
+486,E233B,byte,1,%44.0g,E233B,Democracy: People obey their rulers
+487,E234,byte,1,%19.0g,E234,"The world is better off, or worse off, because of science and technology"
+488,E235,byte,1,%20.0g,E235,Importance of democracy
+489,E236,byte,1,%21.0g,E236,Democraticness in own country
+490,E238,byte,1,%39.0g,E238,Most serious problem of the world: 1st choice
+491,E248,byte,1,%19.0g,E248,Information source: Daily newspaper
+492,E248B,byte,1,%19.0g,E248B,Information source: Daily newspaper (B)
+493,E250,byte,1,%19.0g,E250,Information source: Printed magazines
+494,E254,byte,1,%19.0g,E254,Information source: Talk with friends or colleagues
+495,E254B,byte,1,%19.0g,E254B,Information source: Talk with friends or colleagues (B)
+496,E255,byte,1,%29.0g,E255,How often use of PC
+497,E258B,byte,1,%19.0g,E258B,Information source: TV news (B)
+498,E259B,byte,1,%19.0g,E259B,Information source: Radio news (B)
+499,E260B,byte,1,%19.0g,E260B,Information source: Mobile phone (B)
+500,E261B,byte,1,%19.0g,E261B,Information source: Email (B)
+501,E262B,byte,1,%19.0g,E262B,Information source: Internet (B)
+502,E263,byte,1,%19.0g,E263,Vote in elections: local level
+503,E264,byte,1,%19.0g,E264,Vote in elections: National level
+504,E265_01,byte,1,%19.0g,E265_01,How often in country's elections: Votes are counted fairly
+505,E265_02,byte,1,%19.0g,E265_02,How often in country's elections: Opposition candidates are prevented from runni
+506,E265_03,byte,1,%19.0g,E265_03,How often in country's elections: TV news favors the governing party
+507,E265_04,byte,1,%19.0g,E265_04,How often in country's elections: Voters are bribed
+508,E265_05,byte,1,%19.0g,E265_05,How often in country's elections: Journalists provide fair coverage of elections
+509,E265_06,byte,1,%19.0g,E265_06,How often in country's elections: Election officials are fair
+510,E265_07,byte,1,%19.0g,E265_07,How often in country's elections: Rich people buy elections
+511,E265_08,byte,1,%19.0g,E265_08,How often in country's elections: Voters are threatened with  violence at the po
+512,E265_09,byte,1,%19.0g,E265_09,How often in country's elections: Voters are offered a genuine choice in the ele
+513,E266,byte,1,%20.0g,E266,Some people think that having honest elections makes a lot of difference in thei
+514,E290,byte,1,%19.0g,E290,Justifiable: Political violence
+515,F001,byte,1,%19.0g,F001,Thinking about meaning and purpose of life
+516,F003,byte,1,%19.0g,F003,Thinking about death
+517,F004,byte,1,%19.0g,F004,Life is meaningful because God exists
+518,F005,byte,1,%19.0g,F005,Try to get the best out of life
+519,F006,byte,1,%19.0g,F006,Death is inevitable
+520,F007,byte,1,%19.0g,F007,Death has meaning if you believe in God
+521,F008,byte,1,%19.0g,F008,Death is a natural resting point
+522,F009,byte,1,%19.0g,F009,Sorrow has meaning if you believe in God
+523,F010,byte,1,%19.0g,F010,Life has no meaning
+524,F022,byte,1,%44.0g,F022,Statement: good and evil
+525,F024,byte,1,%19.0g,F024,Belong to religious denomination
+526,F025,byte,1,%58.0g,F025,Religious denomination (major groups)
+527,F025_EVS,long,1,%79.0g,F025_EVS,Religious denomination (country-specific)
+528,F025_WVS,long,1,%80.0g,F025_WVS,Religious denomination - detailed list
+529,F026,byte,1,%19.0g,F026,Former religious denomination
+530,F027,byte,1,%58.0g,F027,Which former religious denomination
+531,F028,byte,1,%47.0g,F028,How often do you attend religious services
+532,F028B,byte,1,%47.0g,F028B,How often to you pray
+533,F029,byte,1,%19.0g,F029,Raised religiously
+534,F030,byte,1,%42.0g,F030,Attendance religious services 12 years old
+535,F031,byte,1,%19.0g,F031,Important: Religious service birth
+536,F032,byte,1,%19.0g,F032,Important: Religious service marriage
+537,F033,byte,1,%19.0g,F033,Important: Religious service death
+538,F034,byte,1,%22.0g,F034,Religious person
+539,F035,byte,1,%19.0g,F035,Churches give answers: moral problems
+540,F036,byte,1,%19.0g,F036,Churches give answers: the problems of family life
+541,F037,byte,1,%19.0g,F037,Churches give answers: people´s spiritual needs
+542,F038,byte,1,%19.0g,F038,Churches give answers: the social problems
+543,F040,byte,1,%19.0g,F040,Churches speak out on: disarmament
+544,F041,byte,1,%19.0g,F041,Churches speak out on: abortion
+545,F042,byte,1,%19.0g,F042,Churches speak out on: third world problems
+546,F043,byte,1,%19.0g,F043,Churches speak out on: extramarital affairs
+547,F044,byte,1,%19.0g,F044,Churches speak out on: unemployment
+548,F045,byte,1,%19.0g,F045,Churches speak out on: racial discrimination
+549,F046,byte,1,%19.0g,F046,Churches speak out on: euthanasia
+550,F047,byte,1,%19.0g,F047,Churches speak out on: homosexuality
+551,F048,byte,1,%19.0g,F048,Churches speak out on: ecology and environmental issues
+552,F049,byte,1,%19.0g,F049,Churches speak out on: government policy
+553,F050,byte,1,%19.0g,F050,Believe in: God
+554,F051,byte,1,%19.0g,F051,Believe in: life after death
+555,F052,byte,1,%19.0g,F052,Believe in: people have a soul
+556,F053,byte,1,%19.0g,F053,Believe in: hell
+557,F054,byte,1,%19.0g,F054,Believe in: heaven
+558,F055,byte,1,%19.0g,F055,Believe in: sin
+559,F057,byte,1,%19.0g,F057,Believe in: re-incarnation
+560,F059,byte,1,%19.0g,F059,Believe in: devil
+561,F060,byte,1,%19.0g,F060,Believe in: resurrection of the dead
+562,F062,byte,1,%27.0g,F062,Personal God vs. Spirit or Life Force
+563,F063,byte,1,%20.0g,F063,How important is God in your life
+564,F064,byte,1,%19.0g,F064,Get comfort and strength from religion
+565,F065,byte,1,%19.0g,F065,"Moments of prayer, meditation..."
+566,F066,byte,1,%21.0g,F066,Pray to God outside of religious services (i)
+567,F067,byte,1,%23.0g,F067,Pray to God outside of religious services (ii)
+568,F099,byte,1,%19.0g,F099,Lucky charm protects
+569,F102,byte,1,%26.0g,F102,Politicians who don´t believe in God are unfit for public office
+570,F103,byte,1,%26.0g,F103,Religious leaders should not influence how people vote
+571,F104,byte,1,%26.0g,F104,Better if more people with strong religious beliefs in public office
+572,F105,byte,1,%26.0g,F105,Religious leaders should not influence government
+573,F114,byte,1,%19.0g,F114,Justifiable: Claiming government benefits
+574,F114A,byte,1,%19.0g,F114A,Justifiable: Claiming government benefits to which you are not entitled
+575,F114B,byte,1,%22.0g,F114B,Justifiable: Stealing property
+576,F114C,byte,1,%22.0g,F114C,Justifiable: Parents beating children
+577,F114D,byte,1,%22.0g,F114D,Justifiable: Violence against other people
+578,F115,byte,1,%19.0g,F115,Justifiable: Avoiding a fare on public transport
+579,F116,byte,1,%19.0g,F116,Justifiable: Cheating on taxes
+580,F117,byte,1,%19.0g,F117,Justifiable: Someone accepting a bribe
+581,F118,byte,1,%19.0g,F118,Justifiable: Homosexuality
+582,F119,byte,1,%19.0g,F119,Justifiable: Prostitution
+583,F120,byte,1,%19.0g,F120,Justifiable: Abortion
+584,F121,byte,1,%19.0g,F121,Justifiable: Divorce
+585,F122,byte,1,%19.0g,F122,Justifiable: Euthanasia
+586,F123,byte,1,%19.0g,F123,Justifiable: Suicide
+587,F125,byte,1,%19.0g,F125,Justifiable: Joyriding
+588,F126,byte,1,%19.0g,F126,Justifiable: Taking soft drugs
+589,F127,byte,1,%19.0g,F127,Justifiable: Lying
+590,F128,byte,1,%19.0g,F128,Justifiable: Adultery
+591,F129,byte,1,%19.0g,F129,Justifiable: Throwing away litter
+592,F130,byte,1,%19.0g,F130,Justifiable: Driving under influence of alcohol
+593,F131,byte,1,%19.0g,F131,Justifiable: Paying cash
+594,F132,byte,1,%19.0g,F132,Justifiable: Having casual sex
+595,F135,byte,1,%19.0g,F135,Justifiable: Sex under the legal age of consent
+596,F135A,byte,1,%22.0g,F135A,Justifiable: Sex before marriage
+597,F136,byte,1,%19.0g,F136,Justifiable: Political assassination
+598,F137,byte,1,%19.0g,F137,Justifiable: Experiments with human embryos
+599,F138,byte,1,%19.0g,F138,Justifiable: Manipulation of food
+600,F139,byte,1,%19.0g,F139,Justifiable: Buy stolen goods
+601,F140,byte,1,%19.0g,F140,Justifiable: Keeping money that you have found
+602,F141,byte,1,%19.0g,F141,Justifiable: Fighting with the police
+603,F142,byte,1,%19.0g,F142,Justifiable: Failing to report damage you’ve done accidentally to a parked vehic
+604,F143,byte,1,%19.0g,F143,Justifiable: Threatening workers who refuse to join a strike
+605,F144,byte,1,%19.0g,F144,Justifiable: Killing in self-defence
+606,F144_01,byte,1,%19.0g,F144_01,Justifiable: Invitro fertilization
+607,F144_02,byte,1,%19.0g,F144_02,Justifiable: Death penalty
+608,F199,byte,1,%22.0g,F199,Justifiable: For a man to beat his wife
+609,F200,byte,1,%37.0g,F200,Meaning of religion: To follow religious norms and ceremonies vs To do good to o
+610,F201,byte,1,%32.0g,F201,Meaning of religion: To make sense of life after death vs To make sense of life
+611,F202,byte,1,%19.0g,F202,"Whenever science and religion conflict,  religion is always right"
+612,F203,byte,1,%19.0g,F203,The only acceptable religion  is my religion
+613,G001,byte,1,%19.0g,G001,Geographical groups belonging to first
+614,G001CS,long,1,%12.0g,LABC,Geographical groups belonging to first (country-specific)
+615,G002,byte,1,%19.0g,G002,Geographical groups belonging to second
+616,G002CS,long,1,%12.0g,LABC,Geographical groups belonging to second  (country-specific)
+617,G003CS,long,1,%66.0g,G003CS,Geographical groups belonging to least of all (country specific)
+618,G005,byte,1,%19.0g,G005,Citizen of [country]
+619,G006,byte,1,%56.0g,G006,How proud of nationality
+620,G007_01,byte,1,%31.0g,G007_01,Trust: Other people in country
+621,G007_18_B,byte,1,%8.0g,G007_18,Trust: Your neighborhood (B)
+622,G007_33_B,byte,1,%8.0g,G007_33,Trust: People you know personally (B)
+623,G007_34_B,byte,1,%8.0g,G007_34,Trust: People you meet for the first time (B)
+624,G007_35_B,byte,1,%8.0g,G007_35,Trust: People of another religion (B)
+625,G007_36_B,byte,1,%8.0g,G007_36,Trust: People of another nationality (B)
+626,G014,byte,1,%25.0g,G014,Opinion European union
+627,G016,int,1,%44.0g,G016,Language at home
+628,G017,byte,1,%19.0g,G017,Born in this country: birth country
+629,G018,byte,1,%22.0g,G018,When came to country
+630,G019,byte,1,%19.0g,G019,I see myself as a world citizen
+631,G020,byte,1,%19.0g,G020,I see myself as member of my local community
+632,G021,byte,1,%19.0g,G021,I see myself as citizen of the [country] nation
+633,G022A,byte,1,%19.0g,G022A,I see myself as citizen of [Latinamerica]
+634,G022B,byte,1,%19.0g,G022B,I see myself as citizen of [North America]
+635,G022C,byte,1,%19.0g,G022C,I see myself as citizen of the [European Union]
+636,G022D,byte,1,%19.0g,G022D,I see myself as citizen of [APEC]
+637,G022E,byte,1,%19.0g,G022E,I see myself as citizen of [ASIA]
+638,G022F,byte,1,%19.0g,G022F,I see myself as citizen of [Mercosur]
+639,G022K,byte,1,%19.0g,G022K,I see myself as citizen of [The African Union]
+640,G022L,byte,1,%19.0g,G022L,I see myself as citizen of [Arab Maghreb Union]
+641,G022M,byte,1,%19.0g,G022M,I see myself as citizen of [ASEAN]
+642,G022N,byte,1,%19.0g,G022N,I see myself as citizen of [Arab Union]
+643,G023,byte,1,%19.0g,G023,I see myself as an autonomous individual
+644,G026,byte,1,%19.0g,G026,Mother immigrant
+645,G027,byte,1,%19.0g,G027,Father immigrant
+646,G027A,byte,1,%33.0g,G027A,Respondent immigrant
+647,G027B,byte,1,%39.0g,G027B,Respondent citizen
+648,G033,byte,1,%20.0g,G033,Important: to have been born in [country]
+649,G034,byte,1,%20.0g,G034,Important: to respect [country nationality] political institutions and laws
+650,G035,byte,1,%20.0g,G035,Important: to have [country nationality] ancestry
+651,G036,byte,1,%20.0g,G036,Important: to be able to speak [country language]
+652,G038,byte,1,%19.0g,G038,Immigrants take away jobs from [nationality]
+653,G040,byte,1,%20.0g,G040,Immigrants increase crime problems
+654,G041,byte,1,%19.0g,G041,Immigrants are a strain on welfare system
+655,G043,byte,1,%40.0g,G043,Immigrants maintain own/take over customs
+656,G051,byte,1,%19.0g,G051,European Union enlargement
+657,G052,byte,1,%21.0g,G052,Evaluate the impact of immigrants on the development of [your country]
+658,G062,byte,1,%8.0g,LABD,"How close you feel: continent; e.g. Europe, Asia etc."
+659,G063,byte,1,%8.0g,LABD,How close you feel: world
+660,G255,byte,1,%8.0g,LABD,"How close you feel: your [village, town or city]"
+661,G256,byte,1,%8.0g,LABD,"How close do you feel: to your county, region, district"
+662,G257,byte,1,%8.0g,LABD,How close do you feel: to country
+663,H001,byte,1,%19.0g,H001,Secure in neighborhood
+664,H002_01,byte,1,%21.0g,H002_01,Frequency in your neighborhood: Robberies
+665,H002_02,byte,1,%21.0g,H002_02,Frequency in your neighborhood: Alcohol consumed in the streets
+666,H002_03,byte,1,%21.0g,H002_03,Frequency in your neighborhood: Police or military interfere with people’s pri
+667,H002_04,byte,1,%21.0g,H002_04,Frequency in your neighborhood: Racist behavior
+668,H002_05,byte,1,%21.0g,H002_05,Frequency in your neighborhood: Drug sale in streets
+669,H003_01,byte,1,%19.0g,H003_01,Things done for reasons of security: Didn’t carry much money
+670,H003_02,byte,1,%19.0g,H003_02,Things done for reasons of security: Preferred not to go out at night
+671,H003_03,byte,1,%19.0g,H003_03,"Things done for reasons of security: Carried a knife, gun or other weapon"
+672,H004,byte,1,%19.0g,H004,Respondent was victim of a crime during the past year
+673,H005,byte,1,%19.0g,H005,Respondent's family was victim of a crime during last year
+674,H006_01,byte,1,%19.0g,H006_01,Worries: Losing my job or not finding a job
+675,H006_02,byte,1,%19.0g,H006_02,Worries: Not being able to give one's children a good education
+676,H006_03,byte,1,%19.0g,H006_03,Worries: A war involving my country
+677,H006_04,byte,1,%19.0g,H006_04,Worries: A terrorist attack
+678,H006_05,byte,1,%19.0g,H006_05,Worries: A civil war
+679,H008_01,byte,1,%19.0g,H008_01,Frequency you/family (last 12 month): Gone without enough food to eat
+680,H008_02,byte,1,%19.0g,H008_02,Frequency you/family (last 12 month): Felt unsafe from crime in your own home
+681,H008_03,byte,1,%19.0g,H008_03,Frequency you/family (last 12 month): Gone without needed medicine or treatment
+682,H008_04,byte,1,%19.0g,H008_04,Frequency you/family (last 12 month): Gone without a cash income
+683,H009,byte,1,%8.0g,LABE,Government has the right: Keep people under video surveillance in public areas
+684,H010,byte,1,%8.0g,LABE,Government has the right: Monitor all e-mails and any other information exchange
+685,H011,byte,1,%8.0g,LABE,Government has the right: Collect information about anyone living in [COUNTRY] w
+686,I001,byte,1,%19.0g,I001,One of the bad effects of science is that it breaks down people’s ideas of rig
+687,I002,byte,1,%19.0g,I002,It is not important for me to know about science in my daily life
+688,V001,byte,1,%19.0g,V001,Father born in country
+689,V001A,int,1,%52.0g,V001A,Fathers country of birth: ISO 3166-1 code
+691,V002,byte,1,%19.0g,V002,Mother born in country
+692,V002A,int,1,%52.0g,V002A,Mothers country of birth: ISO 3166-1 code
+694,V004AF,byte,1,%8.0g,LABF,Educational level father: ISCED 97 - one digit
+695,V004AF_01,byte,1,%8.0g,V004AF_0,Educational level father: ISCED 11 - one digit
+696,V004AM_01,byte,1,%8.0g,V004AM_0,Educational level mother: ISCED 11 - one digit
+697,V004DF,long,1,%12.0g,LABG,"Educational level father: country-specific, ISO 3166-1"
+698,V004EF,byte,1,%8.0g,LABH,Educational level father: 8 categories
+699,V004RF,byte,1,%19.0g,V004RF,Educational level father: recoded
+700,V004RM,byte,1,%19.0g,V004RM,Educational level mother: recoded
+701,V005F,byte,1,%19.0g,V005F,"At age 14, was father employed"
+702,V011,byte,1,%19.0g,V011,Mother liked to read books
+703,V012,byte,1,%19.0g,V012,Discussed politics with mother
+704,V013,byte,1,%19.0g,V013,Mother liked to follow the news
+705,V014,byte,1,%19.0g,V014,Parent(s) had problems making ends meet
+706,V015,byte,1,%19.0g,V015,Father liked to read books
+707,V016,byte,1,%19.0g,V016,Discussed politics with father
+708,V017,byte,1,%19.0g,V017,Father liked to follow the news
+709,V018,byte,1,%19.0g,V018,Parent(s) had problems replacing broken things
+710,V097EF,byte,1,%50.0g,V097EF,Occupational group - respondent´s father (EVS5 - main earner) (respondent  14 ye
+711,W001,byte,1,%19.0g,W001,Spouse/partner born in [country]
+712,W001A,int,1,%52.0g,W001A,Spouse/partners country of birth: ISO 3166-1 code
+714,W002A,byte,1,%8.0g,LABF,Educational level spouse/partner: ISCED 97 - one digit
+715,W002A_01,byte,1,%27.0g,W002A_01,Educational level spouse/partner: ISCED 11 -one digit
+716,W002D,long,1,%12.0g,LABG,Educational level spouse/partner: Country-specific
+717,W002E,byte,1,%8.0g,LABH,Educational level spouse/partner: 8 categories
+718,W002R,byte,1,%19.0g,W002R,Educational level spouse/partner: recoded
+719,W003,byte,1,%37.0g,W003,Employment status spouse/partner
+720,W004,byte,1,%20.0g,W004,Employment status spouse/partner: last job
+721,W005_2,byte,1,%57.0g,W005_2,Job profession/industry (2-digit ISCO88) - spouse/partner
+722,W005_2_01,byte,1,%8.0g,W005_2_0,Job profession/industry (2-digit ISCO08) - spouse/partner
+723,W006A,byte,1,%19.0g,W006A,Occupational status spouse/partner - SIOPS
+724,W006B,byte,1,%19.0g,W006B,Occupational status spouse/partner - ISEI
+725,W006C,byte,1,%60.0g,W006C,Occupational status spouse/partner - European ESeC
+726,W006D,byte,1,%24.0g,W006D,Occupational status spouse/partner - egp11
+727,W007,byte,1,%19.0g,W007,Spouse/partner had/has how many employees
+728,W008,byte,1,%19.0g,W008,Does spouse/partner supervise someone
+729,W009,byte,1,%19.0g,W009,How many people does she/he supervise
+730,X001,byte,1,%19.0g,X001,Sex
+731,X002,int,1,%29.0g,X002,Year of birth
+732,X002_02,byte,1,%19.0g,X002_02,Respondent born in [country]
+733,X002_02A,int,1,%52.0g,X002_02A,Respondents country of birth: ISO 3166-1 code
+735,X002_03,int,1,%19.0g,X002_03,Year in which respondent came to live in [country]
+736,X003,int,1,%25.0g,X003,Age
+737,X003R,byte,1,%19.0g,X003R,Age recoded
+738,X003R2,byte,1,%19.0g,X003R2,Age recoded (3 intervals)
+739,X004,byte,1,%19.0g,X004,Stable relationship
+740,X006,byte,1,%19.0g,X006,Stable relationship before
+741,X007,byte,1,%55.0g,X007,Marital status
+742,X007_01,byte,1,%19.0g,X007_01,Lived with partner before marriage
+743,X007_02,byte,1,%19.0g,X007_02,Living with partner
+744,X008,byte,1,%19.0g,X008,Have you been married before
+745,X011,byte,1,%55.0g,X011,How many children do you have
+746,X011A,byte,1,%19.0g,X011A,Have you had any children
+747,X012,byte,1,%55.0g,X012,How many are still living at home
+748,X013,byte,1,%35.0g,X013,Number of people in household
+749,X023,float,1,%31.0g,X023,What age did you complete your education
+750,X023R,byte,1,%19.0g,X023R,What age did you complete your education (recoded in intervals)
+751,X025,byte,1,%8.0g,LABH,Educational level respondent: 8 categories
+752,X025A,byte,1,%8.0g,LABF,Educational level respondent: ISCED 97 - one digit
+753,X025A_01,byte,1,%27.0g,X025A_01,Educational level respondent: ISCED 11 ‐ one digit
+754,X025CSEVS,long,1,%12.0g,LABG,Educational level respondent: country-specific
+755,X025CSWVS,long,1,%12.0g,X025CSWV,Education (country specific)
+756,X025R,byte,1,%19.0g,X025R,Educational level respondent: recoded
+757,X026,byte,1,%19.0g,X026,Do you live with your parents (yes/no)
+758,X026_01,byte,1,%44.0g,X026_01,Do you live with your parents (4 categories)
+759,X028,byte,1,%19.0g,X028,Employment status
+760,X028_01,byte,1,%20.0g,X028_01,Employment status: last job
+761,X031,byte,1,%19.0g,X031,Are you supervising someone
+762,X032R_01,byte,1,%19.0g,X032R_01,Number of supervised people (3 categories)
+763,X034R_01,byte,1,%19.0g,X034R_01,Number of employees (4 categories)
+764,X035_2,byte,1,%62.0g,X035_2,Job profession/industry (2-digit ISCO88) - respondent
+765,X035_2_01,byte,1,%8.0g,X035_2_0,Job profession/industry (2-digit ISCO08) - respondent
+766,X036,byte,1,%60.0g,X036,Profession/job
+767,X036A,byte,1,%19.0g,X036A,Occupational status respondent - SIOPS
+768,X036B,byte,1,%19.0g,X036B,Occupational status respondent - ISEI
+769,X036C,byte,1,%24.0g,X036C,Occupational status respondent - egp11
+770,X036D,byte,1,%56.0g,X036D,Occupational status respondent - European ESeC
+771,X037_01,byte,1,%19.0g,X037_01,Respondent experienced unemployment longer than 3 months
+772,X037_02,byte,1,%19.0g,X037_02,Dependency on social security during last 5 years respondent
+773,X040,byte,1,%19.0g,X040,Are you the chief wage earner in your house
+774,X041,byte,1,%19.0g,X041,Is the chief wage earner employed now
+775,X043,byte,1,%60.0g,X043,Chief wage earner profession/job
+776,X044,byte,1,%37.0g,X044,Family savings during past year
+777,X045,byte,1,%19.0g,X045,Social class (subjective)
+778,X046,byte,1,%41.0g,X046,Socio-economic status of respondent
+779,X047_EVS,byte,1,%19.0g,X047_EVS,Scale of incomes (EVS)
+780,X047_WVS,byte,1,%19.0g,X047_WVS,Scale of incomes
+781,X047CS,long,1,%72.0g,X047CS,Income (country-specific)
+782,X047D,double,1,%19.0g,X047D,"Monthly household income (x1000), corrected for ppp in euros"
+783,X047R_EVS,byte,1,%8.0g,X047R_EV,Income level (3 categories) EVS
+784,X047R_WVS,byte,1,%8.0g,X047R_WV,Subjective income level (recoded in 3 groups)
+785,X048_EVS,long,1,%43.0g,X048_EVS,Region where the interview was conducted
+790,X048ISO,long,1,%63.0g,X048ISO,Region ISO 3166-2
+791,X048WVS,long,1,%82.0g,X048WVS,Region where the interview was conducted (WVS)
+792,X049,byte,1,%32.0g,X049,Size of town
+793,X049A,byte,1,%19.0g,X049A,Size of town where interview was conducted (5 categories)
+794,X049CS,long,1,%20.0g,X049CS,Size of town (country-specific)
+795,X050,byte,1,%19.0g,X050,Type of habitat
+796,X050C,byte,1,%19.0g,X050C,Urban/Rural habitat
+797,X051,long,1,%72.0g,X051,Ethnic group
+798,X052,byte,1,%31.0g,X052,Institution of occupation
+799,X053,byte,1,%23.0g,X053,Nature of tasks: manual vs. Cognitive
+800,X054,byte,1,%24.0g,X054,Nature of tasks: routine vs. Creative
+801,X055,byte,1,%22.0g,X055,Nature of tasks: independence
+802,Y001,byte,1,%19.0g,Y001,Post-Materialist index 12-item
+803,Y002,byte,1,%19.0g,Y002,Post-Materialist index 4-item
+804,Y003,byte,1,%40.0g,Y003,Autonomy Index
+805,Y010,double,1,%19.0g,Y010,SACSECVAL.- Welzel Overall Secular Values
+806,Y011,double,1,%19.0g,Y011,DEFIANCE.- Welzel defiance sub-index
+807,Y011A,float,1,%19.0g,Y011A,AUTHORITY - Welzel defiance - 1: Inverse respect for authority
+808,Y011B,double,1,%19.0g,Y011B,NATIONALISM - Welzel defiance - 2: Inverse national pride
+809,Y011C,double,1,%19.0g,Y011C,DEVOUT- Welzel defiance - 3: Inverse devoutness
+810,Y012,double,1,%19.0g,Y012,DISBELIEF.- Welzel disbelief sub-index
+811,Y012A,double,1,%19.0g,Y012A,RELIGIMP - Welzel disbelief- 1: Inverse importance of religion
+812,Y012B,byte,1,%24.0g,Y012B,RELIGBEL - Welzel disbelief- 2: Inverse religious person
+813,Y012C,double,1,%19.0g,Y012C,RELIGPRAC - Welzel disbelief- 3: Inverse religious practice
+814,Y013,double,1,%19.0g,Y013,RELATIVISM.- Welzel relativism
+815,Y013A,byte,1,%19.0g,Y013A,NORM1 - Welzel relativism- 1: Inverse norm conform1
+816,Y013B,byte,1,%19.0g,Y013B,NORM2 - Welzel relativism- 2: Inverse norm conform2
+817,Y013C,byte,1,%19.0g,Y013C,NORM3 - Welzel relativism- 3: Inverse norm conform3
+818,Y014,double,1,%19.0g,Y014,SCEPTICISM.- Welzel scepticism index
+819,Y014A,double,1,%19.0g,Y014A,TRUSTARMY- Welzel scepticism- 1: Inverse trust in army
+820,Y014B,double,1,%19.0g,Y014B,TRUSTPOLICE- Welzel scepticism- 2: Inverse trust in police
+821,Y014C,double,1,%19.0g,Y014C,TRUSTCOURTS- Welzel scepticism- 3: Inverse trust in courts
+822,Y020,double,1,%19.0g,Y020,RESEMAVAL.- Welzel emancipative values
+823,Y021,double,1,%19.0g,Y021,AUTONOMY.- Wezel Autonomy subindex
+824,Y021A,byte,1,%19.0g,Y021A,INDEP- Welzel autonomy-1: Independence as kid quality
+825,Y021B,byte,1,%19.0g,Y021B,IMAGIN- Welzel autonomy-2: Imagination as kid quality
+826,Y021C,byte,1,%19.0g,Y021C,NONOBED- Welzel autonomy-3: Obedience as kid quality
+827,Y022,double,1,%19.0g,Y022,EQUALITY.- Welzel equality sub-index
+828,Y022A,float,1,%19.0g,Y022A,WOMJOB- Welzel equality-1: Gender equality: job
+829,Y022B,double,1,%19.0g,Y022B,WOMPOL- Welzel equality-2: Gender equality: politics
+830,Y022C,double,1,%19.0g,Y022C,WOMEDU- Welzel equality-3: Gender equality: education
+831,Y023,double,1,%19.0g,Y023,CHOICE.- Welzel choice sub-index
+832,Y023A,double,1,%19.0g,Y023A,HOMOLIB- Welzel choice-1: Homosexuality acceptance
+833,Y023B,double,1,%19.0g,Y023B,ABORTLIB- Welzel choice-2: Abortion acceptable
+834,Y023C,double,1,%19.0g,Y023C,DIVORLIB- Welzel choice-3: Divorce acceptable
+835,Y024,double,1,%19.0g,Y024,VOICE.- Welzel voice sub-index
+836,Y024A,double,1,%19.0g,Y024A,VOICE1- Welzel voice-1
+837,Y024B,float,1,%19.0g,Y024B,VOICE2- Welzel voice-2
+838,Y024C,double,1,%19.0g,Y024C,VOI2_00- Welzel voice-3 (auxiliary)
