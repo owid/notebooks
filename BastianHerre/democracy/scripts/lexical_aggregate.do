@@ -1,6 +1,6 @@
 *****  This Stata do-file aggregates some of the variables in the LIED dataset
 *****  Author: Bastian Herre
-*****  September 5, 2023
+*****  February 16, 2024
 
 version 14
 clear all
@@ -19,19 +19,23 @@ global project "/Users/bastianherre/Dropbox/Data/"
 use "democracy/datasets/refined/lexical_refined.dta", clear
 
 * Create indicator variables for specific regime categories:
+tabulate democracy_lied, generate(democracy_lied)
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
 tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied*, by(year)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
+collapse (sum) democracy_lied* regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied*, by(year)
+drop democracy_lied regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 generate country_name = "World"
 
 * Rename variables:
+rename democracy_lied1 number_aut_lied
+rename democracy_lied2 number_dem_lied
+
 rename regime_lied1 number_nonelectaut_lied
 rename regime_lied2 number_onepaut_lied
 rename regime_lied3 number_multipautne_lied
@@ -73,6 +77,10 @@ tab country_name if _merge == 1 // Unmerged observations are historical countrie
 drop _merge
 
 * Recode regime classification such that it includes a category for when population data is available, but regime data is missing:
+replace democracy_lied = 2 if democracy_lied == . & population_owid != .
+label values democracy_lied democracy_lied
+label define democracy_lied 2 "no regime data", add
+
 replace regime_lied = 9 if regime_lied == . & population_owid != .
 label values regime_lied regime_lied
 label define regime_lied 9 "no regime data", add
@@ -83,19 +91,24 @@ label define suffrage_lied 4 "no suffrage data", add
 drop if population_owid == .
 
 * Create indicator variables for specific regime categories:
+tabulate democracy_lied, generate(democracy_lied)
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
 tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied* [fweight = population_owid], by(year)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
+collapse (sum) democracy_lied* regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied* [fweight = population_owid], by(year)
+drop democracy_lied regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 generate country_name = "World"
 
 * Rename variables:
+rename democracy_lied1 pop_aut_lied
+rename democracy_lied2 pop_dem_lied
+rename democracy_lied3 pop_missdem_lied
+
 rename regime_lied1 pop_nonelectaut_lied
 rename regime_lied2 pop_onepaut_lied
 rename regime_lied3 pop_multipautne_lied
@@ -152,7 +165,7 @@ use "democracy/datasets/refined/lexical_refined.dta", clear
 merge m:1 country_name using "Our World in Data/countries_regions_pairs.dta"
 tab country_name if _merge == 1
 replace region = "Africa" if country_name == "Cape Colony" | country_name == "Natal" | country_name == "Orange Free State" | country_name == "Transvaal"
-replace region = "Asia" if country_name == "Palestine/British Mandate" | country_name == "Palestine/Gaza" | country_name == "Palestine/West Bank" |  country_name == "North Vietnam" | country_name == "Ottoman Empire" | country_name == "Tibet"
+replace region = "Asia" if country_name == "Palestine/British Mandate" | country_name == "Palestine/Gaza" | country_name == "Palestine/West Bank" |  country_name == "North Vietnam" | country_name == "Ottoman Empire" | country_name == "Tibet" | country_name == "East Timor"
 replace region = "Europe" if country_name == "Brunswick" | country_name == "Hamburg" | country_name == "Hesse-Darmstadt" | country_name == "Hesse-Kassel" | country_name == "Nassau" | country_name == "Oldenburg" | country_name == "Papal States" | country_name == "Prussia" | country_name == "Sardinia" | country_name == "Saxe-Weimar-Eisenach" | country_name == "Sicily"
 replace region = "North America" if country_name == "United Provinces of Central America" | country_name == "Newfoundland"
 replace region = "South America" if country_name == "Great Colombia"
@@ -160,19 +173,23 @@ drop if _merge == 2
 drop _merge
 
 * Create indicator variables for specific regime categories:
+tabulate democracy_lied, generate(democracy_lied)
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
 tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied*, by(year region)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
+collapse (sum) democracy_lied* regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied*, by(year region)
+drop democracy_lied regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 rename region country_name
 
 * Rename variables:
+rename democracy_lied1 number_aut_lied
+rename democracy_lied2 number_dem_lied
+
 rename regime_lied1 number_nonelectaut_lied
 rename regime_lied2 number_onepaut_lied
 rename regime_lied3 number_multipautne_lied
@@ -217,7 +234,7 @@ drop _merge
 merge m:1 country_name using "Our World in Data/countries_regions_pairs.dta"
 tab country_name if _merge == 1
 replace region = "Africa" if country_name == "Cape Colony" | country_name == "Natal" | country_name == "Orange Free State" | country_name == "Transvaal"
-replace region = "Asia" if country_name == "Palestine/British Mandate" | country_name == "Palestine/Gaza" | country_name == "Palestine/West Bank" |  country_name == "North Vietnam" | country_name == "Ottoman Empire" | country_name == "Tibet"
+replace region = "Asia" if country_name == "Palestine/British Mandate" | country_name == "Palestine/Gaza" | country_name == "Palestine/West Bank" |  country_name == "North Vietnam" | country_name == "Ottoman Empire" | country_name == "Tibet" | country_name == "East Timor"
 replace region = "Europe" if country_name == "Brunswick" | country_name == "Hamburg" | country_name == "Hesse-Darmstadt" | country_name == "Hesse-Kassel" | country_name == "Nassau" | country_name == "Oldenburg" | country_name == "Papal States" | country_name == "Prussia" | country_name == "Sardinia" | country_name == "Saxe-Weimar-Eisenach" | country_name == "Sicily"
 replace region = "North America" if country_name == "United Provinces of Central America"
 replace region = "South America" if country_name == "Great Colombia"
@@ -225,6 +242,10 @@ drop if _merge == 2
 drop _merge
 
 * Recode regime classification such that it includes a category for when population data is available, but regime data is missing:
+replace democracy_lied = 2 if democracy_lied == . & population_owid != .
+label values democracy_lied democracy_lied
+label define democracy_lied 2 "no regime data", add
+
 replace regime_lied = 9 if regime_lied == . & population_owid != .
 label values regime_lied regime_lied
 label define regime_lied 9 "no regime data", add
@@ -235,19 +256,24 @@ label define suffrage_lied 4 "no suffrage data", add
 drop if population_owid == .
 
 * Create indicator variables for specific regime categories:
+tabulate democracy_lied, generate(democracy_lied)
 tabulate regime_lied, generate(regime_lied)
 tabulate electdem_age_group_lied, generate(electdem_age_group_lied)
 tabulate polyarchy_age_group_lied, generate(polyarchy_age_group_lied)
 tabulate suffrage_lied, generate(suffrage_lied)
 
 * Collapse dataset by year:
-collapse (sum) regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied* [fweight = population_owid], by(year region)
-drop regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
+collapse (sum) democracy_lied* regime_lied* electdem_age_group_lied* polyarchy_age_group_lied* suffrage_lied* [fweight = population_owid], by(year region)
+drop democracy_lied regime_lied electdem_age_group_lied polyarchy_age_group_lied suffrage_lied
 
 * Create entity identifier:
 rename region country_name
 
 * Rename variables:
+rename democracy_lied1 pop_aut_lied
+rename democracy_lied2 pop_dem_lied
+rename democracy_lied3 pop_missdem_lied
+
 rename regime_lied1 pop_nonelectaut_lied
 rename regime_lied2 pop_onepaut_lied
 rename regime_lied3 pop_multipautne_lied
@@ -309,6 +335,13 @@ drop _merge
 
 
 ** Label variables:
+label variable number_aut_lied "Number of autocracies (LIED)"
+label variable number_dem_lied "Number of democracies (LIED)"
+
+label variable pop_aut_lied "People living in autocracies (LIED)"
+label variable pop_dem_lied "People living in democracies (LIED)"
+label variable pop_missdem_lied "People living in countries without democracy data (LIED)"
+
 label variable number_nonelectaut_lied "Number of non-electoral autocracies (LIED)"
 label variable number_onepaut_lied "Number of one-party autocracies (LIED)"
 label variable number_multipautne_lied "Number of multi-party autocracies without elected executive (LIED)"

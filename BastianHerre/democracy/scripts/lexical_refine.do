@@ -1,6 +1,6 @@
 *****  This Stata do-file refines the variables in the LIED dataset
 *****  Author: Bastian Herre
-*****  September 5, 2023
+*****  February 16, 2024
 
 version 14
 clear all
@@ -15,6 +15,15 @@ global project "/Users/bastianherre/Dropbox/Data/"
 
 ** Import data:
 use "democracy/datasets/cleaned/lexical_cleaned.dta"
+
+
+** Create variable distinguishing between democracies and autocracies:
+generate democracy_lied = .
+replace democracy_lied = 1 if regime_redux_lied == 6
+replace democracy_lied = 0 if regime_redux_lied >= 0 & regime_redux_lied < 6
+label define democracy_lied 0 "autocracy" 1 "democracy"
+label values democracy_lied democracy_lied
+label variable democracy_lied "Electoral democracy (LIED)"
 
 
 ** Create numeric country identifier:
