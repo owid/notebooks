@@ -1,6 +1,5 @@
 /*
-COUNTRIES AVAILABLE PER VARIABLE IN INTEGRATED VALUES SURVEY
-
+COVERAGE OF IVS BY WAVE
 */
 
 
@@ -28,42 +27,18 @@ replace year = "2017-2022" if S002VS==. & S002EVS==5
 
 rename S003 country
 
+keep country year
+
+* Define waves
+global ivs_waves "1981-1984" "1989-1993" "1994-1998" "1999-2004" "2005-2010" "2010-2014" "2017-2022"
+
 preserve
 
-foreach var of varlist _all {
-	
-	drop if missing(`var')
-	keep country year
-	duplicates drop
-	
-	collapse (count) country, by (year)
-	
-	rename country count
-	gen var = "`var'"
-	
-	tempfile `var'_file
-	save "``var'_file'"
-	
-	restore
-	preserve
-	
-}
 
-ds
-local all_vars `r(varlist)'
-
-* Get first var in the group
-local first_var : word 1 of `all_vars'
-local to_merge: subinstr local all_vars "`first_var'" ""
-
-
-use ``first_var'_file', clear
-
-foreach var in `to_merge' {
-	append using "``var'_file'"
-}
+duplicates drop
+	
+collapse (count) country, by (year)
+	
 
 * Export as csv
-export delimited using "countries_count.csv", datafmt replace
-
-
+export delimited using "coverage.csv", datafmt replace
