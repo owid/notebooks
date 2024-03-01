@@ -1,6 +1,6 @@
 *****  This Stata do-file aggregates some of the variables of the V-Dem and RoW data
 *****  Author: Bastian Herre
-*****  March 9, 2023
+*****  May 25, 2023
 
 version 14
 clear all
@@ -124,10 +124,6 @@ label values regime_amb_row_owid regime_row_owid
 label define regime_amb_row_owid 10 "no regime data", add
 drop if population_owid == .
 
-replace wom_parl_gr_vdem_owid = 7 if wom_parl_gr_vdem_owid == . & population_owid != .
-label values wom_parl_gr_vdem_owid wom_parl_gr_vdem_owid
-label define wom_parl_gr_vdem_owid 7 "no women's representation data", add
-
 replace wom_hog_vdem_owid = 3 if wom_hog_vdem_owid == . & population_owid != .
 label values wom_hog_vdem_owid wom_hog_vdem_owid
 label define wom_hog_vdem_owid 3 "no gender data", add
@@ -147,13 +143,12 @@ tabulate regime_row_owid, generate(regime_row_owid)
 tabulate regime_amb_row_owid, generate(regime_amb_row_owid)
 tabulate electdem_age_group_row_owid, generate(electdem_age_group_row_owid)
 tabulate libdem_age_group_row_owid, generate(libdem_age_group_row_owid)
-tabulate wom_parl_gr_vdem_owid, generate(wom_parl_gr_vdem_owid)
 tabulate wom_hog_vdem_owid, generate(wom_hog_vdem_owid)
 tabulate wom_hos_vdem_owid, generate(wom_hos_vdem_owid)
 tabulate wom_hoe_vdem_owid, generate(wom_hoe_vdem_owid)
 
 * Collapse dataset by year:
-collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* wom_parl_gr_vdem_owid* wom_hog_vdem_owid* wom_hos_vdem_owid* wom_hoe_vdem_owid* ///
+collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* wom_hog_vdem_owid* wom_hos_vdem_owid* wom_hoe_vdem_owid* ///
 	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid ///
 	civ_libs_vdem_owid civ_libs_vdem_high_owid civ_libs_vdem_low_owid phys_integr_libs_vdem_owid phys_integr_libs_vdem_high_owid phys_integr_libs_vdem_low_owid pol_libs_vdem_owid pol_libs_vdem_high_owid pol_libs_vdem_low_owid priv_libs_vdem_owid priv_libs_vdem_high_owid priv_libs_vdem_low_owid ///
 	wom_emp_vdem_owid wom_emp_vdem_high_owid wom_emp_vdem_low_owid wom_civ_libs_vdem_owid wom_civ_libs_vdem_high_owid wom_civ_libs_vdem_low_owid wom_civ_soc_vdem_owid wom_civ_soc_vdem_high_owid wom_civ_soc_vdem_low_owid wom_pol_par_vdem_owid wom_pol_par_vdem_high_owid wom_pol_par_vdem_low_owid wom_parl_vdem_owid ///
@@ -161,7 +156,7 @@ collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid
 	terr_contr_vdem_owid terr_contr_vdem_high_owid terr_contr_vdem_low_owid rule_of_law_vdem_owid rule_of_law_vdem_high_owid rule_of_law_vdem_low_owid public_admin_vdem_owid public_admin_vdem_high_owid public_admin_vdem_low_owid int_auton_vdem_owid int_auton_vdem_high_owid int_auton_vdem_low_owid dom_auton_vdem_owid dom_auton_vdem_high_owid dom_auton_vdem_low_owid ///
 	corruption_vdem_owid corruption_vdem_high_owid corruption_vdem_low_owid corr_publsec_vdem_owid corr_publsec_vdem_high_owid corr_publsec_vdem_low_owid corr_exec_vdem_owid corr_exec_vdem_high_owid corr_exec_vdem_low_owid corr_leg_vdem_owid corr_leg_vdem_high_owid corr_leg_vdem_low_owid corr_jud_vdem_owid corr_jud_vdem_high_owid corr_jud_vdem_low_owid ///
 	personalism_vdem_owid personalism_vdem_high_owid personalism_vdem_low_owid civ_soc_str_vdem_owid civ_soc_str_vdem_high_owid civ_soc_str_vdem_low_owid [fweight = population_owid], by(year)
-drop regime_row_owid regime_amb_row_owid regime_amb_row_owid11 electdem_age_group_row_owid libdem_age_group_row_owid wom_parl_gr_vdem_owid wom_hog_vdem_owid wom_hos_vdem_owid wom_hoe_vdem_owid
+drop regime_row_owid regime_amb_row_owid regime_amb_row_owid11 electdem_age_group_row_owid libdem_age_group_row_owid wom_hog_vdem_owid wom_hos_vdem_owid wom_hoe_vdem_owid
 
 * Create entity identifier:
 generate country_name = "World"
@@ -197,15 +192,6 @@ rename libdem_age_group_row_owid5 pop_libdem_30_row_owid
 rename libdem_age_group_row_owid6 pop_libdem_60_row_owid
 rename libdem_age_group_row_owid7 pop_libdem_90_row_owid
 rename libdem_age_group_row_owid8 pop_libdem_91plus_row_owid
-
-rename wom_parl_gr_vdem_owid1 pop_nowomen_vdem_owid
-rename wom_parl_gr_vdem_owid2 pop_less10women_vdem_owid
-rename wom_parl_gr_vdem_owid3 pop_less20women_vdem_owid
-rename wom_parl_gr_vdem_owid4 pop_less30women_vdem_owid
-rename wom_parl_gr_vdem_owid5 pop_less40women_vdem_owid
-rename wom_parl_gr_vdem_owid6 pop_less50women_vdem_owid
-rename wom_parl_gr_vdem_owid7 pop_more50women_vdem_owid
-rename wom_parl_gr_vdem_owid8 pop_misswomen_vdem_owid
 
 rename wom_hog_vdem_owid1 pop_hog_men_vdem_owid
 rename wom_hog_vdem_owid2 pop_hog_women_vdem_owid
@@ -475,10 +461,6 @@ label values regime_amb_row_owid regime_row_owid
 label define regime_amb_row_owid 10 "no regime data", add
 drop if population_owid == .
 
-replace wom_parl_gr_vdem_owid = 7 if wom_parl_gr_vdem_owid == . & population_owid != .
-label values wom_parl_gr_vdem_owid wom_parl_gr_vdem_owid
-label define wom_parl_gr_vdem_owid 7 "no women's representation data", add
-
 replace wom_hog_vdem_owid = 3 if wom_hog_vdem_owid == . & population_owid != .
 label values wom_hog_vdem_owid wom_hog_vdem_owid
 label define wom_hog_vdem_owid 3 "no gender data", add
@@ -498,13 +480,12 @@ tabulate regime_row_owid, generate(regime_row_owid)
 tabulate regime_amb_row_owid, generate(regime_amb_row_owid)
 tabulate electdem_age_group_row_owid, generate(electdem_age_group_row_owid)
 tabulate libdem_age_group_row_owid, generate(libdem_age_group_row_owid)
-tabulate wom_parl_gr_vdem_owid, generate(wom_parl_gr_vdem_owid)
 tabulate wom_hog_vdem_owid, generate(wom_hog_vdem_owid)
 tabulate wom_hos_vdem_owid, generate(wom_hos_vdem_owid)
 tabulate wom_hoe_vdem_owid, generate(wom_hoe_vdem_owid)
 
 * Collapse dataset by year:
-collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* wom_parl_gr_vdem_owid* wom_hog_vdem_owid* wom_hos_vdem_owid* wom_hoe_vdem_owid* ///
+collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid* libdem_age_group_row_owid* wom_hog_vdem_owid* wom_hos_vdem_owid* wom_hoe_vdem_owid* ///
 	(mean) electdem_vdem_owid electdem_vdem_low_owid electdem_vdem_high_owid libdem_vdem_owid libdem_vdem_low_owid libdem_vdem_high_owid participdem_vdem_owid participdem_vdem_low_owid participdem_vdem_high_owid delibdem_vdem_owid delibdem_vdem_low_owid delibdem_vdem_high_owid egaldem_vdem_owid egaldem_vdem_low_owid egaldem_vdem_high_owid ///
 	civ_libs_vdem_owid civ_libs_vdem_high_owid civ_libs_vdem_low_owid phys_integr_libs_vdem_owid phys_integr_libs_vdem_high_owid phys_integr_libs_vdem_low_owid pol_libs_vdem_owid pol_libs_vdem_high_owid pol_libs_vdem_low_owid priv_libs_vdem_owid priv_libs_vdem_high_owid priv_libs_vdem_low_owid ///
 	wom_emp_vdem_owid wom_emp_vdem_high_owid wom_emp_vdem_low_owid wom_civ_libs_vdem_owid wom_civ_libs_vdem_high_owid wom_civ_libs_vdem_low_owid wom_civ_soc_vdem_owid wom_civ_soc_vdem_high_owid wom_civ_soc_vdem_low_owid wom_pol_par_vdem_owid wom_pol_par_vdem_high_owid wom_pol_par_vdem_low_owid wom_parl_vdem_owid ///
@@ -512,7 +493,7 @@ collapse (sum) regime_row_owid* regime_amb_row_owid* electdem_age_group_row_owid
 	terr_contr_vdem_owid terr_contr_vdem_high_owid terr_contr_vdem_low_owid rule_of_law_vdem_owid rule_of_law_vdem_high_owid rule_of_law_vdem_low_owid public_admin_vdem_owid public_admin_vdem_high_owid public_admin_vdem_low_owid int_auton_vdem_owid int_auton_vdem_high_owid int_auton_vdem_low_owid dom_auton_vdem_owid dom_auton_vdem_high_owid dom_auton_vdem_low_owid ///
 	corruption_vdem_owid corruption_vdem_high_owid corruption_vdem_low_owid corr_publsec_vdem_owid corr_publsec_vdem_high_owid corr_publsec_vdem_low_owid corr_exec_vdem_owid corr_exec_vdem_high_owid corr_exec_vdem_low_owid corr_leg_vdem_owid corr_leg_vdem_high_owid corr_leg_vdem_low_owid corr_jud_vdem_owid corr_jud_vdem_high_owid corr_jud_vdem_low_owid ///
 	personalism_vdem_owid personalism_vdem_high_owid personalism_vdem_low_owid civ_soc_str_vdem_owid civ_soc_str_vdem_high_owid civ_soc_str_vdem_low_owid [fweight = population_owid], by(year region)
-drop regime_row_owid regime_amb_row_owid regime_amb_row_owid11 electdem_age_group_row_owid libdem_age_group_row_owid wom_parl_gr_vdem_owid wom_hog_vdem_owid wom_hos_vdem_owid wom_hoe_vdem_owid
+drop regime_row_owid regime_amb_row_owid regime_amb_row_owid11 electdem_age_group_row_owid libdem_age_group_row_owid wom_hog_vdem_owid wom_hos_vdem_owid wom_hoe_vdem_owid
 
 * Create entity identifier:
 rename region country_name
@@ -596,15 +577,6 @@ rename pol_libs_vdem_low_owid popw_pol_libs_vdem_low_owid
 rename priv_libs_vdem_owid popw_priv_libs_vdem_owid
 rename priv_libs_vdem_high_owid popw_priv_libs_vdem_high_owid
 rename priv_libs_vdem_low_owid popw_priv_libs_vdem_low_owid
-
-rename wom_parl_gr_vdem_owid1 pop_nowomen_vdem_owid
-rename wom_parl_gr_vdem_owid2 pop_less10women_vdem_owid
-rename wom_parl_gr_vdem_owid3 pop_less20women_vdem_owid
-rename wom_parl_gr_vdem_owid4 pop_less30women_vdem_owid
-rename wom_parl_gr_vdem_owid5 pop_less40women_vdem_owid
-rename wom_parl_gr_vdem_owid6 pop_less50women_vdem_owid
-rename wom_parl_gr_vdem_owid7 pop_more50women_vdem_owid
-rename wom_parl_gr_vdem_owid8 pop_misswomen_vdem_owid
 
 rename wom_emp_vdem_owid popw_wom_emp_vdem_owid
 rename wom_emp_vdem_high_owid popw_wom_emp_vdem_high_owid
@@ -719,15 +691,6 @@ replace number_less40women_vdem_owid = . if year < 1900
 replace number_less50women_vdem_owid = . if year < 1900
 replace number_more50women_vdem_owid = . if year < 1900
 
-replace pop_nowomen_vdem_owid = . if year < 1900
-replace pop_less10women_vdem_owid = . if year < 1900
-replace pop_less20women_vdem_owid = . if year < 1900
-replace pop_less30women_vdem_owid = . if year < 1900
-replace pop_less40women_vdem_owid = . if year < 1900
-replace pop_less50women_vdem_owid = . if year < 1900
-replace pop_more50women_vdem_owid = . if year < 1900
-replace pop_misswomen_vdem_owid = . if year < 1900
-
 
 ** Label variables:
 label variable number_closedaut_row_owid "Number of closed autocracies (RoW, OWID)"
@@ -830,15 +793,6 @@ label variable number_less30women_vdem_owid "Number of countries with 20-30% wom
 label variable number_less40women_vdem_owid "Number of countries with 30-40% women in parliament (V-Dem, OWID)"
 label variable number_less50women_vdem_owid "Number of countries with 40-50% women in parliament (V-Dem, OWID)"
 label variable number_more50women_vdem_owid "Number of countries with more than 50% women in parliament (V-Dem, OWID)"
-
-label variable pop_nowomen_vdem_owid "People living in countries with less no women in parliament (V-Dem, OWID)"
-label variable pop_less10women_vdem_owid "People living in countries with 0-10% women in parliament (V-Dem, OWID)"
-label variable pop_less20women_vdem_owid "People living in countries with 10-20% women in parliament (V-Dem, OWID)"
-label variable pop_less30women_vdem_owid "People living in countries with 20-30% women in parliament (V-Dem, OWID)"
-label variable pop_less40women_vdem_owid "People living in countries with 30-40% women in parliament (V-Dem, OWID)"
-label variable pop_less50women_vdem_owid "People living in countries with 40-50% women in parliament (V-Dem, OWID)"
-label variable pop_more50women_vdem_owid "People living in countries with more than 50% women in parliament (V-Dem, OWID)"
-label variable pop_misswomen_vdem_owid "People living in countries without data on women's representation in parliament (V-Dem, OWID)"
 
 label variable number_hog_men_vdem_owid "Number of countries in which head of government is a woman (V-Dem)"
 label variable number_hog_women_vdem_owid "Number of countries in which head of government is a man (V-Dem)"

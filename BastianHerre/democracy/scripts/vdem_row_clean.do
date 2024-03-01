@@ -1,6 +1,6 @@
 *****  This Stata do-file cleans the democracy dataset by the Varieties of Democracy (V-Dem) project, including the Regimes of the World (RoW) data
 *****  Author: Bastian Herre
-*****  March 7, 2023
+*****  February 22, 2024
 
 version 14
 clear all
@@ -53,6 +53,16 @@ replace v2exaphogp = 0 if country_name == "Haiti" & year >= 1991 & year <= 1993
 * Goemans et al.'s (2009) Archigos dataset, rulers.org, and worldstatesmen.org identify non-elected General Raoul Cédras as the de-facto leader of Haiti from 1991 until 1994.
 
 replace v2exfemhog = 0 if v2exnamhog == "Rishi Sunak"
+replace v2exfemhog = 0 if v2exnamhog == "Joseph Jacques Jean Chrétien"
+replace v2exfemhog = 0 if v2exnamhog == "Ion Chicu"
+replace v2exfemhog = 0 if v2exnamhog == "KåreIsaachsen Willoch"
+replace v2exfemhos = 0 if v2exnamhos == "Prince Zaifeng"
+replace v2exfemhos = 0 if v2exnamhos == "Ali Ben Bongo Ondimba"
+replace v2exfemhos = 0 if v2exnamhos == "Dieudonné François Joseph Marie Reste"
+replace v2exfemhos = 0 if v2exnamhos == "Letsie III"
+replace v2exfemhos = 0 if country_name == "Portugal" & year == 1828 // The head of state listed here is Miguel I "o Rei Absoluto".
+replace v2exfemhos = 0 if v2exnamhos == "Chulalongkorn (Rama V)"
+* While the head-of-government indicators generally should refer to te one in office on December 31, v2exfemhog seems to (occasionally?) refer to other points during the year. For most purposes, it makes sense to consistently refer to December 31, so I am recoding here.
 
 
 ** Create expanded and refined Regimes of the World indicator:

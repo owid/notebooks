@@ -256,14 +256,6 @@ pop_libdem_30_row_owid,"People living in liberal democracies aged 19-30 years (R
 pop_libdem_60_row_owid,"People living in liberal democracies aged 31-60 years (RoW, OWID)"
 pop_libdem_90_row_owid,"People living in liberal democracies aged 61-90 years (RoW, OWID)"
 pop_libdem_91plus_row_owid,"People living in liberal democracies aged 91 years or older (RoW, OWID)"
-pop_nowomen_vdem_owid,"People living in countries with less no women in parliament (V-Dem, OWID)"
-pop_less10women_vdem_owid,"People living in countries with 0-10% women in parliament (V-Dem, OWID)"
-pop_less20women_vdem_owid,"People living in countries with 10-20% women in parliament (V-Dem, OWID)"
-pop_less30women_vdem_owid,"People living in countries with 20-30% women in parliament (V-Dem, OWID)"
-pop_less40women_vdem_owid,"People living in countries with 30-40% women in parliament (V-Dem, OWID)"
-pop_less50women_vdem_owid,"People living in countries with 40-50% women in parliament (V-Dem, OWID)"
-pop_more50women_vdem_owid,"People living in countries with more than 50% women in parliament (V-Dem, OWID)"
-pop_misswomen_vdem_owid,People living in countries without data on women's representation in parliament
 pop_hog_men_vdem_owid,People living in countries in which head of government is a woman (V-Dem)
 pop_hog_women_vdem_owid,People living in countries in which head of government is a man (V-Dem)
 pop_hog_missgen_vdem_owid,People living in countries without data on head of government's gender (V-Dem)
