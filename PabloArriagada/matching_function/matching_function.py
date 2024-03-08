@@ -10,17 +10,26 @@ from structlog import get_logger
 # Initialize logger.
 log = get_logger()
 
-PARENT_DIR = Path(__file__).parent.absolute()
 
-df = pd.read_feather(f"{PARENT_DIR}/tb.feather")
-# df_percentiles = pd.read_feather(f"{PARENT_DIR}/tb_percentiles.feather")
+# Set the paths to the datasets
+PARENT_DIR = Path(__file__).parent.absolute()
+KEYVARS_PATH = (
+    "https://catalog.ourworldindata.org/explorers/poverty_inequality/latest/poverty_inequality_export/keyvars.feather"
+)
+PERCENTILES_PATH = "https://catalog.ourworldindata.org/explorers/poverty_inequality/latest/poverty_inequality_export/percentiles.feather"
+WDI_PATH = (
+    "https://catalog.ourworldindata.org/explorers/poverty_inequality/latest/poverty_inequality_export/wdi.feather"
+)
+
+# Load the datasets
+df = pd.read_feather(KEYVARS_PATH)
+df_percentiles = pd.read_feather(PERCENTILES_PATH)
+df_wdi = pd.read_feather(WDI_PATH)
 
 ##############################################
 # FUNCTION SETTINGS
 
-series_type = "series_code"  # series_name or series_code
-
-# `series` depends on series_type: if series_type is series_name, series is a list of series names, e.g. ["WID Gini", "PIP Top 1% share"]; if series_type is series_code, series is a list of series codes, e.g. ["gini_wid_pretaxNational_perAdult", "p99p100Share_pip_disposable_perCapita"]
+# `series` is a list of series codes, e.g. ["gini_wid_pretaxNational_perAdult", "p99p100Share_pip_disposable_perCapita"]
 series = ["gini_wid_pretaxNational_perAdult", "gini_lis_market_perCapita", "gini_pip_disposable_perCapita"]
 
 # reference_years is the list of years to match the series to. Each year is a dictionary with the year as key and a dictionary of parameters as value. The parameters are:
@@ -48,7 +57,6 @@ income_or_consumption = "income"
 
 def match_ref_years(
     df: pd.DataFrame,
-    series_type: str,
     series: list,
     reference_years: dict,
     constant_reporting_level: bool,
@@ -60,11 +68,11 @@ def match_ref_years(
     """
 
     # Assert if the series belong to the df
-    assert set(series).issubset(set(df[series_type])), log.error(
-        f"The series {set(series) - set(df[series_type])} is not in the dataset."
+    assert set(series).issubset(set(df["series_code"])), log.error(
+        f"The series {set(series) - set(df['series_code'])} is not in the dataset."
     )
     df_match = pd.DataFrame()
-    df_series = df[df[series_type].isin(series)].reset_index(drop=True)
+    df_series = df[df["series_code"].isin(series)].reset_index(drop=True)
 
     reference_years_list = []
     for y in reference_years:
@@ -226,5 +234,5 @@ def match_ref_years(
 
 
 df_match = match_ref_years(
-    df, series_type, series, reference_years, constant_reporting_level, constant_welfare_type, income_or_consumption
+    df, series, reference_years, constant_reporting_level, constant_welfare_type, income_or_consumption
 )
