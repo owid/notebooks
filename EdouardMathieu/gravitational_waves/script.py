@@ -2,8 +2,10 @@ import pandas as pd
 
 
 def main():
-
     df = pd.read_csv("https://www.gw-openscience.org/eventapi/csv/GWTC/")
+
+    # Only keep events considered "confident", i.e. with "confident" in their catalog.shortName
+    df = df[df["catalog.shortName"].str.contains("confident")]
 
     # In case events are recorded multiple times
     # we keep only the earliest GPS time for each commonName
