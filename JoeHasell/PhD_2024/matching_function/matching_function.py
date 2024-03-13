@@ -9,10 +9,6 @@ import pandas as pd
 #%% The main dataset prepared by Pablo
 df = pd.read_feather("tb.feather")
 
-fp = "https://catalog.ourworldindata.org/explorers/poverty_inequality/latest/poverty_inequality_export/percentiles.feather"
-df2 = pd.read_feather(fp)
-
-
 
 #%% Add in dataset with top1 shares from PIP
 df_top1pip = pd.read_csv("prepared_pip_top1shares.csv")
