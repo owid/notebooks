@@ -72,7 +72,7 @@ distr_id_list<- unique(df_percentiles$distr_id)
 ######
 
 
-#### Make a function to run flow over all country years
+#### Make a function to run over all country years
 align_distr<- function(distr, id){
 
     #choose the lower bracket thresholds, begin from 0

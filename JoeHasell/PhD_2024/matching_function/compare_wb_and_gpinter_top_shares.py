@@ -58,7 +58,8 @@ df_compare['ratio']= df_compare['top1_share_gpinter']/df_compare['top1_share_wb'
 plt.scatter(df_compare['top1_share_gpinter'], df_compare['top1_share_wb'])
 
 # %% plot the ratio against WB percentile data
-# NB There are some outliers where GPinter-alighned data is ~30% higher or lower. But it doesn't look like there's a systematic effect
+# NB The majoirty of observations fall between 1 and 1.1 (Gpinter is 0-10% higher). 
+# But there are some outliers where GPinter-alighned data is ~30% higher or lower.
 plt.scatter(df_compare['ratio'], df_compare['top1_share_wb'])
 
 # %%

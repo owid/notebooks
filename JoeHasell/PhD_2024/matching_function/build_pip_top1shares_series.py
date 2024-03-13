@@ -17,7 +17,7 @@ df_top1_wb = df_top1_wb[['country', 'year', 'reporting_level','welfare_type', 't
 df_top1_wb.rename(columns={'reporting_level': 'pipreportinglevel', 'welfare_type': 'pipwelfare'}, inplace=True)
 
 
-# %% merge in top shares originating 
+# %% merge in top shares  
 df = pd.merge(
     df,
     df_top1_wb,
