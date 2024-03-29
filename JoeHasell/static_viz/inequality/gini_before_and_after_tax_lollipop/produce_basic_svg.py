@@ -133,6 +133,8 @@ closest_data = cleaned_data.groupby('country').apply(closest_year, target_year=t
 closest_data.dropna(subset=['year', 'country'], inplace=True)
 #%%
 
+closest_data.to_csv(f'closest_datapoints_to_{target_year}.csv')
+
 ################################################
 #### Lollipop plot of before and after tax Gini
 ################################################
@@ -197,7 +199,6 @@ plt.show()
 #### Plot comparison of working age and total pop Ginis ####
 ############################################################
 #%%
-scatter_chart_path = f'working_age_vs_total_pop_before_after_tax_gini_scatter.svg'
 
 #%%
 # Scatter plot for both sets of Gini coefficients
@@ -211,7 +212,8 @@ plt.ylabel('Gini Total')
 plt.legend()
 plt.grid(True)
 
-plt.savefig(scatter_chart_path, format='svg')
+chart_path = f'working_age_vs_total_pop_before_after_tax_gini_scatter.svg'
+plt.savefig(chart_path, format='svg')
 plt.show()
 
 #%%
