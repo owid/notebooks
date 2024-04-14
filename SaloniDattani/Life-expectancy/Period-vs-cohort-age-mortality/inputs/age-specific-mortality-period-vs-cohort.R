@@ -9,9 +9,9 @@ data_folder <- ""
 # Data source:
 # https://www.mortality.org/
 # Choose countries, then go to Cohort data > Death Rates > 1x1
-# set filename to cMx_1x10_(name of country).txt
+# set filename to cMx_1x1_(name of country).txt
 # Choose countries, then go to Period data > Death Rates > 1x1
-# set filename to Mx_1x10_(name of country).txt
+# set filename to Mx_1x1_(name of country).txt
 
 countries <- c("FRA")
 cohort_mortality <- list()
