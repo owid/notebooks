@@ -2,6 +2,7 @@
 library(tidyverse)
 library(scales)
 library(viridis)
+library(RColorBrewer)
 
 # !!! Download and replace this with path to folder
 data_folder <- ""
