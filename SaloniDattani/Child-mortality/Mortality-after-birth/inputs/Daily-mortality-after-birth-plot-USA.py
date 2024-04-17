@@ -4,6 +4,10 @@ import seaborn as sns
 import numpy as np
 import re
 
+# Data source: https://wonder.cdc.gov/
+# Click: Infant deaths - Linked records
+# Group  by: Age of Infant at Death in days
+
 # Filepath
 file_path = ""
 

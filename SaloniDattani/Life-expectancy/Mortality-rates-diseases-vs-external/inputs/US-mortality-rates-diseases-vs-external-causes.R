@@ -5,8 +5,13 @@ library(viridis)
 
 # Data source:
 # CDC Wonder https://wonder.cdc.gov/
+
 # 1. Underlying cause of death - group by single age - group by ICD chapter (By cause)
+# Saved link: https://wonder.cdc.gov/controller/saved/D158/D386F982 --> save as "underlying-cod-2018-2021-all-causes.txt"
+
 # 2. Underlying cause of death - group by single age (All causes)
+# Saved link: https://wonder.cdc.gov/controller/saved/D158/D386F982 --> save as "underlying-cod-2018-2021-by-cause-by-cause.txt"
+
 # Download and replace this with path to folder
 data_folder <- ""
 
@@ -47,7 +52,7 @@ all_causes <- all_causes %>%
   select(Notes, `Single-Year Ages`, Age, ICD_chapter, ICD_chapter_code, Deaths, Population, Crude_rate)
 
 ### Import age-specific mortality by ICD chapter
-by_cause <- read_tsv(paste0(data_folder, "underlying-cod-2018-2021-by-cause-by-gender.txt"))
+by_cause <- read_tsv(paste0(data_folder, "underlying-cod-2018-2021-by-cause-by-cause.txt"))
 
 # Remove quotation marks
 by_cause <- by_cause %>% 
