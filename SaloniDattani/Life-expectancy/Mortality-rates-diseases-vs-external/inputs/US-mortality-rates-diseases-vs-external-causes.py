@@ -4,8 +4,13 @@ import seaborn as sns
 
 # Data source:
 # CDC Wonder https://wonder.cdc.gov/
+
 # 1. Underlying cause of death - group by single age - group by ICD chapter (By cause)
+# Saved link: https://wonder.cdc.gov/controller/saved/D158/D386F982 --> save as "underlying-cod-2018-2021-all-causes.txt"
+
 # 2. Underlying cause of death - group by single age (All causes)
+# Saved link: https://wonder.cdc.gov/controller/saved/D158/D386F982 --> save as "underlying-cod-2018-2021-by-cause-by-cause.txt"
+
 # Download and replace this with path to folder
 data_folder = ""
 
