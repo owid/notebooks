@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 #%% 
 # This is the new OECD data also with working age pop 
-fp = "oecd_data_IDD_2024_03_29.csv"
+fp = "oecd_data_IDD_2024_03_29_raw.csv"
 df_oecd = pd.read_csv(fp)
 
 #%% 
@@ -47,6 +47,14 @@ data = data.rename(columns={
     "TIME_PERIOD" : "year"
 })
 
+
+#%% Harmonize country names
+# I don't know the right way to do this nowadays..
+# But I need to replace China, Turkey and (South) Korea
+
+
+#%% export the full dataset
+data.to_csv('OECD_IDD_before_after_tax_gini_all_obs.csv')
 
 #%% 
 #### LOAD AND CLEAN THE ETL DATA ####

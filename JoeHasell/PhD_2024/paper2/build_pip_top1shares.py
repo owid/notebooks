@@ -114,7 +114,7 @@ def linear_interp_top_1_share(df_group):
 
 
 
-# %%
+# %% test the function
 
 df_group = df_selected_avgs[
     (df_selected_avgs['country']=='India') & \
