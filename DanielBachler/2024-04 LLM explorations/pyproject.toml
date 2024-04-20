@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "2024-04 llm explorations"
+version = "0.1.0"
+description = ""
+authors = ["Daniel Bachler <daniel@danielbachler.de>"]
+readme = "README.md"
+packages = [{include = "2024_04 llm explorations"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+jupyter = "^1.0.0"
+jupyterlab = "^4.1.6"
+openai = "^1.22.0"
+rich = "^13.7.1"
+pillow = "^10.3.0"
+pillow-heif = "^0.16.0"
+requests = "^2.31.0"
+
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
