@@ -1,7 +1,4 @@
-"""
-If the file doesn't execute correctly, try
-pip install requirements.txt
-"""
+
 #%% 
 
 import pandas as pd
@@ -22,10 +19,11 @@ df = pd.concat([df, df_top1shares], ignore_index=True)
 df_regions = pd.read_csv("region_mapping.csv")
 df_regions = df_regions.rename(columns={'Entity': 'country'})
 
+#%% Load population data from OWID ETL
+fp = 'http://catalog.ourworldindata.org/grapher/demography/2023-03-31/population/population.feather'
+df_pop = pd.read_feather(fp)
 
-df_pop = pd.read_csv("population.csv")
-df_pop = df_pop.drop(columns='world_pop_share')
-df_pop = df_pop.rename(columns={'Entity': 'country'})
+df_pop = df_pop[['country','year','population']]
 
 #%% 
 
@@ -262,8 +260,8 @@ def match_ref_years(
 
     # Calculate population weights 
     for y in reference_years_list:
-        df_pop_year = df_pop[df_pop['Year']==y]
-        df_pop_year = df_pop_year.drop(columns='Year')
+        df_pop_year = df_pop[df_pop['year']==y]
+        df_pop_year = df_pop_year.drop(columns='year')
 
         df_match = pd.merge(
         df_match,
@@ -285,19 +283,32 @@ def match_ref_years(
         df_match[f'weight_{y}'] = df_match[f'population_{y}'] / df_match[f'population_{y}_total']
         df_match[f'weightedvalue_{y}'] = df_match[f'weight_{y}'] * df_match[f'value_{y}']
 
-
-
-    # Export as csv
-    df_match.to_csv("data/selected_reference_year_obs.csv", index=False)
-
   
     return df_match
+#%%
+
+##################################################
+##################################################
+
 
 
 #### SET ARGUMENTS AND RUN FUNCTION ####
-#%%
-# Set the series codes that observations will be drawn from
-series = [
+# I save four versions of the data, 3 each for the reference
+# periods of 1993-2018 and 1980-2018:
+# 1) a version matching all available observations, including both
+# extrapolated and non-extrapolated flavours of the WID data
+# 2) a version matching only those oberservations available in all datasets,
+# but only including the non-extrapolated data for WID
+# 3) a version matching only those oberservations available in all datasets,
+# but only including the extrapolated data for WID
+
+# 1993-2018 PERIOD (allowing +/- 5 years)
+
+#%% Version 1 – All data points 
+# (NB only_all_series = False)
+output = match_ref_years(
+    df = df, 
+    series = [
     "gini_pip_disposable_perCapita",
     "p99p100Share_pip_disposable_perCapita",
     "p90p100Share_pip_disposable_perCapita",
@@ -306,31 +317,182 @@ series = [
     "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
     "p90p100Share_widExtrapolated_pretaxNational_perAdult",
     "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult",
-    # "gini_wid_pretaxNational_perAdult",
-    # "p99p100Share_wid_pretaxNational_perAdult",           
-    # "p90p100Share_wid_pretaxNational_perAdult",
-    # "headcountRatio50Median_wid_pretaxNational_perAdult" 
-]
-
-# Set the reference years, max distance, tie-break strategy and min interval between reference years
-# reference_years is the list of years to match the series to. Each year is a dictionary with the year as key and a dictionary of parameters as value. The parameters are:
-# - maximum_distance: the maximum distance between the series and the reference year
-# - tie_break_strategy: the strategy to use to break ties when there are multiple series that match the reference year. The options are "lower" (select the series with the lowest distance to the reference year) or "higher" (select the series with the highest distance to the reference year)
-# - min_interval: the minimum distance between reference years. The value of min_interval for the last reference year is ignored.
-reference_years = {
+    "gini_wid_pretaxNational_perAdult",
+    "p99p100Share_wid_pretaxNational_perAdult",           
+    "p90p100Share_wid_pretaxNational_perAdult",
+    "headcountRatio50Median_wid_pretaxNational_perAdult" 
+], 
+    reference_years = {
     1993: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
-    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},    
-    # 1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
-    # 2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
+    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
+}, 
+    only_all_series = False)
+
+# Save to csv
+output.to_csv("data/selected_observations/short_period_all_obs.csv", index=False)
+
+#%%
+
+
+#%% Counterfactual 2 – Only matching data points, non-extrapolated data for WID 
+# (NB only_all_series = True)
+output_wid_non_extrap = match_ref_years(
+    df = df, 
+    series = [
+    "gini_pip_disposable_perCapita",
+    "p99p100Share_pip_disposable_perCapita",
+    "p90p100Share_pip_disposable_perCapita",
+    "headcountRatio50Median_pip_disposable_perCapita",    
+    "gini_wid_pretaxNational_perAdult",
+    "p99p100Share_wid_pretaxNational_perAdult",           
+    "p90p100Share_wid_pretaxNational_perAdult",
+    "headcountRatio50Median_wid_pretaxNational_perAdult" 
+], 
+    reference_years = {
+    1993: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
+    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
+}, 
+    only_all_series = True)
+
+# Save to csv
+output_wid_non_extrap.to_csv("data/selected_observations/short_period_counterfactual2_only_matches.csv", index=False)
+
+
+#%%
+
+#%% Counterfactual 1 – Only matching data points, adding extrapolated data for WID 
+# (NB only_all_series = True)
+output_wid_extrap = match_ref_years(
+    df = df, 
+    series = [
+    "gini_pip_disposable_perCapita",
+    "p99p100Share_pip_disposable_perCapita",
+    "p90p100Share_pip_disposable_perCapita",
+    "headcountRatio50Median_pip_disposable_perCapita",    
+    "gini_widExtrapolated_pretaxNational_perAdult",
+    "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
+    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
+    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult"
+], 
+    reference_years = {
+    1993: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
+    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
+}, 
+    only_all_series = True)
+
+#%%
+output_wid_extrap['series_code'] = output_wid_extrap['series_code'].str.replace('Extrapolated', '', regex=False)
+#%%
+# Append the extrap and non-extrap outputs, adding a key
+output_counterfactual1 = pd.concat([output_wid_non_extrap, output_wid_extrap], axis=0, keys=['wid_not_extrapolated', 'wid_extrapolated'])
+
+#%%
+
+# Reset the index to make the keys a separate column
+output_counterfactual1.reset_index(level=0, inplace=True)
+
+# Rename the 'level_0' column to 'key'
+output_counterfactual1.rename(columns={'level_0': 'key'}, inplace=True)
+
+# Reset the index to make it sequential
+output_counterfactual1.reset_index(drop=True, inplace=True)
+
+#%% 
+# count number of observations by series_code and country
+columns_to_consider = ['series_code', 'country']
+output_counterfactual1['count'] = output_counterfactual1.groupby(columns_to_consider)[columns_to_consider[0]].transform('count')
+
+#%% 
+# Drop the extrpolated data if the count is 2 (i.e. if there is an observation from the non extrap data)
+output_counterfactual1 = output_counterfactual1[(output_counterfactual1['count']==1) | (output_counterfactual1['key']=='wid_not_extrapolated')]
+
+output_counterfactual1 = output_counterfactual1.drop(columns = ['count','key'])
+#%% 
+#Note that the WID data is a mix of extrap and non extrap
+output_counterfactual1['series_code'] = output_counterfactual1['series_code'].str.replace('_wid_pretaxNational_perAdult', '_widWithAddedExtrapolated_pretaxNational_perAdult', regex=False)
+
+
+#%%
+# Save to csv
+output_counterfactual1.to_csv("data/selected_observations/short_period_counterfactual1_adding_wid_extrap.csv", index=False)
+
+#%%
+
+# 1980-2018 PERIOD (allowing +/- 5 years)
+#%%
+reference_years = {
+    1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
+    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
 }
 
-
-#%% Run the main function using the series and ref years specified above
+#%% Version 1 – All data points 
+# (NB only_all_series = False)
 output = match_ref_years(
     df = df, 
-    series = series, 
+    series = [
+    "gini_pip_disposable_perCapita",
+    "p99p100Share_pip_disposable_perCapita",
+    "p90p100Share_pip_disposable_perCapita",
+    "headcountRatio50Median_pip_disposable_perCapita",    
+    "gini_widExtrapolated_pretaxNational_perAdult",
+    "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
+    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
+    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult",
+    "gini_wid_pretaxNational_perAdult",
+    "p99p100Share_wid_pretaxNational_perAdult",           
+    "p90p100Share_wid_pretaxNational_perAdult",
+    "headcountRatio50Median_wid_pretaxNational_perAdult" 
+], 
+    reference_years = reference_years, 
+    only_all_series = False)
+
+# Save to csv
+output.to_csv("data/selected_observations/long_period_all_obs.csv", index=False)
+
+#%%
+
+
+#%% Version 2 – Only matching data points, non-extrapolated data for WID 
+# (NB only_all_series = True)
+output = match_ref_years(
+    df = df, 
+    series = [
+    "gini_pip_disposable_perCapita",
+    "p99p100Share_pip_disposable_perCapita",
+    "p90p100Share_pip_disposable_perCapita",
+    "headcountRatio50Median_pip_disposable_perCapita",    
+    "gini_wid_pretaxNational_perAdult",
+    "p99p100Share_wid_pretaxNational_perAdult",           
+    "p90p100Share_wid_pretaxNational_perAdult",
+    "headcountRatio50Median_wid_pretaxNational_perAdult" 
+], 
     reference_years = reference_years, 
     only_all_series = True)
+
+# Save to csv
+output.to_csv("data/selected_observations/long_period_matching_obs_non_extrap_WID.csv", index=False)
+
+
+
+#%% Version 3 – Only matching data points, extrapolated data for WID 
+# (NB only_all_series = True)
+output = match_ref_years(
+    df = df, 
+    series = [
+    "gini_pip_disposable_perCapita",
+    "p99p100Share_pip_disposable_perCapita",
+    "p90p100Share_pip_disposable_perCapita",
+    "headcountRatio50Median_pip_disposable_perCapita",    
+    "gini_widExtrapolated_pretaxNational_perAdult",
+    "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
+    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
+    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult"
+], 
+    reference_years = reference_years, 
+    only_all_series = True)
+
+# Save to csv
+output.to_csv("data/selected_observations/long_period_matching_obs_extrap_WID.csv", index=False)
 
 
 #%%

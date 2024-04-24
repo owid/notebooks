@@ -1,5 +1,5 @@
 Entity,region
-Andorra,W. Europe
+Andorra,W. Eur and Offshoots
 United Arab Emirates,MENA
 Afghanistan,S & SE Asia
 Antigua and Barbuda,LAC
@@ -10,14 +10,14 @@ Netherlands Antilles,LAC
 Angola,SS Africa
 Argentina,LAC
 American Samoa,Other Oceania
-Austria,W. Europe
-Australia,W. Offshoots
+Austria,W. Eur and Offshoots
+Australia,W. Eur and Offshoots
 Aruba,LAC
 Azerbaijan,EE & CA
 Bosnia and Herzegovina,EE & CA
 Barbados,LAC
 Bangladesh,S & SE Asia
-Belgium,W. Europe
+Belgium,W. Eur and Offshoots
 Burkina Faso,SS Africa
 Bulgaria,EE & CA
 Bahrain,MENA
@@ -32,11 +32,11 @@ Bhutan,S & SE Asia
 Botswana,SS Africa
 Belarus,EE & CA
 Belize,LAC
-Canada,W. Offshoots
+Canada,W. Eur and Offshoots
 Democratic Republic of Congo,SS Africa
 Central African Republic,SS Africa
 Congo,SS Africa
-Switzerland,W. Europe
+Switzerland,W. Eur and Offshoots
 Cote d'Ivoire,SS Africa
 Cook Islands,Other Oceania
 Chile,LAC
@@ -49,10 +49,10 @@ Cape Verde,SS Africa
 Curacao,LAC
 Cyprus,EE & CA
 Czechia,EE & CA
-East Germany,W. Europe
-Germany,W. Europe
+East Germany,W. Eur and Offshoots
+Germany,W. Eur and Offshoots
 Djibouti,SS Africa
-Denmark,W. Europe
+Denmark,W. Eur and Offshoots
 Dominica,LAC
 Dominican Republic,LAC
 Algeria,MENA
@@ -61,25 +61,25 @@ Estonia,EE & CA
 Egypt,MENA
 Western Sahara,MENA
 Eritrea,SS Africa
-Spain,W. Europe
+Spain,W. Eur and Offshoots
 Ethiopia,SS Africa
-Finland,W. Europe
+Finland,W. Eur and Offshoots
 Fiji,Other Oceania
 Falkland Islands,LAC
 Micronesia (country),Other Oceania
-Faeroe Islands,W. Europe
-France,W. Europe
+Faeroe Islands,W. Eur and Offshoots
+France,W. Eur and Offshoots
 Gabon,SS Africa
-United Kingdom,W. Europe
+United Kingdom,W. Eur and Offshoots
 Grenada,LAC
 Georgia,EE & CA
 Ghana,SS Africa
-Gibraltar,W. Europe
+Gibraltar,W. Eur and Offshoots
 Greenland,Other N. America
 Gambia,SS Africa
 Guinea,SS Africa
 Equatorial Guinea,SS Africa
-Greece,W. Europe
+Greece,W. Eur and Offshoots
 Guatemala,LAC
 Guam,Other Oceania
 Guinea-Bissau,SS Africa
@@ -90,14 +90,14 @@ Croatia,EE & CA
 Haiti,LAC
 Hungary,EE & CA
 Indonesia,S & SE Asia
-Ireland,W. Europe
+Ireland,W. Eur and Offshoots
 Israel,MENA
-Isle of Man,W. Europe
+Isle of Man,W. Eur and Offshoots
 India,S & SE Asia
 Iraq,MENA
 Iran,MENA
-Iceland,W. Europe
-Italy,W. Europe
+Iceland,W. Eur and Offshoots
+Italy,W. Eur and Offshoots
 Jamaica,LAC
 Jordan,MENA
 Japan,East Asia
@@ -116,16 +116,16 @@ Kazakhstan,EE & CA
 Laos,S & SE Asia
 Lebanon,MENA
 Saint Lucia,LAC
-Liechtenstein,W. Europe
+Liechtenstein,W. Eur and Offshoots
 Sri Lanka,S & SE Asia
 Liberia,SS Africa
 Lesotho,SS Africa
 Lithuania,EE & CA
-Luxembourg,W. Europe
+Luxembourg,W. Eur and Offshoots
 Latvia,EE & CA
 Libya,MENA
 Morocco,MENA
-Monaco,W. Europe
+Monaco,W. Eur and Offshoots
 Moldova,EE & CA
 Montenegro,EE & CA
 Madagascar,SS Africa
@@ -138,7 +138,7 @@ Macao,East Asia
 Northern Mariana Islands,Other Oceania
 Mauritania,SS Africa
 Montserrat,LAC
-Malta,W. Europe
+Malta,W. Eur and Offshoots
 Mauritius,SS Africa
 Maldives,S & SE Asia
 Malawi,SS Africa
@@ -150,12 +150,12 @@ New Caledonia,Other Oceania
 Niger,SS Africa
 Nigeria,SS Africa
 Nicaragua,LAC
-Netherlands,W. Europe
-Norway,W. Europe
+Netherlands,W. Eur and Offshoots
+Norway,W. Eur and Offshoots
 Nepal,S & SE Asia
 Nauru,Other Oceania
 Niue,Other Oceania
-New Zealand,W. Offshoots
+New Zealand,W. Eur and Offshoots
 Oman,MENA
 Panama,LAC
 Peru,LAC
@@ -167,7 +167,7 @@ Poland,EE & CA
 Saint Pierre and Miquelon,Other N. America
 Puerto Rico,LAC
 Palestine,MENA
-Portugal,W. Europe
+Portugal,W. Eur and Offshoots
 Palau,Other Oceania
 Paraguay,LAC
 Qatar,MENA
@@ -179,13 +179,13 @@ Saudi Arabia,MENA
 Solomon Islands,Other Oceania
 Seychelles,SS Africa
 Sudan,SS Africa
-Sweden,W. Europe
+Sweden,W. Eur and Offshoots
 Singapore,S & SE Asia
 Saint Helena,SS Africa
 Slovenia,EE & CA
 Slovakia,EE & CA
 Sierra Leone,SS Africa
-San Marino,W. Europe
+San Marino,W. Eur and Offshoots
 Senegal,SS Africa
 Somalia,SS Africa
 Suriname,LAC
@@ -201,7 +201,7 @@ Togo,SS Africa
 Thailand,S & SE Asia
 Tajikistan,EE & CA
 Tokelau,Other Oceania
-Timor,S & SE Asia
+East Timor,S & SE Asia
 Turkmenistan,EE & CA
 Tunisia,MENA
 Tonga,Other Oceania
@@ -212,10 +212,10 @@ Taiwan,East Asia
 Tanzania,SS Africa
 Ukraine,EE & CA
 Uganda,SS Africa
-United States,W. Offshoots
+United States,W. Eur and Offshoots
 Uruguay,LAC
 Uzbekistan,EE & CA
-Vatican,W. Europe
+Vatican,W. Eur and Offshoots
 Saint Vincent and the Grenadines,LAC
 Venezuela,LAC
 British Virgin Islands,LAC
@@ -224,7 +224,7 @@ Vietnam,S & SE Asia
 Vanuatu,Other Oceania
 Wallis and Futuna,Other Oceania
 Samoa,Other Oceania
-Channel Islands,W. Europe
+Channel Islands,W. Eur and Offshoots
 Yemen,MENA
 Yugoslavia,EE & CA
 South Africa,SS Africa

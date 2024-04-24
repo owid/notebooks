@@ -1,0 +1,2415 @@
+country,year,pipreportinglevel,pipwelfare,value
+Albania,1996,national,consumption,0.03279147
+Albania,2002,national,consumption,0.049788978
+Albania,2005,national,consumption,0.047802716
+Albania,2008,national,consumption,0.05624065
+Albania,2012,national,consumption,0.041242514
+Albania,2014,national,consumption,0.04253023
+Albania,2015,national,consumption,0.039139524
+Albania,2016,national,consumption,0.03961848
+Albania,2016,national,income,0.048623852
+Albania,2017,national,consumption,0.038807098
+Albania,2017,national,income,0.04563346
+Albania,2018,national,consumption,0.034719866
+Albania,2018,national,income,0.043572564
+Albania,2019,national,consumption,0.037878897
+Albania,2020,national,consumption,0.034832187
+Algeria,1988,national,consumption,0.11308118
+Algeria,1995,national,consumption,0.04563192
+Algeria,2011,national,consumption,0.038747866
+Angola,2000,national,consumption,0.118633
+Angola,2008,national,consumption,0.075052686
+Angola,2018,national,consumption,0.1402083
+Argentina,1980,urban,income,0.055731565
+Argentina,1986,urban,income,0.0747464
+Argentina,1987,urban,income,0.082885735
+Argentina,1991,urban,income,0.1074739
+Argentina,1992,urban,income,0.076619
+Argentina,1993,urban,income,0.0750358
+Argentina,1994,urban,income,0.08116869
+Argentina,1995,urban,income,0.088381395
+Argentina,1996,urban,income,0.09266002
+Argentina,1997,urban,income,0.08029786
+Argentina,1998,urban,income,0.09367433
+Argentina,1999,urban,income,0.08625844
+Argentina,2000,urban,income,0.08627617
+Argentina,2001,urban,income,0.09000927
+Argentina,2002,urban,income,0.10037843
+Argentina,2003,urban,income,0.09811251
+Argentina,2004,urban,income,0.08060573
+Argentina,2005,urban,income,0.081422865
+Argentina,2006,urban,income,0.07816583
+Argentina,2007,urban,income,0.08071894
+Argentina,2008,urban,income,0.073052704
+Argentina,2009,urban,income,0.063803956
+Argentina,2010,urban,income,0.06613079
+Argentina,2011,urban,income,0.06274267
+Argentina,2012,urban,income,0.0593114
+Argentina,2013,urban,income,0.056876905
+Argentina,2014,urban,income,0.06145358
+Argentina,2016,urban,income,0.06316046
+Argentina,2017,urban,income,0.058403004
+Argentina,2018,urban,income,0.060278196
+Argentina,2019,urban,income,0.06633179
+Argentina,2020,urban,income,0.059017487
+Argentina,2021,urban,income,0.07133378
+Argentina,2022,urban,income,0.05673435
+Armenia,1996,national,income,0.099906236
+Armenia,1999,national,consumption,0.075016454
+Armenia,2001,national,consumption,0.06393682
+Armenia,2002,national,consumption,0.068911515
+Armenia,2003,national,consumption,0.07534493
+Armenia,2004,national,consumption,0.090231046
+Armenia,2005,national,consumption,0.08551059
+Armenia,2006,national,consumption,0.051629573
+Armenia,2007,national,consumption,0.048960913
+Armenia,2008,national,consumption,0.04724721
+Armenia,2009,national,consumption,0.043525606
+Armenia,2010,national,consumption,0.05866803
+Armenia,2011,national,consumption,0.05194983
+Armenia,2012,national,consumption,0.056055028
+Armenia,2013,national,consumption,0.05594844
+Armenia,2014,national,consumption,0.05966318
+Armenia,2015,national,consumption,0.063620724
+Armenia,2016,national,consumption,0.067934304
+Armenia,2017,national,consumption,0.08249904
+Armenia,2018,national,consumption,0.07757306
+Armenia,2019,national,consumption,0.060635313
+Armenia,2020,national,consumption,0.041559473
+Armenia,2021,national,consumption,0.051154483
+Armenia,2022,national,consumption,0.045641772
+Australia,1981,national,income,0.03610855
+Australia,1985,national,income,0.05159755
+Australia,1989,national,income,0.046334986
+Australia,1995,national,income,0.045702443
+Australia,2001,national,income,0.047022343
+Australia,2003,national,income,0.0482493
+Australia,2004,national,income,0.049694408
+Australia,2008,national,income,0.073822334
+Australia,2010,national,income,0.06606057
+Australia,2014,national,income,0.06432642
+Australia,2016,national,income,0.056578312
+Australia,2018,national,income,0.063564554
+Austria,1994,national,income,0.047045708
+Austria,1995,national,income,0.04500549
+Austria,1996,national,income,0.045066856
+Austria,1997,national,income,0.04020086
+Austria,1998,national,income,0.0586582
+Austria,1999,national,income,0.04667453
+Austria,2000,national,income,0.041259937
+Austria,2003,national,income,0.047351673
+Austria,2004,national,income,0.046651218
+Austria,2005,national,income,0.040655132
+Austria,2006,national,income,0.047843505
+Austria,2007,national,income,0.045666322
+Austria,2008,national,income,0.04902021
+Austria,2009,national,income,0.051332578
+Austria,2010,national,income,0.044355243
+Austria,2011,national,income,0.046957817
+Austria,2012,national,income,0.04431088
+Austria,2013,national,income,0.05461727
+Austria,2014,national,income,0.05185497
+Austria,2015,national,income,0.052313857
+Austria,2016,national,income,0.04790079
+Austria,2017,national,income,0.043446742
+Austria,2018,national,income,0.050114665
+Austria,2019,national,income,0.043451276
+Austria,2020,national,income,0.04371008
+Austria,2021,national,income,0.051236596
+Azerbaijan,1995,national,consumption,0.052635178
+Azerbaijan,2001,national,consumption,0.06620537
+Azerbaijan,2002,national,consumption,0.050017897
+Azerbaijan,2003,national,consumption,0.05039106
+Azerbaijan,2004,national,consumption,0.05750056
+Azerbaijan,2005,national,consumption,0.05492991
+Bangladesh,1983,national,consumption,0.038130507
+Bangladesh,1985,national,consumption,0.047531586
+Bangladesh,1988,national,consumption,0.052700065
+Bangladesh,1991,national,consumption,0.047063507
+Bangladesh,1995,national,consumption,0.066632286
+Bangladesh,2000,national,consumption,0.06285642
+Bangladesh,2005,national,consumption,0.0626754
+Bangladesh,2010,national,consumption,0.060622506
+Bangladesh,2016,national,consumption,0.064068
+Bangladesh,2022,national,consumption,0.057820544
+Belarus,1993,national,income,0.029567625
+Belarus,1995,national,income,0.034188025
+Belarus,1998,national,consumption,0.05102872
+Belarus,1999,national,consumption,0.043831293
+Belarus,2000,national,consumption,0.046559952
+Belarus,2001,national,consumption,0.048384517
+Belarus,2002,national,consumption,0.04952888
+Belarus,2003,national,consumption,0.03982131
+Belarus,2004,national,consumption,0.034490086
+Belarus,2005,national,consumption,0.036444623
+Belarus,2006,national,consumption,0.039904445
+Belarus,2007,national,consumption,0.046869222
+Belarus,2008,national,consumption,0.04216661
+Belarus,2009,national,consumption,0.04295666
+Belarus,2010,national,consumption,0.037803177
+Belarus,2011,national,consumption,0.038878243
+Belarus,2012,national,consumption,0.0408959
+Belarus,2013,national,consumption,0.04464215
+Belarus,2014,national,consumption,0.044397023
+Belarus,2015,national,consumption,0.03505383
+Belarus,2016,national,consumption,0.036710214
+Belarus,2017,national,consumption,0.038266014
+Belarus,2018,national,consumption,0.039337765
+Belarus,2019,national,consumption,0.0364577
+Belarus,2020,national,consumption,0.037099786
+Belgium,1985,national,income,0.03502179
+Belgium,1988,national,income,0.041914634
+Belgium,1992,national,income,0.032133374
+Belgium,1995,national,income,0.04757941
+Belgium,1997,national,income,0.037035536
+Belgium,2000,national,income,0.11470581
+Belgium,2003,national,income,0.042125624
+Belgium,2004,national,income,0.08056673
+Belgium,2005,national,income,0.06343606
+Belgium,2006,national,income,0.04385246
+Belgium,2007,national,income,0.056738254
+Belgium,2008,national,income,0.04977022
+Belgium,2009,national,income,0.049476884
+Belgium,2010,national,income,0.04925942
+Belgium,2011,national,income,0.04572291
+Belgium,2012,national,income,0.04268401
+Belgium,2013,national,income,0.041617494
+Belgium,2014,national,income,0.046605457
+Belgium,2015,national,income,0.043773744
+Belgium,2016,national,income,0.045086484
+Belgium,2017,national,income,0.044305503
+Belgium,2018,national,income,0.048665944
+Belgium,2019,national,income,0.05177545
+Belgium,2020,national,income,0.045695458
+Belgium,2021,national,income,0.046072394
+Belize,1993,national,income,0.27615395
+Belize,1994,national,income,0.27648672
+Belize,1995,national,consumption,0.14198941
+Belize,1996,national,income,0.19124708
+Belize,1997,national,income,0.26135686
+Belize,1998,national,income,0.14382963
+Belize,1999,national,income,0.11537464
+Benin,2003,national,consumption,0.08012491
+Benin,2011,national,consumption,0.07619169
+Benin,2015,national,consumption,0.090722635
+Benin,2018,national,consumption,0.068519756
+Benin,2021,national,consumption,0.058998607
+Bhutan,2003,national,consumption,0.072897255
+Bhutan,2007,national,consumption,0.059326332
+Bhutan,2012,national,consumption,0.07267716
+Bhutan,2017,national,consumption,0.055722546
+Bhutan,2022,national,consumption,0.043023564
+Bolivia,1990,urban,income,0.05965184
+Bolivia,1992,urban,income,0.10669565
+Bolivia,1997,national,income,0.14439298
+Bolivia,1999,national,income,0.10980013
+Bolivia,2000,national,income,0.14629945
+Bolivia,2001,national,income,0.13344775
+Bolivia,2002,national,income,0.1383652
+Bolivia,2004,national,income,0.13119714
+Bolivia,2005,national,income,0.13590035
+Bolivia,2006,national,income,0.12445818
+Bolivia,2007,national,income,0.11135238
+Bolivia,2008,national,income,0.101743184
+Bolivia,2009,national,income,0.10418367
+Bolivia,2011,national,income,0.073418364
+Bolivia,2012,national,income,0.07388048
+Bolivia,2013,national,income,0.08488115
+Bolivia,2014,national,income,0.10192825
+Bolivia,2015,national,income,0.09696007
+Bolivia,2016,national,income,0.06825425
+Bolivia,2017,national,income,0.06702131
+Bolivia,2018,national,income,0.062748425
+Bolivia,2019,national,income,0.06640817
+Bolivia,2020,national,income,0.075636
+Bolivia,2021,national,income,0.061499484
+Bosnia and Herzegovina,2001,national,consumption,0.068898134
+Bosnia and Herzegovina,2004,national,consumption,0.04810394
+Bosnia and Herzegovina,2007,national,consumption,0.04455221
+Bosnia and Herzegovina,2011,national,consumption,0.04639072
+Botswana,1985,national,consumption,0.13398808
+Botswana,1993,national,consumption,0.24051164
+Botswana,2002,national,consumption,0.16758378
+Botswana,2009,national,consumption,0.17341597
+Botswana,2015,national,consumption,0.122913845
+Brazil,1981,national,income,0.12476539
+Brazil,1982,national,income,0.12686704
+Brazil,1983,national,income,0.13159654
+Brazil,1984,national,income,0.12633945
+Brazil,1985,national,income,0.09785568
+Brazil,1986,national,income,0.13569689
+Brazil,1987,national,income,0.13915475
+Brazil,1988,national,income,0.14255096
+Brazil,1989,national,income,0.16376159
+Brazil,1990,national,income,0.13905324
+Brazil,1992,national,income,0.09442823
+Brazil,1993,national,income,0.15103987
+Brazil,1995,national,income,0.1366082
+Brazil,1996,national,income,0.13446708
+Brazil,1997,national,income,0.13651048
+Brazil,1998,national,income,0.13762495
+Brazil,1999,national,income,0.13231677
+Brazil,2001,national,income,0.12903821
+Brazil,2002,national,income,0.12663512
+Brazil,2003,national,income,0.124238774
+Brazil,2004,national,income,0.12278476
+Brazil,2005,national,income,0.124055095
+Brazil,2006,national,income,0.12128178
+Brazil,2007,national,income,0.118842855
+Brazil,2008,national,income,0.11613347
+Brazil,2009,national,income,0.11430607
+Brazil,2011,national,income,0.11450404
+Brazil,2012,national,income,0.11601857
+Brazil,2013,national,income,0.110173315
+Brazil,2014,national,income,0.105513535
+Brazil,2015,national,income,0.107448384
+Brazil,2016,national,income,0.11055366
+Brazil,2017,national,income,0.11185348
+Brazil,2018,national,income,0.116870835
+Brazil,2019,national,income,0.11651082
+Brazil,2020,national,income,0.10689158
+Brazil,2021,national,income,0.110484764
+Brazil,2022,national,income,0.11015841
+Bulgaria,1989,national,consumption,0.028692605
+Bulgaria,1992,national,income,0.04705598
+Bulgaria,1994,national,consumption,0.035305385
+Bulgaria,1995,national,consumption,0.06271963
+Bulgaria,1997,national,consumption,0.04124146
+Bulgaria,2001,national,consumption,0.048571907
+Bulgaria,2003,national,consumption,0.048582006
+Bulgaria,2006,national,income,0.060123544
+Bulgaria,2007,national,consumption,0.039593562
+Bulgaria,2007,national,income,0.05812762
+Bulgaria,2008,national,income,0.04758872
+Bulgaria,2009,national,income,0.055553254
+Bulgaria,2010,national,income,0.06105771
+Bulgaria,2011,national,income,0.05661369
+Bulgaria,2012,national,income,0.060043115
+Bulgaria,2013,national,income,0.060328513
+Bulgaria,2014,national,income,0.06516313
+Bulgaria,2015,national,income,0.069500275
+Bulgaria,2016,national,income,0.09081491
+Bulgaria,2017,national,income,0.101333596
+Bulgaria,2018,national,income,0.100442685
+Bulgaria,2019,national,income,0.07951407
+Bulgaria,2020,national,income,0.09538978
+Bulgaria,2021,national,income,0.06988135
+Burkina Faso,1994,national,consumption,0.11184063
+Burkina Faso,1998,national,consumption,0.1483021
+Burkina Faso,2003,national,consumption,0.09179585
+Burkina Faso,2009,national,consumption,0.083708934
+Burkina Faso,2014,national,consumption,0.06831744
+Burkina Faso,2018,national,consumption,0.08380669
+Burkina Faso,2021,national,consumption,0.069835015
+Burundi,1992,national,consumption,0.050311398
+Burundi,1998,national,consumption,0.086995
+Burundi,2006,national,consumption,0.05893439
+Burundi,2013,national,consumption,0.07064599
+Burundi,2020,national,consumption,0.06864989
+Cameroon,1996,national,consumption,0.09487081
+Cameroon,2001,national,consumption,0.09536885
+Cameroon,2007,national,consumption,0.07696272
+Cameroon,2014,national,consumption,0.079893105
+Cameroon,2021,national,consumption,0.0641225
+Canada,1971,national,income,0.048500072
+Canada,1973,national,income,0.045439385
+Canada,1975,national,income,0.042909853
+Canada,1977,national,income,0.04033401
+Canada,1979,national,income,0.0411865
+Canada,1981,national,income,0.041449904
+Canada,1982,national,income,0.041387152
+Canada,1984,national,income,0.04478201
+Canada,1985,national,income,0.047774564
+Canada,1986,national,income,0.04009225
+Canada,1987,national,income,0.041534096
+Canada,1988,national,income,0.04119006
+Canada,1989,national,income,0.039206535
+Canada,1990,national,income,0.040284216
+Canada,1991,national,income,0.040394522
+Canada,1992,national,income,0.04082603
+Canada,1993,national,income,0.039061643
+Canada,1994,national,income,0.038403045
+Canada,1995,national,income,0.038921654
+Canada,1996,national,income,0.04958362
+Canada,1997,national,income,0.053313825
+Canada,1998,national,income,0.057024557
+Canada,1999,national,income,0.052872255
+Canada,2000,national,income,0.05635338
+Canada,2001,national,income,0.05517246
+Canada,2002,national,income,0.053583186
+Canada,2003,national,income,0.05609085
+Canada,2004,national,income,0.054211076
+Canada,2005,national,income,0.054232206
+Canada,2006,national,income,0.057867646
+Canada,2007,national,income,0.058346096
+Canada,2008,national,income,0.057245955
+Canada,2009,national,income,0.054031882
+Canada,2010,national,income,0.056703635
+Canada,2011,national,income,0.048485115
+Canada,2012,national,income,0.048047014
+Canada,2013,national,income,0.047032952
+Canada,2014,national,income,0.048821136
+Canada,2015,national,income,0.048598807
+Canada,2016,national,income,0.047969826
+Canada,2017,national,income,0.05022447
+Canada,2018,national,income,0.04807211
+Canada,2019,national,income,0.047431022
+Cape Verde,2001,national,consumption,0.12658687
+Cape Verde,2007,national,consumption,0.10103273
+Cape Verde,2015,national,consumption,0.06776488
+Central African Republic,1992,national,consumption,0.12561557
+Central African Republic,2008,national,consumption,0.17869803
+Central African Republic,2021,national,consumption,0.07690572
+Chad,2003,national,consumption,0.0698557
+Chad,2011,national,consumption,0.077351116
+Chad,2018,national,consumption,0.06317201
+Chad,2022,national,consumption,0.060363464
+Chile,1987,national,income,0.12571774
+Chile,1990,national,income,0.14600804
+Chile,1992,national,income,0.14138654
+Chile,1994,national,income,0.15200177
+Chile,1996,national,income,0.12791093
+Chile,1998,national,income,0.13638034
+Chile,2000,national,income,0.12017108
+Chile,2003,national,income,0.12061897
+Chile,2006,national,income,0.103365295
+Chile,2009,national,income,0.101246305
+Chile,2011,national,income,0.09599938
+Chile,2013,national,income,0.09837438
+Chile,2015,national,income,0.09461877
+Chile,2017,national,income,0.09635118
+Chile,2020,national,income,0.095777795
+Chile,2022,national,income,0.08161155
+China,1981,rural,income,0.029991627
+China,1981,urban,income,0.022343528
+China,1984,rural,income,0.036623243
+China,1984,urban,income,0.021460142
+China,1987,rural,income,0.04030762
+China,1987,urban,income,0.024369417
+China,1990,rural,consumption,0.06948647
+China,1990,urban,consumption,0.031031638
+China,1993,rural,consumption,0.09988471
+China,1993,urban,consumption,0.03924401
+China,1996,rural,consumption,0.061711334
+China,1996,urban,consumption,0.03885254
+China,1999,rural,consumption,0.06829014
+China,1999,urban,consumption,0.042919423
+China,2002,rural,consumption,0.07900173
+China,2002,urban,consumption,0.052378964
+China,2005,rural,consumption,0.06413683
+China,2005,urban,consumption,0.057456266
+China,2008,rural,consumption,0.079189144
+China,2008,urban,consumption,0.061495762
+China,2010,rural,consumption,0.09135009
+China,2010,urban,consumption,0.06334369
+China,2011,rural,consumption,0.07714285
+China,2011,urban,consumption,0.06300163
+China,2012,rural,consumption,0.07967545
+China,2012,urban,consumption,0.059443593
+China,2013,rural,consumption,0.05357121
+China,2013,urban,consumption,0.05651175
+China,2014,rural,consumption,0.052167434
+China,2014,urban,consumption,0.0531022
+China,2015,rural,consumption,0.050631415
+China,2015,urban,consumption,0.053495284
+China,2016,rural,consumption,0.05067248
+China,2016,urban,consumption,0.05196859
+China,2017,rural,consumption,0.05677085
+China,2017,urban,consumption,0.05366698
+China,2018,rural,consumption,0.05390005
+China,2018,urban,consumption,0.05117997
+China,2019,rural,consumption,0.052929085
+China,2019,urban,consumption,0.05351554
+China,2020,rural,consumption,0.05450015
+China,2020,urban,consumption,0.062158354
+Colombia,1980,urban,income,0.19363998
+Colombia,1988,urban,income,0.12504408
+Colombia,1989,urban,income,0.14258601
+Colombia,1991,urban,income,0.11001469
+Colombia,1992,national,income,0.0982709
+Colombia,1996,national,income,0.14764772
+Colombia,1999,national,income,0.1508096
+Colombia,2000,national,income,0.15500756
+Colombia,2001,national,income,0.14277713
+Colombia,2002,national,income,0.14043781
+Colombia,2003,national,income,0.11677919
+Colombia,2004,national,income,0.13215229
+Colombia,2005,national,income,0.12373588
+Colombia,2008,national,income,0.12493146
+Colombia,2009,national,income,0.123608425
+Colombia,2010,national,income,0.12607062
+Colombia,2011,national,income,0.1219471
+Colombia,2012,national,income,0.11556466
+Colombia,2013,national,income,0.117436685
+Colombia,2014,national,income,0.1170205
+Colombia,2015,national,income,0.11126032
+Colombia,2016,national,income,0.1118726
+Colombia,2017,national,income,0.10662603
+Colombia,2018,national,income,0.11015091
+Colombia,2019,national,income,0.10973161
+Colombia,2020,national,income,0.11948959
+Colombia,2021,national,income,0.121052586
+Colombia,2022,national,income,0.11983859
+Comoros,2004,national,consumption,0.16959305
+Comoros,2014,national,consumption,0.070375904
+Congo,2005,national,consumption,0.09544266
+Congo,2011,national,consumption,0.10764127
+Costa Rica,1981,national,income,0.06014497
+Costa Rica,1986,national,income,0.02924345
+Costa Rica,1989,national,income,0.07604252
+Costa Rica,1990,national,income,0.072547436
+Costa Rica,1991,national,income,0.08393077
+Costa Rica,1992,national,income,0.08242407
+Costa Rica,1993,national,income,0.074582845
+Costa Rica,1994,national,income,0.08456463
+Costa Rica,1995,national,income,0.07863582
+Costa Rica,1996,national,income,0.07319827
+Costa Rica,1997,national,income,0.07689807
+Costa Rica,1998,national,income,0.07475423
+Costa Rica,1999,national,income,0.078517035
+Costa Rica,2000,national,income,0.08199434
+Costa Rica,2001,national,income,0.0991456
+Costa Rica,2002,national,income,0.10504631
+Costa Rica,2003,national,income,0.08808921
+Costa Rica,2004,national,income,0.08382958
+Costa Rica,2005,national,income,0.08348396
+Costa Rica,2006,national,income,0.09279562
+Costa Rica,2007,national,income,0.104166366
+Costa Rica,2008,national,income,0.094616495
+Costa Rica,2009,national,income,0.094987035
+Costa Rica,2010,national,income,0.09075321
+Costa Rica,2011,national,income,0.09443136
+Costa Rica,2012,national,income,0.09077453
+Costa Rica,2013,national,income,0.089937665
+Costa Rica,2014,national,income,0.08283789
+Costa Rica,2015,national,income,0.080675125
+Costa Rica,2016,national,income,0.08379402
+Costa Rica,2017,national,income,0.08498627
+Costa Rica,2018,national,income,0.08311192
+Costa Rica,2019,national,income,0.08321649
+Costa Rica,2020,national,income,0.07941605
+Costa Rica,2021,national,income,0.088157274
+Costa Rica,2022,national,income,0.0795762
+Cote d'Ivoire,1985,national,consumption,0.0990954
+Cote d'Ivoire,1986,national,consumption,0.06327931
+Cote d'Ivoire,1987,national,consumption,0.070548
+Cote d'Ivoire,1988,national,consumption,0.061764058
+Cote d'Ivoire,1992,national,consumption,0.060048964
+Cote d'Ivoire,1995,national,consumption,0.078045905
+Cote d'Ivoire,2015,national,consumption,0.07237292
+Cote d'Ivoire,2018,national,consumption,0.05877838
+Cote d'Ivoire,2021,national,consumption,0.0559792
+Croatia,1988,national,income,0.028413972
+Croatia,1998,national,consumption,0.0387252
+Croatia,1999,national,consumption,0.04138483
+Croatia,2000,national,consumption,0.044748455
+Croatia,2001,national,consumption,0.04080625
+Croatia,2004,national,consumption,0.04412447
+Croatia,2008,national,consumption,0.0662589
+Croatia,2009,national,consumption,0.05157272
+Croatia,2009,national,income,0.040770937
+Croatia,2010,national,consumption,0.03925052
+Croatia,2010,national,income,0.041597705
+Croatia,2011,national,income,0.039284427
+Croatia,2012,national,income,0.038683742
+Croatia,2013,national,income,0.040572695
+Croatia,2014,national,income,0.04395815
+Croatia,2015,national,income,0.04066282
+Croatia,2016,national,income,0.04094062
+Croatia,2017,national,income,0.040005695
+Croatia,2018,national,income,0.040335767
+Croatia,2019,national,income,0.039478865
+Croatia,2020,national,income,0.039041396
+Croatia,2021,national,income,0.03912571
+Cyprus,2004,national,income,0.05477555
+Cyprus,2005,national,income,0.058905352
+Cyprus,2006,national,income,0.07247259
+Cyprus,2007,national,income,0.062040128
+Cyprus,2008,national,income,0.06612109
+Cyprus,2009,national,income,0.06553178
+Cyprus,2010,national,income,0.05796831
+Cyprus,2011,national,income,0.067991495
+Cyprus,2012,national,income,0.0743258
+Cyprus,2013,national,income,0.09212001
+Cyprus,2014,national,income,0.07596813
+Cyprus,2015,national,income,0.06875842
+Cyprus,2016,national,income,0.064994894
+Cyprus,2017,national,income,0.056766495
+Cyprus,2018,national,income,0.0708177
+Cyprus,2019,national,income,0.05701968
+Cyprus,2020,national,income,0.06522204
+Cyprus,2021,national,income,0.0616354
+Czechia,1992,national,income,0.039170854
+Czechia,1993,national,income,0.051110476
+Czechia,1996,national,income,0.045278948
+Czechia,2002,national,income,0.045590933
+Czechia,2004,national,income,0.049712062
+Czechia,2005,national,income,0.05005588
+Czechia,2006,national,income,0.04640444
+Czechia,2007,national,income,0.046377435
+Czechia,2008,national,income,0.05393223
+Czechia,2009,national,income,0.04770404
+Czechia,2010,national,income,0.04439412
+Czechia,2011,national,income,0.04434376
+Czechia,2012,national,income,0.04150496
+Czechia,2013,national,income,0.046262875
+Czechia,2014,national,income,0.04264711
+Czechia,2015,national,income,0.045214776
+Czechia,2016,national,income,0.043744367
+Czechia,2017,national,income,0.039867334
+Czechia,2018,national,income,0.039180685
+Czechia,2019,national,income,0.03738761
+Czechia,2020,national,income,0.04565065
+Czechia,2021,national,income,0.04253371
+Democratic Republic of Congo,2004,national,consumption,0.070420824
+Democratic Republic of Congo,2012,national,consumption,0.07123973
+Democratic Republic of Congo,2020,national,consumption,0.09923653
+Denmark,1987,national,income,0.040919606
+Denmark,1992,national,income,0.04149301
+Denmark,1995,national,income,0.038714018
+Denmark,2000,national,income,0.038145002
+Denmark,2003,national,income,0.046245422
+Denmark,2004,national,income,0.04011376
+Denmark,2005,national,income,0.042405847
+Denmark,2006,national,income,0.05301065
+Denmark,2007,national,income,0.053180408
+Denmark,2008,national,income,0.043605383
+Denmark,2009,national,income,0.04735539
+Denmark,2010,national,income,0.049982075
+Denmark,2011,national,income,0.050901502
+Denmark,2012,national,income,0.05944478
+Denmark,2013,national,income,0.058370568
+Denmark,2014,national,income,0.05738891
+Denmark,2015,national,income,0.06898267
+Denmark,2016,national,income,0.06433315
+Denmark,2017,national,income,0.0646714
+Denmark,2018,national,income,0.05846728
+Denmark,2019,national,income,0.06272319
+Denmark,2020,national,income,0.05511336
+Denmark,2021,national,income,0.06103374
+Djibouti,2002,national,consumption,0.074353255
+Djibouti,2012,national,consumption,0.08700509
+Djibouti,2013,national,consumption,0.08416889
+Djibouti,2017,national,consumption,0.07780156
+Dominican Republic,1986,national,income,0.09267012
+Dominican Republic,1989,national,income,0.12548323
+Dominican Republic,1992,national,income,0.16475753
+Dominican Republic,1996,national,income,0.08634947
+Dominican Republic,1997,national,income,0.111279264
+Dominican Republic,2000,national,income,0.11334282
+Dominican Republic,2001,national,income,0.09839214
+Dominican Republic,2002,national,income,0.09735136
+Dominican Republic,2003,national,income,0.120556034
+Dominican Republic,2004,national,income,0.12828065
+Dominican Republic,2005,national,income,0.105121806
+Dominican Republic,2006,national,income,0.1298807
+Dominican Republic,2007,national,income,0.09907344
+Dominican Republic,2008,national,income,0.100605614
+Dominican Republic,2009,national,income,0.09836071
+Dominican Republic,2010,national,income,0.078913234
+Dominican Republic,2011,national,income,0.09307384
+Dominican Republic,2012,national,income,0.08195678
+Dominican Republic,2013,national,income,0.094355404
+Dominican Republic,2014,national,income,0.064934105
+Dominican Republic,2015,national,income,0.087990955
+Dominican Republic,2016,national,income,0.079059556
+Dominican Republic,2017,national,income,0.09179052
+Dominican Republic,2018,national,income,0.11148589
+Dominican Republic,2019,national,income,0.08416338
+Dominican Republic,2020,national,income,0.06977819
+Dominican Republic,2021,national,income,0.068417065
+Dominican Republic,2022,national,income,0.059229612
+East Timor,2001,national,consumption,0.06067981
+East Timor,2007,national,consumption,0.044206686
+East Timor,2014,national,consumption,0.049280472
+Ecuador,1987,urban,income,0.117485836
+Ecuador,1994,national,income,0.12865415
+Ecuador,1995,urban,income,0.11073793
+Ecuador,1998,urban,income,0.08307155
+Ecuador,1999,national,income,0.19061479
+Ecuador,2000,national,income,0.16045302
+Ecuador,2003,national,income,0.11612138
+Ecuador,2004,national,income,0.12620471
+Ecuador,2005,national,income,0.11182217
+Ecuador,2006,national,income,0.13187832
+Ecuador,2007,national,income,0.12886551
+Ecuador,2008,national,income,0.09660504
+Ecuador,2009,national,income,0.09540034
+Ecuador,2010,national,income,0.09995196
+Ecuador,2011,national,income,0.077309586
+Ecuador,2012,national,income,0.08411104
+Ecuador,2013,national,income,0.09032435
+Ecuador,2014,national,income,0.08439854
+Ecuador,2015,national,income,0.08809231
+Ecuador,2016,national,income,0.08302034
+Ecuador,2017,national,income,0.07869769
+Ecuador,2018,national,income,0.080319904
+Ecuador,2019,national,income,0.08196038
+Ecuador,2020,national,income,0.090393394
+Ecuador,2021,national,income,0.079456106
+Ecuador,2022,national,income,0.08380511
+Egypt,1990,national,consumption,0.060481142
+Egypt,1995,national,consumption,0.064625084
+Egypt,1999,national,consumption,0.0897858
+Egypt,2004,national,consumption,0.06334113
+Egypt,2008,national,consumption,0.06606522
+Egypt,2010,national,consumption,0.0591934
+Egypt,2012,national,consumption,0.052254464
+Egypt,2015,national,consumption,0.074489124
+Egypt,2017,national,consumption,0.06334364
+Egypt,2019,national,consumption,0.071812615
+El Salvador,1989,national,income,0.078285396
+El Salvador,1991,national,income,0.12622382
+El Salvador,1995,national,income,0.11038813
+El Salvador,1996,national,income,0.11307211
+El Salvador,1998,national,income,0.11433844
+El Salvador,1999,national,income,0.09506775
+El Salvador,2000,national,income,0.10980397
+El Salvador,2001,national,income,0.098212466
+El Salvador,2002,national,income,0.11453788
+El Salvador,2003,national,income,0.09272526
+El Salvador,2004,national,income,0.08589084
+El Salvador,2005,national,income,0.09692077
+El Salvador,2006,national,income,0.0931355
+El Salvador,2007,national,income,0.099169835
+El Salvador,2008,national,income,0.09399453
+El Salvador,2009,national,income,0.09069246
+El Salvador,2010,national,income,0.072466016
+El Salvador,2011,national,income,0.07770822
+El Salvador,2012,national,income,0.0818008
+El Salvador,2013,national,income,0.09805921
+El Salvador,2014,national,income,0.07539616
+El Salvador,2015,national,income,0.079857245
+El Salvador,2016,national,income,0.073513664
+El Salvador,2017,national,income,0.06584391
+El Salvador,2018,national,income,0.06404671
+El Salvador,2019,national,income,0.06640925
+El Salvador,2021,national,income,0.05710922
+El Salvador,2022,national,income,0.058047496
+Estonia,1993,national,income,0.082783125
+Estonia,1995,national,consumption,0.03089821
+Estonia,1998,national,consumption,0.06369371
+Estonia,2000,national,consumption,0.055585675
+Estonia,2001,national,consumption,0.059722576
+Estonia,2002,national,consumption,0.057818096
+Estonia,2003,national,consumption,0.053706743
+Estonia,2003,national,income,0.05905304
+Estonia,2004,national,consumption,0.06556309
+Estonia,2004,national,income,0.051344298
+Estonia,2005,national,income,0.054355767
+Estonia,2006,national,income,0.065704755
+Estonia,2007,national,income,0.044356737
+Estonia,2008,national,income,0.044850763
+Estonia,2009,national,income,0.042442173
+Estonia,2010,national,income,0.045312863
+Estonia,2011,national,income,0.04681979
+Estonia,2012,national,income,0.04869432
+Estonia,2013,national,income,0.045673717
+Estonia,2014,national,income,0.04516951
+Estonia,2015,national,income,0.038634274
+Estonia,2016,national,income,0.031859595
+Estonia,2017,national,income,0.031611387
+Estonia,2018,national,income,0.030668924
+Estonia,2019,national,income,0.033661056
+Estonia,2020,national,income,0.034735557
+Estonia,2021,national,income,0.035699658
+Eswatini,1994,national,consumption,0.2163464
+Eswatini,2000,national,consumption,0.12067514
+Eswatini,2009,national,consumption,0.09676494
+Eswatini,2016,national,consumption,0.10474152
+Ethiopia,1981,rural,consumption,0.082311414
+Ethiopia,1995,national,consumption,0.1576974
+Ethiopia,1999,national,consumption,0.06109917
+Ethiopia,2004,national,consumption,0.068464555
+Ethiopia,2010,national,consumption,0.068906106
+Ethiopia,2015,national,consumption,0.06444953
+Fiji,2002,national,consumption,0.062485516
+Fiji,2008,national,consumption,0.09652893
+Fiji,2013,national,consumption,0.071292296
+Fiji,2019,national,consumption,0.043568544
+Finland,1987,national,income,0.03172992
+Finland,1991,national,income,0.031601656
+Finland,1995,national,income,0.038792882
+Finland,2000,national,income,0.051306047
+Finland,2003,national,income,0.05506763
+Finland,2004,national,income,0.05844572
+Finland,2005,national,income,0.052777946
+Finland,2006,national,income,0.05176065
+Finland,2007,national,income,0.05197475
+Finland,2008,national,income,0.050259814
+Finland,2009,national,income,0.047938615
+Finland,2010,national,income,0.047836136
+Finland,2011,national,income,0.048207946
+Finland,2012,national,income,0.044508457
+Finland,2013,national,income,0.045089412
+Finland,2014,national,income,0.042032886
+Finland,2015,national,income,0.04359355
+Finland,2016,national,income,0.046028223
+Finland,2017,national,income,0.047768723
+Finland,2018,national,income,0.049112376
+Finland,2019,national,income,0.051084895
+Finland,2020,national,income,0.049143855
+Finland,2021,national,income,0.051440496
+France,1970,national,income,0.06431899
+France,1975,national,income,0.065462016
+France,1979,national,income,0.06140091
+France,1984,national,income,0.058673713
+France,1990,national,income,0.052323617
+France,1996,national,income,0.044630513
+France,1997,national,income,0.04471436
+France,1998,national,income,0.046031382
+France,1999,national,income,0.05119575
+France,2000,national,income,0.051180363
+France,2001,national,income,0.052739933
+France,2002,national,income,0.050640717
+France,2003,national,income,0.0539938
+France,2004,national,income,0.049538065
+France,2005,national,income,0.050678868
+France,2006,national,income,0.045732524
+France,2007,national,income,0.059368413
+France,2008,national,income,0.068617485
+France,2009,national,income,0.059805796
+France,2010,national,income,0.065491155
+France,2011,national,income,0.06581132
+France,2012,national,income,0.06432346
+France,2013,national,income,0.061773952
+France,2014,national,income,0.062266
+France,2015,national,income,0.07003319
+France,2016,national,income,0.060771767
+France,2017,national,income,0.06277283
+France,2018,national,income,0.07194184
+France,2019,national,income,0.056316413
+France,2020,national,income,0.055052724
+France,2021,national,income,0.056999676
+Gabon,2005,national,consumption,0.08470588
+Gabon,2017,national,consumption,0.051305007
+Gambia,1998,national,consumption,0.0963715
+Gambia,2003,national,consumption,0.10858351
+Gambia,2010,national,consumption,0.1088655
+Gambia,2015,national,consumption,0.0642405
+Gambia,2020,national,consumption,0.07802719
+Georgia,1996,national,consumption,0.05265217
+Georgia,1997,national,consumption,0.06263728
+Georgia,1998,national,consumption,0.09268817
+Georgia,1999,national,consumption,0.066994816
+Georgia,2000,national,consumption,0.06907899
+Georgia,2001,national,consumption,0.07082265
+Georgia,2002,national,consumption,0.058365665
+Georgia,2003,national,consumption,0.053008907
+Georgia,2004,national,consumption,0.050983567
+Georgia,2005,national,consumption,0.059868548
+Georgia,2006,national,consumption,0.0550823
+Georgia,2007,national,consumption,0.06645467
+Georgia,2008,national,consumption,0.063886225
+Georgia,2009,national,consumption,0.06455139
+Georgia,2010,national,consumption,0.06458659
+Georgia,2011,national,consumption,0.069680996
+Georgia,2012,national,consumption,0.06383484
+Georgia,2013,national,consumption,0.0650507
+Georgia,2014,national,consumption,0.061671816
+Georgia,2015,national,consumption,0.058259055
+Georgia,2016,national,consumption,0.05940695
+Georgia,2017,national,consumption,0.06161215
+Georgia,2018,national,consumption,0.057976928
+Georgia,2019,national,consumption,0.06643364
+Georgia,2020,national,consumption,0.053789224
+Georgia,2021,national,consumption,0.056074295
+Germany,1991,national,income,0.04432752
+Germany,1992,national,income,0.041124783
+Germany,1993,national,income,0.04050808
+Germany,1994,national,income,0.041709337
+Germany,1995,national,income,0.04162157
+Germany,1996,national,income,0.038916685
+Germany,1997,national,income,0.039271876
+Germany,1998,national,income,0.03970811
+Germany,1999,national,income,0.042938307
+Germany,2000,national,income,0.043133322
+Germany,2001,national,income,0.047170658
+Germany,2002,national,income,0.04644061
+Germany,2003,national,income,0.05105947
+Germany,2004,national,income,0.050898917
+Germany,2005,national,income,0.055161502
+Germany,2006,national,income,0.052511524
+Germany,2007,national,income,0.056294117
+Germany,2008,national,income,0.05555097
+Germany,2009,national,income,0.049128786
+Germany,2010,national,income,0.047174625
+Germany,2011,national,income,0.052712448
+Germany,2012,national,income,0.05038759
+Germany,2013,national,income,0.055634517
+Germany,2014,national,income,0.04992402
+Germany,2015,national,income,0.057347976
+Germany,2016,national,income,0.05381676
+Germany,2017,national,income,0.058729075
+Germany,2018,national,income,0.06159832
+Germany,2019,national,income,0.0635714
+Ghana,1987,national,consumption,0.052672397
+Ghana,1988,national,consumption,0.058048043
+Ghana,1991,national,consumption,0.065844536
+Ghana,1998,national,consumption,0.058086835
+Ghana,2005,national,consumption,0.07806137
+Ghana,2012,national,consumption,0.069972806
+Ghana,2016,national,consumption,0.075274654
+Greece,1995,national,income,0.055303678
+Greece,2000,national,income,0.04942411
+Greece,2003,national,income,0.049012356
+Greece,2004,national,income,0.049758136
+Greece,2005,national,income,0.05355532
+Greece,2006,national,income,0.059003633
+Greece,2007,national,income,0.05749524
+Greece,2008,national,income,0.060405426
+Greece,2009,national,income,0.056239795
+Greece,2010,national,income,0.055130098
+Greece,2011,national,income,0.05513683
+Greece,2012,national,income,0.06148829
+Greece,2013,national,income,0.059185456
+Greece,2014,national,income,0.057746917
+Greece,2015,national,income,0.059385404
+Greece,2016,national,income,0.05997007
+Greece,2017,national,income,0.063150875
+Greece,2018,national,income,0.055122003
+Greece,2019,national,income,0.05502034
+Greece,2020,national,income,0.05294665
+Greece,2021,national,income,0.050351538
+Grenada,2018,national,consumption,0.07624896
+Guatemala,1986,national,income,0.19047269
+Guatemala,1989,national,income,0.16337122
+Guatemala,1998,national,income,0.20045932
+Guatemala,2000,national,income,0.13144228
+Guatemala,2006,national,income,0.13583645
+Guatemala,2014,national,income,0.12156645
+Guinea,1991,national,consumption,0.047369324
+Guinea,1994,national,consumption,0.09598516
+Guinea,2002,national,consumption,0.09316825
+Guinea,2007,national,consumption,0.062636554
+Guinea,2012,national,consumption,0.057256147
+Guinea,2018,national,consumption,0.038009096
+Guinea-Bissau,1991,national,consumption,0.12843281
+Guinea-Bissau,1993,national,consumption,0.09924715
+Guinea-Bissau,2002,national,consumption,0.06708969
+Guinea-Bissau,2010,national,consumption,0.09446834
+Guinea-Bissau,2018,national,consumption,0.058672283
+Guinea-Bissau,2021,national,consumption,0.0500056
+Guyana,1992,national,income,0.23708244
+Guyana,1998,national,income,0.087412946
+Haiti,2001,national,income,0.15402384
+Haiti,2012,national,consumption,0.07739494
+Honduras,1986,urban,income,0.13322929
+Honduras,1989,national,income,0.1987459
+Honduras,1990,national,income,0.16243617
+Honduras,1991,national,income,0.11506542
+Honduras,1992,national,income,0.11702013
+Honduras,1993,national,income,0.1419026
+Honduras,1994,national,income,0.12975317
+Honduras,1995,national,income,0.14130294
+Honduras,1996,national,income,0.14221145
+Honduras,1997,national,income,0.13002191
+Honduras,1998,national,income,0.13391294
+Honduras,1999,national,income,0.11192357
+Honduras,2001,national,income,0.1062527
+Honduras,2002,national,income,0.12048456
+Honduras,2003,national,income,0.12872216
+Honduras,2004,national,income,0.13128169
+Honduras,2005,national,income,0.12650736
+Honduras,2006,national,income,0.12807883
+Honduras,2007,national,income,0.12108506
+Honduras,2008,national,income,0.13708808
+Honduras,2009,national,income,0.09809433
+Honduras,2010,national,income,0.106566496
+Honduras,2011,national,income,0.100225486
+Honduras,2012,national,income,0.1048712
+Honduras,2013,national,income,0.08082252
+Honduras,2014,national,income,0.08123588
+Honduras,2015,national,income,0.07986793
+Honduras,2016,national,income,0.073640406
+Honduras,2017,national,income,0.080951035
+Honduras,2018,national,income,0.0757574
+Honduras,2019,national,income,0.07495399
+Hungary,1987,national,income,0.028031398
+Hungary,1989,national,income,0.035240658
+Hungary,1991,national,income,0.053247992
+Hungary,1993,national,income,0.06003786
+Hungary,1994,national,income,0.057086866
+Hungary,1998,national,consumption,0.04040968
+Hungary,1999,national,consumption,0.05473744
+Hungary,1999,national,income,0.053836346
+Hungary,2000,national,consumption,0.049947735
+Hungary,2001,national,consumption,0.03928405
+Hungary,2002,national,consumption,0.041250616
+Hungary,2003,national,consumption,0.046771828
+Hungary,2004,national,consumption,0.047077946
+Hungary,2004,national,income,0.057270262
+Hungary,2005,national,consumption,0.040909458
+Hungary,2005,national,income,0.07934194
+Hungary,2006,national,consumption,0.04106275
+Hungary,2006,national,income,0.046436906
+Hungary,2007,national,consumption,0.050539315
+Hungary,2007,national,income,0.04365992
+Hungary,2008,national,income,0.040038873
+Hungary,2009,national,income,0.03825095
+Hungary,2010,national,income,0.041959118
+Hungary,2011,national,income,0.046302874
+Hungary,2012,national,income,0.04971269
+Hungary,2013,national,income,0.050172996
+Hungary,2014,national,income,0.046017684
+Hungary,2015,national,income,0.045866493
+Hungary,2016,national,income,0.048435297
+Hungary,2017,national,income,0.053672113
+Hungary,2018,national,income,0.05463221
+Hungary,2019,national,income,0.06255898
+Hungary,2020,national,income,0.046879936
+Hungary,2021,national,income,0.05232259
+Iceland,2003,national,income,0.0503724
+Iceland,2004,national,income,0.059281044
+Iceland,2005,national,income,0.06027419
+Iceland,2006,national,income,0.065591775
+Iceland,2007,national,income,0.0579842
+Iceland,2008,national,income,0.068375744
+Iceland,2009,national,income,0.052620832
+Iceland,2010,national,income,0.046924222
+Iceland,2011,national,income,0.044641852
+Iceland,2012,national,income,0.04365699
+Iceland,2013,national,income,0.04125711
+Iceland,2014,national,income,0.06149482
+Iceland,2015,national,income,0.049705178
+Iceland,2016,national,income,0.05087781
+Iceland,2017,national,income,0.04790545
+India,1977,rural,consumption,0.099882305
+India,1977,urban,consumption,0.07404099
+India,1983,rural,consumption,0.050808914
+India,1983,urban,consumption,0.05589193
+India,1987,rural,consumption,0.061667405
+India,1987,urban,consumption,0.06997416
+India,1993,rural,consumption,0.057653237
+India,1993,urban,consumption,0.06564237
+India,2004,rural,consumption,0.0707648
+India,2004,urban,consumption,0.07665241
+India,2009,rural,consumption,0.07087771
+India,2009,urban,consumption,0.09212519
+India,2011,rural,consumption,0.07422403
+India,2011,urban,consumption,0.080117255
+India,2015,rural,consumption,0.06277674
+India,2015,urban,consumption,0.06758311
+India,2016,rural,consumption,0.06306561
+India,2016,urban,consumption,0.06862784
+India,2017,rural,consumption,0.05736116
+India,2017,urban,consumption,0.0721952
+India,2018,rural,consumption,0.058858726
+India,2018,urban,consumption,0.051063657
+India,2019,rural,consumption,0.044404708
+India,2019,urban,consumption,0.048371755
+India,2020,rural,consumption,0.04131449
+India,2020,urban,consumption,0.04827803
+India,2021,rural,consumption,0.039877605
+India,2021,urban,consumption,0.045304917
+Indonesia,1984,rural,consumption,0.043582916
+Indonesia,1984,urban,consumption,0.054057147
+Indonesia,1987,rural,consumption,0.045174766
+Indonesia,1987,urban,consumption,0.052543886
+Indonesia,1990,rural,consumption,0.039702043
+Indonesia,1990,urban,consumption,0.057899684
+Indonesia,1993,rural,consumption,0.043414697
+Indonesia,1993,urban,consumption,0.064323395
+Indonesia,1996,rural,consumption,0.048466653
+Indonesia,1996,urban,consumption,0.07437534
+Indonesia,1998,rural,consumption,0.04174181
+Indonesia,1998,urban,consumption,0.06453202
+Indonesia,1999,rural,consumption,0.03955654
+Indonesia,1999,urban,consumption,0.09593457
+Indonesia,2000,rural,consumption,0.03788695
+Indonesia,2000,urban,consumption,0.057781752
+Indonesia,2001,rural,consumption,0.040607058
+Indonesia,2001,urban,consumption,0.05711969
+Indonesia,2002,rural,consumption,0.040998295
+Indonesia,2002,urban,consumption,0.057917412
+Indonesia,2003,rural,consumption,0.038910978
+Indonesia,2003,urban,consumption,0.054247748
+Indonesia,2004,rural,consumption,0.040455848
+Indonesia,2004,urban,consumption,0.05793752
+Indonesia,2005,rural,consumption,0.04932056
+Indonesia,2005,urban,consumption,0.06323749
+Indonesia,2006,rural,consumption,0.050412025
+Indonesia,2006,urban,consumption,0.075628415
+Indonesia,2007,rural,consumption,0.05174021
+Indonesia,2007,urban,consumption,0.06678184
+Indonesia,2008,rural,consumption,0.05389312
+Indonesia,2008,urban,consumption,0.067479916
+Indonesia,2009,rural,consumption,0.053426605
+Indonesia,2009,urban,consumption,0.07733233
+Indonesia,2010,rural,consumption,0.05326029
+Indonesia,2010,urban,consumption,0.06751011
+Indonesia,2011,rural,consumption,0.06294062
+Indonesia,2011,urban,consumption,0.09255889
+Indonesia,2012,rural,consumption,0.062330216
+Indonesia,2012,urban,consumption,0.089042775
+Indonesia,2013,rural,consumption,0.059682887
+Indonesia,2013,urban,consumption,0.081347324
+Indonesia,2014,rural,consumption,0.059102494
+Indonesia,2014,urban,consumption,0.08431005
+Indonesia,2015,rural,consumption,0.06641786
+Indonesia,2015,urban,consumption,0.0860542
+Indonesia,2016,rural,consumption,0.053547435
+Indonesia,2016,urban,consumption,0.06755277
+Indonesia,2017,rural,consumption,0.05112267
+Indonesia,2017,urban,consumption,0.065684855
+Indonesia,2018,rural,consumption,0.053367548
+Indonesia,2018,urban,consumption,0.06824393
+Indonesia,2019,rural,consumption,0.05270254
+Indonesia,2019,urban,consumption,0.07088718
+Indonesia,2020,rural,consumption,0.051849347
+Indonesia,2020,urban,consumption,0.06724727
+Indonesia,2021,rural,consumption,0.050075512
+Indonesia,2021,urban,consumption,0.072285354
+Indonesia,2022,rural,consumption,0.04915645
+Indonesia,2022,urban,consumption,0.07548586
+Indonesia,2023,rural,consumption,0.050967585
+Indonesia,2023,urban,consumption,0.07945506
+Iran,1986,national,consumption,0.10147265
+Iran,1990,national,consumption,0.08097085
+Iran,1994,national,consumption,0.07922187
+Iran,1998,national,consumption,0.07607829
+Iran,2005,national,consumption,0.07593318
+Iran,2006,national,consumption,0.07537846
+Iran,2009,national,consumption,0.06505913
+Iran,2011,national,consumption,0.05621094
+Iran,2012,national,consumption,0.056982115
+Iran,2013,national,consumption,0.05353929
+Iran,2014,national,consumption,0.056274097
+Iran,2015,national,consumption,0.057652697
+Iran,2016,national,consumption,0.057757065
+Iran,2017,national,consumption,0.058413282
+Iran,2018,national,consumption,0.062824704
+Iran,2019,national,consumption,0.05993051
+Iran,2020,national,consumption,0.056446753
+Iran,2021,national,consumption,0.052093074
+Iran,2022,national,consumption,0.054370277
+Iraq,2006,national,consumption,0.045102373
+Iraq,2012,national,consumption,0.043700248
+Ireland,1987,national,income,0.058336567
+Ireland,1994,national,income,0.070325054
+Ireland,1995,national,income,0.0718227
+Ireland,1996,national,income,0.0717584
+Ireland,2000,national,income,0.0632951
+Ireland,2002,national,income,0.05252941
+Ireland,2003,national,income,0.06293125
+Ireland,2004,national,income,0.068242244
+Ireland,2005,national,income,0.06983502
+Ireland,2006,national,income,0.055154048
+Ireland,2007,national,income,0.058895286
+Ireland,2008,national,income,0.04913103
+Ireland,2009,national,income,0.054848015
+Ireland,2010,national,income,0.047150545
+Ireland,2011,national,income,0.052589383
+Ireland,2012,national,income,0.056557998
+Ireland,2013,national,income,0.05320426
+Ireland,2014,national,income,0.048954412
+Ireland,2015,national,income,0.054720644
+Ireland,2016,national,income,0.057184644
+Ireland,2017,national,income,0.06202331
+Ireland,2018,national,income,0.05676427
+Ireland,2019,national,income,0.063818626
+Ireland,2020,national,income,0.053233385
+Ireland,2021,national,income,0.060932115
+Israel,1979,national,income,0.06378931
+Israel,1986,national,income,0.050850265
+Israel,1992,national,income,0.05541413
+Israel,1997,national,income,0.05976403
+Israel,2001,national,income,0.063798204
+Israel,2002,national,income,0.05801826
+Israel,2003,national,income,0.061288636
+Israel,2004,national,income,0.060482625
+Israel,2005,national,income,0.07120467
+Israel,2006,national,income,0.06527162
+Israel,2007,national,income,0.058145504
+Israel,2008,national,income,0.06043591
+Israel,2009,national,income,0.07612981
+Israel,2010,national,income,0.07782579
+Israel,2011,national,income,0.06349691
+Israel,2012,national,income,0.06356156
+Israel,2013,national,income,0.061895307
+Israel,2014,national,income,0.055162646
+Israel,2015,national,income,0.058642704
+Israel,2016,national,income,0.05114066
+Israel,2017,national,income,0.04960132
+Israel,2018,national,income,0.05555833
+Israel,2019,national,income,0.05110705
+Israel,2020,national,income,0.046932142
+Israel,2021,national,income,0.051766388
+Italy,1977,national,income,0.054676652
+Italy,1978,national,income,0.056781642
+Italy,1979,national,income,0.05461829
+Italy,1980,national,income,0.063794546
+Italy,1981,national,income,0.049996868
+Italy,1982,national,income,0.040927086
+Italy,1983,national,income,0.044537727
+Italy,1984,national,income,0.044557672
+Italy,1986,national,income,0.047690462
+Italy,1987,national,income,0.048119556
+Italy,1989,national,income,0.05131473
+Italy,1991,national,income,0.046919726
+Italy,1993,national,income,0.051823303
+Italy,1995,national,income,0.056969263
+Italy,1998,national,income,0.068125024
+Italy,2000,national,income,0.057582803
+Italy,2002,national,income,0.052898567
+Italy,2003,national,income,0.060848054
+Italy,2004,national,income,0.06074379
+Italy,2005,national,income,0.05316566
+Italy,2006,national,income,0.0523146
+Italy,2007,national,income,0.051833384
+Italy,2008,national,income,0.05486197
+Italy,2009,national,income,0.0540682
+Italy,2010,national,income,0.058836367
+Italy,2011,national,income,0.057047985
+Italy,2012,national,income,0.058107946
+Italy,2013,national,income,0.05271772
+Italy,2014,national,income,0.05171592
+Italy,2015,national,income,0.051631235
+Italy,2016,national,income,0.05472862
+Italy,2017,national,income,0.05669352
+Italy,2018,national,income,0.05136611
+Italy,2019,national,income,0.05028959
+Italy,2020,national,income,0.051844444
+Italy,2021,national,income,0.055690203
+Jamaica,1988,national,consumption,0.09071557
+Jamaica,1990,national,consumption,0.07353098
+Jamaica,1993,national,consumption,0.052326415
+Jamaica,1996,national,consumption,0.08376656
+Jamaica,1999,national,consumption,0.08873594
+Jamaica,2002,national,consumption,0.10325221
+Jamaica,2004,national,consumption,0.08309904
+Jamaica,2018,national,consumption,0.05270839
+Jamaica,2021,national,consumption,0.062641166
+Japan,2008,national,income,0.052432977
+Japan,2010,national,income,0.05731911
+Japan,2013,national,income,0.058416586
+Jordan,1986,national,consumption,0.05082395
+Jordan,1992,national,consumption,0.10770063
+Jordan,1997,national,consumption,0.07884065
+Jordan,2002,national,consumption,0.06206146
+Jordan,2006,national,consumption,0.056855064
+Jordan,2008,national,consumption,0.04764065
+Jordan,2010,national,consumption,0.053992797
+Kazakhstan,1993,national,income,0.03962336
+Kazakhstan,1996,national,consumption,0.046472944
+Kazakhstan,2001,national,consumption,0.05365309
+Kazakhstan,2002,national,consumption,0.054120272
+Kazakhstan,2003,national,consumption,0.050050147
+Kazakhstan,2004,national,consumption,0.050807033
+Kazakhstan,2005,national,consumption,0.05977532
+Kazakhstan,2006,national,consumption,0.056019202
+Kazakhstan,2007,national,consumption,0.05396247
+Kazakhstan,2008,national,consumption,0.047105126
+Kazakhstan,2009,national,consumption,0.044081334
+Kazakhstan,2010,national,consumption,0.04304142
+Kazakhstan,2011,national,consumption,0.042432796
+Kazakhstan,2012,national,consumption,0.042278327
+Kazakhstan,2013,national,consumption,0.041700892
+Kazakhstan,2014,national,consumption,0.044973716
+Kazakhstan,2015,national,consumption,0.045242745
+Kazakhstan,2016,national,consumption,0.04155084
+Kazakhstan,2017,national,consumption,0.042698838
+Kazakhstan,2018,national,consumption,0.043447595
+Kazakhstan,2019,national,consumption,0.04345685
+Kazakhstan,2020,national,consumption,0.046341512
+Kazakhstan,2021,national,consumption,0.05138111
+Kenya,1992,national,consumption,0.21366575
+Kenya,1994,national,consumption,0.09498479
+Kenya,1997,national,consumption,0.09909049
+Kenya,2005,national,consumption,0.11104576
+Kenya,2015,national,consumption,0.073686115
+Kenya,2020,national,consumption,0.05655291
+Kenya,2021,national,consumption,0.08008821
+Kiribati,2006,national,consumption,0.06415752
+Kiribati,2019,national,consumption,0.0430886
+Kosovo,2003,national,consumption,0.03551796
+Kosovo,2005,national,consumption,0.036620557
+Kosovo,2006,national,consumption,0.03771272
+Kosovo,2009,national,consumption,0.037752956
+Kosovo,2010,national,consumption,0.03964035
+Kosovo,2011,national,consumption,0.033391144
+Kosovo,2012,national,consumption,0.049687773
+Kosovo,2013,national,consumption,0.0418095
+Kosovo,2014,national,consumption,0.03775404
+Kosovo,2015,national,consumption,0.03479241
+Kosovo,2016,national,consumption,0.03770512
+Kosovo,2017,national,consumption,0.055498313
+Kyrgyzstan,1998,national,income,0.09854451
+Kyrgyzstan,2000,national,consumption,0.040397745
+Kyrgyzstan,2001,national,consumption,0.04287096
+Kyrgyzstan,2002,national,consumption,0.041452937
+Kyrgyzstan,2003,national,consumption,0.040244076
+Kyrgyzstan,2004,national,consumption,0.05143355
+Kyrgyzstan,2005,national,consumption,0.053880453
+Kyrgyzstan,2006,national,consumption,0.0730802
+Kyrgyzstan,2007,national,consumption,0.05247587
+Kyrgyzstan,2008,national,consumption,0.054004796
+Kyrgyzstan,2009,national,consumption,0.05103357
+Kyrgyzstan,2010,national,consumption,0.050175376
+Kyrgyzstan,2011,national,consumption,0.04609592
+Kyrgyzstan,2012,national,consumption,0.04433494
+Kyrgyzstan,2013,national,consumption,0.045855775
+Kyrgyzstan,2014,national,consumption,0.04636804
+Kyrgyzstan,2015,national,consumption,0.057690293
+Kyrgyzstan,2016,national,consumption,0.041280344
+Kyrgyzstan,2017,national,consumption,0.04770844
+Kyrgyzstan,2018,national,consumption,0.047802363
+Kyrgyzstan,2019,national,consumption,0.06802671
+Kyrgyzstan,2020,national,consumption,0.04791896
+Kyrgyzstan,2021,national,consumption,0.05156855
+Laos,1992,national,consumption,0.06189544
+Laos,1997,national,consumption,0.072255574
+Laos,2002,national,consumption,0.061265644
+Laos,2007,national,consumption,0.07137523
+Laos,2012,national,consumption,0.06421498
+Laos,2018,national,consumption,0.07826892
+Latvia,1993,national,income,0.032156233
+Latvia,1995,national,income,0.05644064
+Latvia,1996,national,income,0.066374205
+Latvia,1997,national,consumption,0.056789037
+Latvia,1998,national,consumption,0.05303891
+Latvia,2002,national,consumption,0.05926694
+Latvia,2003,national,consumption,0.059174106
+Latvia,2004,national,consumption,0.05713433
+Latvia,2004,national,income,0.06916506
+Latvia,2005,national,income,0.07073473
+Latvia,2006,national,income,0.05498879
+Latvia,2007,national,consumption,0.056455705
+Latvia,2007,national,income,0.054285724
+Latvia,2008,national,consumption,0.06006374
+Latvia,2008,national,income,0.05826362
+Latvia,2009,national,consumption,0.049441922
+Latvia,2009,national,income,0.048720993
+Latvia,2010,national,income,0.045461416
+Latvia,2011,national,income,0.05395671
+Latvia,2012,national,income,0.052369088
+Latvia,2013,national,income,0.05128142
+Latvia,2014,national,income,0.05222561
+Latvia,2015,national,income,0.05146427
+Latvia,2016,national,income,0.04638264
+Latvia,2017,national,income,0.05237802
+Latvia,2018,national,income,0.05305088
+Latvia,2019,national,income,0.054243576
+Latvia,2020,national,income,0.06057179
+Latvia,2021,national,income,0.056204036
+Lebanon,2011,national,consumption,0.045429215
+Lesotho,1986,national,consumption,0.1296319
+Lesotho,1994,national,consumption,0.12851915
+Lesotho,2002,national,consumption,0.0980889
+Lesotho,2017,national,consumption,0.07152272
+Liberia,2007,national,consumption,0.05947242
+Liberia,2014,national,consumption,0.049882382
+Liberia,2016,national,consumption,0.056323666
+Lithuania,1993,national,income,0.07892499
+Lithuania,1996,national,consumption,0.050042696
+Lithuania,1998,national,consumption,0.05139221
+Lithuania,1999,national,consumption,0.053296246
+Lithuania,2000,national,consumption,0.047596436
+Lithuania,2001,national,consumption,0.047462557
+Lithuania,2002,national,consumption,0.047433473
+Lithuania,2003,national,consumption,0.0584995
+Lithuania,2004,national,consumption,0.05623782
+Lithuania,2004,national,income,0.05217479
+Lithuania,2005,national,income,0.048917647
+Lithuania,2006,national,income,0.052020382
+Lithuania,2007,national,income,0.060981072
+Lithuania,2008,national,consumption,0.06729131
+Lithuania,2008,national,income,0.06756891
+Lithuania,2009,national,income,0.057235252
+Lithuania,2010,national,income,0.048217177
+Lithuania,2011,national,income,0.044298053
+Lithuania,2012,national,income,0.054316793
+Lithuania,2013,national,income,0.051255673
+Lithuania,2014,national,income,0.06427623
+Lithuania,2015,national,income,0.056927804
+Lithuania,2016,national,income,0.06637419
+Lithuania,2017,national,income,0.06424891
+Lithuania,2018,national,income,0.055662394
+Lithuania,2019,national,income,0.05652418
+Lithuania,2020,national,income,0.0635603
+Lithuania,2021,national,income,0.06604849
+Luxembourg,1985,national,income,0.037376385
+Luxembourg,1986,national,income,0.050766252
+Luxembourg,1987,national,income,0.057111233
+Luxembourg,1988,national,income,0.052719474
+Luxembourg,1989,national,income,0.07393658
+Luxembourg,1990,national,income,0.046308316
+Luxembourg,1991,national,income,0.04261215
+Luxembourg,1992,national,income,0.041496273
+Luxembourg,1993,national,income,0.040582884
+Luxembourg,1994,national,income,0.044847727
+Luxembourg,1995,national,income,0.04323843
+Luxembourg,1996,national,income,0.046105035
+Luxembourg,1997,national,income,0.04788466
+Luxembourg,1998,national,income,0.05115217
+Luxembourg,1999,national,income,0.049518213
+Luxembourg,2000,national,income,0.044255696
+Luxembourg,2001,national,income,0.05174531
+Luxembourg,2002,national,income,0.05534556
+Luxembourg,2003,national,income,0.04198575
+Luxembourg,2004,national,income,0.045389015
+Luxembourg,2005,national,income,0.044430483
+Luxembourg,2006,national,income,0.049444273
+Luxembourg,2007,national,income,0.048148904
+Luxembourg,2008,national,income,0.056532066
+Luxembourg,2009,national,income,0.04986937
+Luxembourg,2010,national,income,0.044747338
+Luxembourg,2011,national,income,0.04833008
+Luxembourg,2012,national,income,0.062570624
+Luxembourg,2013,national,income,0.04365031
+Luxembourg,2014,national,income,0.048132714
+Luxembourg,2015,national,income,0.05244589
+Luxembourg,2016,national,income,0.047798853
+Luxembourg,2017,national,income,0.052417945
+Luxembourg,2018,national,income,0.06272008
+Luxembourg,2019,national,income,0.05297455
+Luxembourg,2020,national,income,0.045619436
+Luxembourg,2021,national,income,0.0440515
+Madagascar,1980,national,consumption,0.11007586
+Madagascar,1993,national,consumption,0.14450277
+Madagascar,1997,national,consumption,0.07160706
+Madagascar,1999,national,consumption,0.055759132
+Madagascar,2001,national,consumption,0.08094471
+Madagascar,2005,national,consumption,0.090963185
+Madagascar,2010,national,consumption,0.093469664
+Madagascar,2012,national,consumption,0.07472977
+Malawi,1997,national,consumption,0.4496452
+Malawi,2004,national,consumption,0.0950824
+Malawi,2010,national,consumption,0.113637365
+Malawi,2016,national,consumption,0.1673022
+Malawi,2019,national,consumption,0.07295095
+Malaysia,1984,national,income,0.12124861
+Malaysia,1987,national,income,0.10305778
+Malaysia,1989,national,income,0.102673486
+Malaysia,1992,national,income,0.09471809
+Malaysia,1995,national,income,0.104122244
+Malaysia,1997,national,income,0.10882789
+Malaysia,2003,national,income,0.089620344
+Malaysia,2006,national,income,0.08146426
+Malaysia,2008,national,income,0.08106987
+Malaysia,2011,national,income,0.08225844
+Malaysia,2013,national,income,0.0749432
+Malaysia,2015,national,income,0.073490225
+Malaysia,2018,national,income,0.07283327
+Malaysia,2021,national,income,0.07346675
+Maldives,2002,national,consumption,0.14829646
+Maldives,2009,national,consumption,0.07758569
+Maldives,2016,national,consumption,0.052024256
+Maldives,2019,national,consumption,0.03748261
+Mali,1994,national,consumption,0.11522904
+Mali,2001,national,consumption,0.066222854
+Mali,2006,national,consumption,0.061278846
+Mali,2009,national,consumption,0.043471966
+Mali,2018,national,consumption,0.055153385
+Mali,2021,national,consumption,0.0561891
+Malta,2006,national,income,0.036912512
+Malta,2007,national,income,0.040040314
+Malta,2008,national,income,0.03967305
+Malta,2009,national,income,0.044659697
+Malta,2010,national,income,0.04053049
+Malta,2011,national,income,0.044957835
+Malta,2012,national,income,0.046216022
+Malta,2013,national,income,0.044086322
+Malta,2014,national,income,0.044471104
+Malta,2015,national,income,0.045831017
+Malta,2016,national,income,0.041996952
+Malta,2017,national,income,0.041748606
+Malta,2018,national,income,0.04207497
+Malta,2019,national,income,0.051900063
+Malta,2020,national,income,0.050852656
+Marshall Islands,2019,national,consumption,0.05278774
+Mauritania,1987,national,consumption,0.062594585
+Mauritania,1993,national,consumption,0.18328343
+Mauritania,1995,national,consumption,0.0599798
+Mauritania,2000,national,consumption,0.052415255
+Mauritania,2004,national,consumption,0.082000725
+Mauritania,2008,national,consumption,0.04701726
+Mauritania,2014,national,consumption,0.04834638
+Mauritania,2019,national,consumption,0.044419266
+Mauritius,2006,national,consumption,0.06419093
+Mauritius,2012,national,consumption,0.082325995
+Mauritius,2017,national,consumption,0.07542877
+Mexico,1984,national,income,0.09976977
+Mexico,1989,national,income,0.1314937
+Mexico,1992,national,income,0.12787084
+Mexico,1994,national,income,0.12213915
+Mexico,1996,national,income,0.11776876
+Mexico,1998,national,income,0.12728828
+Mexico,2000,national,income,0.121921174
+Mexico,2002,national,income,0.101806775
+Mexico,2004,national,income,0.11852338
+Mexico,2005,national,income,0.12746894
+Mexico,2006,national,income,0.10940851
+Mexico,2008,national,income,0.117068745
+Mexico,2010,national,income,0.09934245
+Mexico,2012,national,income,0.10792251
+Mexico,2014,national,income,0.11650124
+Mexico,2016,national,income,0.10433787
+Mexico,2018,national,income,0.10857752
+Mexico,2020,national,income,0.0929297
+Mexico,2022,national,income,0.09367512
+Micronesia (country),2000,urban,income,0.17624047
+Micronesia (country),2005,national,consumption,0.073425636
+Micronesia (country),2013,national,consumption,0.06787054
+Moldova,1997,national,consumption,0.061172396
+Moldova,1998,national,consumption,0.072490476
+Moldova,1999,national,consumption,0.08461696
+Moldova,2000,national,consumption,0.061226204
+Moldova,2001,national,consumption,0.066190496
+Moldova,2002,national,consumption,0.055368416
+Moldova,2003,national,consumption,0.059854236
+Moldova,2004,national,consumption,0.057553694
+Moldova,2005,national,consumption,0.060702946
+Moldova,2006,national,consumption,0.057092167
+Moldova,2007,national,consumption,0.05274292
+Moldova,2008,national,consumption,0.06100629
+Moldova,2009,national,consumption,0.046273272
+Moldova,2010,national,consumption,0.052834466
+Moldova,2011,national,consumption,0.050310798
+Moldova,2012,national,consumption,0.0422821
+Moldova,2013,national,consumption,0.044893477
+Moldova,2014,national,consumption,0.03785937
+Moldova,2015,national,consumption,0.04170225
+Moldova,2016,national,consumption,0.047080096
+Moldova,2017,national,consumption,0.036502376
+Moldova,2018,national,consumption,0.038850993
+Moldova,2019,national,consumption,0.03619213
+Moldova,2021,national,consumption,0.041107837
+Mongolia,1995,national,consumption,0.037194792
+Mongolia,1998,national,consumption,0.03345377
+Mongolia,2002,national,consumption,0.045357298
+Mongolia,2007,national,consumption,0.059222125
+Mongolia,2010,national,consumption,0.05034031
+Mongolia,2011,national,consumption,0.057733107
+Mongolia,2012,national,consumption,0.051177654
+Mongolia,2014,national,consumption,0.053409975
+Mongolia,2016,national,consumption,0.054425567
+Mongolia,2018,national,consumption,0.05274026
+Mongolia,2022,national,consumption,0.045642372
+Montenegro,2005,national,consumption,0.041942295
+Montenegro,2006,national,consumption,0.042924482
+Montenegro,2007,national,consumption,0.05018286
+Montenegro,2008,national,consumption,0.045344338
+Montenegro,2009,national,consumption,0.05278404
+Montenegro,2010,national,consumption,0.048218183
+Montenegro,2011,national,consumption,0.049481776
+Montenegro,2012,national,consumption,0.04418053
+Montenegro,2012,national,income,0.057518385
+Montenegro,2013,national,income,0.047549285
+Montenegro,2014,national,consumption,0.051160727
+Montenegro,2014,national,income,0.046884783
+Montenegro,2015,national,income,0.05449501
+Montenegro,2016,national,income,0.056381077
+Montenegro,2017,national,income,0.049053203
+Montenegro,2018,national,income,0.049950216
+Montenegro,2019,national,income,0.04700935
+Montenegro,2020,national,income,0.050923217
+Montenegro,2021,national,income,0.04588321
+Morocco,1984,national,consumption,0.10781743
+Morocco,1990,national,consumption,0.0699297
+Morocco,1998,national,consumption,0.0677978
+Morocco,2000,national,consumption,0.07784829
+Morocco,2006,national,consumption,0.08376392
+Morocco,2013,national,consumption,0.07321857
+Mozambique,1996,national,consumption,0.13391435
+Mozambique,2002,national,consumption,0.13614507
+Mozambique,2008,national,consumption,0.12225703
+Mozambique,2014,national,consumption,0.17711104
+Mozambique,2019,national,consumption,0.13494912
+Myanmar,2015,national,consumption,0.113960974
+Myanmar,2017,national,consumption,0.057154924
+Namibia,1993,national,income,0.30186093
+Namibia,2003,national,consumption,0.1619497
+Namibia,2009,national,consumption,0.15542701
+Namibia,2015,national,consumption,0.1221703
+Nauru,2012,national,consumption,0.050355874
+Nepal,1984,national,income,0.047166385
+Nepal,1995,national,consumption,0.07163534
+Nepal,2003,national,consumption,0.10848405
+Nepal,2010,national,consumption,0.05286553
+Netherlands,1983,national,income,0.04003317
+Netherlands,1987,national,income,0.037136648
+Netherlands,1990,national,income,0.05281004
+Netherlands,1993,national,income,0.03595362
+Netherlands,1999,national,income,0.036419105
+Netherlands,2004,national,income,0.052475523
+Netherlands,2005,national,income,0.04824586
+Netherlands,2006,national,income,0.06300827
+Netherlands,2007,national,income,0.05514526
+Netherlands,2008,national,income,0.052295145
+Netherlands,2009,national,income,0.042597912
+Netherlands,2010,national,income,0.043239813
+Netherlands,2011,national,income,0.04557621
+Netherlands,2012,national,income,0.04467617
+Netherlands,2013,national,income,0.045128148
+Netherlands,2014,national,income,0.050011985
+Netherlands,2015,national,income,0.048219938
+Netherlands,2016,national,income,0.045110293
+Netherlands,2017,national,income,0.051758543
+Netherlands,2018,national,income,0.048738524
+Netherlands,2019,national,income,0.0586619
+Netherlands,2020,national,income,0.04598496
+Netherlands,2021,national,income,0.04180987
+Nicaragua,1993,national,income,0.13663103
+Nicaragua,1998,national,income,0.152322
+Nicaragua,2001,national,income,0.15514514
+Nicaragua,2005,national,income,0.12846021
+Nicaragua,2009,national,income,0.08978234
+Nicaragua,2014,national,income,0.11350388
+Niger,1992,national,consumption,0.08335137
+Niger,1994,national,consumption,0.08230449
+Niger,2005,national,consumption,0.12311446
+Niger,2007,national,consumption,0.08006531
+Niger,2011,national,consumption,0.055248614
+Niger,2014,national,consumption,0.05297978
+Niger,2018,national,consumption,0.07783567
+Niger,2021,national,consumption,0.0649783
+Nigeria,1985,national,consumption,0.04290109
+Nigeria,1992,national,consumption,0.054664183
+Nigeria,1996,national,consumption,0.13239682
+Nigeria,2003,national,consumption,0.06535085
+Nigeria,2010,national,consumption,0.046985652
+Nigeria,2012,national,consumption,0.04667696
+Nigeria,2015,national,consumption,0.047340836
+Nigeria,2018,national,consumption,0.053117312
+North Macedonia,1998,national,consumption,0.03469281
+North Macedonia,2000,national,consumption,0.050266936
+North Macedonia,2002,national,consumption,0.063488744
+North Macedonia,2003,national,consumption,0.06380837
+North Macedonia,2004,national,consumption,0.070372984
+North Macedonia,2005,national,consumption,0.05891814
+North Macedonia,2006,national,consumption,0.08111383
+North Macedonia,2008,national,consumption,0.080358446
+North Macedonia,2009,national,income,0.07476956
+North Macedonia,2010,national,income,0.046910405
+North Macedonia,2011,national,income,0.04404001
+North Macedonia,2012,national,income,0.04614024
+North Macedonia,2013,national,income,0.043029413
+North Macedonia,2014,national,income,0.041537397
+North Macedonia,2015,national,income,0.042284064
+North Macedonia,2016,national,income,0.041732006
+North Macedonia,2017,national,income,0.04234979
+North Macedonia,2018,national,income,0.03592753
+North Macedonia,2019,national,income,0.03574262
+Norway,1979,national,income,0.036983218
+Norway,1986,national,income,0.035271283
+Norway,1991,national,income,0.040481877
+Norway,1995,national,income,0.047735628
+Norway,2000,national,income,0.063645914
+Norway,2003,national,income,0.063492954
+Norway,2004,national,income,0.1099582
+Norway,2005,national,income,0.095823675
+Norway,2006,national,income,0.042263616
+Norway,2007,national,income,0.05166763
+Norway,2008,national,income,0.044151098
+Norway,2009,national,income,0.043634247
+Norway,2010,national,income,0.04144289
+Norway,2011,national,income,0.036326874
+Norway,2012,national,income,0.038457144
+Norway,2013,national,income,0.041567426
+Norway,2014,national,income,0.043955874
+Norway,2015,national,income,0.04882197
+Norway,2016,national,income,0.056112282
+Norway,2017,national,income,0.040122412
+Norway,2018,national,income,0.04518545
+Norway,2019,national,income,0.047614478
+Pakistan,1987,national,consumption,0.061563063
+Pakistan,1990,national,consumption,0.06007906
+Pakistan,1996,national,consumption,0.06199374
+Pakistan,1998,national,consumption,0.07344952
+Pakistan,2001,national,consumption,0.05593161
+Pakistan,2004,national,consumption,0.059826292
+Pakistan,2005,national,consumption,0.06774911
+Pakistan,2007,national,consumption,0.05742668
+Pakistan,2010,national,consumption,0.057101578
+Pakistan,2011,national,consumption,0.059448794
+Pakistan,2013,national,consumption,0.059170414
+Pakistan,2015,national,consumption,0.064678125
+Pakistan,2018,national,consumption,0.059844747
+Palestine,2004,national,consumption,0.05571714
+Palestine,2005,national,consumption,0.052914374
+Palestine,2006,national,consumption,0.057637986
+Palestine,2007,national,consumption,0.06044118
+Palestine,2009,national,consumption,0.056123164
+Palestine,2010,national,consumption,0.059454978
+Palestine,2011,national,consumption,0.055405352
+Palestine,2016,national,consumption,0.043871246
+Panama,1979,national,income,0.06940255
+Panama,1989,national,income,0.10432133
+Panama,1991,national,income,0.10765804
+Panama,1995,national,income,0.10797601
+Panama,1997,national,income,0.12722114
+Panama,1998,national,income,0.11431417
+Panama,1999,national,income,0.10775134
+Panama,2000,national,income,0.1149775
+Panama,2001,national,income,0.106329896
+Panama,2002,national,income,0.11028772
+Panama,2003,national,income,0.10644652
+Panama,2004,national,income,0.09358807
+Panama,2005,national,income,0.09397924
+Panama,2006,national,income,0.10122928
+Panama,2007,national,income,0.09828743
+Panama,2008,national,income,0.11477724
+Panama,2009,national,income,0.1040186
+Panama,2010,national,income,0.1059939
+Panama,2011,national,income,0.10259234
+Panama,2012,national,income,0.10255675
+Panama,2013,national,income,0.09609762
+Panama,2014,national,income,0.096772246
+Panama,2015,national,income,0.10014006
+Panama,2016,national,income,0.08748037
+Panama,2017,national,income,0.100549564
+Panama,2018,national,income,0.0953241
+Panama,2019,national,income,0.09468432
+Panama,2021,national,income,0.09878205
+Panama,2023,national,income,0.09161101
+Papua New Guinea,1996,national,consumption,0.075312056
+Papua New Guinea,2009,national,consumption,0.06587329
+Paraguay,1990,national,income,0.05765952
+Paraguay,1995,national,income,0.14431085
+Paraguay,1997,national,income,0.11267926
+Paraguay,1999,national,income,0.13060403
+Paraguay,2001,national,income,0.13795416
+Paraguay,2002,national,income,0.20024177
+Paraguay,2003,national,income,0.15642297
+Paraguay,2004,national,income,0.14793232
+Paraguay,2005,national,income,0.12786728
+Paraguay,2006,national,income,0.14382198
+Paraguay,2007,national,income,0.16077393
+Paraguay,2008,national,income,0.1266683
+Paraguay,2009,national,income,0.116594344
+Paraguay,2010,national,income,0.14199275
+Paraguay,2011,national,income,0.1383214
+Paraguay,2012,national,income,0.1065692
+Paraguay,2013,national,income,0.102080524
+Paraguay,2014,national,income,0.1427395
+Paraguay,2015,national,income,0.0999256
+Paraguay,2016,national,income,0.11207505
+Paraguay,2017,national,income,0.14435342
+Paraguay,2018,national,income,0.09682443
+Paraguay,2019,national,income,0.10000155
+Paraguay,2020,national,income,0.07946995
+Paraguay,2021,national,income,0.082102366
+Paraguay,2022,national,income,0.10016175
+Peru,1985,national,consumption,0.09055464
+Peru,1994,national,consumption,0.08246565
+Peru,1997,national,income,0.12009331
+Peru,1998,national,income,0.1295562
+Peru,1999,national,income,0.12707621
+Peru,2000,national,income,0.088384755
+Peru,2001,national,income,0.11113504
+Peru,2002,national,income,0.13470113
+Peru,2003,national,income,0.12787633
+Peru,2004,national,income,0.104361154
+Peru,2005,national,income,0.10454884
+Peru,2006,national,income,0.10421087
+Peru,2007,national,income,0.10395792
+Peru,2008,national,income,0.0903916
+Peru,2009,national,income,0.08874273
+Peru,2010,national,income,0.08918225
+Peru,2011,national,income,0.08373535
+Peru,2012,national,income,0.080242686
+Peru,2013,national,income,0.07827918
+Peru,2014,national,income,0.07496855
+Peru,2015,national,income,0.07683916
+Peru,2016,national,income,0.076559186
+Peru,2017,national,income,0.07614277
+Peru,2018,national,income,0.06898491
+Peru,2019,national,income,0.068591624
+Peru,2020,national,income,0.076366745
+Peru,2021,national,income,0.070266195
+Peru,2022,national,income,0.070197165
+Philippines,1985,national,consumption,0.08130489
+Philippines,1988,national,consumption,0.07641252
+Philippines,1991,national,consumption,0.083434634
+Philippines,1994,national,consumption,0.07445762
+Philippines,1997,national,consumption,0.109040774
+Philippines,2000,national,income,0.105843455
+Philippines,2003,national,income,0.09915287
+Philippines,2006,national,income,0.09101742
+Philippines,2009,national,income,0.09444954
+Philippines,2012,national,income,0.08861721
+Philippines,2015,national,income,0.08749295
+Philippines,2018,national,income,0.086060055
+Philippines,2021,national,income,0.08064726
+Poland,1985,national,income,0.030958025
+Poland,1986,national,income,0.03681767
+Poland,1987,national,income,0.03223857
+Poland,1989,national,income,0.033951215
+Poland,1992,national,income,0.044961613
+Poland,1993,national,consumption,0.027630476
+Poland,1995,national,income,0.06289435
+Poland,1996,national,consumption,0.054907043
+Poland,1998,national,consumption,0.059385546
+Poland,1999,national,consumption,0.055074856
+Poland,1999,national,income,0.054619722
+Poland,2000,national,consumption,0.057639755
+Poland,2001,national,consumption,0.053705968
+Poland,2002,national,consumption,0.05820879
+Poland,2003,national,consumption,0.057353713
+Poland,2004,national,consumption,0.05703104
+Poland,2004,national,income,0.06174448
+Poland,2005,national,consumption,0.059860446
+Poland,2005,national,income,0.053580556
+Poland,2006,national,consumption,0.05543435
+Poland,2006,national,income,0.055987265
+Poland,2007,national,consumption,0.05635946
+Poland,2007,national,income,0.058165126
+Poland,2008,national,consumption,0.060305424
+Poland,2008,national,income,0.05902495
+Poland,2009,national,consumption,0.059502106
+Poland,2009,national,income,0.05389839
+Poland,2010,national,consumption,0.054840058
+Poland,2010,national,income,0.05516261
+Poland,2011,national,consumption,0.054290958
+Poland,2011,national,income,0.05124393
+Poland,2012,national,consumption,0.052152876
+Poland,2012,national,income,0.050557703
+Poland,2013,national,consumption,0.053919032
+Poland,2013,national,income,0.051314615
+Poland,2014,national,consumption,0.05124724
+Poland,2014,national,income,0.049634263
+Poland,2015,national,consumption,0.050654776
+Poland,2015,national,income,0.04703832
+Poland,2016,national,consumption,0.050512925
+Poland,2016,national,income,0.049195394
+Poland,2017,national,consumption,0.04865914
+Poland,2017,national,income,0.04260363
+Poland,2018,national,consumption,0.056561477
+Poland,2018,national,income,0.048239175
+Poland,2019,national,consumption,0.051851716
+Poland,2019,national,income,0.0434807
+Poland,2020,national,income,0.042634606
+Poland,2021,national,income,0.04205469
+Portugal,2003,national,income,0.06317097
+Portugal,2004,national,income,0.065422766
+Portugal,2005,national,income,0.06679328
+Portugal,2006,national,income,0.064047456
+Portugal,2007,national,income,0.061704945
+Portugal,2008,national,income,0.06641534
+Portugal,2009,national,income,0.0548707
+Portugal,2010,national,income,0.057339393
+Portugal,2011,national,income,0.06413005
+Portugal,2012,national,income,0.05672304
+Portugal,2013,national,income,0.05386261
+Portugal,2014,national,income,0.055207502
+Portugal,2015,national,income,0.054449376
+Portugal,2016,national,income,0.058760405
+Portugal,2017,national,income,0.051412128
+Portugal,2018,national,income,0.05197052
+Portugal,2019,national,income,0.049078148
+Portugal,2020,national,income,0.054286566
+Portugal,2021,national,income,0.05761509
+Romania,1989,national,income,0.025391325
+Romania,1992,national,income,0.026790429
+Romania,1994,national,income,0.036524456
+Romania,1995,national,income,0.06094848
+Romania,1997,national,income,0.055008397
+Romania,1998,national,consumption,0.048840195
+Romania,1999,national,consumption,0.049020667
+Romania,2000,national,consumption,0.047350384
+Romania,2001,national,consumption,0.0448538
+Romania,2002,national,consumption,0.047667984
+Romania,2003,national,consumption,0.045494087
+Romania,2004,national,consumption,0.040495235
+Romania,2005,national,consumption,0.038556915
+Romania,2006,national,consumption,0.041797824
+Romania,2006,national,income,0.060379524
+Romania,2007,national,consumption,0.039723746
+Romania,2007,national,income,0.05457429
+Romania,2008,national,consumption,0.03833964
+Romania,2008,national,income,0.052054673
+Romania,2009,national,consumption,0.034505364
+Romania,2009,national,income,0.04799961
+Romania,2010,national,consumption,0.033229068
+Romania,2010,national,income,0.04425957
+Romania,2011,national,consumption,0.031988762
+Romania,2011,national,income,0.043042697
+Romania,2012,national,consumption,0.033288304
+Romania,2012,national,income,0.04717262
+Romania,2013,national,consumption,0.033280216
+Romania,2013,national,income,0.05044204
+Romania,2014,national,income,0.044821896
+Romania,2015,national,income,0.044664633
+Romania,2016,national,consumption,0.0366019
+Romania,2016,national,income,0.040038686
+Romania,2017,national,income,0.041250356
+Romania,2018,national,consumption,0.039839134
+Romania,2018,national,income,0.041312635
+Romania,2019,national,consumption,0.032014392
+Romania,2019,national,income,0.040933337
+Romania,2020,national,consumption,0.03211141
+Romania,2020,national,income,0.04181787
+Romania,2021,national,consumption,0.0338259
+Romania,2021,national,income,0.04314858
+Russia,1993,national,consumption,0.1387028
+Russia,1996,national,consumption,0.10531148
+Russia,1997,national,consumption,0.06689376
+Russia,1998,national,consumption,0.05761017
+Russia,1999,national,consumption,0.056706466
+Russia,2000,national,consumption,0.056077637
+Russia,2001,national,consumption,0.057689253
+Russia,2002,national,consumption,0.059516188
+Russia,2003,national,consumption,0.058142185
+Russia,2004,national,consumption,0.062472414
+Russia,2005,national,consumption,0.06473647
+Russia,2006,national,consumption,0.0613451
+Russia,2007,national,consumption,0.06667992
+Russia,2008,national,consumption,0.06927743
+Russia,2009,national,consumption,0.06440239
+Russia,2010,national,consumption,0.062021866
+Russia,2011,national,consumption,0.06411202
+Russia,2012,national,consumption,0.07072448
+Russia,2013,national,consumption,0.07035635
+Russia,2014,national,consumption,0.07071356
+Russia,2014,national,income,0.052974775
+Russia,2015,national,consumption,0.06299972
+Russia,2015,national,income,0.047775816
+Russia,2016,national,consumption,0.0598071
+Russia,2016,national,income,0.050671984
+Russia,2017,national,consumption,0.066685215
+Russia,2017,national,income,0.046793822
+Russia,2018,national,consumption,0.06708028
+Russia,2018,national,income,0.046612445
+Russia,2019,national,consumption,0.06992021
+Russia,2020,national,consumption,0.06545698
+Rwanda,1984,rural,consumption,0.04587529
+Rwanda,2000,national,consumption,0.1297065
+Rwanda,2005,national,consumption,0.15113953
+Rwanda,2010,national,consumption,0.12578477
+Rwanda,2013,national,consumption,0.11805537
+Rwanda,2016,national,consumption,0.10052619
+Saint Lucia,1995,national,income,0.075701825
+Saint Lucia,2015,national,consumption,0.06673486
+Samoa,2002,national,consumption,0.07916818
+Samoa,2008,national,consumption,0.08114105
+Samoa,2013,national,consumption,0.07405684
+Sao Tome and Principe,2000,national,consumption,0.04141133
+Sao Tome and Principe,2010,national,consumption,0.039449107
+Sao Tome and Principe,2017,national,consumption,0.07834349
+Senegal,1991,national,consumption,0.14058062
+Senegal,1994,national,consumption,0.115161344
+Senegal,2001,national,consumption,0.09535541
+Senegal,2005,national,consumption,0.06469834
+Senegal,2011,national,consumption,0.063215874
+Senegal,2018,national,consumption,0.07208562
+Senegal,2021,national,consumption,0.061661933
+Serbia,2002,national,consumption,0.065397196
+Serbia,2003,national,consumption,0.05305657
+Serbia,2004,national,consumption,0.060890716
+Serbia,2005,national,consumption,0.063214354
+Serbia,2006,national,consumption,0.045188967
+Serbia,2007,national,consumption,0.043013524
+Serbia,2008,national,consumption,0.038678546
+Serbia,2009,national,consumption,0.039351728
+Serbia,2010,national,consumption,0.04051199
+Serbia,2012,national,income,0.059032712
+Serbia,2013,national,consumption,0.041207813
+Serbia,2013,national,income,0.060137883
+Serbia,2014,national,income,0.069512
+Serbia,2015,national,consumption,0.042585857
+Serbia,2015,national,income,0.07764725
+Serbia,2016,national,income,0.056198876
+Serbia,2017,national,income,0.05057101
+Serbia,2018,national,consumption,0.04340797
+Serbia,2018,national,income,0.05005471
+Serbia,2019,national,consumption,0.04052084
+Serbia,2019,national,income,0.05842177
+Serbia,2020,national,income,0.074737616
+Serbia,2021,national,income,0.065940134
+Seychelles,1999,national,consumption,0.11029326
+Seychelles,2006,national,consumption,0.104884796
+Seychelles,2013,national,income,0.18201242
+Seychelles,2018,national,income,0.040554777
+Sierra Leone,2003,national,consumption,0.0624612
+Sierra Leone,2011,national,consumption,0.048587978
+Sierra Leone,2018,national,consumption,0.070609905
+Slovakia,1992,national,income,0.034186907
+Slovakia,1996,national,income,0.043238692
+Slovakia,2004,national,consumption,0.054737054
+Slovakia,2004,national,income,0.048706762
+Slovakia,2005,national,consumption,0.060776252
+Slovakia,2005,national,income,0.074868016
+Slovakia,2006,national,consumption,0.053774957
+Slovakia,2006,national,income,0.04499656
+Slovakia,2007,national,consumption,0.060442273
+Slovakia,2007,national,income,0.040496033
+Slovakia,2008,national,consumption,0.053233337
+Slovakia,2008,national,income,0.037822686
+Slovakia,2009,national,consumption,0.048730224
+Slovakia,2009,national,income,0.044499494
+Slovakia,2010,national,income,0.045940876
+Slovakia,2011,national,income,0.034454174
+Slovakia,2012,national,income,0.03403781
+Slovakia,2013,national,income,0.048094116
+Slovakia,2014,national,income,0.036199432
+Slovakia,2015,national,income,0.0422131
+Slovakia,2016,national,income,0.033359893
+Slovakia,2017,national,income,0.0272434
+Slovakia,2018,national,income,0.031481355
+Slovakia,2019,national,income,0.02869749
+Slovakia,2020,national,income,0.027690444
+Slovakia,2021,national,income,0.028591905
+Slovenia,1987,national,income,0.031936936
+Slovenia,1993,national,income,0.054998353
+Slovenia,1997,national,income,0.031420615
+Slovenia,1998,national,consumption,0.03654418
+Slovenia,1999,national,income,0.03319218
+Slovenia,2002,national,consumption,0.041147355
+Slovenia,2003,national,consumption,0.04595669
+Slovenia,2004,national,income,0.03518765
+Slovenia,2005,national,income,0.034778245
+Slovenia,2006,national,income,0.032695264
+Slovenia,2007,national,income,0.033678062
+Slovenia,2008,national,income,0.033312734
+Slovenia,2009,national,income,0.035037514
+Slovenia,2010,national,income,0.035783894
+Slovenia,2011,national,income,0.03595239
+Slovenia,2012,national,income,0.03777414
+Slovenia,2013,national,income,0.037911944
+Slovenia,2014,national,income,0.03563399
+Slovenia,2015,national,income,0.03932092
+Slovenia,2016,national,income,0.034591235
+Slovenia,2017,national,income,0.03458792
+Slovenia,2018,national,income,0.037343673
+Slovenia,2019,national,income,0.040829506
+Slovenia,2020,national,income,0.038180754
+Slovenia,2021,national,income,0.038245935
+Solomon Islands,2005,national,consumption,0.091362625
+Solomon Islands,2012,national,consumption,0.06654751
+South Africa,1993,national,consumption,0.10070597
+South Africa,2000,national,consumption,0.09574428
+South Africa,2005,national,consumption,0.14031737
+South Africa,2008,national,consumption,0.12715955
+South Africa,2010,national,consumption,0.12404244
+South Africa,2014,national,consumption,0.12640043
+South Korea,2006,national,income,0.04348285
+South Korea,2008,national,income,0.045909006
+South Korea,2010,national,income,0.044885386
+South Korea,2012,national,income,0.04504907
+South Korea,2014,national,income,0.04225228
+South Korea,2016,national,income,0.044333234
+South Sudan,2009,national,consumption,0.0705824
+South Sudan,2016,national,consumption,0.07747783
+Spain,1980,national,income,0.055087946
+Spain,1985,national,income,0.05791142
+Spain,1990,national,income,0.050546005
+Spain,1993,national,income,0.05122192
+Spain,1994,national,income,0.047557015
+Spain,1995,national,income,0.052852433
+Spain,1996,national,income,0.050478548
+Spain,1997,national,income,0.049073394
+Spain,1998,national,income,0.04790156
+Spain,1999,national,income,0.05057104
+Spain,2000,national,income,0.054548748
+Spain,2003,national,income,0.0438685
+Spain,2004,national,income,0.046240296
+Spain,2005,national,income,0.044176064
+Spain,2006,national,income,0.046592485
+Spain,2007,national,income,0.0497562
+Spain,2008,national,income,0.04891665
+Spain,2009,national,income,0.05087376
+Spain,2010,national,income,0.051488265
+Spain,2011,national,income,0.047831677
+Spain,2012,national,income,0.048613083
+Spain,2013,national,income,0.04630875
+Spain,2014,national,income,0.048358623
+Spain,2015,national,income,0.050025593
+Spain,2016,national,income,0.048900053
+Spain,2017,national,income,0.046954855
+Spain,2018,national,income,0.04804044
+Spain,2019,national,income,0.046264146
+Spain,2020,national,income,0.044572644
+Spain,2021,national,income,0.043343306
+Sri Lanka,1985,national,consumption,0.053879436
+Sri Lanka,1990,national,consumption,0.06819109
+Sri Lanka,1995,national,consumption,0.064615905
+Sri Lanka,2002,national,consumption,0.0853173
+Sri Lanka,2006,national,consumption,0.089326605
+Sri Lanka,2009,national,consumption,0.07497411
+Sri Lanka,2012,national,consumption,0.0877518
+Sri Lanka,2016,national,consumption,0.089830115
+Sri Lanka,2019,national,consumption,0.07773151
+Sudan,2009,national,consumption,0.05190545
+Sudan,2014,national,consumption,0.07141537
+Suriname,1999,urban,income,0.117425464
+Suriname,2022,national,consumption,0.072914146
+Sweden,1975,national,income,0.02898263
+Sweden,1981,national,income,0.02558324
+Sweden,1987,national,income,0.0314074
+Sweden,1992,national,income,0.032802552
+Sweden,1995,national,income,0.034611873
+Sweden,2000,national,income,0.0477024
+Sweden,2001,national,income,0.043099873
+Sweden,2002,national,income,0.04001591
+Sweden,2003,national,income,0.031464502
+Sweden,2004,national,income,0.03776216
+Sweden,2005,national,income,0.03821867
+Sweden,2006,national,income,0.039544653
+Sweden,2007,national,income,0.044169948
+Sweden,2008,national,income,0.04850888
+Sweden,2009,national,income,0.039541762
+Sweden,2010,national,income,0.042013466
+Sweden,2011,national,income,0.039041955
+Sweden,2012,national,income,0.03901196
+Sweden,2013,national,income,0.044634376
+Sweden,2014,national,income,0.042488273
+Sweden,2015,national,income,0.05147893
+Sweden,2016,national,income,0.057872258
+Sweden,2017,national,income,0.047498707
+Sweden,2018,national,income,0.053680383
+Sweden,2019,national,income,0.051288374
+Sweden,2020,national,income,0.047176454
+Sweden,2021,national,income,0.04720263
+Switzerland,1982,national,income,0.08128547
+Switzerland,1992,national,income,0.06526673
+Switzerland,2000,national,income,0.06325855
+Switzerland,2002,national,income,0.046821434
+Switzerland,2006,national,income,0.056773797
+Switzerland,2007,national,income,0.06449414
+Switzerland,2008,national,income,0.06078488
+Switzerland,2009,national,income,0.058198594
+Switzerland,2010,national,income,0.05789197
+Switzerland,2011,national,income,0.0512209
+Switzerland,2012,national,income,0.054537557
+Switzerland,2013,national,income,0.056215886
+Switzerland,2014,national,income,0.056063008
+Switzerland,2015,national,income,0.05546683
+Switzerland,2016,national,income,0.062106658
+Switzerland,2017,national,income,0.056811452
+Switzerland,2018,national,income,0.06211669
+Switzerland,2019,national,income,0.06559088
+Switzerland,2020,national,income,0.064613976
+Syria,1996,national,consumption,0.069957554
+Syria,2003,national,consumption,0.067831144
+Syria,2006,national,consumption,0.0629779
+Syria,2009,national,consumption,0.07244527
+Syria,2022,national,consumption,0.030050352
+Taiwan,1981,national,income,0.043963354
+Taiwan,1986,national,income,0.04936446
+Taiwan,1991,national,income,0.048580177
+Taiwan,1995,national,income,0.04699202
+Taiwan,1997,national,income,0.046836995
+Taiwan,2000,national,income,0.047727033
+Taiwan,2005,national,income,0.051627874
+Taiwan,2007,national,income,0.047173653
+Taiwan,2010,national,income,0.051442534
+Taiwan,2013,national,income,0.052030306
+Taiwan,2016,national,income,0.050304484
+Taiwan,2017,national,income,0.05435176
+Taiwan,2018,national,income,0.054324906
+Taiwan,2019,national,income,0.050040044
+Taiwan,2020,national,income,0.0539623
+Taiwan,2021,national,income,0.05331894
+Tajikistan,1999,national,consumption,0.043000333
+Tajikistan,2003,national,consumption,0.049901582
+Tajikistan,2004,national,consumption,0.051021867
+Tajikistan,2007,national,consumption,0.063415416
+Tajikistan,2009,national,consumption,0.04871361
+Tajikistan,2015,national,consumption,0.050502624
+Tanzania,1991,national,consumption,0.054070126
+Tanzania,2000,national,consumption,0.059464056
+Tanzania,2007,national,consumption,0.07848717
+Tanzania,2011,national,consumption,0.07866663
+Tanzania,2018,national,consumption,0.08941823
+Thailand,1981,national,consumption,0.08752504
+Thailand,1988,national,consumption,0.093928166
+Thailand,1990,national,consumption,0.09536308
+Thailand,1992,national,consumption,0.10171944
+Thailand,1994,national,consumption,0.09303806
+Thailand,1996,national,consumption,0.087290436
+Thailand,1998,national,consumption,0.07075333
+Thailand,1999,national,consumption,0.08109932
+Thailand,2000,national,consumption,0.08188085
+Thailand,2002,national,consumption,0.08259292
+Thailand,2004,national,consumption,0.0840497
+Thailand,2006,national,consumption,0.074083984
+Thailand,2007,national,consumption,0.067447014
+Thailand,2008,national,consumption,0.0707757
+Thailand,2009,national,consumption,0.069170795
+Thailand,2010,national,consumption,0.06734039
+Thailand,2011,national,consumption,0.06949624
+Thailand,2012,national,consumption,0.070490934
+Thailand,2013,national,consumption,0.06364534
+Thailand,2014,national,consumption,0.06275371
+Thailand,2015,national,consumption,0.06241723
+Thailand,2016,national,consumption,0.0634459
+Thailand,2017,national,consumption,0.059740316
+Thailand,2018,national,consumption,0.055940423
+Thailand,2019,national,consumption,0.054747976
+Thailand,2020,national,consumption,0.05261636
+Thailand,2021,national,consumption,0.055137493
+Togo,2006,national,consumption,0.06878788
+Togo,2011,national,consumption,0.07831488
+Togo,2015,national,consumption,0.067421876
+Togo,2018,national,consumption,0.07614076
+Togo,2021,national,consumption,0.06668753
+Tonga,2000,national,consumption,0.058753416
+Tonga,2009,national,consumption,0.06273509
+Tonga,2015,national,consumption,0.055255037
+Tonga,2021,national,consumption,0.037798066
+Trinidad and Tobago,1988,national,income,0.055372093
+Trinidad and Tobago,1992,national,income,0.05614033
+Tunisia,1985,national,consumption,0.090947956
+Tunisia,1990,national,consumption,0.06317974
+Tunisia,1995,national,consumption,0.065203875
+Tunisia,2000,national,consumption,0.0697946
+Tunisia,2005,national,consumption,0.05974308
+Tunisia,2010,national,consumption,0.050178424
+Tunisia,2015,national,consumption,0.049234305
+Tunisia,2021,national,consumption,0.07066894
+Turkey,1987,national,consumption,0.12237111
+Turkey,1994,national,consumption,0.07454698
+Turkey,2002,national,consumption,0.071617775
+Turkey,2003,national,consumption,0.06965817
+Turkey,2004,national,consumption,0.062610835
+Turkey,2005,national,consumption,0.07367127
+Turkey,2006,national,consumption,0.057843067
+Turkey,2007,national,consumption,0.0499825
+Turkey,2008,national,consumption,0.060137045
+Turkey,2009,national,consumption,0.05263782
+Turkey,2010,national,consumption,0.056977194
+Turkey,2011,national,consumption,0.060499005
+Turkey,2012,national,consumption,0.05981205
+Turkey,2013,national,consumption,0.06558409
+Turkey,2014,national,consumption,0.068063684
+Turkey,2015,national,consumption,0.08333777
+Turkey,2016,national,consumption,0.0680755
+Turkey,2017,national,consumption,0.07190695
+Turkey,2017,national,income,0.09543038
+Turkey,2018,national,consumption,0.07372699
+Turkey,2018,national,income,0.088596046
+Turkey,2019,national,consumption,0.06801327
+Turkey,2019,national,income,0.09009947
+Turkey,2020,national,income,0.08803373
+Turkey,2021,national,income,0.107066534
+Turkmenistan,1998,national,consumption,0.07653033
+Tuvalu,2010,national,consumption,0.075197205
+Uganda,1989,national,consumption,0.07545184
+Uganda,1992,national,consumption,0.10063872
+Uganda,1996,national,consumption,0.07394243
+Uganda,1999,national,consumption,0.09762766
+Uganda,2002,national,consumption,0.11775105
+Uganda,2005,national,consumption,0.08993048
+Uganda,2009,national,consumption,0.09571938
+Uganda,2012,national,consumption,0.07595927
+Uganda,2016,national,consumption,0.08481415
+Uganda,2019,national,consumption,0.10811171
+Ukraine,1992,national,consumption,0.041406155
+Ukraine,1993,national,consumption,0.043500274
+Ukraine,1995,national,consumption,0.0721598
+Ukraine,1996,national,consumption,0.0648649
+Ukraine,1999,national,income,0.037041757
+Ukraine,2002,national,consumption,0.041353513
+Ukraine,2003,national,consumption,0.04239315
+Ukraine,2004,national,consumption,0.04328762
+Ukraine,2005,national,consumption,0.041505862
+Ukraine,2006,national,consumption,0.049904887
+Ukraine,2007,national,consumption,0.03926008
+Ukraine,2008,national,consumption,0.038325533
+Ukraine,2009,national,consumption,0.035017196
+Ukraine,2010,national,consumption,0.03432037
+Ukraine,2011,national,consumption,0.034712266
+Ukraine,2012,national,consumption,0.033589248
+Ukraine,2013,national,consumption,0.035792474
+Ukraine,2014,national,consumption,0.035838008
+Ukraine,2015,national,consumption,0.03859752
+Ukraine,2016,national,consumption,0.03898636
+Ukraine,2017,national,consumption,0.039106194
+Ukraine,2018,national,consumption,0.039877504
+Ukraine,2019,national,consumption,0.03881807
+Ukraine,2020,national,consumption,0.038628235
+United Arab Emirates,2013,national,income,0.02449824
+United Arab Emirates,2018,national,income,0.029798958
+United Kingdom,1968,national,income,0.04448989
+United Kingdom,1969,national,income,0.046242118
+United Kingdom,1970,national,income,0.042427957
+United Kingdom,1971,national,income,0.047666386
+United Kingdom,1972,national,income,0.040472176
+United Kingdom,1973,national,income,0.045831613
+United Kingdom,1974,national,income,0.046044912
+United Kingdom,1975,national,income,0.041998245
+United Kingdom,1976,national,income,0.03849978
+United Kingdom,1977,national,income,0.039238088
+United Kingdom,1978,national,income,0.037709195
+United Kingdom,1979,national,income,0.035374902
+United Kingdom,1980,national,income,0.04121833
+United Kingdom,1981,national,income,0.047170162
+United Kingdom,1982,national,income,0.044456128
+United Kingdom,1983,national,income,0.04437856
+United Kingdom,1984,national,income,0.04268665
+United Kingdom,1985,national,income,0.042581186
+United Kingdom,1986,national,income,0.05729013
+United Kingdom,1987,national,income,0.061054733
+United Kingdom,1988,national,income,0.06516398
+United Kingdom,1989,national,income,0.051971354
+United Kingdom,1990,national,income,0.063833185
+United Kingdom,1991,national,income,0.05977714
+United Kingdom,1992,national,income,0.054656193
+United Kingdom,1993,national,income,0.057678938
+United Kingdom,1994,national,income,0.065467454
+United Kingdom,1995,national,income,0.06117487
+United Kingdom,1996,national,income,0.06328652
+United Kingdom,1997,national,income,0.065924704
+United Kingdom,1998,national,income,0.07319335
+United Kingdom,1999,national,income,0.07615352
+United Kingdom,2000,national,income,0.10477766
+United Kingdom,2001,national,income,0.081488974
+United Kingdom,2002,national,income,0.068477094
+United Kingdom,2003,national,income,0.065388694
+United Kingdom,2004,national,income,0.065339886
+United Kingdom,2005,national,income,0.07057903
+United Kingdom,2006,national,income,0.07180398
+United Kingdom,2007,national,income,0.055597663
+United Kingdom,2008,national,income,0.0688995
+United Kingdom,2009,national,income,0.06755121
+United Kingdom,2010,national,income,0.057069585
+United Kingdom,2011,national,income,0.054755013
+United Kingdom,2012,national,income,0.053169508
+United Kingdom,2013,national,income,0.050573755
+United Kingdom,2014,national,income,0.053737145
+United Kingdom,2015,national,income,0.054137338
+United Kingdom,2016,national,income,0.05411081
+United Kingdom,2017,national,income,0.05085862
+United Kingdom,2018,national,income,0.052546367
+United Kingdom,2019,national,income,0.049852103
+United Kingdom,2020,national,income,0.049093235
+United Kingdom,2021,national,income,0.047819402
+United States,1963,national,income,0.052120626
+United States,1964,national,income,0.056701332
+United States,1965,national,income,0.05170502
+United States,1966,national,income,0.050954364
+United States,1967,national,income,0.049652066
+United States,1968,national,income,0.048961688
+United States,1969,national,income,0.048627004
+United States,1970,national,income,0.048940655
+United States,1971,national,income,0.050606098
+United States,1972,national,income,0.048535604
+United States,1973,national,income,0.047860835
+United States,1974,national,income,0.045328747
+United States,1975,national,income,0.047117814
+United States,1976,national,income,0.046581674
+United States,1977,national,income,0.051237434
+United States,1978,national,income,0.045395706
+United States,1979,national,income,0.04615291
+United States,1980,national,income,0.04608584
+United States,1981,national,income,0.04629898
+United States,1982,national,income,0.04866371
+United States,1983,national,income,0.04802128
+United States,1984,national,income,0.049462117
+United States,1985,national,income,0.05054392
+United States,1986,national,income,0.050290614
+United States,1987,national,income,0.050509486
+United States,1988,national,income,0.05274924
+United States,1989,national,income,0.056791846
+United States,1990,national,income,0.05585437
+United States,1991,national,income,0.05424653
+United States,1992,national,income,0.054900445
+United States,1993,national,income,0.07499971
+United States,1994,national,income,0.074089855
+United States,1995,national,income,0.074985884
+United States,1996,national,income,0.081043065
+United States,1997,national,income,0.08155996
+United States,1998,national,income,0.07676166
+United States,1999,national,income,0.07683631
+United States,2000,national,income,0.08294721
+United States,2001,national,income,0.08635859
+United States,2002,national,income,0.07815167
+United States,2003,national,income,0.07595141
+United States,2004,national,income,0.079136714
+United States,2005,national,income,0.08150647
+United States,2006,national,income,0.08526736
+United States,2007,national,income,0.075783044
+United States,2008,national,income,0.07666627
+United States,2009,national,income,0.07806082
+United States,2010,national,income,0.06559275
+United States,2011,national,income,0.07082822
+United States,2012,national,income,0.07198476
+United States,2013,national,income,0.06792116
+United States,2014,national,income,0.06657566
+United States,2015,national,income,0.068221666
+United States,2016,national,income,0.0682706
+United States,2017,national,income,0.06808443
+United States,2018,national,income,0.07194883
+United States,2019,national,income,0.07003783
+United States,2020,national,income,0.06599474
+United States,2021,national,income,0.06952325
+Uruguay,1981,urban,income,0.0812069
+Uruguay,1989,urban,income,0.085527435
+Uruguay,1992,urban,income,0.06930536
+Uruguay,1995,urban,income,0.06364317
+Uruguay,1996,urban,income,0.060962893
+Uruguay,1997,urban,income,0.06521133
+Uruguay,1998,urban,income,0.06749653
+Uruguay,2000,urban,income,0.06851768
+Uruguay,2001,urban,income,0.07405509
+Uruguay,2002,urban,income,0.07698109
+Uruguay,2003,urban,income,0.07859662
+Uruguay,2004,urban,income,0.080742516
+Uruguay,2005,urban,income,0.07448317
+Uruguay,2006,national,income,0.080458164
+Uruguay,2007,national,income,0.084525816
+Uruguay,2008,national,income,0.0815356
+Uruguay,2009,national,income,0.08429391
+Uruguay,2010,national,income,0.078293666
+Uruguay,2011,national,income,0.069709584
+Uruguay,2012,national,income,0.055746388
+Uruguay,2013,national,income,0.06226898
+Uruguay,2014,national,income,0.06177961
+Uruguay,2015,national,income,0.062139772
+Uruguay,2016,national,income,0.06186659
+Uruguay,2017,national,income,0.06266524
+Uruguay,2018,national,income,0.062104777
+Uruguay,2019,national,income,0.060994014
+Uruguay,2020,national,income,0.0618213
+Uruguay,2021,national,income,0.069672905
+Uruguay,2022,national,income,0.064121045
+Uzbekistan,1998,national,consumption,0.073270924
+Uzbekistan,2000,national,consumption,0.06532873
+Uzbekistan,2002,national,consumption,0.06015424
+Uzbekistan,2003,national,consumption,0.061212696
+Uzbekistan,2022,national,consumption,0.03403194
+Vanuatu,2010,national,consumption,0.06833041
+Vanuatu,2019,national,consumption,0.048414376
+Venezuela,1981,national,income,0.12622115
+Venezuela,1987,national,income,0.092896976
+Venezuela,1989,national,income,0.077001065
+Venezuela,1992,national,income,0.068412445
+Venezuela,1995,national,income,0.09224687
+Venezuela,1998,national,income,0.085526854
+Venezuela,1999,national,income,0.087377094
+Venezuela,2001,national,income,0.08406043
+Venezuela,2002,national,income,0.08822777
+Venezuela,2003,national,income,0.08354563
+Venezuela,2004,national,income,0.07928455
+Venezuela,2005,national,income,0.102610454
+Venezuela,2006,national,income,0.07974341
+Vietnam,1992,national,consumption,0.059019536
+Vietnam,1997,national,consumption,0.06021313
+Vietnam,2002,national,consumption,0.05865041
+Vietnam,2004,national,consumption,0.055433493
+Vietnam,2006,national,consumption,0.054875508
+Vietnam,2008,national,consumption,0.057584833
+Vietnam,2010,national,consumption,0.07669032
+Vietnam,2012,national,consumption,0.058897298
+Vietnam,2014,national,consumption,0.056059875
+Vietnam,2016,national,consumption,0.057978954
+Vietnam,2018,national,consumption,0.05523356
+Vietnam,2020,national,consumption,0.05999919
+Vietnam,2022,national,consumption,0.071246035
+Yemen,1998,national,consumption,0.05454883
+Yemen,2005,national,consumption,0.07212311
+Yemen,2014,national,consumption,0.06706304
+Zambia,1991,national,consumption,0.104047865
+Zambia,1993,national,consumption,0.08795158
+Zambia,1996,national,consumption,0.09843098
+Zambia,1998,national,consumption,0.10551228
+Zambia,2002,national,consumption,0.098108925
+Zambia,2004,national,consumption,0.12657528
+Zambia,2006,national,consumption,0.118163735
+Zambia,2010,national,consumption,0.10096343
+Zambia,2015,national,consumption,0.12235518
+Zambia,2022,national,consumption,0.09496011
+Zimbabwe,2011,national,consumption,0.078791946
+Zimbabwe,2017,national,consumption,0.08752902
+Zimbabwe,2019,national,consumption,0.11503203
