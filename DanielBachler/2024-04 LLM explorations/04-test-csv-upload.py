@@ -3,6 +3,7 @@
 from pathlib import Path
 from openai import OpenAI
 from dotenv import load_dotenv
+from rich import print
 
 load_dotenv()
 client = OpenAI()
@@ -59,7 +60,7 @@ run = client.beta.threads.runs.create(
 )
 
 # %%
-# Repeat this step until the status is completed or failed
+# ❗ Repeat this step until the status is completed or failed
 run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
 run.status
 
@@ -68,11 +69,29 @@ run.status
 messages = client.beta.threads.messages.list(thread_id=thread.id)
 
 # %%
-
-messages.data[0].content
+# Iterate over the messages (the output text)
+for message in reversed(messages.data):
+    print(message.content[0].text.value)
 
 # %%
 
+# Let's also inspect now the other steps and see what code was run
+run_steps = client.beta.threads.runs.steps.list(
+  thread_id=thread.id,
+  run_id=run.id
+)
+# %%
+for step in reversed(run_steps.data):
+    # check if the step detail is an instance of ToolCallsStepDetail
+    if step.step_details.__class__.__name__ == "ToolCallsStepDetails":
+        for tool_call in step.step_details.tool_calls:
+            print("[lightblue]" + tool_call.code_interpreter.input)
+            for output in tool_call.code_interpreter.outputs:
+                print("[green]" + output.logs)
+
+# %%
+
+# Clean up resources
 client.beta.threads.delete(thread.id)
 
 client.beta.assistants.delete(assistant.id)
