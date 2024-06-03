@@ -543,8 +543,30 @@ output.to_csv("data/selected_observations/long_period_all_obs.csv", index=False)
 # #%%
 
 
-# #%% Version 2 – Only matching data points, non-extrapolated data for WID 
-# # (NB only_all_series = True)
+#%% Version 2 – Only matching data points, non-extrapolated data for WID 
+# (NB only_all_series = True)
+
+output = match_ref_years(
+    df = df, 
+    series = [
+    "gini_pip_disposable_perCapita",
+    "p99p100Share_pip_disposable_perCapita",
+    "p90p100Share_pip_disposable_perCapita",
+    "headcountRatio50Median_pip_disposable_perCapita",
+    "gini_wid_pretaxNational_perAdult",
+    "p99p100Share_wid_pretaxNational_perAdult",           
+    "p90p100Share_wid_pretaxNational_perAdult",
+    "headcountRatio50Median_wid_pretaxNational_perAdult" 
+], 
+    reference_years = reference_years, 
+    only_all_series = True)
+
+# Save to csv
+output.to_csv("data/selected_observations/long_period_counterfactual2_only_matches.csv", index=False)
+
+
+
+
 # output = match_ref_years(
 #     df = df, 
 #     series = [
