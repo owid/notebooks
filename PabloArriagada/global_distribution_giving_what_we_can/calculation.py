@@ -125,6 +125,15 @@ def combine_ppp_cpi_and_export(
     # Make year integer
     df_cpi["year"] = df_cpi["year"].astype(int)
 
+    # Assert if I filter by MAX_YEAR_CPI I will get a non-empty dataframe
+    mask = df_cpi["year"] == MAX_YEAR_CPI
+    assert not df_cpi[mask].empty, f"No data CPI for {MAX_YEAR_CPI}"
+
+    # Assert if I filter by MAX_YEAR_CPI I will get a cpi column full of nan
+    assert (
+        not df_cpi[mask]["cpi"].isna().all()
+    ), f"CPI column is full of empty values for {MAX_YEAR_CPI}"
+
     # Filter for 2017 and the maximum year
     df_cpi = df_cpi[
         (df_cpi["year"] == 2017) | (df_cpi["year"] == MAX_YEAR_CPI)
