@@ -56,7 +56,7 @@ ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US,
        x="",
        y="",
        fill="Generation of antipsychotic drug",
-       caption="Sources: Pharmaceutical Manufacturing Encyclopedia (2013)\nand multiple sources compiled by Dattani (2024)") +
+       caption="Sources: Pharmaceutical Manufacturing Encyclopedia (2013)\nand multiple sources compiled by Our World in Data") +
   coord_cartesian(xlim=c(1940,2024))
 
 ggsave(paste0(file_path, "antipsychotics_timeline.svg"),height=8,width=10)
