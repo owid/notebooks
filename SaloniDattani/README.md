@@ -10,3 +10,4 @@ Not all charts have data or code available, but when they do, they will be share
 | 2023-11-07 | Death rates across ages (by diseases & external causes) | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Life-expectancy/Mortality-rates-diseases-vs-external)   |
 | 2023-11-07 | Death rates have declined across the lifespan | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Life-expectancy/Mortality-rates-over-time-countries)   |
 | 2023-11-27 | Period versus cohort: Age mortality profiles | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Life-expectancy/Period-vs-cohort-age-mortality)   |
+| 2024-07-17 | Trachoma declined in Africa | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Trachoma/trachoma-prevalence-Africa-maps)   |
