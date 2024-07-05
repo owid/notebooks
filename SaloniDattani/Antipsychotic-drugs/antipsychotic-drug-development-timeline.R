@@ -4,9 +4,14 @@ library(viridis)
 library(ggrepel)
 library(data.table)
 library(readxl)
+library(extrafont)
+
+# Import Lato font
+font_import(pattern = "Lato")
+loadfonts(device = "mac") # use "win" for Windows, "mac" for macOS
 
 # Import spreadsheet
-file_path <- "owid/notebooks/SaloniDattani/Antipsychotic-drugs/"
+file_path <- ""
 
 ap_drugs <- read_excel(paste0(file_path, "Psychosis treatments.xlsx"),
                        sheet=1,
@@ -37,18 +42,18 @@ group.colors <- c("First-generation" = "#38AABA",
                    "Second-generation" = "#BC8E5A", 
                    "Third-generation" ="#970046")
 
-
 ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US, 
                           y=id, 
                           label=Treatment_name)) +
   geom_point(aes(fill=Treatment_class), color="black", size=2.5, pch=21, stroke=0.8) +
   # Show names
-  geom_text(hjust=1, nudge_x=-3, size=3) + 
+  geom_text(hjust=1, nudge_x=-2.5, size=3.5, family="Lato") + 
   theme_classic() +
   scale_fill_manual(values=group.colors) +
   scale_x_continuous(breaks= seq(1940,2020,by=10), 
                      labels = seq(1940,2020,by=10)) +
-  theme(axis.text.y=element_blank(),
+  theme(text = element_text(family = "Lato"), # Set Lato for all text elements
+        axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
         plot.title = element_text(size = 20)) +
   labs(title="The development of antipsychotic drugs",
