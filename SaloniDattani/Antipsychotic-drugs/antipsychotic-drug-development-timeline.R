@@ -13,7 +13,7 @@ loadfonts(device = "mac") # use "win" for Windows, "mac" for macOS
 # Import spreadsheet
 file_path <- ""
 
-ap_drugs <- read_excel(paste0(file_path, "Psychosis treatments.xlsx"),
+ap_drugs <- read_excel(paste0(file_path, "Psychosis medications historical dataset.xlsx"),
                        sheet=1,
                        col_types=c("text", "text", "text", "text", 
                                    "numeric", "numeric", 
