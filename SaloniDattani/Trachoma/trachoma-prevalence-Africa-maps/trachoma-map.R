@@ -5,14 +5,15 @@ library(tidyverse)
 library(rnaturalearth)
 library(rnaturalearthdata)
 
-file_path <- ""
+# Replace with path to file
+file_path <- "/Trachoma/trachoma-prevalence-Africa-maps/"
 
 # Get the world map outline
 world <- ne_countries(scale = "medium", returnclass = "sf")
 africa <- world %>% filter(continent == "Africa")
 
 # Read the shapefiles
-shapefile <- st_read(paste0(file_path, "IUs_9May2024.shp"))
+shapefile <- st_read(paste0(file_path, "shapefiles_folder/IUs_9May2024.shp"))
 
 #import data
 survey_data <- read_excel(paste0(file_path, "survey_data_2024_05_30.xlsx"), sheet = "surveys") 
