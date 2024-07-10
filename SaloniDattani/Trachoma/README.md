@@ -2,9 +2,9 @@ This folder contains scripts to recreate maps showing the estimated prevalence o
 
 Instructions:
 - Download this Github folder
+- Open the R script and update the filepath in the R script to the downloaded path
 - Download the shapefile folder from [Google drive](https://drive.google.com/file/d/1nOcQSIzNPgaZ9oKseEbthORaQJ0J3qzE/view?usp=drive_link)
 - Unzip the shapefiles folder
-- Update the filepath in the R script to the downloaded path
 - Run the R script
 
 Data comes from the [Global Trachoma Atlas](https://www.trachomaatlas.org/global-trachoma-atlas) and was published by Renneker et al. (2022): 
