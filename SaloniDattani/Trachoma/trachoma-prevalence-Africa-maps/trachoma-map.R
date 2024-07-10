@@ -15,7 +15,7 @@ africa <- world %>% filter(continent == "Africa")
 shapefile <- st_read(paste0(file_path, "IUs_9May2024.shp"))
 
 #import data
-survey_data <- read_excel(paste0(file_path, "surveys_for_Our_World_in_Data_2024_05_30.xlsx"), sheet = "surveys") 
+survey_data <- read_excel(paste0(file_path, "survey_data_2024_05_30.xlsx"), sheet = "surveys") 
 # Inspect the shapefile and survey data
 head(shapefile)
 head(survey_data)
