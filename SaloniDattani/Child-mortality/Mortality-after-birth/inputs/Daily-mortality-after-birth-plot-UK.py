@@ -107,7 +107,7 @@ for idx, year in enumerate(unique_years):
 ax.set_yscale('log')  # log scale for y-axis
 ax.set_title("Infant mortality rates decline sharply after birth")
 ax.set_xlabel("Age (days)")
-ax.set_ylabel("Daily mortality rate (per 100,000)")
+ax.set_ylabel("Daily mortality rate (per 1,000 live births)")
 ax.legend(title="Year")
 
 plt.tight_layout()
