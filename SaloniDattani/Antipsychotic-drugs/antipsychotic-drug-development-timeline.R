@@ -15,9 +15,9 @@ file_path <- ""
 
 ap_drugs <- read_excel(paste0(file_path, "Psychosis medications historical dataset.xlsx"),
                        sheet=1,
-                       col_types=c("text", "text", "text", "text", 
+                       col_types=c("text", "text", "text", 
                                    "numeric", "numeric", 
-                                   "text", "text", "text", "text"))
+                                   "text"))
 
 # Remove drugs not approved in the US
 ap_drugs <- ap_drugs %>% 
@@ -55,14 +55,21 @@ ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US,
   theme(text = element_text(family = "Lato"), # Set Lato for all text elements
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
-        plot.title = element_text(size = 20)) +
-  labs(title="The development of antipsychotic drugs",
+        plot.title = element_text(size = 20),
+        axis.title.x.top = element_text(vjust = 1.5), # Adjust x-axis title position at the top
+        axis.text.x.top = element_text(vjust = 1.5),  # Adjust x-axis text position at the top
+        axis.ticks.x.top = element_line(),           # Add ticks to the top x-axis
+        plot.margin = margin(t = 10, r = 10, b = 10, l = 10)) +
+  labs(title="Timeline of the development of antipsychotic drugs",
        subtitle="The year when each antipsychotic drug was licensed in the United States.",
        x="",
        y="",
-       fill="Generation of antipsychotic drug",
+       fill="Generation of drug",
        caption="Sources: Pharmaceutical Manufacturing Encyclopedia (2013)\nand multiple sources compiled by Our World in Data") +
-  coord_cartesian(xlim=c(1940,2024))
+  coord_cartesian(xlim=c(1940,2024)) +
+  scale_y_reverse() + # Flip y-axis
+  scale_x_continuous(position = "top") # Position x-axis at the top
+
 
 ggsave(paste0(file_path, "antipsychotics_timeline.svg"),height=8,width=10)
 
