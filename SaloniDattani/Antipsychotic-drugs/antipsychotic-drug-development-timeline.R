@@ -17,7 +17,7 @@ ap_drugs <- read_excel(paste0(file_path, "Psychosis medications historical datas
                        sheet=1,
                        col_types=c("text", "text", "text", 
                                    "numeric", "numeric", 
-                                   "text"))
+                                   "text", "text"))
 
 # Remove drugs not approved in the US
 ap_drugs <- ap_drugs %>% 
