@@ -140,7 +140,7 @@ geom_point(aes(color=Year), size=1.4) +
   theme(plot.title = element_text(face = "bold")) +
   labs(title = "Infant mortality rates decline sharply after birth", 
        subtitle = "The chances of dying are highest during the first few days of an infant's life.\nOver the following days, weeks and months, their chances of dying decrease sharply. \nOver time, the mortality rate has declined across the entire first year of an infant's life.", 
-       y = "Daily mortality rate (per 100,000)", 
+       y = "Daily mortality rate (per 1,000 live births)", 
        x = "Age (days)",
        caption = "Source: Office for National Statistics, UK") 
 # Add interpolated lines connecting points

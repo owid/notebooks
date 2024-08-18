@@ -12,6 +12,6 @@ The python script generates per-day mortality rates from intervals (e.g. Under 1
 
 This plot shows data for infants in the United States of America, across 2017-2020 (merged).
 
-Data comes from the US Centers for Disease Control and Prevention, via the CDC Wonder.
+Data comes from the US Centers for Disease Control and Prevention, via the CDC Wonder. See the CDC's data use restrictions [online](https://wonder.cdc.gov/DataUse.html).
 
 The python script plots per-day mortality rates over the first 360 days of life. Then it plots the cumulative share of infants who have died over the first 360 days of life.
