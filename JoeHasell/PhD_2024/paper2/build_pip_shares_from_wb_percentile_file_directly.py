@@ -80,3 +80,5 @@ df_top1shares = df_top1shares[[
 df_top1shares.to_csv("data/df_top1shares.csv", index=False)
 
 
+
+# %%
