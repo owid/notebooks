@@ -132,17 +132,25 @@ fig.update_layout(
     ),
 )
 
+fig.update_yaxes(range=[0, 0.8])
+
 fig.add_vline(
-    x=df_percentiles_us_50[1], line_width=0.5, line_dash="dot", line_color="grey"
+    x=df_percentiles_us_50[1],
+    line_width=0.5,
+    line_dash="dot",
+    line_color="grey",
+    annotation_text=f"<b>USA</b><br>Median income:<br>${int(round(df_percentiles_us_50[0],0))} per day",
+    annotation_position="top right",
+    annotation_align="left",
 )
 fig.add_vline(
-    x=df_percentiles_burundi_50[1], line_width=0.5, line_dash="dot", line_color="grey"
-)
-fig.add_vline(
-    x=df_percentiles_us_50[3], line_width=0.5, line_dash="dot", line_color="grey"
-)
-fig.add_vline(
-    x=df_percentiles_burundi_50[3], line_width=0.5, line_dash="dot", line_color="grey"
+    x=df_percentiles_burundi_50[1],
+    line_width=0.5,
+    line_dash="dot",
+    line_color="grey",
+    annotation_text=f"<b>Burundi</b><br>Median income:<br>${round(df_percentiles_burundi_50[0],2):.2f} per day",
+    annotation_position="top left",
+    annotation_align="right",
 )
 
 # For the International Poverty Line
