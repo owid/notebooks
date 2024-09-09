@@ -116,6 +116,8 @@ tickvals = [
     np.log(20),
     np.log(50),
     np.log(100),
+    np.log(200),
+    np.log(500),
 ]
 ticktext = [f"{int(round(np.exp(val),1))}" for val in tickvals]
 
