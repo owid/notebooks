@@ -110,6 +110,8 @@ fig = ff.create_distplot(
 # Define tick values and labels for the x-axis
 tickvals = [
     np.log(1),
+    np.log(2),
+    np.log(5),
     np.log(10),
     np.log(20),
     np.log(50),
