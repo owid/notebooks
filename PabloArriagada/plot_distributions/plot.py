@@ -83,7 +83,7 @@ data_list = [
     df_percentiles_us["thr_log"],
     df_percentiles_burundi["thr_log"],
 ]
-label_list = ["US", "Burundi"]
+label_list = ["USA", "Burundi"]
 
 # data_list = []
 # label_list = []
@@ -123,7 +123,7 @@ ticktext = [f"{int(round(np.exp(val),1))}" for val in tickvals]
 
 # Update layout
 fig.update_layout(
-    title="Density curve of income for US and Burundi in 2020",
+    title="Density curve of income for USA and Burundi in 2020",
     xaxis_title="Income (log scale)",
     yaxis_title="Density",
     xaxis=dict(
