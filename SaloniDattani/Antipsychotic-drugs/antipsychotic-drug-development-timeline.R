@@ -14,7 +14,7 @@ loadfonts(device = "mac") # use "win" for Windows, "mac" for macOS
 file_path <- ""
 
 ap_drugs <- read_excel(paste0(file_path, "Psychosis medications historical dataset.xlsx"),
-                       sheet=1,
+                       sheet=2,
                        col_types=c("text", "text", "text", 
                                    "numeric", "numeric", 
                                    "text", "text"))
@@ -39,8 +39,9 @@ ap_drugs <- as_tibble(ap_drugs)
 
 # Select colors
 group.colors <- c("First-generation" = "#38AABA", 
-                   "Second-generation" = "#BC8E5A", 
-                   "Third-generation" ="#970046")
+                  "Second-generation" = "#BC8E5A", 
+                  "Third-generation" ="#970046",
+                  "Muscarinic receptor agonist" = "#18470F")
 
 ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US, 
                           y=id, 
