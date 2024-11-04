@@ -36,6 +36,44 @@ df_percentiles_world = (
     .copy()
 )
 
+# Define world median
+WORLD_MEDIAN = df_percentiles_world.loc[
+    df_percentiles_world["percentile"] == 50, "thr"
+].values[0]
+
+# Define world mean
+WORLD_MEAN = df_main_indicators.loc[
+    (df_main_indicators["country"] == "World")
+    & (df_main_indicators["year"] == LATEST_YEAR),
+    "mean",
+].values[0]
+
+# Define world 90th percentile
+WORLD_90TH = df_percentiles_world.loc[
+    df_percentiles_world["percentile"] == 90, "thr"
+].values[0]
+
+# Define world 99th percentile
+WORLD_99TH = df_percentiles_world.loc[
+    df_percentiles_world["percentile"] == 99, "thr"
+].values[0]
+
+# Define US median
+# Calculate most recent year in the US, calculating the maximum year with a valid median
+latest_year_us = df_main_indicators.loc[
+    (df_main_indicators["country"] == "United States")
+    & (df_main_indicators["median"].notna()),
+    "year",
+].max()
+
+US_MEDIAN = df_percentiles.loc[
+    (df_percentiles["country"] == "United States")
+    & (df_percentiles["year"] == latest_year_us)
+    & (df_percentiles["percentile"] == 50),
+    "thr",
+].values[0]
+
+
 # Plot a line chart with  the columns percentile vs thr in plotly express
 fig = px.line(
     df_percentiles_world,
@@ -45,14 +83,86 @@ fig = px.line(
     labels={"percentile": "Percentile", "thr": "Threshold"},
     log_y=False,
 )
+fig.update_layout(
+    xaxis=dict(ticksuffix="%"),
+    yaxis=dict(
+        side="right", title="Daily income (USD)", tickprefix="$", ticksuffix=" a day"
+    ),
+)
 
 # Add a horizontal line for the IPL
 fig.add_hline(
     y=INTERNATIONAL_POVERTY_LINE,
     line_dash="dot",
     line_color="red",
-    annotation_text="IPL",
+    annotation_text=f"International Poverty Line: ${INTERNATIONAL_POVERTY_LINE}",
     annotation_position="top right",
+)
+
+# Add median
+fig.add_hline(
+    y=WORLD_MEDIAN,
+    line_dash="dot",
+    line_color="red",
+    annotation_text=f"World median: ${WORLD_MEDIAN:.2f}",
+    annotation_position="top right",
+)
+
+# Add 90th percentile
+fig.add_hline(
+    y=WORLD_90TH,
+    line_dash="dot",
+    line_color="red",
+    annotation_text=f"World 90th percentile: ${WORLD_90TH:.2f}",
+    annotation_position="top right",
+)
+
+# Add 99th percentile
+fig.add_hline(
+    y=WORLD_99TH,
+    line_dash="dot",
+    line_color="red",
+    annotation_text=f"World 99th percentile: ${WORLD_99TH:.2f}",
+    annotation_position="top right",
+)
+
+# Add mean
+fig.add_hline(
+    y=WORLD_MEAN,
+    line_dash="dot",
+    line_color="red",
+    annotation_text=f"World mean: ${WORLD_MEAN:.2f}",
+    annotation_position="top right",
+)
+
+# Add US median
+fig.add_hline(
+    y=US_MEDIAN,
+    line_dash="dot",
+    line_color="red",
+    annotation_text=f"US median: ${US_MEDIAN:.2f}",
+    annotation_position="top right",
+)
+
+
+# Add a vertical line to say "50% of the world population lives with less than ${WORLD_MEDIAN} per day"
+fig.add_shape(
+    type="line",
+    x0=50,
+    x1=50,
+    y0=0,
+    y1=1,
+    yref="paper",
+    line=dict(dash="dot", color="red"),
+)
+fig.add_annotation(
+    x=50,
+    y=0.5,
+    yref="paper",
+    text=f"50% of the world population lives with less than<br><b>${WORLD_MEDIAN:.2f} per day</b>",
+    showarrow=False,
+    xanchor="left",
+    align="left",
 )
 
 fig.show()
