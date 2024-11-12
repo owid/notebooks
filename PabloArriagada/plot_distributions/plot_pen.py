@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 PARENT_DIR = Path(__file__).parent.absolute()
 
@@ -77,6 +78,43 @@ US_MEDIAN = df_percentiles.loc[
     "thr",
 ].values[0]
 
+# Create dataframes to plot subareas of the world, depending on the percentile
+df_percentiles_world_below_median = (
+    df_percentiles_world[df_percentiles_world["percentile"] <= 50]
+    .copy()
+    .reset_index(drop=True)
+)
+
+df_percentiles_world_below_mean = (
+    df_percentiles_world[df_percentiles_world["thr"] <= WORLD_MEAN]
+    .copy()
+    .reset_index(drop=True)
+)
+
+df_percentiles_world_below_90th = (
+    df_percentiles_world[df_percentiles_world["percentile"] <= 90]
+    .copy()
+    .reset_index(drop=True)
+)
+
+df_percentiles_world_below_99th = (
+    df_percentiles_world[df_percentiles_world["percentile"] <= 99]
+    .copy()
+    .reset_index(drop=True)
+)
+
+df_percentiles_world_below_us_median = (
+    df_percentiles_world[df_percentiles_world["thr"] <= US_MEDIAN]
+    .copy()
+    .reset_index(drop=True)
+)
+
+df_percentiles_world_below_ipl = (
+    df_percentiles_world[df_percentiles_world["thr"] <= INTERNATIONAL_POVERTY_LINE]
+    .copy()
+    .reset_index(drop=True)
+)
+
 
 # Plot a line chart with  the columns percentile vs thr in plotly express
 fig = px.area(
@@ -88,7 +126,7 @@ fig = px.area(
     log_y=False,
 )
 fig.update_layout(
-    xaxis=dict(ticksuffix="%"),
+    xaxis=dict(ticksuffix="%", range=[0, 100]),
     yaxis=dict(
         side="right",
         title="Daily income or consumption",
@@ -96,6 +134,18 @@ fig.update_layout(
         ticksuffix=" a day",
     ),
 )
+
+
+fig.add_trace(
+    go.Scatter(
+        x=df_percentiles_world_below_median["percentile"],
+        y=df_percentiles_world_below_median["thr"],
+        fill="tozeroy",
+        mode="none",
+        name="Below Median",
+    )
+)
+
 
 # Add a horizontal line for the IPL
 fig.add_hline(
@@ -105,6 +155,8 @@ fig.add_hline(
     line_width=LINE_WIDTH,
     annotation_text=f"International Poverty Line: ${INTERNATIONAL_POVERTY_LINE}",
     annotation_position="top right",
+    x0=1,
+    x1=0.09,
 )
 
 # Add median
@@ -115,6 +167,8 @@ fig.add_hline(
     line_width=LINE_WIDTH,
     annotation_text=f"World median: ${WORLD_MEDIAN:.2f}",
     annotation_position="top right",
+    x0=1,
+    x1=0.5,
 )
 
 # Add 90th percentile
@@ -125,6 +179,19 @@ fig.add_hline(
     line_width=LINE_WIDTH,
     annotation_text=f"World 90th percentile: ${WORLD_90TH:.2f}",
     annotation_position="top right",
+    x0=1,
+    x1=0.9,
+)
+
+# Add vertical line for the 90th percentile
+fig.add_shape(
+    type="line",
+    x0=90,
+    x1=90,
+    y0=0,
+    y1=WORLD_90TH,
+    yref="y",
+    line=dict(dash=LINE_DASH, color="red", width=LINE_WIDTH),
 )
 
 # Add 99th percentile
@@ -135,6 +202,19 @@ fig.add_hline(
     line_width=LINE_WIDTH,
     annotation_text=f"World 99th percentile: ${WORLD_99TH:.2f}",
     annotation_position="top right",
+    x0=1,
+    x1=0.99,
+)
+
+# Add vertical line for the 99th percentile
+fig.add_shape(
+    type="line",
+    x0=99,
+    x1=99,
+    y0=0,
+    y1=WORLD_99TH,
+    yref="y",
+    line=dict(dash=LINE_DASH, color="red", width=LINE_WIDTH),
 )
 
 # Add mean
@@ -145,6 +225,19 @@ fig.add_hline(
     line_width=LINE_WIDTH,
     annotation_text=f"World mean: ${WORLD_MEAN:.2f}",
     annotation_position="top right",
+    x0=1,
+    x1=0.75,
+)
+
+# Add vertical line for the mean
+fig.add_shape(
+    type="line",
+    x0=75,
+    x1=75,
+    y0=0,
+    y1=WORLD_MEAN,
+    yref="y",
+    line=dict(dash=LINE_DASH, color="red", width=LINE_WIDTH),
 )
 
 # Add US median
@@ -155,6 +248,19 @@ fig.add_hline(
     line_width=LINE_WIDTH,
     annotation_text=f"US median: ${US_MEDIAN:.2f}",
     annotation_position="top right",
+    x0=1,
+    x1=0.9325,
+)
+
+# Add vertical line for the US median
+fig.add_shape(
+    type="line",
+    x0=93.25,
+    x1=93.25,
+    y0=0,
+    y1=US_MEDIAN,
+    yref="y",
+    line=dict(dash=LINE_DASH, color="red", width=LINE_WIDTH),
 )
 
 
