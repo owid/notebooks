@@ -5,14 +5,10 @@ bioweapons_status_current,"Current country position towards bioweapons (OWID bas
 bioweapons_status_current_num,Current country position towards bioweapons (numerical)
 bioweapons_status_hist,"Past country position towards bioweapons (OWID based on ACA, NTI, and CNS)"
 bioweapons_status_hist_num,Past country position towards bioweapons (numerical)
-bioweapons_convention,Position on Biological Weapons Convention (United Nations)
-bioweapons_convention_num,Position on Biological Weapons Convention (numerical)
 chemweapons_status_current,"Current country pos. towards chemical weapons (OWID based on ACA, NTI, and CNS)"
 chemweapons_status_current_num,Current country position towards chemical weapons (numerical)
 chemweapons_status_hist,"Past country position towards chemical weapons (OWID based on ACA, NTI, and CNS)"
 chemweapons_status_hist_num,Past country position towards chemical weapons (numerical)
-chemweapons_convention,chemweapons_convention
-chemweapons_convention_num,Position on Chemical Weapons Convention (numerical)
 num_bioweapons_curr_neither,Number of countries neither pursuing nor possessing bioweapons
 num_bioweapons_curr_allepur,Number of countries allegedly pursuing bioweapons
 num_bioweapons_hist_neither,Number of countries that neither pursued nor possessed bioweapons
