@@ -6,7 +6,7 @@ The dataset is from Hutchings et al. (2019), please cite it as the reference for
 
 The folder contains two scripts:
 
-1. The Golden Age of Antibiotics (which shows a timeline when each antibiotic drug class was first available for clinical use)
-2. Antibiotics: time from discovery to innovation (which shows a timeline of the time between discovery and availability for clinical use)
+1. The Golden Age of Antibiotics - which shows a timeline when each antibiotic drug class was first available for clinical use - under `antibiotic-drug-timeline.R`
+2. Antibiotics: time from discovery to innovation - which shows a timeline of the time between discovery and availability for clinical use - under `antibiotic-drug-discovery-to-development.R`
 
 The output plots are also included in the folder.
