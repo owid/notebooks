@@ -11,10 +11,10 @@ font_import(pattern = "Lato")
 loadfonts(device = "mac") # use "win" for Windows, "mac" for macOS
 
 # Import spreadsheet
-file_path <- ""
+file_path <- "/Users/saloni/Documents/OWID/Posts and articles/Mental health/Psychosis/"
 
 ap_drugs <- read_excel(paste0(file_path, "Psychosis medications historical dataset.xlsx"),
-                       sheet=1,
+                       sheet=2,
                        col_types=c("text", "text", "text", 
                                    "numeric", "numeric", 
                                    "text", "text"))
@@ -40,7 +40,8 @@ ap_drugs <- as_tibble(ap_drugs)
 # Select colors
 group.colors <- c("First-generation" = "#38AABA", 
                    "Second-generation" = "#BC8E5A", 
-                   "Third-generation" ="#970046")
+                   "Third-generation" ="#970046",
+                  "Muscarinic receptor agonist" = "#18470F")
 
 ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US, 
                           y=id, 
