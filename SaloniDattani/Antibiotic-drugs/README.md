@@ -1,4 +1,4 @@
-This folder contains a dataset and script to generate two timelines of antibiotic drug development, using data from [Hutchings, Truman and Wilkinson (2019). Antibiotics: Past, present and future](https://www.sciencedirect.com/science/article/pii/S1369527419300190).
+This folder contains a dataset and script to generate two timelines of antibiotic drug development.
 
 The dataset is from Hutchings et al. (2019), please cite it as the reference for the dataset:
 
