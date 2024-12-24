@@ -1,7 +1,7 @@
 *****  Stata do-file to create the biological-chemical-weapons-proliferation data used in several charts on Our World in Data (OWID)'s biological-and-chemical-weapons page:
 *****  
 *****  Author: Bastian Herre
-*****  September 14, 2022
+*****  November 14, 2024
 
 
 version 14
@@ -19,12 +19,6 @@ cd "/Users/bastianherre/Dropbox/Data/biological_chemical_weapons/OWID based on A
 ** Import data:
 import excel "biological_chemical_weapons_proliferation_raw.xlsx", firstrow
 
-
-** Refine variables of interest:
-replace bioweapons_convention = "neither signed nor ratified" if bioweapons_convention == "neither ratified nor signed"
-replace chemweapons_convention = "neither signed nor ratified" if chemweapons_convention == "neither ratified nor signed"
-
-
 ** Generate numerical variables of interest:
 tab bioweapons_status_current
 generate bioweapons_status_current_num = 0 if bioweapons_status_current == "neither pursues nor possesses"
@@ -37,11 +31,6 @@ replace bioweapons_status_hist_num = 2 if bioweapons_status_hist == "pursued"
 replace bioweapons_status_hist_num = 3 if bioweapons_status_hist == "allegedly possessed"
 replace bioweapons_status_hist_num = 4 if bioweapons_status_hist == "possessed"
 replace bioweapons_status_hist_num = 5 if bioweapons_status_hist == "used"
-
-tab bioweapons_convention
-generate bioweapons_convention_num = 0 if bioweapons_convention == "neither signed nor ratified"
-replace bioweapons_convention_num = 1 if bioweapons_convention == "signed"
-replace bioweapons_convention_num = 2 if bioweapons_convention == "ratified"
 
 tab chemweapons_status_current
 generate chemweapons_status_current_num = 0 if chemweapons_status_current == "neither pursues nor possesses"
@@ -57,12 +46,6 @@ replace chemweapons_status_hist_num = 2 if chemweapons_status_hist == "allegedly
 replace chemweapons_status_hist_num = 3 if chemweapons_status_hist == "possessed"
 replace chemweapons_status_hist_num = 4 if chemweapons_status_hist == "allegedly used"
 replace chemweapons_status_hist_num = 5 if chemweapons_status_hist == "used"
-
-tab chemweapons_convention
-generate chemweapons_convention_num = 0 if chemweapons_convention == "neither signed nor ratified"
-replace chemweapons_convention_num = 1 if chemweapons_convention == "signed"
-replace chemweapons_convention_num = 2 if chemweapons_convention == "ratified"
-
 
 ** Create world aggregates:
 
@@ -127,15 +110,10 @@ label variable bioweapons_status_current "Current country position towards biowe
 label variable bioweapons_status_current_num "Current country position towards bioweapons (numerical)"
 label variable bioweapons_status_hist "Past country position towards bioweapons (OWID based on ACA, NTI, and CNS)"
 label variable bioweapons_status_hist_num "Past country position towards bioweapons (numerical)"
-label variable bioweapons_convention "Position on Biological Weapons Convention (United Nations)"
-label variable bioweapons_convention_num "Position on Biological Weapons Convention (numerical)"
 label variable chemweapons_status_current "Current country pos. towards chemical weapons (OWID based on ACA, NTI, and CNS)"
 label variable chemweapons_status_current_num "Current country position towards chemical weapons (numerical)"
 label variable chemweapons_status_hist "Past country position towards chemical weapons (OWID based on ACA, NTI, and CNS)"
 label variable chemweapons_status_hist_num "Past country position towards chemical weapons (numerical)"
-label variable chemweapons_convention_num "Position on Chemical Weapons Convention (United Nations)"
-label variable chemweapons_convention_num "Position on Chemical Weapons Convention (numerical)"
-
 
 label variable num_bioweapons_curr_neither "Number of countries neither pursuing nor possessing bioweapons"
 label variable num_bioweapons_curr_allepur "Number of countries allegedly pursuing bioweapons"
@@ -159,7 +137,7 @@ label variable num_chemweapons_hist_use "Number of countries that used chemical 
 
 
 ** Order variables:
-order country_name year bioweapons_status_current bioweapons_status_current_num bioweapons_status_hist bioweapons_status_hist_num bioweapons_convention bioweapons_convention_num chemweapons_status_current chemweapons_status_current_num chemweapons_status_hist chemweapons_status_hist_num chemweapons_convention chemweapons_convention_num
+order country_name year bioweapons_status_current bioweapons_status_current_num bioweapons_status_hist bioweapons_status_hist_num chemweapons_status_current chemweapons_status_current_num chemweapons_status_hist chemweapons_status_hist_num
 
 
 ** Export data:

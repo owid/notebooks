@@ -11,26 +11,26 @@ font_import(pattern = "Lato")
 loadfonts(device = "mac") # use "win" for Windows, "mac" for macOS
 
 # Import spreadsheet
-file_path <- "/Users/saloni/Documents/OWID/Posts and articles/Mental health/Psychosis/"
+file_path <- ""
 
 ap_drugs <- read_excel(paste0(file_path, "Psychosis medications historical dataset.xlsx"),
                        sheet=2,
-                       col_types=c("text", "text", "text", 
-                                   "numeric", "numeric", 
+                       col_types=c("text", "text", "text",
+                                   "numeric", "numeric",
                                    "text", "text"))
 
 # Remove drugs not approved in the US
-ap_drugs <- ap_drugs %>% 
+ap_drugs <- ap_drugs %>%
               filter(!is.na(Year_first_used_approved_US)) %>%
-  # Shorten names            
-              mutate(Treatment_class = str_replace_all(Treatment_class, 
+  # Shorten names
+              mutate(Treatment_class = str_replace_all(Treatment_class,
                                            c("First-generation antipsychotic" = "First-generation",
                                              "Second-generation antipsychotic" = "Second-generation",
                                              "Third-generation antipsychotic" = "Third-generation")))
 
 # Arrange by year
 ap_drugs <- ap_drugs %>%
-  arrange(Year_first_used_approved_US) 
+  arrange(Year_first_used_approved_US)
 
 # Give drugs an ID number to put them in order
 setDT(ap_drugs)[, id := .GRP, by = Treatment_name]
@@ -38,20 +38,20 @@ setDT(ap_drugs)[, id := .GRP, by = Treatment_name]
 ap_drugs <- as_tibble(ap_drugs)
 
 # Select colors
-group.colors <- c("First-generation" = "#38AABA", 
-                   "Second-generation" = "#BC8E5A", 
+group.colors <- c("First-generation" = "#38AABA",
+                   "Second-generation" = "#BC8E5A",
                    "Third-generation" ="#970046",
                   "Muscarinic receptor agonist" = "#18470F")
 
-ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US, 
-                          y=id, 
+ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US,
+                          y=id,
                           label=Treatment_name)) +
   geom_point(aes(fill=Treatment_class), color="black", size=2.5, pch=21, stroke=0.8) +
   # Show names
-  geom_text(hjust=1, nudge_x=-2.5, size=3.5, family="Lato") + 
+  geom_text(hjust=1, nudge_x=-2.5, size=3.5, family="Lato") +
   theme_classic() +
   scale_fill_manual(values=group.colors) +
-  scale_x_continuous(breaks= seq(1940,2020,by=10), 
+  scale_x_continuous(breaks= seq(1940,2020,by=10),
                      labels = seq(1940,2020,by=10)) +
   theme(text = element_text(family = "Lato"), # Set Lato for all text elements
         axis.text.y=element_blank(),
@@ -73,5 +73,3 @@ ggplot(data=ap_drugs, aes(x=Year_first_used_approved_US,
 
 
 ggsave(paste0(file_path, "antipsychotics_timeline.svg"),height=8,width=10)
-
-

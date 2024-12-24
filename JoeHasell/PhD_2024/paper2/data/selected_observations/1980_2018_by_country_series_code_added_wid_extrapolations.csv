@@ -1,0 +1,305 @@
+key,country,series_code,indicator_name,year_1980,value_1980,year_2018,value_2018,pipwelfare_1980,pipwelfare_2018,pipreportinglevel_1980,pipreportinglevel_2018,region,population_1980,population_2018
+wid_not_extrapolated,Australia,gini_pip_disposable_perCapita,gini,1981,31.32578659057617,2018,34.333763122558594,income,income,national,national,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,gini_pip_disposable_perCapita,gini,1983,25.876489639282227,2016,32.38527297973633,consumption,consumption,national,national,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,gini_pip_disposable_perCapita,gini,1985,25.2038516998291,2018,27.214414596557617,income,income,national,national,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,gini_pip_disposable_perCapita,gini,1985,54.21210479736328,2015,53.32502746582031,consumption,consumption,national,national,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,gini_pip_disposable_perCapita,gini,1979,33.47417068481445,2018,32.50926971435547,income,income,national,national,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,gini_pip_disposable_perCapita,gini,1981,28.16409683227539,2018,38.49764251708984,income,consumption,national,national,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,gini_pip_disposable_perCapita,gini,1985,45.52626800537109,2018,37.16887664794922,consumption,consumption,national,national,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,gini_pip_disposable_perCapita,gini,1981,32.424957275390625,2015,34.993125915527344,consumption,consumption,rural,national,SS Africa,34945472,111129440
+wid_not_extrapolated,France,gini_pip_disposable_perCapita,gini,1979,34.04261779785156,2018,32.38068771362305,income,income,national,national,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,gini_pip_disposable_perCapita,gini,1977,33.21363067626953,2018,34.54484176635742,consumption,consumption,national,national,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,gini_pip_disposable_perCapita,gini,1984,33.45597839355469,2018,38.410377502441406,consumption,consumption,national,national,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,gini_pip_disposable_perCapita,gini,1979,36.32997512817383,2018,38.57717514038086,income,income,national,national,MENA,3744612,8456487
+wid_not_extrapolated,Italy,gini_pip_disposable_perCapita,gini,1980,32.89926528930664,2018,35.22257232666016,income,income,national,national,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,gini_pip_disposable_perCapita,gini,1985,26.294357299804688,2018,35.36809539794922,income,income,national,national,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,gini_pip_disposable_perCapita,gini,1984,48.624813079833984,2018,41.17677688598633,income,income,national,national,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,gini_pip_disposable_perCapita,gini,1984,39.1866340637207,2013,39.54850769042969,consumption,consumption,national,national,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,gini_pip_disposable_perCapita,gini,1983,28.36605262756348,2018,28.12108039855957,income,income,national,national,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,gini_pip_disposable_perCapita,gini,1985,38.67784881591797,2018,35.127742767333984,consumption,consumption,national,national,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,gini_pip_disposable_perCapita,gini,1979,26.894760131835938,2018,27.560863494873047,income,income,national,national,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,gini_pip_disposable_perCapita,gini,1985,41.03743362426758,2018,37.81170654296875,consumption,consumption,national,national,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,gini_pip_disposable_perCapita,gini,1985,25.16496467590332,2020,28.462860107421875,income,income,national,national,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,gini_pip_disposable_perCapita,gini,1984,28.89859390258789,2016,43.71004867553711,consumption,consumption,rural,national,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,gini_pip_disposable_perCapita,gini,1980,34.48354721069336,2018,34.71894836425781,income,income,national,national,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,gini_pip_disposable_perCapita,gini,1985,32.46785354614258,2019,37.66377639770508,consumption,consumption,national,national,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,gini_pip_disposable_perCapita,gini,1981,22.92357444763184,2018,29.97418975830078,income,income,national,national,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,gini_pip_disposable_perCapita,gini,1982,36.00737380981445,2018,33.141048431396484,income,income,national,national,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,gini_pip_disposable_perCapita,gini,1981,45.21682357788086,2018,36.41217422485352,consumption,consumption,national,national,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,gini_pip_disposable_perCapita,gini,1985,43.43376922607422,2021,33.716426849365234,consumption,consumption,national,national,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,gini_pip_disposable_perCapita,gini,1980,28.47789192199707,2018,33.69105911254883,income,income,national,national,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,gini_pip_disposable_perCapita,gini,1980,34.71839904785156,2018,41.40784454345703,income,income,national,national,W. Eur and Offshoots,223140016,332140032
+wid_not_extrapolated,Australia,gini_wid_pretaxNational_perAdult,gini,1980,42.0028076171875,2018,47.9780502319336,,,,,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,gini_wid_pretaxNational_perAdult,gini,1983,47.31695556640625,2016,52.98373794555664,,,,,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,gini_wid_pretaxNational_perAdult,gini,1985,42.94441986083984,2017,43.43203353881836,,,,,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,gini_wid_pretaxNational_perAdult,gini,1985,70.46368408203125,2015,70.0338363647461,,,,,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,gini_wid_pretaxNational_perAdult,gini,1980,42.03586959838867,2018,48.4473991394043,,,,,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,gini_wid_pretaxNational_perAdult,gini,1980,38.2153205871582,2016,55.37135696411133,,,,,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,gini_wid_pretaxNational_perAdult,gini,1985,64.23485565185547,2015,60.120697021484375,,,,,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,gini_wid_pretaxNational_perAdult,gini,1981,54.69196319580078,2015,55.43134307861328,,,,,SS Africa,34945472,111129440
+wid_not_extrapolated,France,gini_wid_pretaxNational_perAdult,gini,1980,42.92876052856445,2018,45.759124755859375,,,,,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,gini_wid_pretaxNational_perAdult,gini,1980,44.04766845703125,2022,63.36181640625,,,,,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,gini_wid_pretaxNational_perAdult,gini,1985,54.141849517822266,2017,54.46759033203125,,,,,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,gini_wid_pretaxNational_perAdult,gini,1979,59.34280776977539,2016,59.36489868164063,,,,,MENA,3744612,8456487
+wid_not_extrapolated,Italy,gini_wid_pretaxNational_perAdult,gini,1981,41.9456901550293,2022,53.10180282592773,,,,,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,gini_wid_pretaxNational_perAdult,gini,1985,44.18270111083984,2017,48.59314727783203,,,,,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,gini_wid_pretaxNational_perAdult,gini,1984,58.86042785644531,2015,51.78910446166992,,,,,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,gini_wid_pretaxNational_perAdult,gini,1984,59.173709869384766,2022,59.59965515136719,,,,,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,gini_wid_pretaxNational_perAdult,gini,1980,38.767181396484375,2017,43.29148483276367,,,,,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,gini_wid_pretaxNational_perAdult,gini,1985,56.997650146484375,2018,54.51491928100586,,,,,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,gini_wid_pretaxNational_perAdult,gini,1980,37.7142333984375,2017,40.60421752929688,,,,,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,gini_wid_pretaxNational_perAdult,gini,1985,60.39862823486328,2018,57.17208862304688,,,,,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,gini_wid_pretaxNational_perAdult,gini,1980,31.129980087280277,2018,48.02539443969727,,,,,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,gini_wid_pretaxNational_perAdult,gini,1984,50.760929107666016,2016,63.60808563232422,,,,,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,gini_wid_pretaxNational_perAdult,gini,1981,44.03211212158203,2017,45.11774826049805,,,,,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,gini_wid_pretaxNational_perAdult,gini,1985,53.3953742980957,2016,59.11437225341797,,,,,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,gini_wid_pretaxNational_perAdult,gini,1980,31.532901763916016,2017,39.8301010131836,,,,,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,gini_wid_pretaxNational_perAdult,gini,1980,40.73771286010742,2017,41.95077896118164,,,,,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,gini_wid_pretaxNational_perAdult,gini,1981,66.87994384765625,2018,62.33319091796875,,,,,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,gini_wid_pretaxNational_perAdult,gini,1985,62.40671920776367,2015,52.75900268554688,,,,,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,gini_wid_pretaxNational_perAdult,gini,1981,40.80052185058594,2017,46.81171417236328,,,,,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,gini_wid_pretaxNational_perAdult,gini,1980,45.39571380615234,2018,58.364383697509766,,,,,W. Eur and Offshoots,223140016,332140032
+wid_not_extrapolated,Australia,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,10.478995323181152,2018,11.742362022399902,income,income,national,national,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1983,5.721747875213623,2016,6.145714282989502,consumption,consumption,national,national,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,5.977400302886963,2018,9.6382417678833,income,income,national,national,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,23.263761520385746,2015,19.667179107666016,consumption,consumption,national,national,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1979,13.497154235839844,2018,12.249933242797852,income,income,national,national,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,8.276514053344727,2018,14.673508644104004,income,consumption,national,national,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,17.382354736328125,2018,11.87974452972412,consumption,consumption,national,national,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,6.234340667724609,2015,12.365949630737305,consumption,consumption,rural,national,SS Africa,34945472,111129440
+wid_not_extrapolated,France,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1979,11.246700286865234,2018,10.034907341003418,income,income,national,national,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1977,7.143517017364502,2018,6.75021505355835,consumption,consumption,national,national,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1984,8.429513931274414,2018,12.357150077819824,consumption,consumption,national,national,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1979,15.195395469665527,2018,20.49445152282715,income,income,national,national,MENA,3744612,8456487
+wid_not_extrapolated,Italy,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1980,10.489429473876951,2018,15.232851028442385,income,income,national,national,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,6.742944717407227,2018,14.313420295715332,income,income,national,national,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1984,19.92789077758789,2018,17.02021598815918,income,income,national,national,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1984,14.076640129089355,2013,11.682022094726562,consumption,consumption,national,national,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1983,6.230123996734619,2018,8.0935697555542,income,income,national,national,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,17.93971061706543,2018,13.318072319030762,consumption,consumption,national,national,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1979,5.737981796264648,2018,8.042963981628418,income,income,national,national,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,14.850781440734863,2018,11.214404106140137,consumption,consumption,national,national,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,5.807180404663086,2020,9.17794418334961,income,income,national,national,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1984,3.427285432815552,2016,12.571409225463867,consumption,consumption,rural,national,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1980,13.24915885925293,2018,15.71409511566162,income,income,national,national,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,8.748486518859863,2019,9.497572898864746,consumption,consumption,national,national,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,6.499270915985107,2018,10.766722679138184,income,income,national,national,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1982,9.234430313110352,2018,11.249615669250488,income,income,national,national,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,18.26806640625,2018,11.317448616027832,consumption,consumption,national,national,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,17.120834350585938,2021,10.819109916687012,consumption,consumption,national,national,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1980,6.982577800750732,2018,12.24964427947998,income,income,national,national,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1980,15.996977806091309,2018,18.248611450195312,income,income,national,national,W. Eur and Offshoots,223140016,332140032
+wid_not_extrapolated,Australia,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,29.0,2018,28.0,,,,,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1983,18.0,2016,18.0,,,,,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,18.0,2017,18.0,,,,,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,33.0,2015,27.000001907348636,,,,,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,21.0,2018,26.0,,,,,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,15.000000953674316,2016,30.000001907348636,,,,,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,20.0,2015,24.0,,,,,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1981,18.0,2015,20.0,,,,,SS Africa,34945472,111129440
+wid_not_extrapolated,France,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,19.0,2018,20.0,,,,,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,17.0,2022,18.0,,,,,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,20.0,2017,21.0,,,,,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1979,21.0,2016,24.0,,,,,MENA,3744612,8456487
+wid_not_extrapolated,Italy,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1981,24.0,2022,26.0,,,,,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,17.0,2017,20.0,,,,,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1984,22.0,2015,19.0,,,,,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1984,20.0,2022,20.0,,,,,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,21.0,2017,19.0,,,,,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,25.0,2018,22.0,,,,,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,17.0,2017,17.0,,,,,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,21.0,2018,20.0,,,,,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,16.0,2018,19.0,,,,,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1984,18.0,2016,21.0,,,,,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1981,14.0,2017,18.0,,,,,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,19.0,2016,19.0,,,,,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,16.0,2017,18.0,,,,,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,16.0,2017,18.0,,,,,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1981,27.000001907348636,2018,30.000001907348636,,,,,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1985,25.0,2015,20.0,,,,,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1981,19.0,2017,18.0,,,,,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,24.0,2018,28.0,,,,,W. Eur and Offshoots,223140016,332140032
+wid_not_extrapolated,Australia,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,23.3016357421875,2018,26.61338996887207,income,income,national,national,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,p90p100Share_pip_disposable_perCapita,p90p100Share,1983,21.865631103515625,2016,26.835071563720703,consumption,consumption,national,national,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,20.6418399810791,2018,22.24361801147461,income,income,national,national,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,42.93087005615234,2015,41.47603225708008,consumption,consumption,national,national,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,p90p100Share_pip_disposable_perCapita,p90p100Share,1979,24.42832946777344,2018,24.787044525146484,income,income,national,national,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,21.73497009277344,2018,29.43410873413086,income,consumption,national,national,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,35.60782623291016,2018,28.983417510986328,consumption,consumption,national,national,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,27.516511917114254,2015,28.464752197265625,consumption,consumption,rural,national,SS Africa,34945472,111129440
+wid_not_extrapolated,France,p90p100Share_pip_disposable_perCapita,p90p100Share,1979,26.597400665283203,2018,26.69635772705078,income,income,national,national,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,p90p100Share_pip_disposable_perCapita,p90p100Share,1977,27.417200088500977,2018,28.37216567993164,consumption,consumption,national,national,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,p90p100Share_pip_disposable_perCapita,p90p100Share,1984,26.97024726867676,2018,29.91118049621582,consumption,consumption,national,national,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,p90p100Share_pip_disposable_perCapita,p90p100Share,1979,26.907211303710938,2018,27.62486267089844,income,income,national,national,MENA,3744612,8456487
+wid_not_extrapolated,Italy,p90p100Share_pip_disposable_perCapita,p90p100Share,1980,25.367021560668945,2018,25.92391014099121,income,income,national,national,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,21.539119720458984,2018,26.627275466918945,income,income,national,national,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,p90p100Share_pip_disposable_perCapita,p90p100Share,1984,38.45030212402344,2018,31.192773818969727,income,income,national,national,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,p90p100Share_pip_disposable_perCapita,p90p100Share,1984,31.84375762939453,2013,31.885164260864254,consumption,consumption,national,national,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,p90p100Share_pip_disposable_perCapita,p90p100Share,1983,22.61043930053711,2018,22.972570419311523,income,income,national,national,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,28.206932067871094,2018,26.743194580078125,consumption,consumption,national,national,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,p90p100Share_pip_disposable_perCapita,p90p100Share,1979,21.84733772277832,2018,22.2056827545166,income,income,national,national,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,32.7348518371582,2018,29.81129264831543,consumption,consumption,national,national,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,20.864858627319336,2020,22.759654998779297,income,income,national,national,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,p90p100Share_pip_disposable_perCapita,p90p100Share,1984,24.584617614746094,2016,35.63444519042969,consumption,consumption,rural,national,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,p90p100Share_pip_disposable_perCapita,p90p100Share,1980,26.279216766357425,2018,25.3392276763916,income,income,national,national,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,26.41641998291016,2019,30.841503143310547,consumption,consumption,national,national,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,18.28803062438965,2018,22.909320831298828,income,income,national,national,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,p90p100Share_pip_disposable_perCapita,p90p100Share,1982,28.56106376647949,2018,25.78742218017578,income,income,national,national,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,35.507808685302734,2018,28.148820877075195,consumption,consumption,national,national,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,34.08427047729492,2021,26.984542846679688,consumption,consumption,national,national,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,p90p100Share_pip_disposable_perCapita,p90p100Share,1980,22.878076553344727,2018,25.82466506958008,income,income,national,national,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,p90p100Share_pip_disposable_perCapita,p90p100Share,1980,25.2495231628418,2018,30.7496280670166,income,income,national,national,W. Eur and Offshoots,223140016,332140032
+wid_not_extrapolated,Australia,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,24.850000381469727,2018,33.7599983215332,,,,,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1983,36.52000045776367,2016,42.38999938964844,,,,,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,31.200000762939453,2017,31.770000457763672,,,,,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,60.70000076293945,2015,59.2599983215332,,,,,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,30.030000686645508,2018,34.599998474121094,,,,,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,27.88999938964844,2016,41.80000305175781,,,,,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,54.65999984741211,2015,48.64999771118164,,,,,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1981,44.970001220703125,2015,45.470001220703125,,,,,SS Africa,34945472,111129440
+wid_not_extrapolated,France,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,31.270000457763672,2018,34.2599983215332,,,,,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,32.36000061035156,2022,57.1300048828125,,,,,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,42.25,2017,41.72999954223633,,,,,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1979,47.93000030517578,2016,47.79999923706055,,,,,MENA,3744612,8456487
+wid_not_extrapolated,Italy,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1981,27.32999992370605,2022,39.04999923706055,,,,,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,35.42000198364258,2017,36.81999969482422,,,,,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1984,47.47999954223633,2015,40.27000045776367,,,,,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1984,50.31999969482422,2022,49.43000030517578,,,,,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,28.270000457763672,2017,31.65999984741211,,,,,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,44.119998931884766,2018,42.71999740600586,,,,,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,27.299999237060547,2017,31.290000915527344,,,,,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,49.41999816894531,2018,45.400001525878906,,,,,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,22.71999931335449,2018,37.59999847412109,,,,,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1984,40.130001068115234,2016,53.93999862670898,,,,,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1981,36.09999847412109,2017,34.75,,,,,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,42.22999954223633,2016,48.97999954223633,,,,,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,23.479999542236328,2017,29.940000534057617,,,,,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,31.479999542236328,2017,31.400001525878903,,,,,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1981,55.970001220703125,2018,50.4800033569336,,,,,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1985,51.54999923706055,2015,41.37000274658203,,,,,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1981,28.479999542236328,2017,36.119998931884766,,,,,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,33.84000015258789,2018,45.80999755859375,,,,,W. Eur and Offshoots,223140016,332140032
+wid_not_extrapolated,Australia,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,3.61085510993817,2018,6.35645567193189,income,income,national,national,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,p99p100Share_pip_disposable_perCapita,p99p100Share,1983,3.81305074489204,2016,6.406799370837719,consumption,consumption,national,national,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,3.5021789294381898,2018,4.866594579833531,income,income,national,national,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,13.398807667559302,2015,12.2913846827006,consumption,consumption,national,national,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,p99p100Share_pip_disposable_perCapita,p99p100Share,1979,4.11865017145883,2018,4.80721117311242,income,income,national,national,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,3.93327574286864,2018,6.16338717814389,income,consumption,national,national,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,9.90953940594714,2018,5.87783775925491,consumption,consumption,national,national,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,6.26934362208135,2015,6.4449523183183794,consumption,consumption,national,national,SS Africa,34945472,111129440
+wid_not_extrapolated,France,p99p100Share_pip_disposable_perCapita,p99p100Share,1979,6.1400907833041005,2018,7.194184023314031,income,income,national,national,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,p99p100Share_pip_disposable_perCapita,p99p100Share,1977,7.13034500349494,2018,5.690303007271711,consumption,consumption,national,national,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,p99p100Share_pip_disposable_perCapita,p99p100Share,1984,5.90203935890087,2018,6.80859197098766,consumption,consumption,national,national,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,p99p100Share_pip_disposable_perCapita,p99p100Share,1979,6.37893063483796,2018,5.55583309412679,income,income,national,national,MENA,3744612,8456487
+wid_not_extrapolated,Italy,p99p100Share_pip_disposable_perCapita,p99p100Share,1980,6.379454909062609,2018,5.1366109754956,income,income,national,national,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,3.7376386523853498,2018,6.27200855240346,income,income,national,national,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,p99p100Share_pip_disposable_perCapita,p99p100Share,1984,12.1248607187452,2018,7.283327081873529,income,income,national,national,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,p99p100Share_pip_disposable_perCapita,p99p100Share,1984,10.7817427389404,2013,7.32185715783515,consumption,consumption,national,national,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,p99p100Share_pip_disposable_perCapita,p99p100Share,1983,4.003316772013,2018,4.87385249840586,income,income,national,national,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,4.29010921999973,2018,5.3117313339468,consumption,consumption,national,national,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,p99p100Share_pip_disposable_perCapita,p99p100Share,1979,3.69832178552293,2018,4.51854516055843,income,income,national,national,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,8.130488994353879,2018,8.60600547119623,consumption,income,national,national,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,3.0958025202272,2018,4.82391756883477,income,income,national,national,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,p99p100Share_pip_disposable_perCapita,p99p100Share,1984,4.5912208381047,2016,10.0526191132999,consumption,consumption,national,national,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,p99p100Share_pip_disposable_perCapita,p99p100Share,1980,5.50879476643976,2018,4.80404398594437,income,income,national,national,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,5.38794376407252,2019,7.773151134118669,consumption,consumption,national,national,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,2.55832385299901,2018,5.36803838744601,income,income,national,national,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,p99p100Share_pip_disposable_perCapita,p99p100Share,1982,8.12854712263463,2018,6.21166901482186,income,income,national,national,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,8.752504325722919,2018,5.594042488645759,consumption,consumption,national,national,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,9.09479592025972,2021,7.066894336600241,consumption,consumption,national,national,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,p99p100Share_pip_disposable_perCapita,p99p100Share,1980,4.1218327482054,2018,5.25463686444136,income,income,national,national,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,p99p100Share_pip_disposable_perCapita,p99p100Share,1980,4.60858365701268,2018,7.19488271020322,income,income,national,national,W. Eur and Offshoots,223140016,332140032
+wid_not_extrapolated,Australia,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,5.46999979019165,2018,9.670000076293944,,,,,W. Eur and Offshoots,14706329,24979228
+wid_not_extrapolated,Bangladesh,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1983,11.640000343322754,2016,16.150001525878906,,,,,S & SE Asia,83929768,163683952
+wid_not_extrapolated,Belgium,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,7.500000476837158,2017,8.4399995803833,,,,,W. Eur and Offshoots,9828989,11448598
+wid_not_extrapolated,Botswana,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,21.799999237060547,2015,22.739999771118164,,,,,SS Africa,938582,2451411
+wid_not_extrapolated,Canada,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,7.599999904632568,2018,10.529999732971191,,,,,W. Eur and Offshoots,24511512,37035260
+wid_not_extrapolated,China,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,6.570000171661377,2016,14.049999237060549,,,,,East Asia,982372480,1417069440
+wid_not_extrapolated,Cote d'Ivoire,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,21.030000686645508,2015,17.209999084472656,,,,,SS Africa,8303818,25493990
+wid_not_extrapolated,Ethiopia,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1981,14.90000057220459,2015,13.81999969482422,,,,,SS Africa,34945472,111129440
+wid_not_extrapolated,France,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,8.319999694824219,2018,11.710000038146973,,,,,W. Eur and Offshoots,53713836,64277812
+wid_not_extrapolated,India,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,7.5400004386901855,2022,21.729999542236328,,,,,S & SE Asia,696828352,1369003264
+wid_not_extrapolated,Indonesia,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,15.469999313354492,2017,15.530000686645508,,,,,S & SE Asia,148177104,267066848
+wid_not_extrapolated,Israel,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1979,17.350000381469727,2016,16.040000915527344,,,,,MENA,3744612,8456487
+wid_not_extrapolated,Italy,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1981,5.579999923706055,2022,13.550000190734863,,,,,W. Eur and Offshoots,56329480,59877432
+wid_not_extrapolated,Luxembourg,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,12.920000076293944,2017,13.460000038146973,,,,,W. Eur and Offshoots,363745,607920
+wid_not_extrapolated,Malaysia,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1984,20.1299991607666,2015,14.869999885559082,,,,,S & SE Asia,13215709,32399270
+wid_not_extrapolated,Morocco,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1984,15.520000457763672,2022,15.140000343322754,,,,,MENA,19678446,35927516
+wid_not_extrapolated,Netherlands,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,6.589999675750732,2017,8.649999618530273,,,,,W. Eur and Offshoots,14130383,17286042
+wid_not_extrapolated,Nigeria,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,12.020000457763672,2018,11.59000015258789,,,,,SS Africa,72951440,198387616
+wid_not_extrapolated,Norway,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,7.599999904632568,2017,10.230000495910645,,,,,W. Eur and Offshoots,4085778,5312321
+wid_not_extrapolated,Philippines,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,19.56999969482422,2018,16.619998931884766,,,,,S & SE Asia,48419544,108568832
+wid_not_extrapolated,Poland,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,4.390000343322754,2018,14.589999198913574,,,,,EE & CA,35521432,38521464
+wid_not_extrapolated,Rwanda,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1984,10.470000267028809,2016,19.88999938964844,,,,,SS Africa,5247537,12531810
+wid_not_extrapolated,Spain,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1981,11.460000038146973,2017,12.40999984741211,,,,,W. Eur and Offshoots,37491664,46792044
+wid_not_extrapolated,Sri Lanka,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,14.769999504089355,2016,20.46999931335449,,,,,S & SE Asia,14943644,21580712
+wid_not_extrapolated,Sweden,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,6.3600006103515625,2017,9.730000495910645,,,,,W. Eur and Offshoots,8311761,10162300
+wid_not_extrapolated,Switzerland,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,10.59000015258789,2017,10.3100004196167,,,,,W. Eur and Offshoots,6319116,8514431
+wid_not_extrapolated,Thailand,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1981,22.989999771118164,2018,17.350000381469727,,,,,S & SE Asia,45737756,71127808
+wid_not_extrapolated,Tunisia,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1985,18.07999992370605,2015,10.90999984741211,,,,,MENA,6578159,11933040
+wid_not_extrapolated,United Kingdom,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1981,6.78000020980835,2017,13.390000343322754,,,,,W. Eur and Offshoots,56326328,66432996
+wid_not_extrapolated,United States,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,10.420000076293944,2018,19.239999771118164,,,,,W. Eur and Offshoots,223140016,332140032
+wid_extrapolated,Argentina,gini_pip_disposable_perCapita,gini,1980,40.83086013793945,2018,41.72038269042969,income,income,urban,urban,LAC,28024808,44413592
+wid_extrapolated,Brazil,gini_pip_disposable_perCapita,gini,1981,57.930850982666016,2018,53.892372131347656,income,income,national,national,LAC,122288384,210166592
+wid_extrapolated,Colombia,gini_pip_disposable_perCapita,gini,1980,59.12672805786133,2018,50.418704986572266,income,income,urban,national,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,gini_pip_disposable_perCapita,gini,1981,47.4947624206543,2018,47.97240447998047,income,income,national,national,LAC,2414306,5040738
+wid_extrapolated,Mexico,gini_pip_disposable_perCapita,gini,1984,48.52701187133789,2018,45.95524215698242,income,income,national,national,LAC,67705184,124013864
+wid_extrapolated,Panama,gini_pip_disposable_perCapita,gini,1979,48.740142822265625,2018,49.21247482299805,income,income,national,national,LAC,1956989,4165258
+wid_extrapolated,Peru,gini_pip_disposable_perCapita,gini,1985,45.63498306274414,2018,42.36569213867188,consumption,income,national,national,LAC,17492406,32203946
+wid_extrapolated,Uruguay,gini_pip_disposable_perCapita,gini,1981,43.64543151855469,2018,39.68724060058594,income,income,urban,national,LAC,2953754,3427044
+wid_extrapolated,Argentina,gini_wid_pretaxNational_perAdult,gini,1980,64.20611572265625,2018,55.964111328125,,,,,LAC,28024808,44413592
+wid_extrapolated,Brazil,gini_wid_pretaxNational_perAdult,gini,1980,68.20763397216797,2018,68.0779800415039,,,,,LAC,122288384,210166592
+wid_extrapolated,Colombia,gini_wid_pretaxNational_perAdult,gini,1980,71.7738037109375,2018,69.56590270996094,,,,,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,gini_wid_pretaxNational_perAdult,gini,1980,66.0208969116211,2018,67.89044189453125,,,,,LAC,2414306,5040738
+wid_extrapolated,Mexico,gini_wid_pretaxNational_perAdult,gini,1980,69.78123474121094,2018,75.6332015991211,,,,,LAC,67705184,124013864
+wid_extrapolated,Panama,gini_wid_pretaxNational_perAdult,gini,1980,67.57266998291016,2018,65.07276916503906,,,,,LAC,1956989,4165258
+wid_extrapolated,Peru,gini_wid_pretaxNational_perAdult,gini,1980,68.1778335571289,2018,69.44293212890625,,,,,LAC,17492406,32203946
+wid_extrapolated,Uruguay,gini_wid_pretaxNational_perAdult,gini,1980,60.37610626220703,2018,54.998416900634766,,,,,LAC,2953754,3427044
+wid_extrapolated,Argentina,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1980,19.342071533203125,2018,20.074556350708008,income,income,urban,urban,LAC,28024808,44413592
+wid_extrapolated,Brazil,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,24.619773864746094,2018,23.561569213867188,income,income,national,national,LAC,122288384,210166592
+wid_extrapolated,Colombia,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1980,25.63963890075684,2018,20.434356689453125,income,income,urban,national,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,25.056161880493164,2018,19.29714775085449,income,income,national,national,LAC,2414306,5040738
+wid_extrapolated,Mexico,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1984,18.36092758178711,2018,16.032737731933594,income,income,national,national,LAC,67705184,124013864
+wid_extrapolated,Panama,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1979,23.70343017578125,2018,22.315235137939453,income,income,national,national,LAC,1956989,4165258
+wid_extrapolated,Peru,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1985,18.126697540283203,2018,19.28135681152344,consumption,income,national,national,LAC,17492406,32203946
+wid_extrapolated,Uruguay,headcountRatio50Median_pip_disposable_perCapita,headcountRatio50Median,1981,19.62744140625,2018,16.908246994018555,income,income,urban,national,LAC,2953754,3427044
+wid_extrapolated,Argentina,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,31.0,2018,23.0,,,,,LAC,28024808,44413592
+wid_extrapolated,Brazil,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,25.0,2018,28.0,,,,,LAC,122288384,210166592
+wid_extrapolated,Colombia,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,31.0,2018,29.0,,,,,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,30.000001907348636,2018,33.0,,,,,LAC,2414306,5040738
+wid_extrapolated,Mexico,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,32.0,2018,28.0,,,,,LAC,67705184,124013864
+wid_extrapolated,Panama,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,30.000001907348636,2018,29.0,,,,,LAC,1956989,4165258
+wid_extrapolated,Peru,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,33.0,2018,31.0,,,,,LAC,17492406,32203946
+wid_extrapolated,Uruguay,headcountRatio50Median_wid_pretaxNational_perAdult,headcountRatio50Median,1980,22.0,2018,21.0,,,,,LAC,2953754,3427044
+wid_extrapolated,Argentina,p90p100Share_pip_disposable_perCapita,p90p100Share,1980,30.175369262695312,2018,30.148590087890625,income,income,urban,urban,LAC,28024808,44413592
+wid_extrapolated,Brazil,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,45.88058090209961,2018,42.47370529174805,income,income,national,national,LAC,122288384,210166592
+wid_extrapolated,Colombia,p90p100Share_pip_disposable_perCapita,p90p100Share,1980,47.44688415527344,2018,39.66259765625,income,income,urban,national,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,33.73237991333008,2018,36.35345077514648,income,income,national,national,LAC,2414306,5040738
+wid_extrapolated,Mexico,p90p100Share_pip_disposable_perCapita,p90p100Share,1984,37.87241744995117,2018,36.6308822631836,income,income,national,national,LAC,67705184,124013864
+wid_extrapolated,Panama,p90p100Share_pip_disposable_perCapita,p90p100Share,1979,35.996524810791016,2018,37.10797882080078,income,income,national,national,LAC,1956989,4165258
+wid_extrapolated,Peru,p90p100Share_pip_disposable_perCapita,p90p100Share,1985,35.15504837036133,2018,31.60381317138672,consumption,income,national,national,LAC,17492406,32203946
+wid_extrapolated,Uruguay,p90p100Share_pip_disposable_perCapita,p90p100Share,1981,33.31595230102539,2018,29.67904281616211,income,income,urban,national,LAC,2953754,3427044
+wid_extrapolated,Argentina,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,49.57999801635742,2018,43.560001373291016,,,,,LAC,28024808,44413592
+wid_extrapolated,Brazil,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,58.09999847412109,2018,58.04999923706055,,,,,LAC,122288384,210166592
+wid_extrapolated,Colombia,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,60.77999877929688,2018,58.71000289916992,,,,,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,53.34000015258789,2018,54.25,,,,,LAC,2414306,5040738
+wid_extrapolated,Mexico,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,54.84000015258789,2018,66.05999755859375,,,,,LAC,67705184,124013864
+wid_extrapolated,Panama,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,54.959999084472656,2018,53.22999954223633,,,,,LAC,1956989,4165258
+wid_extrapolated,Peru,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,54.97999954223633,2018,58.71000289916992,,,,,LAC,17492406,32203946
+wid_extrapolated,Uruguay,p90p100Share_wid_pretaxNational_perAdult,p90p100Share,1980,49.73999786376953,2018,44.130001068115234,,,,,LAC,2953754,3427044
+wid_extrapolated,Argentina,p99p100Share_pip_disposable_perCapita,p99p100Share,1980,5.57315643321844,2018,6.02781964794283,income,income,national,national,LAC,28024808,44413592
+wid_extrapolated,Brazil,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,12.4765386899822,2018,11.6870837799254,income,income,national,national,LAC,122288384,210166592
+wid_extrapolated,Colombia,p99p100Share_pip_disposable_perCapita,p99p100Share,1980,11.402671996848,2018,11.0150914178721,income,income,national,national,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,6.01449684369295,2018,8.311191681470211,income,income,national,national,LAC,2414306,5040738
+wid_extrapolated,Mexico,p99p100Share_pip_disposable_perCapita,p99p100Share,1984,9.97697718710502,2018,10.8577517804299,income,income,national,national,LAC,67705184,124013864
+wid_extrapolated,Panama,p99p100Share_pip_disposable_perCapita,p99p100Share,1979,6.94025508256533,2018,9.532410144581627,income,income,national,national,LAC,1956989,4165258
+wid_extrapolated,Peru,p99p100Share_pip_disposable_perCapita,p99p100Share,1985,9.05546392456599,2018,6.898490910639719,consumption,income,national,national,LAC,17492406,32203946
+wid_extrapolated,Uruguay,p99p100Share_pip_disposable_perCapita,p99p100Share,1981,8.12068755802369,2018,6.210477514336779,income,income,national,national,LAC,2953754,3427044
+wid_extrapolated,Argentina,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,14.270000457763672,2018,12.170000076293944,,,,,LAC,28024808,44413592
+wid_extrapolated,Brazil,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,20.90999984741211,2018,20.670000076293945,,,,,LAC,122288384,210166592
+wid_extrapolated,Colombia,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,24.06999969482422,2018,19.040000915527344,,,,,LAC,26176206,49276968
+wid_extrapolated,Costa Rica,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,20.029998779296875,2018,20.57999992370605,,,,,LAC,2414306,5040738
+wid_extrapolated,Mexico,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,11.710000038146973,2018,29.6200008392334,,,,,LAC,67705184,124013864
+wid_extrapolated,Panama,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,18.93000030517578,2018,19.61999893188477,,,,,LAC,1956989,4165258
+wid_extrapolated,Peru,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,20.900001525878903,2018,22.939998626708984,,,,,LAC,17492406,32203946
+wid_extrapolated,Uruguay,p99p100Share_wid_pretaxNational_perAdult,p99p100Share,1980,17.229999542236328,2018,14.09000015258789,,,,,LAC,2953754,3427044

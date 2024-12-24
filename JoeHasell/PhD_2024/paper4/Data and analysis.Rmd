@@ -1,0 +1,27 @@
+---
+title: "Housing and the capital share of income – data and analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, include=FALSE}
+# Load data ----
+
+load("Manipulated data/OECD API output/GDP_PPP.Rda") # GDP at PPPs (OECD data)
+load("Manipulated data/KLEMS/GDP_PPP.Rda") # GDP at PPPs (OECD data)
+load("Manipulated data/OECD industry data - aggregate factor shares.Rda") # OECD aggregate factor shares (both gross and net)
+
+
+# merge with OECD GDP at PPPs data (to calculate weights later)
+
+```
+
+
+

@@ -12,7 +12,7 @@ def add_weights_and_calc_aggregates(df,ref_years,proportional_change_threshold):
     unweighted_avg = {}
     weighted_avg = {}
     total_pop = {}
-    abs_thresholds =[0.02,1,2]
+    abs_thresholds =[1,2]
 
     for y in ref_years:
         # Group by 'series_code' and calculate total population for each group
@@ -94,81 +94,197 @@ def add_weights_and_calc_aggregates(df,ref_years,proportional_change_threshold):
 
 
 
-#%%
-# replace india value
-def set_india_wid_gini_in_2018(df, new_value):
-
-    condition = (df['country']=="India") & (df['series_code']=="gini_wid_pretaxNational_perAdult")
-    df.loc[condition, 'value_2018'] = new_value
-
-    return df
 
 ######################################
-####### Run on different scenarios #######
-
-
+####### Run on different ref_years #######
 
 #%%
-output_short_main = pd.read_csv("data/selected_observations/short_period_all_obs.csv")
+ref_yrs = [1993, 2018]
 
+########## GLOBAL SUMMARY ON MAIN DATA ##############
+#%%
+selected_data = pd.read_csv(f'data/selected_observations/{ref_yrs[0]}_{ref_yrs[1]}_by_country_series_code.csv')
 
 # %%
 global_summary = add_weights_and_calc_aggregates(
-    output_short_main,
-    [1993, 2018],
+    selected_data,
+    ref_yrs,
     0.05
     )
 
+# %%
+# Save to csv
+global_summary.to_csv(f'data/summary_stats/{ref_yrs[0]}_{ref_yrs[1]}_summary_global.csv', index=False)
+
+
+
+
+########## REGIONAL SUMMARIES ON MAIN DATA ##############
+
+# %%
+
+regions = selected_data['region'].unique().tolist()
+region_summary_dict = {}
+# %%
+for reg in regions:
+
+    #Filter data for region
+    region_data = selected_data[selected_data['region'] == reg]
+
+    #Calculate summary stats
+    region_summary = add_weights_and_calc_aggregates(
+    region_data,
+    ref_yrs,
+    0.05
+    )
+
+    # Move the region column first
+    region_summary['region'] = reg
+    column_to_move = 'region'
+    cols = list(region_summary.columns)
+    cols.insert(0, cols.pop(cols.index(column_to_move)))
+    region_summary = region_summary[cols]
+
+
+    #Add to dictionary
+    region_summary_dict[reg] = region_summary
+
+# %%
+# append region summaries together into a single dataframe
+regional_summaries = pd.concat(region_summary_dict.values(), axis=0)
+
+# %%
+#Re-sort
+regional_summaries = regional_summaries.sort_values(by=['series_code','region'], ascending=[True, True])
+
+# Save to csv
+regional_summaries.to_csv(f'data/summary_stats/{ref_yrs[0]}_{ref_yrs[1]}_summary_by_region.csv', index=False)
+
+
+
+
+########## GLOBAL SUMMARY ON ALT COVERAGE DATA ##############
+#%%
+selected_data = pd.read_csv(f'data/selected_observations/{ref_yrs[0]}_{ref_yrs[1]}_by_country_series_code_added_wid_extrapolations.csv')
+
+# ALT 1 – including WID extroplated data
+# %%
+global_summary = add_weights_and_calc_aggregates(
+    selected_data,
+    ref_yrs,
+    0.05
+    )
 
 # %%
 # Save to csv
-global_summary.to_csv("data/summary_stats/short_period_all_obs.csv", index=False)
+global_summary.to_csv(f'data/summary_stats/{ref_yrs[0]}_{ref_yrs[1]}_summary_global_added_wid_extrapolations.csv', index=False)
+
+
+# ALT 2 – excluding WID extroplated data
+# (leaving only observations with matching PIP and non-extrap WID data)
+
+# Filter out WID extrapolations 
+# %%
+selected_data = selected_data[selected_data['key']=='wid_not_extrapolated']
+# %%
+global_summary = add_weights_and_calc_aggregates(
+    selected_data,
+    ref_yrs,
+    0.05
+    )
+
+# %%
+# Save to csv
+global_summary.to_csv(f'data/summary_stats/{ref_yrs[0]}_{ref_yrs[1]}_summary_global_added_only_original_matching.csv', index=False)
+
+
+
+
+
+###### Match shorter period and longer period observations and recalculate summary for shorter period
+# %%
+short_period = pd.read_csv(f'data/selected_observations/1993_2018_by_country_series_code.csv')
+long_period = pd.read_csv(f'data/selected_observations/1980_2018_by_country_series_code.csv')
 
 
 # %%
+merged_df = short_period.merge(long_period, on=['country', 'series_code'], how='inner', suffixes=('_short', '_long'))
+# %% Drop the '_long' period columns
+columns_to_drop = [col for col in merged_df.columns if col.endswith('_long')]
+merged_df = merged_df.drop(columns=columns_to_drop)
 
-def extract_avgs(summary_stats, series_code):
+# %% Remove '_short' from the end of remaining columns
+new_columns = {col: col[:-len('_short')] if col.endswith('_short') else col for col in merged_df.columns}
+merged_df.rename(columns=new_columns, inplace=True)
 
-    #Filter for the series of interest
-    series_data = summary_stats[summary_stats['series_code'] == series_code]
 
-    # Grab the two unweighted avg columns
-    avgs = series_data.filter(like='_avg')
+# %% Generate summary
+global_summary = add_weights_and_calc_aggregates(
+    merged_df,
+    [1993,2018],
+    0.05
+    )
+
+# %%
+# Save to csv
+global_summary.to_csv(f'data/summary_stats/1993_2018_summary_global_countries_from_long_period.csv', index=False)
+
+
+
+# %% OLDER CODE THAT IS NOT USED IN THE PIPELINE, BUT MIGHT BE HELPFUL IN THE FUTURE
+
+#%%
+# # replace india value
+# def set_india_wid_gini_in_2018(df, new_value):
+
+#     condition = (df['country']=="India") & (df['series_code']=="gini_wid_pretaxNational_perAdult")
+#     df.loc[condition, 'value_2018'] = new_value
+
+#     return df
+
+
+# def extract_avgs(summary_stats, series_code):
+
+#     #Filter for the series of interest
+#     series_data = summary_stats[summary_stats['series_code'] == series_code]
+
+#     # Grab the two unweighted avg columns
+#     avgs = series_data.filter(like='_avg')
 
     
-    return avgs
+#     return avgs
 
-# %%
-threshold = 0.05
-ref_years = [1993,2018]
+# # %%
+# threshold = 0.05
+# ref_years = [1993,2018]
 
-india_scenarios = {}
-# %%
-original_wid_value = output_short_main[
-    (output_short_main['series_code']=='gini_wid_pretaxNational_perAdult')  & \
-    (output_short_main['country']=='India')]['value_2018'].values[0]
-# %%
-for india_wid_gini_value in [original_wid_value, 0.6, 0.55, 0.5]:
+# india_scenarios = {}
+# # %%
+# original_wid_value = output_short_main[
+#     (output_short_main['series_code']=='gini_wid_pretaxNational_perAdult')  & \
+#     (output_short_main['country']=='India')]['value_2018'].values[0]
+# # %%
+# for india_wid_gini_value in [original_wid_value, 0.6, 0.55, 0.5]:
 
-    summary_stats =  add_weights_and_calc_aggregates(
-        set_india_wid_gini_in_2018(output_short_main, india_wid_gini_value),
-        ref_years,
-        threshold
-        )
+#     summary_stats =  add_weights_and_calc_aggregates(
+#         set_india_wid_gini_in_2018(output_short_main, india_wid_gini_value),
+#         ref_years,
+#         threshold
+#         )
 
-    india_scenarios[india_wid_gini_value] = extract_avgs(
-        summary_stats,
-        'gini_wid_pretaxNational_perAdult'
-)
-# %%
-india_scenarios = pd.concat(india_scenarios).reset_index()
-india_scenarios = india_scenarios.rename(columns={'level_0': 'Assumed India Gini in 2018'})
-india_scenarios = india_scenarios.drop(columns='level_1')
-india_scenarios['unweighted_change'] = india_scenarios['unweighted_avg_2018'] - india_scenarios['unweighted_avg_1993'] 
-india_scenarios['weighted_change'] = india_scenarios['weighted_avg_2018'] - india_scenarios['weighted_avg_1993'] 
+#     india_scenarios[india_wid_gini_value] = extract_avgs(
+#         summary_stats,
+#         'gini_wid_pretaxNational_perAdult'
+# )
+# # %%
+# india_scenarios = pd.concat(india_scenarios).reset_index()
+# india_scenarios = india_scenarios.rename(columns={'level_0': 'Assumed India Gini in 2018'})
+# india_scenarios = india_scenarios.drop(columns='level_1')
+# india_scenarios['unweighted_change'] = india_scenarios['unweighted_avg_2018'] - india_scenarios['unweighted_avg_1993'] 
+# india_scenarios['weighted_change'] = india_scenarios['weighted_avg_2018'] - india_scenarios['weighted_avg_1993'] 
 
-# Save to csv
-india_scenarios.to_csv("data/summary_stats/india_wid_scenarios.csv", index=False)
+# # Save to csv
+# india_scenarios.to_csv("data/summary_stats/india_wid_scenarios.csv", index=False)
 
 # %%
 
@@ -176,19 +292,19 @@ india_scenarios.to_csv("data/summary_stats/india_wid_scenarios.csv", index=False
 
 
 #%%
-output_long_main = pd.read_csv("data/selected_observations/long_period_all_obs.csv")
+# output_long_main = pd.read_csv("data/selected_observations/long_period_all_obs.csv")
 
 
-# %%
-global_summary = add_weights_and_calc_aggregates(
-    output_long_main,
-    [1980, 2018],
-    0.05
-    )
+# # %%
+# global_summary = add_weights_and_calc_aggregates(
+#     output_long_main,
+#     [1980, 2018],
+#     0.05
+#     )
 
 
-# %%
-# Save to csv
-global_summary.to_csv("data/summary_stats/long_period_all_obs.csv", index=False)
+# # %%
+# # Save to csv
+# global_summary.to_csv("data/summary_stats/long_period_all_obs.csv", index=False)
 
 

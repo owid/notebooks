@@ -2,6 +2,7 @@
 #%% 
 
 import pandas as pd
+import numpy as np
 
 
 
@@ -9,6 +10,10 @@ import pandas as pd
 #%% Load the main dataset prepared by Pablo
 fp = "https://catalog.ourworldindata.org/explorers/poverty_inequality/latest/poverty_inequality_export/keyvars.feather"
 df = pd.read_feather(fp)
+
+# Express Ginis as percent not share
+df.loc[df['indicator_name'] == 'gini', 'value'] *= 100
+
 
 #%% Add in dataset with top1 shares from PIP – built in build_pip_top1shares.py
 df_top1shares = pd.read_csv("data/df_top1shares.csv")
@@ -72,6 +77,8 @@ def cat_reportinglevel(row,col1,col2):
 
 ##############################################
 
+## This is the main function that finds pairs of matching observations
+# In the case of PIP data, it calls the special functions above to handle the additional dimensions of that dataset (region, welfare measure)
 def match_ref_years(
     df: pd.DataFrame,
     series: list,
@@ -275,52 +282,7 @@ def match_ref_years(
 
 
     return df_match
-#%%
 
-
-#####################################
-# def add_region_and_pop_weight_cols(
-#     df_matched_obs: pd.DataFrame,
-#     df_pop: pd.DataFrame,
-#     df_regions: pd.DataFrame,
-#     reference_years: dict
-# ) -> pd.DataFrame:
-#     """
-#     Adds additional columns to the selected reference year observations 
-#     """
-
- 
-
-
-#     years = list(reference_years.keys())
-
-#     # Calculate population weights 
-#     for y in years:
-#         df_pop_year = df_pop[df_pop['year']==y]
-#         df_pop_year = df_pop_year.drop(columns='year')
-
-#         df_matched_obs = pd.merge(
-#         df_matched_obs,
-#         df_pop_year,
-#         how='left'
-#         )
-
-#         df_matched_obs = df_matched_obs.rename(columns={'population': f'population_{y}'})
-
-#         # Calculate pop-weights and pop-weighted values
-
-#         # Group by 'series_code' and calculate total population for each group
-#         grouped_totals = df_matched_obs.groupby('series_code')[f'population_{y}'].sum().rename(f'population_{y}_total')
-
-#         # Merge the total populations back to the original DataFrame
-#         df_matched_obs = df_matched_obs.merge(grouped_totals, on='series_code', suffixes=('', '_total'))
-
-#         # Calculate the weight and weighted-value for each country within its 'series_code' group for both years
-#         df_matched_obs[f'weight_{y}'] = df_matched_obs[f'population_{y}'] / df_matched_obs[f'population_{y}_total']
-#         df_matched_obs[f'weightedvalue_{y}'] = df_matched_obs[f'weight_{y}'] * df_matched_obs[f'value_{y}']
-
-#     return df_matched_obs
-  
 
 
 ##################################################
@@ -328,284 +290,280 @@ def match_ref_years(
 
 
 
-#### SET ARGUMENTS AND RUN FUNCTION ####
-# I save four versions of the data, 3 each for the reference
-# periods of 1993-2018 and 1980-2018:
-# 1) a version matching all available observations, including both
-# extrapolated and non-extrapolated flavours of the WID data
-# 2) a version matching only those oberservations available in all datasets,
-# but only including the non-extrapolated data for WID
-# 3) a version matching only those oberservations available in all datasets,
-# but only including the extrapolated data for WID
+#### SET REF YEARS AND THEN RUN ####
 
-#%%
-# 1993-2018 PERIOD (allowing +/- 5 years)
-reference_years = {
-    1993: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
-    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
-}
+# Specify pairs of reference years in a list
+ref_yrs_list = [[1980, 2018],[1993, 2018]]
 
-#%% Version 1 – All data points 
-# (NB only_all_series = False)
-output_short_main = match_ref_years(
-    df = df, 
-    series = [
-    "gini_pip_disposable_perCapita",
-    "p99p100Share_pip_disposable_perCapita",
-    "p90p100Share_pip_disposable_perCapita",
-    "headcountRatio50Median_pip_disposable_perCapita",    
-    "gini_widExtrapolated_pretaxNational_perAdult",
-    "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
-    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
-    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult",
-    "gini_wid_pretaxNational_perAdult",
-    "p99p100Share_wid_pretaxNational_perAdult",           
-    "p90p100Share_wid_pretaxNational_perAdult",
-    "headcountRatio50Median_wid_pretaxNational_perAdult" 
-], 
-    reference_years = reference_years, 
-    only_all_series = False)
+for ref_yrs in ref_yrs_list:
+
+    print(ref_yrs[0])
+    print(ref_yrs[1])
+    
+    reference_years = {
+        ref_yrs[0]: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
+        ref_yrs[1]: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
+    }
+
+    # Version 1 – All data points (for both WID extrap and non-extrap series)
+    # (NB only_all_series = False)
+    output_main = match_ref_years(
+        df = df, 
+        series = [
+        "gini_pip_disposable_perCapita",
+        "p99p100Share_pip_disposable_perCapita",
+        "p90p100Share_pip_disposable_perCapita",
+        "headcountRatio50Median_pip_disposable_perCapita",    
+        "gini_widExtrapolated_pretaxNational_perAdult",
+        "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
+        "p90p100Share_widExtrapolated_pretaxNational_perAdult",
+        "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult",
+        "gini_wid_pretaxNational_perAdult",
+        "p99p100Share_wid_pretaxNational_perAdult",           
+        "p90p100Share_wid_pretaxNational_perAdult",
+        "headcountRatio50Median_wid_pretaxNational_perAdult" 
+    ], 
+        reference_years = reference_years, 
+        only_all_series = False)
 
 
+    output_main.to_csv(f'data/selected_observations/{ref_yrs[0]}_{ref_yrs[1]}_by_country_series_code.csv', index=False)
 
-#%%
-# Save to csv
-output_short_main.to_csv("data/selected_observations/short_period_all_obs.csv", index=False)
+    
+    # Make a version for OWID plot
+    # Reshape from wide to long format
+    owid_data = pd.wide_to_long(output_main, ["value", "year", "population"], i=["country", "series_code"], j="ref_year", sep='_').reset_index()
 
+    
 
-#%% Counterfactual 2 – Only matching data points, non-extrapolated data for WID 
-# (NB only_all_series = True)
-output_short_wid_non_extrap = match_ref_years(
-    df = df, 
-    series = [
-    "gini_pip_disposable_perCapita",
-    "p99p100Share_pip_disposable_perCapita",
-    "p90p100Share_pip_disposable_perCapita",
-    "headcountRatio50Median_pip_disposable_perCapita",    
-    "gini_wid_pretaxNational_perAdult",
-    "p99p100Share_wid_pretaxNational_perAdult",           
-    "p90p100Share_wid_pretaxNational_perAdult",
-    "headcountRatio50Median_wid_pretaxNational_perAdult" 
-], 
-    reference_years = reference_years, 
-    only_all_series = True)
+    # Pivot from long to wide format, creating a column for each series_code
+    owid_data = owid_data.pivot_table(
+        index=['country', 'year'],
+        columns='series_code',
+        values='value',
+        aggfunc='first'
+    ).reset_index()
 
 
-
-# Save to csv
-output_short_wid_non_extrap.to_csv("data/selected_observations/short_period_counterfactual2_only_matches.csv", index=False)
-
-#%%
-# Make a version for OWID plot
-# Reshape from wide to long format
-owid_data_short = pd.wide_to_long(output_short_wid_non_extrap, ["value", "year", "population"], i=["country", "series_code"], j="ref_year", sep='_').reset_index()
-
-#%%
-
-# Pivot from long to wide format, creating a column for each series_code
-owid_data_short = owid_data_short.pivot_table(
-    index=['country', 'year'],
-    columns='series_code',
-    values='value',
-    aggfunc='first'
-).reset_index()
+    # Save to csv
+    owid_data.to_csv(f'data/selected_observations/{ref_yrs[0]}_{ref_yrs[1]}_by_country_year.csv', index=False)
 
 
-#%% Save to csv
-owid_data_short.to_csv("data/selected_observations/short_period_owid_upload.csv", index=False)
+    # Save a version for the appendix table – excluding WID extrapolated data
+    
+    # Reshape wider
+    
+    # Drop extrapolated WID series
+
+    # Drop rows where series_code includes 'Extrapolated'
+    output_main = output_main[~output_main['series_code'].str.contains('widExtrapolated', na=False)]
 
 
-#%% Counterfactual 1 – Only matching data points, adding extrapolated data for WID 
-# (NB only_all_series = True)
-output_short_wid_extrap = match_ref_years(
-    df = df, 
-    series = [
-    "gini_pip_disposable_perCapita",
-    "p99p100Share_pip_disposable_perCapita",
-    "p90p100Share_pip_disposable_perCapita",
-    "headcountRatio50Median_pip_disposable_perCapita",    
-    "gini_widExtrapolated_pretaxNational_perAdult",
-    "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
-    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
-    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult"
-], 
-    reference_years = reference_years, 
-    only_all_series = True)
+    
+    # Replace series_code with 'pip' or 'wid'
+    output_main['series_code'] = output_main['series_code'].apply(lambda x: 'pip' if 'pip' in x else 'wid')
 
-#%%
-output_short_wid_extrap['series_code'] = output_short_wid_extrap['series_code'].str.replace('Extrapolated', '', regex=False)
+    
+    # Identify the columns that need to be reshaped
+    varying_columns = [f'year_{ref_yrs[0]}', f'value_{ref_yrs[0]}', f'year_{ref_yrs[1]}', f'value_{ref_yrs[1]}', f'pipwelfare_{ref_yrs[0]}', f'pipwelfare_{ref_yrs[1]}', f'pipreportinglevel_{ref_yrs[0]}', f'pipreportinglevel_{ref_yrs[1]}']
+    non_varying_columns = ['region', f'population_{ref_yrs[0]}', f'population_{ref_yrs[1]}']
 
-#%%
-# Drop the population and region cols from the non_extrap data perpared above (aso that we can recalculate the pop weights based on the new sample)
-# Find columns in df2 that are not in df1
-columns_to_drop = output_short_wid_non_extrap\
-    .columns.difference(output_short_wid_extrap.columns)
+    
+    # Use pivot to reshape the data
+    output_main_wide = output_main.pivot_table(
+        index=['indicator_name', 'country'],
+        columns='series_code',
+        values=varying_columns,
+        aggfunc='first'
+    ).reset_index()
 
-#%%
-# Drop these columns from df2
-output_short_wid_non_extrap = output_short_wid_non_extrap.drop(columns=columns_to_drop)
+    
+    # Flatten the MultiIndex in columns
+    output_main_wide.columns = ['_'.join(col).strip() if col[1] else col[0] for col in output_main_wide.columns.values]
 
-#%%
-# Append the extrap and non-extrap outputs, adding a key
-output_short_counterfactual1 = pd.concat([output_short_wid_non_extrap, output_short_wid_extrap], axis=0, keys=['wid_not_extrapolated', 'wid_extrapolated'])
 
-#%%
+    # Merge the non-varying columns back to the reshaped dataframe
+    output_main_non_varying = output_main.drop_duplicates(subset=['indicator_name', 'country'])[non_varying_columns + ['indicator_name', 'country']]
 
-# Reset the index to make the keys a separate column
-output_short_counterfactual1.reset_index(level=0, inplace=True)
+    output_main_reshaped = pd.merge(output_main_non_varying, output_main_wide, on=['indicator_name', 'country'])
 
-# Rename the 'level_0' column to 'key'
-output_short_counterfactual1.rename(columns={'level_0': 'key'}, inplace=True)
-
-# Reset the index to make it sequential
-output_short_counterfactual1.reset_index(drop=True, inplace=True)
-
-#%% 
-# count number of observations by series_code and country
-columns_to_consider = ['series_code', 'country']
-output_short_counterfactual1['count'] = output_short_counterfactual1.groupby(columns_to_consider)[columns_to_consider[0]].transform('count')
-
-#%% 
-# Drop the extrpolated data if the count is 2 (i.e. if there is an observation from the non extrap data)
-output_short_counterfactual1 = output_short_counterfactual1[(output_short_counterfactual1['count']==1) | (output_short_counterfactual1['key']=='wid_not_extrapolated')]
-
-output_short_counterfactual1 = output_short_counterfactual1.drop(columns = ['count','key'])
-#%% 
-#Note that the WID data is a mix of extrap and non extrap
-output_short_counterfactual1['series_code'] = output_short_counterfactual1['series_code'].str.replace('_wid_pretaxNational_perAdult', '_widWithAddedExtrapolated_pretaxNational_perAdult', regex=False)
+    
+    #Sort rows
+    output_main_reshaped = output_main_reshaped.sort_values(by=['indicator_name','country'], ascending=[True, True])
 
 
 
 
-#%%
-# Save to csv
-output_short_counterfactual1.to_csv("data/selected_observations/short_period_counterfactual1_adding_wid_extrap.csv", index=False)
-
-#%%
-
-######## Recalculate, dropping India #########
-
-# #%%
-# # Drop the pop and region columns from the first selection of observations
-# output_short_main = output_short_main.drop(columns=columns_to_drop)
-
-# #%%
-# output_short_main_no_india = output_short_main[output_short_main['country']!='India']
 
 
-# #%% 
-# # Realculate pop weights and add region
-# # output_short_main_no_india = add_region_and_pop_weight_cols(
-# #     output_short_main_no_india, 
-# #     df_pop, 
-# #     df_regions, 
-# #     reference_years)
+    # I then make a wider dataset that matches PIP and WID datapoints 
+    # – first excluding extrapolated WID data (which should match the above), then adding any additional extrapolated data points in
 
-# #%%
-# # Save to csv
-# output_short_main_no_india.to_csv("data/selected_observations/short_period_all_obs_minus_india.csv", index=False)
-
-
-
-#%% 
-
-# # 1980-2018 PERIOD (allowing +/- 5 years)
-# #%%
-reference_years = {
-    1980: {"maximum_distance": 5, "tie_break_strategy": "lower", "min_interval": 0},
-    2018: {"maximum_distance": 5, "tie_break_strategy": "higher", "min_interval": 0},
-}
-
-#%% Version 1 – All data points 
-# (NB only_all_series = False)
-output = match_ref_years(
-    df = df, 
-    series = [
-    "gini_pip_disposable_perCapita",
-    "p99p100Share_pip_disposable_perCapita",
-    "p90p100Share_pip_disposable_perCapita",
-    "headcountRatio50Median_pip_disposable_perCapita",    
-    "gini_widExtrapolated_pretaxNational_perAdult",
-    "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
-    "p90p100Share_widExtrapolated_pretaxNational_perAdult",
-    "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult",
-    "gini_wid_pretaxNational_perAdult",
-    "p99p100Share_wid_pretaxNational_perAdult",           
-    "p90p100Share_wid_pretaxNational_perAdult",
-    "headcountRatio50Median_wid_pretaxNational_perAdult" 
-], 
-    reference_years = reference_years, 
-    only_all_series = False)
-
-# Save to csv
-output.to_csv("data/selected_observations/long_period_all_obs.csv", index=False)
-
-# #%%
+    # Step 1 – Only matching data points, non-extrapolated data for WID 
+    # (NB only_all_series = True)
+    output_wid_non_extrap = match_ref_years(
+        df = df, 
+        series = [
+        "gini_pip_disposable_perCapita",
+        "p99p100Share_pip_disposable_perCapita",
+        "p90p100Share_pip_disposable_perCapita",
+        "headcountRatio50Median_pip_disposable_perCapita",    
+        "gini_wid_pretaxNational_perAdult",
+        "p99p100Share_wid_pretaxNational_perAdult",           
+        "p90p100Share_wid_pretaxNational_perAdult",
+        "headcountRatio50Median_wid_pretaxNational_perAdult" 
+    ], 
+        reference_years = reference_years, 
+        only_all_series = True)
 
 
-#%% Version 2 – Only matching data points, non-extrapolated data for WID 
-# (NB only_all_series = True)
+    # Step 2 Only matching data points, with extrapolated data for WID 
+    # (NB only_all_series = True)
+    output_wid_extrap = match_ref_years(
+        df = df, 
+        series = [
+        "gini_pip_disposable_perCapita",
+        "p99p100Share_pip_disposable_perCapita",
+        "p90p100Share_pip_disposable_perCapita",
+        "headcountRatio50Median_pip_disposable_perCapita",    
+        "gini_widExtrapolated_pretaxNational_perAdult",
+        "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
+        "p90p100Share_widExtrapolated_pretaxNational_perAdult",
+        "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult"
+    ], 
+        reference_years = reference_years, 
+        only_all_series = True)
 
-output = match_ref_years(
-    df = df, 
-    series = [
-    "gini_pip_disposable_perCapita",
-    "p99p100Share_pip_disposable_perCapita",
-    "p90p100Share_pip_disposable_perCapita",
-    "headcountRatio50Median_pip_disposable_perCapita",
-    "gini_wid_pretaxNational_perAdult",
-    "p99p100Share_wid_pretaxNational_perAdult",           
-    "p90p100Share_wid_pretaxNational_perAdult",
-    "headcountRatio50Median_wid_pretaxNational_perAdult" 
-], 
-    reference_years = reference_years, 
-    only_all_series = True)
+    #
+    output_wid_extrap['series_code'] = output_wid_extrap['series_code'].str.replace('Extrapolated', '', regex=False)
 
-# Save to csv
-output.to_csv("data/selected_observations/long_period_counterfactual2_only_matches.csv", index=False)
+    # Step 3 – add in the any additional observations available in the extrapolated data to the non-extrpolated data
+
+    # Drop the population and region cols from the non_extrap data perpared above (aso that we can recalculate the pop weights based on the new sample)
+    # Find columns in df2 that are not in df1
+    columns_to_drop = output_wid_non_extrap\
+        .columns.difference(output_wid_extrap.columns)
+
+    #
+    # Drop these columns from df2
+    output_wid_non_extrap = output_wid_non_extrap.drop(columns=columns_to_drop)
+
+    #
+    # Append the extrap and non-extrap outputs, adding a key
+    output_matched = pd.concat([output_wid_non_extrap, output_wid_extrap], axis=0, keys=['wid_not_extrapolated', 'wid_extrapolated'])
+
+    #
+
+    # Reset the index to make the keys a separate column
+    output_matched.reset_index(level=0, inplace=True)
+
+    # Rename the 'level_0' column to 'key'
+    output_matched.rename(columns={'level_0': 'key'}, inplace=True)
+
+    # Reset the index to make it sequential
+    output_matched.reset_index(drop=True, inplace=True)
+
+    #
+    # count number of observations by series_code and country
+    columns_to_consider = ['series_code', 'country']
+    output_matched['count'] = output_matched.groupby(columns_to_consider)[columns_to_consider[0]].transform('count')
+
+    #
+    # Drop the extrpolated data if the count is 2 (i.e. if there is an observation from the non extrap data)
+    output_matched = output_matched[(output_matched['count']==1) | (output_matched['key']=='wid_not_extrapolated')]
+
+    # Drop the count column
+    output_matched = output_matched.drop(columns = ['count'])
+    
+    # Save the output in long format
+    output_matched.to_csv(f'data/selected_observations/{ref_yrs[0]}_{ref_yrs[1]}_by_country_series_code_added_wid_extrapolations.csv', index=False)
+
+    # Reshape wider
+    #
+    # Replace series_code with 'pip' or 'wid'
+    output_matched['series_code'] = output_matched['series_code'].apply(lambda x: 'pip' if 'pip' in x else 'wid')
+
+    
+    # Identify the columns that need to be reshaped
+    #varying_columns are as above
+    non_varying_columns = ['key'] + non_varying_columns #non_varying_columns now has a 'key' column reporting whether the wid data is from the extrapolated data matches or not
+
+    
+    # Use pivot to reshape the data
+    output_matched_wide = output_matched.pivot_table(
+        index=['indicator_name', 'country'],
+        columns='series_code',
+        values=varying_columns,
+        aggfunc='first'
+    ).reset_index()
+
+    
+    # Flatten the MultiIndex in columns
+    output_matched_wide.columns = ['_'.join(col).strip() if col[1] else col[0] for col in output_matched_wide.columns.values]
+
+    
+    # Merge the non-varying columns back to the reshaped dataframe
+    output_matched_non_varying = output_matched.drop_duplicates(subset=['indicator_name', 'country'])[non_varying_columns + ['indicator_name', 'country']]
+
+
+    output_matched_reshaped = pd.merge(output_matched_non_varying, output_matched_wide, on=['indicator_name', 'country'])
+
+    
+    #Sort rows
+    output_matched_reshaped = output_matched_reshaped.sort_values(by=['indicator_name','country'], ascending=[True, True])
 
 
 
+    # I then append the 'main' and 'matched' sets of observtions, deduplicating
+    output_all_obs = pd.concat([output_main_reshaped, output_matched_reshaped], axis=0)
+    output_all_obs = output_all_obs.sort_values(by=['indicator_name','country'], ascending=[True, True])
 
-# output = match_ref_years(
-#     df = df, 
-#     series = [
-#     "gini_pip_disposable_perCapita",
-#     "p99p100Share_pip_disposable_perCapita",
-#     "p90p100Share_pip_disposable_perCapita",
-#     "headcountRatio50Median_pip_disposable_perCapita",    
-#     "gini_wid_pretaxNational_perAdult",
-#     "p99p100Share_wid_pretaxNational_perAdult",           
-#     "p90p100Share_wid_pretaxNational_perAdult",
-#     "headcountRatio50Median_wid_pretaxNational_perAdult" 
-# ], 
-#     reference_years = reference_years, 
-#     only_all_series = True)
+    #
+    # count number of observations by series_code and country
+    columns_to_consider = ['indicator_name','country']
+    output_all_obs['count'] = output_all_obs.groupby(columns_to_consider)[columns_to_consider[0]].transform('count')
 
-# # Save to csv
-# output.to_csv("data/selected_observations/long_period_matching_obs_non_extrap_WID.csv", index=False)
+    #
+    # Keep the matched data (in which case, key is not NaN) if the count is 2 (the matched data contains additional observations)
+    output_all_obs = output_all_obs[(output_all_obs['count']==1) | (output_all_obs['key'].notna())]
+
+    output_all_obs_test = output_all_obs.copy()
+    # Note WID extrapolated or not in a boolean
+    # Define the function to determine the value of 'wid_is_extrapolated'
+    def determine_wid_is_extrapolated(row):
+        if pd.isna(row[f'value_{ref_yrs[0]}_wid']):
+            return np.nan
+        return 1 if row['key'] == 'wid_extrapolated' else 0
+
+    # Apply the function to each row to create the new column
+    output_all_obs['wid_is_extrapolated'] = output_all_obs.apply(determine_wid_is_extrapolated, axis=1)
+
+    #
+    # Drop the count and key columns
+    output_all_obs = output_all_obs.drop(columns = ['count', 'key'])
+
+
+    # reorder columns slightly
+    
+    #Sort columns
+    desired_column_order = [
+        'indicator_name', 'country', 
+        f'year_{ref_yrs[0]}_pip', f'value_{ref_yrs[0]}_pip', f'pipwelfare_{ref_yrs[0]}_pip',
+        f'year_{ref_yrs[1]}_pip', f'value_{ref_yrs[1]}_pip', f'pipwelfare_{ref_yrs[1]}_pip',
+        f'year_{ref_yrs[0]}_wid', f'value_{ref_yrs[0]}_wid', f'year_{ref_yrs[1]}_wid', f'value_{ref_yrs[1]}_wid', 'wid_is_extrapolated',
+        'region', f'population_{ref_yrs[0]}', f'population_{ref_yrs[1]}',
+        f'pipreportinglevel_{ref_yrs[0]}_pip', f'pipreportinglevel_{ref_yrs[1]}_pip',
+        
+    ]
+
+    # Reorder the DataFrame columns
+    output_all_obs = output_all_obs.reindex(columns=desired_column_order)
 
 
 
-# #%% Version 3 – Only matching data points, extrapolated data for WID 
-# # (NB only_all_series = True)
-# output = match_ref_years(
-#     df = df, 
-#     series = [
-#     "gini_pip_disposable_perCapita",
-#     "p99p100Share_pip_disposable_perCapita",
-#     "p90p100Share_pip_disposable_perCapita",
-#     "headcountRatio50Median_pip_disposable_perCapita",    
-#     "gini_widExtrapolated_pretaxNational_perAdult",
-#     "p99p100Share_widExtrapolated_pretaxNational_perAdult",           
-#     "p90p100Share_widExtrapolated_pretaxNational_perAdult",
-#     "headcountRatio50Median_widExtrapolated_pretaxNational_perAdult"
-# ], 
-#     reference_years = reference_years, 
-#     only_all_series = True)
+    # Save to csv
+    output_all_obs.to_csv(f'data/selected_observations/{ref_yrs[0]}_{ref_yrs[1]}_by_indicator_owid_upload.csv', index=False)
 
-# # Save to csv
-# output.to_csv("data/selected_observations/long_period_matching_obs_extrap_WID.csv", index=False)
 
 
 #%%
