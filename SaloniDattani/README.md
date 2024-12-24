@@ -12,3 +12,8 @@ Not all charts have data or code available, but when they do, they will be share
 | 2023-11-27 | Period versus cohort: Age mortality profiles | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Life-expectancy/Period-vs-cohort-age-mortality)   |
 | 2024-07-17 | Trachoma declined in Africa | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Trachoma/trachoma-prevalence-Africa-maps)   |
 | 2024-07-26 | HIV mortality fell steeply after HAART was introduced | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/HIV-AIDS-mortality) |
+| 2024-08-26 | Timeline of the development of antipsychotic drugs | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Antipsychotic-drugs) |
+| 2024-10-07 | How do death rates from each cancer vary by age? | [GitHub folder]([https://github.com/owid/notebooks/tree/main/SaloniDattani/HIV-AIDS-mortality](https://github.com/owid/notebooks/tree/main/SaloniDattani/Cancer-mortality-age) |
+| 2024-10-07 | Which cancers do people in the United States die from at different ages? | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Cancer-mortality-age) |
+| 2024-12-23 | The Golden Age of Antibiotics | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Antibiotic-drugs) |
+| 2024-12-23 | Antibiotics: time from discovery to introduction | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Antibiotic-drugs) |
