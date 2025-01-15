@@ -7,7 +7,7 @@ import plotly.figure_factory as ff
 PARENT_DIR = Path(__file__).parent.absolute()
 
 # Define OWID version of PIP data
-PIP_VERSION = "2024-03-27"
+PIP_VERSION = "2024-10-07"
 POPULATION_VERSION = "2024-07-15"
 
 # Define PIP percentiles URL
@@ -18,6 +18,25 @@ POPULATION_URL = f"http://catalog.ourworldindata.org/garden/demography/{POPULATI
 
 # Define IPL
 INTERNATIONAL_POVERTY_LINE = 2.15
+
+# Define countries and years
+COUNTRIES_YEARS = {
+    1: {
+        "United States": 2022,
+        "Burundi": 2020,
+    },
+    2: {
+        "Ethiopia": 2015,
+        "Denmark": 2021,
+    },
+}
+
+# Define latest year for world mean
+LATEST_YEAR = 2024
+
+# Define width and height for the plot
+WIDTH = 2000
+HEIGHT = 500
 
 df_percentiles = pd.read_feather(PERCENTILES_URL)
 df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
@@ -44,134 +63,187 @@ df_percentiles = df_percentiles[df_percentiles["percentile"] != 100].reset_index
     drop=True
 )
 
-# Filter Chile
-df_percentiles_chile = (
-    df_percentiles[df_percentiles["country"] == "Chile"].reset_index(drop=True).copy()
-)
-
-# Filter US
-df_percentiles_us = (
-    df_percentiles[
-        (df_percentiles["country"] == "United States")
-        & (df_percentiles["year"] == 2020)
-    ]
-    .reset_index(drop=True)
-    .copy()
-)
-
-# Get values of thr and thr_log for US at percentile 50
-df_percentiles_us_50 = df_percentiles_us[df_percentiles_us["percentile"] == 50][
-    ["thr", "thr_log", "avg", "avg_log"]
+# Define world mean
+WORLD_MEAN = df_main_indicators.loc[
+    (df_main_indicators["country"] == "World")
+    & (df_main_indicators["year"] == LATEST_YEAR),
+    "mean",
 ].values[0]
 
+# Define world median
+WORLD_MEDIAN = df_main_indicators.loc[
+    (df_main_indicators["country"] == "World")
+    & (df_main_indicators["year"] == LATEST_YEAR),
+    "median",
+].values[0]
 
-# Filter Burundi
-df_percentiles_burundi = (
-    df_percentiles[
-        (df_percentiles["country"] == "Burundi") & (df_percentiles["year"] == 2020)
+for set, countries_years in COUNTRIES_YEARS.items():
+    # Filter first country in set
+    df_percentiles_country_1 = (
+        df_percentiles[
+            (df_percentiles["country"] == list(countries_years.keys())[0])
+            & (df_percentiles["year"] == list(countries_years.values())[0])
+        ]
+        .reset_index(drop=True)
+        .copy()
+    )
+
+    # Get values of thr and thr_log for country 1 at percentile 50
+    df_percentiles_country_1_50 = df_percentiles_country_1[
+        df_percentiles_country_1["percentile"] == 50
+    ][["thr", "thr_log", "avg", "avg_log"]].values[0]
+
+    # Get values of mean
+    MEAN_COUNTRY_1 = df_main_indicators.loc[
+        (df_main_indicators["country"] == list(countries_years.keys())[0])
+        & (df_main_indicators["year"] == list(countries_years.values())[0]),
+        "mean",
+    ].values[0]
+
+    # Get value of median as shown in the main indicators
+    MEDIAN_COUNTRY_1 = df_main_indicators.loc[
+        (df_main_indicators["country"] == list(countries_years.keys())[0])
+        & (df_main_indicators["year"] == list(countries_years.values())[0]),
+        "median",
+    ].values[0]
+
+    # Filter second country in set
+    df_percentiles_country_2 = (
+        df_percentiles[
+            (df_percentiles["country"] == list(countries_years.keys())[1])
+            & (df_percentiles["year"] == list(countries_years.values())[1])
+        ]
+        .reset_index(drop=True)
+        .copy()
+    )
+
+    # Get values of thr and thr_log for country 2 at percentile 50
+    df_percentiles_country_2_50 = df_percentiles_country_2[
+        df_percentiles_country_2["percentile"] == 50
+    ][["thr", "thr_log", "avg", "avg_log"]].values[0]
+
+    # Get values of mean
+    MEAN_COUNTRY_2 = df_main_indicators.loc[
+        (df_main_indicators["country"] == list(countries_years.keys())[1])
+        & (df_main_indicators["year"] == list(countries_years.values())[1]),
+        "mean",
+    ].values[0]
+
+    # Get value of median as shown in the main indicators
+    MEDIAN_COUNTRY_2 = df_main_indicators.loc[
+        (df_main_indicators["country"] == list(countries_years.keys())[1])
+        & (df_main_indicators["year"] == list(countries_years.values())[1]),
+        "median",
+    ].values[0]
+
+    data_list = [
+        df_percentiles_country_1["thr_log"],
+        df_percentiles_country_2["thr_log"],
     ]
-    .reset_index(drop=True)
-    .copy()
-)
+    label_list = [list(countries_years.keys())[0], list(countries_years.keys())[1]]
 
-# Get values of thr and thr_log for Burundi at percentile 50
-df_percentiles_burundi_50 = df_percentiles_burundi[
-    df_percentiles_burundi["percentile"] == 50
-][["thr", "thr_log", "avg", "avg_log"]].values[0]
+    # Plot density curve for thr_log
+    fig = ff.create_distplot(
+        hist_data=data_list,
+        group_labels=label_list,
+        curve_type="normal",
+        show_hist=False,
+        show_rug=False,
+    )
 
-data_list = [
-    df_percentiles_us["thr_log"],
-    df_percentiles_burundi["thr_log"],
-]
-label_list = ["USA", "Burundi"]
+    # Define tick values and labels for the x-axis
+    tickvals = [
+        np.log(1),
+        np.log(2),
+        np.log(5),
+        np.log(10),
+        np.log(20),
+        np.log(50),
+        np.log(100),
+        np.log(200),
+        np.log(500),
+    ]
+    ticktext = [f"{int(round(np.exp(val),1))}" for val in tickvals]
 
-# data_list = []
-# label_list = []
-# for year in df_percentiles_chile["year"].unique():
-#     df_percentiles_year = (
-#         df_percentiles_chile[(df_percentiles_chile["year"] == year)]
-#         .reset_index(drop=True)
-#         .copy()
-#     )
-#     data_list.append(df_percentiles_year["avg"])
-#     label_list.append(str(year))
+    # Update layout
+    fig.update_layout(
+        title=f"Density curve of income for {list(countries_years.keys())[0]} and {list(countries_years.keys())[1]}",
+        xaxis_title="Income (log scale)",
+        yaxis_title="Density",
+        xaxis=dict(
+            tickvals=tickvals,
+            ticktext=ticktext,
+        ),
+    )
 
+    fig.update_yaxes(range=[0, 1])
 
-# Plot density curve for avg vs people for Chile in 2017
-# The probability numers should be multiplied bt population to get the number of people in each percentile
-fig = ff.create_distplot(
-    hist_data=data_list,
-    group_labels=label_list,
-    curve_type="normal",
-    show_hist=False,
-    show_rug=False,
-)
+    fig.add_vline(
+        x=df_percentiles_country_1_50[1],
+        line_width=0.5,
+        line_dash="dot",
+        line_color="grey",
+        annotation_text=f"<b>{list(countries_years.keys())[0]} ({list(countries_years.values())[0]})</b><br>Median income: &#36;{round(MEDIAN_COUNTRY_1,1):.2f}<br>Mean income: &#36;{round(MEAN_COUNTRY_1,1):.2f}",
+        annotation_position="top right",
+        annotation_align="left",
+    )
+    fig.add_vline(
+        x=df_percentiles_country_2_50[1],
+        line_width=0.5,
+        line_dash="dot",
+        line_color="grey",
+        annotation_text=f"<b>{list(countries_years.keys())[1]} ({list(countries_years.values())[1]})</b><br>Median income: &#36;{round(MEDIAN_COUNTRY_2,1):.2f}<br>Mean income: &#36;{round(MEAN_COUNTRY_2,1):.2f}",
+        annotation_position="top left",
+        annotation_align="right",
+    )
 
-# Define tick values and labels for the x-axis
-tickvals = [
-    np.log(1),
-    np.log(2),
-    np.log(5),
-    np.log(10),
-    np.log(20),
-    np.log(50),
-    np.log(100),
-    np.log(200),
-    np.log(500),
-]
-ticktext = [f"{int(round(np.exp(val),1))}" for val in tickvals]
+    # For the International Poverty Line
+    fig.add_vline(
+        x=np.log(INTERNATIONAL_POVERTY_LINE),
+        line_width=0.5,
+        line_dash="dot",
+        line_color="red",
+        annotation_text="International Poverty Line",
+        annotation_position="bottom right",
+        annotation_textangle=-90,
+    )
 
-# Update layout
-fig.update_layout(
-    title="Density curve of income for USA and Burundi in 2020",
-    xaxis_title="Income (log scale)",
-    yaxis_title="Density",
-    xaxis=dict(
-        tickvals=tickvals,
-        ticktext=ticktext,
-    ),
-)
+    # For the World mean
+    fig.add_vline(
+        x=np.log(WORLD_MEAN),
+        line_width=0.5,
+        line_dash="dot",
+        line_color="black",
+        annotation_text=f"World mean: &#36;{round(WORLD_MEAN,1):.2f}",
+        annotation_position="bottom right",
+        annotation_textangle=-90,
+    )
 
-fig.update_yaxes(range=[0, 0.8])
+    # For the World median
+    fig.add_vline(
+        x=np.log(WORLD_MEDIAN),
+        line_width=0.5,
+        line_dash="dot",
+        line_color="black",
+        annotation_text=f"World median: &#36;{round(WORLD_MEDIAN,1):.2f}",
+        annotation_position="bottom right",
+        annotation_textangle=-90,
+    )
 
-fig.add_vline(
-    x=df_percentiles_us_50[1],
-    line_width=0.5,
-    line_dash="dot",
-    line_color="grey",
-    annotation_text=f"<b>USA</b><br>Median income:<br>${int(round(df_percentiles_us_50[0],0))} per day",
-    annotation_position="top right",
-    annotation_align="left",
-)
-fig.add_vline(
-    x=df_percentiles_burundi_50[1],
-    line_width=0.5,
-    line_dash="dot",
-    line_color="grey",
-    annotation_text=f"<b>Burundi</b><br>Median income:<br>${round(df_percentiles_burundi_50[0],2):.2f} per day",
-    annotation_position="top left",
-    annotation_align="right",
-)
+    # Export png
+    fig.write_image(
+        PARENT_DIR
+        / f"density_curve_{list(countries_years.keys())[0]}_{list(countries_years.keys())[1]}.png",
+        width=WIDTH,
+        height=HEIGHT,
+    )
 
-# For the International Poverty Line
-fig.add_vline(
-    x=np.log(INTERNATIONAL_POVERTY_LINE),
-    line_width=0.5,
-    line_dash="dot",
-    line_color="red",
-    annotation_text="International Poverty Line",
-    annotation_position="bottom right",
-    annotation_textangle=-90,
-)
+    # Export svg
+    fig.write_image(
+        PARENT_DIR
+        / f"density_curve_{list(countries_years.keys())[0]}_{list(countries_years.keys())[1]}.svg",
+        width=WIDTH,
+        height=HEIGHT,
+    )
 
-# Export png
-fig.write_image(
-    PARENT_DIR / "density_curve_us_burundi_2020.png", width=1000, height=600
-)
-
-# Export svg
-fig.write_image(
-    PARENT_DIR / "density_curve_us_burundi_2020.svg", width=1000, height=600
-)
-
-# fig.show()
+    fig.show()

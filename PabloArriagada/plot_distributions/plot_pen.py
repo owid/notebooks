@@ -71,11 +71,10 @@ latest_year_us = df_main_indicators.loc[
     "year",
 ].max()
 
-US_MEDIAN = df_percentiles.loc[
-    (df_percentiles["country"] == "United States")
-    & (df_percentiles["year"] == latest_year_us)
-    & (df_percentiles["percentile"] == 50),
-    "thr",
+US_MEDIAN = df_main_indicators.loc[
+    (df_main_indicators["country"] == "United States")
+    & (df_main_indicators["year"] == latest_year_us),
+    "median",
 ].values[0]
 
 
@@ -224,12 +223,18 @@ fig.add_hline(
 # Add a vertical line to say "50% of the world population lives with less than ${WORLD_MEDIAN} per day"
 fig.add_annotation(
     x=50,
-    y=0.1,
+    y=0.08,
     yref="paper",
-    text=f"50% of the world population lives with less than<br><b>${WORLD_MEDIAN:.2f} per day</b>",
+    text=f"50% of the world population lives<br>with less than<br><b>${WORLD_MEDIAN:.2f} per day</b>",
     showarrow=False,
     xanchor="left",
     align="left",
 )
 
-fig.show()
+# Export png
+fig.write_image(PARENT_DIR / "global_income_distribution.png", width=1100, height=1000)
+
+# Export svg
+fig.write_image(PARENT_DIR / "global_income_distribution.svg", width=1100, height=1000)
+
+# fig.show()
