@@ -23,6 +23,12 @@ INTERNATIONAL_POVERTY_LINE = 2.15
 # Define latest year
 LATEST_YEAR = 2024
 
+# Define maximum income
+MAX_INCOME = 500
+
+# Define maximum income for the plot
+MAX_INCOME_PLOT = 150
+
 # Set line dash, dot or solid
 LINE_DASH = "dot"
 LINE_WIDTH = 1
@@ -39,6 +45,31 @@ df_percentiles_world = (
     ]
     .reset_index(drop=True)
     .copy()
+)
+
+# Add percentiles 0 and 100
+df_percentile_0_world = pd.DataFrame.from_dict(
+    data={
+        "country": ["World"],
+        "year": [LATEST_YEAR],
+        "percentile": [0],
+        "thr": [0],
+    }
+)
+
+df_percentile_100_world = pd.DataFrame.from_dict(
+    data={
+        "country": ["World"],
+        "year": [LATEST_YEAR],
+        "percentile": [100],
+        "thr": [MAX_INCOME],
+    }
+)
+
+# Concatenate
+df_percentiles_world = pd.concat(
+    [df_percentile_0_world, df_percentiles_world, df_percentile_100_world],
+    ignore_index=True,
 )
 
 # Define world median
@@ -97,6 +128,9 @@ df_percentiles_world_below_90th = (
     .reset_index(drop=True)
 )
 
+########################################################
+# PLOT
+########################################################
 
 # Plot a line chart with  the columns percentile vs thr in plotly express
 fig = px.area(
@@ -116,7 +150,10 @@ fig.update_layout(
         ticksuffix=" a day",
     ),
     showlegend=False,
+    plot_bgcolor="rgba(0, 0, 0, 0)",
 )
+
+fig.update_yaxes(range=[0, MAX_INCOME_PLOT])
 
 # Add overlapping areas for the different percentiles
 fig.add_trace(
@@ -229,6 +266,14 @@ fig.add_annotation(
     showarrow=False,
     xanchor="left",
     align="left",
+)
+
+# Format ticks
+fig.update_xaxes(
+    showgrid=True, ticks="outside", tickson="boundaries", ticklen=5, color="grey"
+)
+fig.update_yaxes(
+    showgrid=True, ticks="outside", tickson="boundaries", ticklen=5, color="grey"
 )
 
 # Export png

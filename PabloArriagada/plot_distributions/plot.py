@@ -34,9 +34,15 @@ COUNTRIES_YEARS = {
 # Define latest year for world mean
 LATEST_YEAR = 2024
 
+# Define minimum log income
+MIN_LOG_INCOME = -2
+
+# Define maximum income
+MAX_INCOME = 1000
+
 # Define width and height for the plot
-WIDTH = 2000
-HEIGHT = 500
+WIDTH = 1500
+HEIGHT = 750
 
 df_percentiles = pd.read_feather(PERCENTILES_URL)
 df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
@@ -107,6 +113,38 @@ for set, countries_years in COUNTRIES_YEARS.items():
         "median",
     ].values[0]
 
+    # Add percentile 0 to df_percentiles_country_1, with country = list(countries_years.keys())[0], year = list(countries_years.values())[0]
+    df_percentile_0_country_1 = pd.DataFrame.from_dict(
+        data={
+            "country": [list(countries_years.keys())[0]],
+            "year": [list(countries_years.values())[0]],
+            "percentile": [0],
+            "thr": [0],
+            "thr_log": [MIN_LOG_INCOME],
+        }
+    )
+
+    # Add percentile 100 to df_percentiles_country_1, with country = list(countries_years.keys())[0], year = list(countries_years.values())[0]
+    df_percentile_100_country_1 = pd.DataFrame.from_dict(
+        data={
+            "country": [list(countries_years.keys())[0]],
+            "year": [list(countries_years.values())[0]],
+            "percentile": [100],
+            "thr": [MAX_INCOME],
+            "thr_log": [np.log(MAX_INCOME)],
+        }
+    )
+
+    # Concatenate
+    df_percentiles_country_1 = pd.concat(
+        [
+            df_percentile_0_country_1,
+            df_percentiles_country_1,
+            df_percentile_100_country_1,
+        ],
+        ignore_index=True,
+    )
+
     # Filter second country in set
     df_percentiles_country_2 = (
         df_percentiles[
@@ -136,11 +174,47 @@ for set, countries_years in COUNTRIES_YEARS.items():
         "median",
     ].values[0]
 
+    # Add percentile 0 to df_percentiles_country_2, with country = list(countries_years.keys())[1], year = list(countries_years.values())[1]
+    df_percentile_0_country_2 = pd.DataFrame.from_dict(
+        data={
+            "country": [list(countries_years.keys())[1]],
+            "year": [list(countries_years.values())[1]],
+            "percentile": [0],
+            "thr": [0],
+            "thr_log": [MIN_LOG_INCOME],
+        }
+    )
+
+    # Add percentile 100 to df_percentiles_country_2, with country = list(countries_years.keys())[1], year = list(countries_years.values())[1]
+    df_percentile_100_country_2 = pd.DataFrame.from_dict(
+        data={
+            "country": [list(countries_years.keys())[1]],
+            "year": [list(countries_years.values())[1]],
+            "percentile": [100],
+            "thr": [MAX_INCOME],
+            "thr_log": [np.log(MAX_INCOME)],
+        }
+    )
+
+    # Concatenate
+    df_percentiles_country_2 = pd.concat(
+        [
+            df_percentile_0_country_2,
+            df_percentiles_country_2,
+            df_percentile_100_country_2,
+        ],
+        ignore_index=True,
+    )
+
     data_list = [
         df_percentiles_country_1["thr_log"],
         df_percentiles_country_2["thr_log"],
     ]
     label_list = [list(countries_years.keys())[0], list(countries_years.keys())[1]]
+
+    ########################################################
+    # PLOT
+    ########################################################
 
     # Plot density curve for thr_log
     fig = ff.create_distplot(
@@ -174,9 +248,12 @@ for set, countries_years in COUNTRIES_YEARS.items():
             tickvals=tickvals,
             ticktext=ticktext,
         ),
+        yaxis={"visible": False, "showticklabels": False},
+        showlegend=False,
+        plot_bgcolor="rgba(0, 0, 0, 0)",
     )
 
-    fig.update_yaxes(range=[0, 1])
+    fig.update_yaxes(range=[0, 0.7])
 
     fig.add_vline(
         x=df_percentiles_country_1_50[1],
@@ -229,6 +306,27 @@ for set, countries_years in COUNTRIES_YEARS.items():
         annotation_position="bottom right",
         annotation_textangle=-90,
     )
+
+    # Add line at y=0
+    fig.add_hline(y=0, line_width=2, line_color="grey")
+
+    # Format ticks
+    fig.update_xaxes(
+        showgrid=True, ticks="outside", tickson="boundaries", ticklen=5, color="grey"
+    )
+
+    # Fill area under each curve
+    x1 = [xc for xc in fig.data[0].x]
+    y1 = fig.data[0].y[: len(x1)]
+
+    x2 = [xc for xc in fig.data[1].x]
+    y2 = fig.data[1].y[: len(x2)]
+    fig.add_scatter(
+        x=x1, y=y1, fill="tozeroy", mode="none", fillcolor="#67b1e5"
+    )  # original #1f77b4
+    fig.add_scatter(
+        x=x2, y=y2, fill="tozeroy", mode="none", fillcolor="#ffa04d"
+    )  # original #ff7f0e
 
     # Export png
     fig.write_image(
