@@ -113,37 +113,38 @@ for set, countries_years in COUNTRIES_YEARS.items():
         "median",
     ].values[0]
 
-    # Add percentile 0 to df_percentiles_country_1, with country = list(countries_years.keys())[0], year = list(countries_years.values())[0]
-    df_percentile_0_country_1 = pd.DataFrame.from_dict(
-        data={
-            "country": [list(countries_years.keys())[0]],
-            "year": [list(countries_years.values())[0]],
-            "percentile": [0],
-            "thr": [0],
-            "thr_log": [MIN_LOG_INCOME],
-        }
-    )
+    # NOTE: I omitted this bit, because the curve is distorted when adding the percentiles 0 and 100
+    # # Add percentile 0 to df_percentiles_country_1, with country = list(countries_years.keys())[0], year = list(countries_years.values())[0]
+    # df_percentile_0_country_1 = pd.DataFrame.from_dict(
+    #     data={
+    #         "country": [list(countries_years.keys())[0]],
+    #         "year": [list(countries_years.values())[0]],
+    #         "percentile": [0],
+    #         "thr": [0],
+    #         "thr_log": [MIN_LOG_INCOME],
+    #     }
+    # )
 
-    # Add percentile 100 to df_percentiles_country_1, with country = list(countries_years.keys())[0], year = list(countries_years.values())[0]
-    df_percentile_100_country_1 = pd.DataFrame.from_dict(
-        data={
-            "country": [list(countries_years.keys())[0]],
-            "year": [list(countries_years.values())[0]],
-            "percentile": [100],
-            "thr": [MAX_INCOME],
-            "thr_log": [np.log(MAX_INCOME)],
-        }
-    )
+    # # Add percentile 100 to df_percentiles_country_1, with country = list(countries_years.keys())[0], year = list(countries_years.values())[0]
+    # df_percentile_100_country_1 = pd.DataFrame.from_dict(
+    #     data={
+    #         "country": [list(countries_years.keys())[0]],
+    #         "year": [list(countries_years.values())[0]],
+    #         "percentile": [100],
+    #         "thr": [MAX_INCOME],
+    #         "thr_log": [np.log(MAX_INCOME)],
+    #     }
+    # )
 
-    # Concatenate
-    df_percentiles_country_1 = pd.concat(
-        [
-            df_percentile_0_country_1,
-            df_percentiles_country_1,
-            df_percentile_100_country_1,
-        ],
-        ignore_index=True,
-    )
+    # # Concatenate
+    # df_percentiles_country_1 = pd.concat(
+    #     [
+    #         df_percentile_0_country_1,
+    #         df_percentiles_country_1,
+    #         df_percentile_100_country_1,
+    #     ],
+    #     ignore_index=True,
+    # )
 
     # Filter second country in set
     df_percentiles_country_2 = (
@@ -174,37 +175,38 @@ for set, countries_years in COUNTRIES_YEARS.items():
         "median",
     ].values[0]
 
-    # Add percentile 0 to df_percentiles_country_2, with country = list(countries_years.keys())[1], year = list(countries_years.values())[1]
-    df_percentile_0_country_2 = pd.DataFrame.from_dict(
-        data={
-            "country": [list(countries_years.keys())[1]],
-            "year": [list(countries_years.values())[1]],
-            "percentile": [0],
-            "thr": [0],
-            "thr_log": [MIN_LOG_INCOME],
-        }
-    )
+    # NOTE: I omitted this bit, because the curve is distorted when adding the percentiles 0 and 100
+    # # Add percentile 0 to df_percentiles_country_2, with country = list(countries_years.keys())[1], year = list(countries_years.values())[1]
+    # df_percentile_0_country_2 = pd.DataFrame.from_dict(
+    #     data={
+    #         "country": [list(countries_years.keys())[1]],
+    #         "year": [list(countries_years.values())[1]],
+    #         "percentile": [0],
+    #         "thr": [0],
+    #         "thr_log": [MIN_LOG_INCOME],
+    #     }
+    # )
 
-    # Add percentile 100 to df_percentiles_country_2, with country = list(countries_years.keys())[1], year = list(countries_years.values())[1]
-    df_percentile_100_country_2 = pd.DataFrame.from_dict(
-        data={
-            "country": [list(countries_years.keys())[1]],
-            "year": [list(countries_years.values())[1]],
-            "percentile": [100],
-            "thr": [MAX_INCOME],
-            "thr_log": [np.log(MAX_INCOME)],
-        }
-    )
+    # # Add percentile 100 to df_percentiles_country_2, with country = list(countries_years.keys())[1], year = list(countries_years.values())[1]
+    # df_percentile_100_country_2 = pd.DataFrame.from_dict(
+    #     data={
+    #         "country": [list(countries_years.keys())[1]],
+    #         "year": [list(countries_years.values())[1]],
+    #         "percentile": [100],
+    #         "thr": [MAX_INCOME],
+    #         "thr_log": [np.log(MAX_INCOME)],
+    #     }
+    # )
 
-    # Concatenate
-    df_percentiles_country_2 = pd.concat(
-        [
-            df_percentile_0_country_2,
-            df_percentiles_country_2,
-            df_percentile_100_country_2,
-        ],
-        ignore_index=True,
-    )
+    # # Concatenate
+    # df_percentiles_country_2 = pd.concat(
+    #     [
+    #         df_percentile_0_country_2,
+    #         df_percentiles_country_2,
+    #         df_percentile_100_country_2,
+    #     ],
+    #     ignore_index=True,
+    # )
 
     data_list = [
         df_percentiles_country_1["thr_log"],
@@ -253,7 +255,7 @@ for set, countries_years in COUNTRIES_YEARS.items():
         plot_bgcolor="rgba(0, 0, 0, 0)",
     )
 
-    fig.update_yaxes(range=[0, 0.7])
+    fig.update_yaxes(range=[0, 0.9])
 
     fig.add_vline(
         x=df_percentiles_country_1_50[1],
