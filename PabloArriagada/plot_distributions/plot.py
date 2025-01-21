@@ -26,7 +26,7 @@ COUNTRIES_YEARS = {
         "Burundi": 2020,
     },
     2: {
-        "Syria": 2022,
+        "Ethiopia": 2015,
         "Denmark": 2021,
     },
 }
