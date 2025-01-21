@@ -26,7 +26,7 @@ COUNTRIES_YEARS = {
         "Burundi": 2020,
     },
     2: {
-        "Ethiopia": 2015,
+        "Syria": 2022,
         "Denmark": 2021,
     },
 }
@@ -43,6 +43,9 @@ MAX_INCOME = 1000
 # Define width and height for the plot
 WIDTH = 1500
 HEIGHT = 750
+
+# Define if we use threshold (thr), average (avg) or the log of these values (thr_log, avg_log) for the x-axis
+X_AXIS = "avg_log"
 
 df_percentiles = pd.read_feather(PERCENTILES_URL)
 df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
@@ -65,9 +68,10 @@ df_percentiles["avg_log"] = np.log(df_percentiles["avg"])
 df_percentiles["thr_log"] = np.log(df_percentiles["thr"])
 
 # Drop percentile 100
-df_percentiles = df_percentiles[df_percentiles["percentile"] != 100].reset_index(
-    drop=True
-)
+if X_AXIS == "thr" or X_AXIS == "thr_log":
+    df_percentiles = df_percentiles[df_percentiles["percentile"] != 100].reset_index(
+        drop=True
+    )
 
 # Define world mean
 WORLD_MEAN = df_main_indicators.loc[
@@ -94,7 +98,7 @@ for set, countries_years in COUNTRIES_YEARS.items():
         .copy()
     )
 
-    # Get values of thr and thr_log for country 1 at percentile 50
+    # Get value of thr for country 1 at percentile 50
     df_percentiles_country_1_50 = df_percentiles_country_1[
         df_percentiles_country_1["percentile"] == 50
     ][["thr", "thr_log", "avg", "avg_log"]].values[0]
@@ -156,7 +160,7 @@ for set, countries_years in COUNTRIES_YEARS.items():
         .copy()
     )
 
-    # Get values of thr and thr_log for country 2 at percentile 50
+    # Get value of thr for country 2 at percentile 50
     df_percentiles_country_2_50 = df_percentiles_country_2[
         df_percentiles_country_2["percentile"] == 50
     ][["thr", "thr_log", "avg", "avg_log"]].values[0]
@@ -209,8 +213,8 @@ for set, countries_years in COUNTRIES_YEARS.items():
     # )
 
     data_list = [
-        df_percentiles_country_1["thr_log"],
-        df_percentiles_country_2["thr_log"],
+        df_percentiles_country_1[X_AXIS],
+        df_percentiles_country_2[X_AXIS],
     ]
     label_list = [list(countries_years.keys())[0], list(countries_years.keys())[1]]
 
