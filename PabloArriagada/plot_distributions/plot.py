@@ -266,7 +266,7 @@ for set, countries_years in COUNTRIES_YEARS.items():
         line_width=0.5,
         line_dash="dot",
         line_color="grey",
-        annotation_text=f"<b>{list(countries_years.keys())[0]} ({list(countries_years.values())[0]})</b><br>Median income: &#36;{round(MEDIAN_COUNTRY_1,1):.2f}<br>Mean income: &#36;{round(MEAN_COUNTRY_1,1):.2f}",
+        annotation_text=f"<b>{list(countries_years.keys())[0]} ({list(countries_years.values())[0]})</b><br>Median income: &#36;{round(MEDIAN_COUNTRY_1,2):.2f}<br>Mean income: &#36;{round(MEAN_COUNTRY_1,1):.2f}",
         annotation_position="top right",
         annotation_align="left",
     )
@@ -275,7 +275,7 @@ for set, countries_years in COUNTRIES_YEARS.items():
         line_width=0.5,
         line_dash="dot",
         line_color="grey",
-        annotation_text=f"<b>{list(countries_years.keys())[1]} ({list(countries_years.values())[1]})</b><br>Median income: &#36;{round(MEDIAN_COUNTRY_2,1):.2f}<br>Mean income: &#36;{round(MEAN_COUNTRY_2,1):.2f}",
+        annotation_text=f"<b>{list(countries_years.keys())[1]} ({list(countries_years.values())[1]})</b><br>Median income: &#36;{round(MEDIAN_COUNTRY_2,2):.2f}<br>Mean income: &#36;{round(MEAN_COUNTRY_2,1):.2f}",
         annotation_position="top left",
         annotation_align="right",
     )
@@ -297,7 +297,7 @@ for set, countries_years in COUNTRIES_YEARS.items():
         line_width=0.5,
         line_dash="dot",
         line_color="black",
-        annotation_text=f"World mean: &#36;{round(WORLD_MEAN,1):.2f}",
+        annotation_text=f"World mean: &#36;{round(WORLD_MEAN,2):.2f}",
         annotation_position="bottom right",
         annotation_textangle=-90,
     )
@@ -308,7 +308,7 @@ for set, countries_years in COUNTRIES_YEARS.items():
         line_width=0.5,
         line_dash="dot",
         line_color="black",
-        annotation_text=f"World median: &#36;{round(WORLD_MEDIAN,1):.2f}",
+        annotation_text=f"World median: &#36;{round(WORLD_MEDIAN,2):.2f}",
         annotation_position="bottom right",
         annotation_textangle=-90,
     )
