@@ -35,32 +35,28 @@ df_wdi = df_wdi[df_wdi["country"].isin(COUNTRIES)].reset_index(drop=True)
 # Sort countries by GDP_VARIABLES[1]
 df_wdi = df_wdi.sort_values(by=GDP_VARIABLES[1], ascending=True).reset_index(drop=True)
 
-# Plot a bar chart with each country in the x-axis and the GDP variables as colors
+# Plot a horizontal bar chart with each country in the y-axis and the GDP variables as colors
 fig = go.Figure()
 
 for variable in GDP_VARIABLES:
     fig.add_trace(
-        go.Bar(
-            x=df_wdi["country"],
-            y=df_wdi[variable],
-            name=variable,
-        )
+        go.Bar(y=df_wdi["country"], x=df_wdi[variable], name=variable, orientation="h")
     )
 
 fig.update_layout(
     title=f"GDP per capita in {latest_year}",
-    xaxis_title="Country",
-    yaxis_title="GDP per capita",
+    yaxis_title="Country",
+    xaxis_title="GDP per capita",
     barmode="group",
 )
 
 # Add a dotted line for the value of the United States
 fig.add_shape(
     type="line",
-    x0=-0.5,
-    x1=len(COUNTRIES) - 0.5,
-    y0=df_wdi[df_wdi["country"] == "United States"][GDP_VARIABLES[1]].values[0],
-    y1=df_wdi[df_wdi["country"] == "United States"][GDP_VARIABLES[1]].values[0],
+    y0=-0.5,
+    y1=len(COUNTRIES) - 0.5,
+    x0=df_wdi[df_wdi["country"] == "United States"][GDP_VARIABLES[1]].values[0],
+    x1=df_wdi[df_wdi["country"] == "United States"][GDP_VARIABLES[1]].values[0],
     line=dict(
         color="grey",
         width=1,
