@@ -19,6 +19,10 @@ COUNTRIES = ["Burkina Faso", "India", "Brazil", "Spain", "United States"]
 # Define WDI URL
 WDI_URL = f"https://catalog.ourworldindata.org/garden/worldbank_wdi/{WDI_VERSION}/wdi/wdi.feather?nocache"
 
+# Define width and height for the plot
+WIDTH = 1500
+HEIGHT = 750
+
 # Open file
 df_wdi = pd.read_feather(WDI_URL)
 
@@ -76,6 +80,12 @@ fig.add_shape(
         width=1,
         dash="dash",
     ),
+)
+
+fig.write_image(
+    PARENT_DIR / "gdp_comparison.svg",
+    width=WIDTH,
+    height=HEIGHT,
 )
 
 fig.show()
