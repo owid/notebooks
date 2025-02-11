@@ -40,7 +40,12 @@ fig = go.Figure()
 
 for variable in GDP_VARIABLES:
     fig.add_trace(
-        go.Bar(y=df_wdi["country"], x=df_wdi[variable], name=variable, orientation="h")
+        go.Bar(
+            y=df_wdi["country"],
+            x=df_wdi[variable],
+            name=variable,
+            orientation="h",
+        )
     )
 
 fig.update_layout(
@@ -49,6 +54,15 @@ fig.update_layout(
     xaxis_title="GDP per capita",
     barmode="group",
 )
+# Add values as labels
+for i, variable in enumerate(GDP_VARIABLES):
+    fig.data[i].text = df_wdi[variable]
+    fig.data[i].texttemplate = "$%{text:,.0f}"
+    fig.data[i].textposition = "outside"
+
+# Update trace names
+fig.data[0].name = "Constant 2021 US$"
+fig.data[1].name = "International-$ at 2021 prices"
 
 # Add a dotted line for the value of the United States
 fig.add_shape(
