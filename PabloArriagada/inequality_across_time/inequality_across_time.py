@@ -33,6 +33,7 @@ df = pd.read_feather(DATASET_URL)
 # Rename rows in only_all_series
 df["only_all_series"] = df["only_all_series"].replace(ONLY_ALL_SERIES)
 
+
 # Keep the data in unique rows using this index ["country", "ref_year", "only_all_series"]
 df = df.groupby(["country", "ref_year", "only_all_series"], as_index=False).first()
 
@@ -44,14 +45,15 @@ df = df.pivot(
     values=INDICATORS,
 ).reset_index()
 
+
 # Flatten columns
 df.columns = ["_".join(map(str, col)).strip() for col in df.columns.values]
 
 # Remove trailing underscore
 df.columns = df.columns.str.rstrip("_")
 
-# Remove rows with missing values (except for country)
-df = df.dropna(subset=[col for col in df.columns if col != "country"])
+# Remove rows with an entire row of missing values (except for country)
+df = df.dropna(how="all", subset=[col for col in df.columns if col != "country"])
 
 # Calculate the difference between values
 for indicator in INDICATORS:
@@ -61,54 +63,49 @@ for indicator in INDICATORS:
             - df[f"{indicator}_1993_{only_all_series}"]
         )
 
-# Sort df by gini_pip_disposable_percapita_all_true_diff
-df = df.sort_values(by="gini_pip_disposable_percapita_all_true_diff", ascending=False)
+        # Also calculate the percentage change
+        df[f"{indicator}_{only_all_series}_perc_diff"] = (
+            df[f"{indicator}_{only_all_series}_diff"]
+            / df[f"{indicator}_1993_{only_all_series}"]
+            * 100
+        )
 
-print(df)
+# Sort df by gini_pip_disposable_percapita_all_true_diff
+df = df.sort_values(
+    by="gini_pip_disposable_percapita_all_true_perc_diff", ascending=False
+)
+
 
 # With plotly express, plot dumbbells for each country (shown by row), using gini_pip_disposable_percapita_1993_all_true and gini_pip_disposable_percapita_2019_all_true
 fig = go.Figure()
 
-for i, row in df.iterrows():
-    fig.add_trace(
-        go.Scatter(
-            x=[row["gini_pip_disposable_percapita_1993_all_true"]],
-            y=[row["country"]],
-            mode="markers",
-            marker=dict(color="red", size=10),
-            name=f"{row['country']} 1993",
-            showlegend=False,
-        )
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=[row["gini_pip_disposable_percapita_2019_all_true"]],
-            y=[row["country"]],
-            mode="markers",
-            marker=dict(color="green", size=10),
-            name=f"{row['country']} 2019",
-            showlegend=False,
-        )
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=[
-                row["gini_pip_disposable_percapita_1993_all_true"],
-                row["gini_pip_disposable_percapita_2019_all_true"],
+# Add bars for the difference in Gini Coefficient
+fig.add_trace(
+    go.Bar(
+        x=df["gini_pip_disposable_percapita_all_true_perc_diff"],
+        y=df["country"],
+        orientation="h",
+        marker=dict(
+            color=[
+                "green" if val >= 0 else "red"
+                for val in df["gini_pip_disposable_percapita_all_true_perc_diff"]
             ],
-            y=[row["country"], row["country"]],
-            mode="lines",
-            line=dict(color="gray", width=1, dash="dot"),
-            showlegend=False,
-        )
+        ),
     )
+)
 
 fig.update_layout(
-    title="Gini coefficient in 1993 vs 2019",
-    xaxis_title="Gini coefficient",
+    title="Change in Gini Coefficient from 1993 to 2019",
+    xaxis_title="Change in Gini Coefficient (%)",
     yaxis_title="Country",
     yaxis=dict(type="category"),
-    xaxis=dict(range=[0, 1]),
+    xaxis=dict(
+        range=[
+            df["gini_pip_disposable_percapita_all_true_perc_diff"].min(),
+            df["gini_pip_disposable_percapita_all_true_perc_diff"].max(),
+        ],
+        ticksuffix="%",
+    ),
 )
 
 # Show the plot
