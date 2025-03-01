@@ -12,16 +12,22 @@ PIP_VERSION = "2024-10-07"
 POPULATION_VERSION = "2024-07-15"
 
 # Define PIP percentiles URL
-PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/percentiles_income_consumption_2017.feather"
-MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/income_consumption_2017.feather"
+PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/percentiles_income_consumption_2017.feather?nocache"
+MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/income_consumption_2017.feather?nocache"
 
-POPULATION_URL = f"http://catalog.ourworldindata.org/garden/demography/{POPULATION_VERSION}/population/population.feather"
+POPULATION_URL = f"http://catalog.ourworldindata.org/garden/demography/{POPULATION_VERSION}/population/population.feather?nocache"
 
 # Define IPL
 INTERNATIONAL_POVERTY_LINE = 2.15
 
 # Define latest year
 LATEST_YEAR = 2024
+
+# Define maximum income
+MAX_INCOME = 500
+
+# Define maximum income for the plot
+MAX_INCOME_PLOT = 150
 
 # Set line dash, dot or solid
 LINE_DASH = "dot"
@@ -39,6 +45,31 @@ df_percentiles_world = (
     ]
     .reset_index(drop=True)
     .copy()
+)
+
+# Add percentiles 0 and 100
+df_percentile_0_world = pd.DataFrame.from_dict(
+    data={
+        "country": ["World"],
+        "year": [LATEST_YEAR],
+        "percentile": [0],
+        "thr": [0],
+    }
+)
+
+df_percentile_100_world = pd.DataFrame.from_dict(
+    data={
+        "country": ["World"],
+        "year": [LATEST_YEAR],
+        "percentile": [100],
+        "thr": [MAX_INCOME],
+    }
+)
+
+# Concatenate
+df_percentiles_world = pd.concat(
+    [df_percentile_0_world, df_percentiles_world, df_percentile_100_world],
+    ignore_index=True,
 )
 
 # Define world median
@@ -71,11 +102,10 @@ latest_year_us = df_main_indicators.loc[
     "year",
 ].max()
 
-US_MEDIAN = df_percentiles.loc[
-    (df_percentiles["country"] == "United States")
-    & (df_percentiles["year"] == latest_year_us)
-    & (df_percentiles["percentile"] == 50),
-    "thr",
+US_MEDIAN = df_main_indicators.loc[
+    (df_main_indicators["country"] == "United States")
+    & (df_main_indicators["year"] == latest_year_us),
+    "median",
 ].values[0]
 
 
@@ -98,6 +128,9 @@ df_percentiles_world_below_90th = (
     .reset_index(drop=True)
 )
 
+########################################################
+# PLOT
+########################################################
 
 # Plot a line chart with  the columns percentile vs thr in plotly express
 fig = px.area(
@@ -117,7 +150,10 @@ fig.update_layout(
         ticksuffix=" a day",
     ),
     showlegend=False,
+    plot_bgcolor="rgba(0, 0, 0, 0)",
 )
+
+fig.update_yaxes(range=[0, MAX_INCOME_PLOT])
 
 # Add overlapping areas for the different percentiles
 fig.add_trace(
@@ -224,12 +260,26 @@ fig.add_hline(
 # Add a vertical line to say "50% of the world population lives with less than ${WORLD_MEDIAN} per day"
 fig.add_annotation(
     x=50,
-    y=0.1,
+    y=0.08,
     yref="paper",
-    text=f"50% of the world population lives with less than<br><b>${WORLD_MEDIAN:.2f} per day</b>",
+    text=f"50% of the world population lives<br>with less than<br><b>${WORLD_MEDIAN:.2f} per day</b>",
     showarrow=False,
     xanchor="left",
     align="left",
 )
 
-fig.show()
+# Format ticks
+fig.update_xaxes(
+    showgrid=True, ticks="outside", tickson="boundaries", ticklen=5, color="grey"
+)
+fig.update_yaxes(
+    showgrid=True, ticks="outside", tickson="boundaries", ticklen=5, color="grey"
+)
+
+# Export png
+fig.write_image(PARENT_DIR / "global_income_distribution.png", width=1100, height=1000)
+
+# Export svg
+fig.write_image(PARENT_DIR / "global_income_distribution.svg", width=1100, height=1000)
+
+# fig.show()
