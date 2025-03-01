@@ -17,3 +17,4 @@ Not all charts have data or code available, but when they do, they will be share
 | 2024-10-07 | Which cancers do people in the United States die from at different ages? | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Cancer-mortality-age) |
 | 2024-12-23 | The Golden Age of Antibiotics | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Antibiotic-drugs) |
 | 2024-12-23 | Antibiotics: time from discovery to introduction | [GitHub folder](https://github.com/owid/notebooks/tree/main/SaloniDattani/Antibiotic-drugs) |
+| 2024-02-24 | The US Baby Boom: When did each cohort of women have children? | [GitHub folder]([https://github.com/owid/notebooks/tree/main/SaloniDattani/Antibiotic-drugs](https://github.com/owid/notebooks/tree/main/SaloniDattani/Fertility/Baby-boom-ridgeplot-age-specific-fertility-rate)) |
