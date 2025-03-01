@@ -2,7 +2,7 @@ This folder contains a script to recreate:
 
 - A ridgeplot showing age-specific cohort fertility rates by age in the United States
 - A ridgeplot showing age-specific cohort fertility rates by year in the United States
-- A heatmap version showing age-specific fertility rates for birth cohorts of women in the United States, which highlights the baby boom
+- A heatmap version showing age-specific fertility rates by age in the United States
 
 The data comes from the Human Fertility Database, with the citation below:
 
