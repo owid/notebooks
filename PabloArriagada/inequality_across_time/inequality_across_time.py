@@ -104,7 +104,7 @@ fig.update_layout(
     title="Change in Gini Coefficient from 1993 to 2019",
     xaxis_title="Change in Gini Coefficient (%)",
     yaxis_title="Country",
-    yaxis=dict(type="category"),
+    yaxis=dict(type="category", dtick=1),  # Ensure all countries are shown
     xaxis=dict(
         range=[
             df["gini_pip_disposable_percapita_all_true_perc_diff"].min(),
