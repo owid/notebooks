@@ -22,10 +22,12 @@ ONLY_ALL_SERIES = {
 
 DATASET_URL = f"http://catalog.ourworldindata.org/garden/poverty_inequality/{VERSION}/inequality_comparison/inequality_comparison.feather?nocache"
 
+# Define percentage change where we consider an insignificant change
+PERCENTAGE_CHANGE_THRESHOLD = 5
 
-# Set line dash, dot or solid
-LINE_DASH = "dot"
-LINE_WIDTH = 1
+# Define dimensions of exported image
+WIDTH = 1000
+HEIGHT = 1500
 
 # Read data
 df = pd.read_feather(DATASET_URL)
@@ -87,7 +89,11 @@ fig.add_trace(
         orientation="h",
         marker=dict(
             color=[
-                "green" if val >= 0 else "red"
+                "#E56E5A"
+                if val > PERCENTAGE_CHANGE_THRESHOLD
+                else "#286BBB"
+                if val < -PERCENTAGE_CHANGE_THRESHOLD
+                else "#D3D3D3"
                 for val in df["gini_pip_disposable_percapita_all_true_perc_diff"]
             ],
         ),
@@ -106,6 +112,16 @@ fig.update_layout(
         ],
         ticksuffix="%",
     ),
+)
+
+# Export png
+fig.write_image(
+    PARENT_DIR / "global_income_distribution.png", width=WIDTH, height=HEIGHT
+)
+
+# Export svg
+fig.write_image(
+    PARENT_DIR / "global_income_distribution.svg", width=WIDTH, height=HEIGHT
 )
 
 # Show the plot
