@@ -23,7 +23,7 @@ ONLY_ALL_SERIES = {
 DATASET_URL = f"http://catalog.ourworldindata.org/garden/poverty_inequality/{VERSION}/inequality_comparison/inequality_comparison.feather?nocache"
 
 # Define percentage change where we consider an insignificant change
-PERCENTAGE_CHANGE_THRESHOLD = 5
+PERCENTAGE_CHANGE_THRESHOLD = 0.05
 
 # Define dimensions of exported image
 WIDTH = 1000
@@ -74,7 +74,7 @@ for indicator in INDICATORS:
 
 # Sort df by gini_pip_disposable_percapita_all_true_diff
 df = df.sort_values(
-    by="gini_pip_disposable_percapita_all_true_perc_diff", ascending=False
+    by="gini_pip_disposable_percapita_all_true_diff", ascending=False
 )
 
 
@@ -84,7 +84,7 @@ fig = go.Figure()
 # Add bars for the difference in Gini Coefficient
 fig.add_trace(
     go.Bar(
-        x=df["gini_pip_disposable_percapita_all_true_perc_diff"],
+        x=df["gini_pip_disposable_percapita_all_true_diff"],
         y=df["country"],
         orientation="h",
         marker=dict(
@@ -94,7 +94,7 @@ fig.add_trace(
                 else "#286BBB"
                 if val < -PERCENTAGE_CHANGE_THRESHOLD
                 else "#D3D3D3"
-                for val in df["gini_pip_disposable_percapita_all_true_perc_diff"]
+                for val in df["gini_pip_disposable_percapita_all_true_diff"]
             ],
         ),
     )
@@ -102,15 +102,14 @@ fig.add_trace(
 
 fig.update_layout(
     title="Change in Gini Coefficient from 1993 to 2019",
-    xaxis_title="Change in Gini Coefficient (%)",
+    xaxis_title="Change in Gini Coefficient",
     yaxis_title="Country",
     yaxis=dict(type="category", dtick=1),  # Ensure all countries are shown
     xaxis=dict(
         range=[
-            df["gini_pip_disposable_percapita_all_true_perc_diff"].min(),
-            df["gini_pip_disposable_percapita_all_true_perc_diff"].max(),
+            df["gini_pip_disposable_percapita_all_true_diff"].min(),
+            df["gini_pip_disposable_percapita_all_true_diff"].max(),
         ],
-        ticksuffix="%",
     ),
 )
 
