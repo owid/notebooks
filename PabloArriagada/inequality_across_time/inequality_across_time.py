@@ -23,7 +23,7 @@ ONLY_ALL_SERIES = {
 DATASET_URL = f"http://catalog.ourworldindata.org/garden/poverty_inequality/{VERSION}/inequality_comparison/inequality_comparison.feather?nocache"
 
 # Define percentage change where we consider an insignificant change
-PERCENTAGE_CHANGE_THRESHOLD = 0.05
+PERCENTAGE_CHANGE_THRESHOLD = 0.025
 
 # Define dimensions of exported image
 WIDTH = 1000
@@ -33,11 +33,11 @@ HEIGHT = 1500
 df = pd.read_feather(DATASET_URL)
 
 # Rename rows in only_all_series
-df["only_all_series"] = df["only_all_series"].replace(ONLY_ALL_SERIES)
+df["only_all_series"] = df["only_all_series"].cat.rename_categories(ONLY_ALL_SERIES)
 
 
 # Keep the data in unique rows using this index ["country", "ref_year", "only_all_series"]
-df = df.groupby(["country", "ref_year", "only_all_series"], as_index=False).first()
+df = df.groupby(["country", "ref_year", "only_all_series"], as_index=False, observed=True).first()
 
 
 # Pivot data with ref_year as columns
