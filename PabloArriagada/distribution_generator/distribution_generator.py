@@ -377,6 +377,12 @@ def distributional_plots_per_row(
             ax.spines["bottom"].set_visible(False)
             ax.spines["left"].set_visible(False)
 
+            # Remove x-axis ticks for all axes except the last
+            if ax != axes[-1]:
+                ax.tick_params(
+                    axis="x", which="both", bottom=False, top=False, labelbottom=False
+                )
+
         # Adjust layout and save the figure
         plt.tight_layout()
         fig.savefig(
