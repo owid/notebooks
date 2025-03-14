@@ -363,6 +363,10 @@ def distributional_plots_per_row(
             # Remove y-axis labels and ticks
             ax.set_ylabel("")
             ax.yaxis.set_ticks([])
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.spines["bottom"].set_visible(False)
+            ax.spines["left"].set_visible(False)
 
         # Adjust layout and save the figure
         plt.tight_layout()
