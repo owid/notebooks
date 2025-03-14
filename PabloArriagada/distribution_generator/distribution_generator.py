@@ -43,20 +43,20 @@ def run() -> None:
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
 
     for countries in COUNTRIES:
-        # Overlapping distributions with independent density estimates
-        distributional_plots(
-            data=df_thousand_bins,
-            df_main_indicators=df_main_indicators,
-            x="avg",
-            weights="pop",
-            log_scale=True,
-            multiple="layer",
-            hue="country",
-            hue_order=countries,
-            years=[2024],
-            legend=True,
-            common_norm=False,
-        )
+        # # Overlapping distributions with independent density estimates
+        # distributional_plots(
+        #     data=df_thousand_bins,
+        #     df_main_indicators=df_main_indicators,
+        #     x="avg",
+        #     weights="pop",
+        #     log_scale=True,
+        #     multiple="layer",
+        #     hue="country",
+        #     hue_order=countries,
+        #     years=[2024],
+        #     legend=True,
+        #     common_norm=False,
+        # )
 
         distributional_plots_per_row(
             data=df_thousand_bins,
@@ -72,20 +72,20 @@ def run() -> None:
             common_norm=False,
         )
 
-    # Stacked distributions with common density estimate
-    distributional_plots(
-        data=df_thousand_bins,
-        df_main_indicators=df_main_indicators,
-        x="avg",
-        weights="pop",
-        log_scale=True,
-        multiple="stack",
-        hue="country",
-        hue_order=["Denmark", "Ethiopia"],
-        years=[2024],
-        legend=True,
-        common_norm=True,
-    )
+    # # Stacked distributions with common density estimate
+    # distributional_plots(
+    #     data=df_thousand_bins,
+    #     df_main_indicators=df_main_indicators,
+    #     x="avg",
+    #     weights="pop",
+    #     log_scale=True,
+    #     multiple="stack",
+    #     hue="country",
+    #     hue_order=["Denmark", "Ethiopia"],
+    #     years=[2024],
+    #     legend=True,
+    #     common_norm=True,
+    # )
 
 
 def distributional_plots(
@@ -238,7 +238,7 @@ def distributional_plots_per_row(
     common_norm: bool = True,
 ) -> None:
     """
-    Plot distributional data with seaborn, with multiple options for customization.
+    Plot distributional data with seaborn, with each distribution in a separate row.
     """
 
     # If no years are provided, use all years in the data
@@ -273,87 +273,121 @@ def distributional_plots_per_row(
             "median",
         ].values[0]
 
-        # Plot a kde with seaborn
-        kde_plot = sns.kdeplot(
-            data=data_year,
-            x=x,
-            weights=weights,
-            fill=True,
-            log_scale=log_scale,
-            hue=hue,
-            hue_order=hue_order,
-            multiple=multiple,
-            legend=legend,
-            common_norm=common_norm,
+        # Create a figure with subplots for each country
+        fig, axes = plt.subplots(
+            nrows=len(hue_order),
+            ncols=1,
+            figsize=(WIDTH / 100, HEIGHT / 100),
+            sharex=True,  # Share the x-axis across all subplots
         )
 
-        if log_scale:
-            # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
-            # kde_plot.set(xscale="log")
-            kde_plot.set_xticks([1, 2, 5, 10, 20, 50, 100, 200, 500, 1000])
-            kde_plot.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+        for ax, country in zip(axes, hue_order):
+            country_data = data_year[data_year[hue] == country]
 
-        # Add a vertical line for the international poverty line
-        plt.axvline(
-            x=INTERNATIONAL_POVERTY_LINE,
-            color="lightgrey",
-            linestyle="--",
-            linewidth=0.8,
-        )
-        plt.text(
-            x=INTERNATIONAL_POVERTY_LINE,  # x-coordinate for the text
-            y=plt.ylim()[1]
-            * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-            s=f"International Poverty Line: ${INTERNATIONAL_POVERTY_LINE}",  # Text string to display
-            color="grey",  # Color of the text
-            rotation=90,  # Rotate the text 90 degrees
-            verticalalignment="top",  # Align the text vertically at the top
-            fontsize=8,  # Font size of the text
-        )
+            # Plot a kde with seaborn
+            sns.kdeplot(
+                data=country_data,
+                x=x,
+                weights=weights,
+                fill=True,
+                log_scale=log_scale,
+                ax=ax,
+                common_norm=common_norm,
+            )
 
-        # Add a vertical line for the world mean, in the same format as the international poverty line
-        plt.axvline(
-            x=world_mean_year,
-            color="lightgrey",
-            linestyle="--",
-            linewidth=0.8,
-        )
-        plt.text(
-            x=world_mean_year,
-            y=plt.ylim()[1] * 0.99,
-            s=f"World mean: ${round(world_mean_year,2):.2f}",
-            color="grey",
-            rotation=90,
-            verticalalignment="top",
-            fontsize=8,
-        )
+            # Add a vertical line for the international poverty line
+            ax.axvline(
+                x=INTERNATIONAL_POVERTY_LINE,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            if ax == axes[-1]:
+                ax.text(
+                    x=INTERNATIONAL_POVERTY_LINE,
+                    y=-0.4,
+                    s=f"International Poverty Line:\n${INTERNATIONAL_POVERTY_LINE}",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="center",
+                    fontsize=8,
+                )
 
-        # Add a vertical line for the world median, in the same format as the international poverty line
-        plt.axvline(
-            x=world_median_year,
-            color="lightgrey",
-            linestyle="--",
-            linewidth=0.8,
-        )
-        plt.text(
-            x=world_median_year,
-            y=plt.ylim()[1] * 0.99,
-            s=f"World median: ${round(world_median_year,2):.2f}",
-            color="grey",
-            rotation=90,
-            verticalalignment="top",
-            fontsize=8,
-        )
+            # Add a vertical line for the world mean
+            ax.axvline(
+                x=world_mean_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            if ax == axes[-1]:
+                ax.text(
+                    x=world_mean_year,
+                    y=-0.4,
+                    s=f"World mean:\n${round(world_mean_year,2):.2f}",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="center",
+                    fontsize=8,
+                )
 
-        if legend:
-            # Move the legend inside the plot
-            kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
-            kde_plot.legend_.set_loc("upper left")
+            # Add a vertical line for the world median
+            ax.axvline(
+                x=world_median_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            if ax == axes[-1]:
+                ax.text(
+                    x=world_median_year,
+                    y=-0.4,
+                    s=f"World median:\n${round(world_median_year,2):.2f}",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="center",
+                    fontsize=8,
+                )
 
-        fig = kde_plot.get_figure()
-        fig.set_size_inches(WIDTH / 100, HEIGHT / 100)
+            # Add the name of the country at the middle of the distribution, bottom
+            ax.text(
+                x=country_data[x].median(),
+                y=ax.get_ylim()[0],
+                s=country,
+                color="black",
+                rotation=0,
+                verticalalignment="bottom",
+                fontsize=10,
+            )
+
+            if log_scale:
+                # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
+                ax.set_xscale("log")
+                ax.set_xticks([1, 2, 5, 10, 20, 50, 100, 200, 500, 1000])
+                ax.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+
+            # Remove y-axis labels and ticks
+            ax.set_ylabel("")
+            ax.yaxis.set_ticks([])
+            ax.set_xlabel("")
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.spines["bottom"].set_visible(False)
+            ax.spines["left"].set_visible(False)
+
+            # Remove x-axis ticks for all axes except the last
+            if ax != axes[-1]:
+                ax.tick_params(
+                    axis="x", which="both", bottom=False, top=False, labelbottom=False
+                )
+
+        # Adjust layout and save the figure
+        plt.tight_layout()
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}.svg"
+            f"{PARENT_DIR}/{filename}_{year}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg"
         )
         plt.close(fig)
 
