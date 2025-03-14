@@ -278,7 +278,7 @@ def distributional_plots_per_row(
             nrows=len(hue_order),
             ncols=1,
             figsize=(WIDTH / 100, HEIGHT / 100),
-            sharex=True,
+            sharex=True,  # Share the x-axis across all subplots
         )
 
         for ax, country in zip(axes, hue_order):
@@ -295,64 +295,73 @@ def distributional_plots_per_row(
                 common_norm=common_norm,
             )
 
-            # Create a shared axis for the vertical lines and labels
-            fig.add_subplot(111, frame_on=False)
-            plt.tick_params(
-                labelcolor="none", top=False, bottom=False, left=False, right=False
-            )
-
             # Add a vertical line for the international poverty line
-            plt.axvline(
+            ax.axvline(
                 x=INTERNATIONAL_POVERTY_LINE,
                 color="lightgrey",
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=INTERNATIONAL_POVERTY_LINE,
-                y=plt.gca().get_ylim()[1] * 0.99,
-                s=f"International Poverty Line: ${INTERNATIONAL_POVERTY_LINE}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
+            if ax == axes[-1]:
+                ax.text(
+                    x=INTERNATIONAL_POVERTY_LINE,
+                    y=ax.get_ylim()[1] * 0.99,
+                    s=f"International Poverty Line:\n${INTERNATIONAL_POVERTY_LINE}",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="center",
+                    fontsize=8,
+                )
 
             # Add a vertical line for the world mean
-            plt.axvline(
+            ax.axvline(
                 x=world_mean_year,
                 color="lightgrey",
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=world_mean_year,
-                y=plt.gca().get_ylim()[1] * 0.99,
-                s=f"World mean: ${round(world_mean_year,2):.2f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
+            if ax == axes[-1]:
+                ax.text(
+                    x=world_mean_year,
+                    y=ax.get_ylim()[1] * 0.99,
+                    s=f"World mean:\n${round(world_mean_year,2):.2f}",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="center",
+                    fontsize=8,
+                )
 
             # Add a vertical line for the world median
-            plt.axvline(
+            ax.axvline(
                 x=world_median_year,
                 color="lightgrey",
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=world_median_year,
-                y=plt.gca().get_ylim()[1] * 0.99,
-                s=f"World median: ${round(world_median_year,2):.2f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
+            if ax == axes[-1]:
+                ax.text(
+                    x=world_median_year,
+                    y=ax.get_ylim()[1] * 0.99,
+                    s=f"World median:\n${round(world_median_year,2):.2f}",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="center",
+                    fontsize=8,
+                )
 
-            ax.set_title(country)
+            # Add the name of the country at the middle of the distribution, bottom
+            ax.text(
+                x=country_data[x].median(),
+                y=ax.get_ylim()[0],
+                s=country,
+                color="black",
+                rotation=0,
+                verticalalignment="bottom",
+                fontsize=10,
+            )
 
             if log_scale:
                 # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
