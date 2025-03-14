@@ -305,7 +305,7 @@ def distributional_plots_per_row(
             if ax == axes[-1]:
                 ax.text(
                     x=INTERNATIONAL_POVERTY_LINE,
-                    y=ax.get_ylim()[1] * 0.99,
+                    y=-0.4,
                     s=f"International Poverty Line:\n${INTERNATIONAL_POVERTY_LINE}",
                     color="grey",
                     rotation=0,
@@ -324,7 +324,7 @@ def distributional_plots_per_row(
             if ax == axes[-1]:
                 ax.text(
                     x=world_mean_year,
-                    y=ax.get_ylim()[1] * 0.99,
+                    y=-0.4,
                     s=f"World mean:\n${round(world_mean_year,2):.2f}",
                     color="grey",
                     rotation=0,
@@ -343,7 +343,7 @@ def distributional_plots_per_row(
             if ax == axes[-1]:
                 ax.text(
                     x=world_median_year,
-                    y=ax.get_ylim()[1] * 0.99,
+                    y=-0.4,
                     s=f"World median:\n${round(world_median_year,2):.2f}",
                     color="grey",
                     rotation=0,
@@ -372,6 +372,7 @@ def distributional_plots_per_row(
             # Remove y-axis labels and ticks
             ax.set_ylabel("")
             ax.yaxis.set_ticks([])
+            ax.set_xlabel("")
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
             ax.spines["bottom"].set_visible(False)
