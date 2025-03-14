@@ -45,12 +45,14 @@ df_thousand_bins_2024 = df_thousand_bins[df_thousand_bins["year"] == 2024].reset
 kde_plot = sns.kdeplot(
     data=df_thousand_bins_2024,
     x="avg",
+    weights="pop",
     fill=True,
     log_scale=True,
-    hue="country",
-    hue_order=["Chile", "Peru", "United States"],
+    hue="region",
+    # hue_order=["Chile", "Peru", "United States"],
     multiple="stack",
     legend=True,
+    common_norm=True,
 )
 
 # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
