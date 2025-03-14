@@ -43,20 +43,20 @@ def run() -> None:
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
 
     for countries in COUNTRIES:
-        # Overlapping distributions with independent density estimates
-        distributional_plots(
-            data=df_thousand_bins,
-            df_main_indicators=df_main_indicators,
-            x="avg",
-            weights="pop",
-            log_scale=True,
-            multiple="layer",
-            hue="country",
-            hue_order=countries,
-            years=[2024],
-            legend=True,
-            common_norm=False,
-        )
+        # # Overlapping distributions with independent density estimates
+        # distributional_plots(
+        #     data=df_thousand_bins,
+        #     df_main_indicators=df_main_indicators,
+        #     x="avg",
+        #     weights="pop",
+        #     log_scale=True,
+        #     multiple="layer",
+        #     hue="country",
+        #     hue_order=countries,
+        #     years=[2024],
+        #     legend=True,
+        #     common_norm=False,
+        # )
 
         distributional_plots_per_row(
             data=df_thousand_bins,
@@ -72,20 +72,20 @@ def run() -> None:
             common_norm=False,
         )
 
-    # Stacked distributions with common density estimate
-    distributional_plots(
-        data=df_thousand_bins,
-        df_main_indicators=df_main_indicators,
-        x="avg",
-        weights="pop",
-        log_scale=True,
-        multiple="stack",
-        hue="country",
-        hue_order=["Denmark", "Ethiopia"],
-        years=[2024],
-        legend=True,
-        common_norm=True,
-    )
+    # # Stacked distributions with common density estimate
+    # distributional_plots(
+    #     data=df_thousand_bins,
+    #     df_main_indicators=df_main_indicators,
+    #     x="avg",
+    #     weights="pop",
+    #     log_scale=True,
+    #     multiple="stack",
+    #     hue="country",
+    #     hue_order=["Denmark", "Ethiopia"],
+    #     years=[2024],
+    #     legend=True,
+    #     common_norm=True,
+    # )
 
 
 def distributional_plots(
@@ -295,16 +295,22 @@ def distributional_plots_per_row(
                 common_norm=common_norm,
             )
 
+            # Create a shared axis for the vertical lines and labels
+            fig.add_subplot(111, frame_on=False)
+            plt.tick_params(
+                labelcolor="none", top=False, bottom=False, left=False, right=False
+            )
+
             # Add a vertical line for the international poverty line
-            ax.axvline(
+            plt.axvline(
                 x=INTERNATIONAL_POVERTY_LINE,
                 color="lightgrey",
                 linestyle="--",
                 linewidth=0.8,
             )
-            ax.text(
+            plt.text(
                 x=INTERNATIONAL_POVERTY_LINE,
-                y=ax.get_ylim()[1] * 0.99,
+                y=plt.gca().get_ylim()[1] * 0.99,
                 s=f"International Poverty Line: ${INTERNATIONAL_POVERTY_LINE}",
                 color="grey",
                 rotation=90,
@@ -313,15 +319,15 @@ def distributional_plots_per_row(
             )
 
             # Add a vertical line for the world mean
-            ax.axvline(
+            plt.axvline(
                 x=world_mean_year,
                 color="lightgrey",
                 linestyle="--",
                 linewidth=0.8,
             )
-            ax.text(
+            plt.text(
                 x=world_mean_year,
-                y=ax.get_ylim()[1] * 0.99,
+                y=plt.gca().get_ylim()[1] * 0.99,
                 s=f"World mean: ${round(world_mean_year,2):.2f}",
                 color="grey",
                 rotation=90,
@@ -330,15 +336,15 @@ def distributional_plots_per_row(
             )
 
             # Add a vertical line for the world median
-            ax.axvline(
+            plt.axvline(
                 x=world_median_year,
                 color="lightgrey",
                 linestyle="--",
                 linewidth=0.8,
             )
-            ax.text(
+            plt.text(
                 x=world_median_year,
-                y=ax.get_ylim()[1] * 0.99,
+                y=plt.gca().get_ylim()[1] * 0.99,
                 s=f"World median: ${round(world_median_year,2):.2f}",
                 color="grey",
                 rotation=90,
@@ -353,6 +359,10 @@ def distributional_plots_per_row(
                 ax.set_xscale("log")
                 ax.set_xticks([1, 2, 5, 10, 20, 50, 100, 200, 500, 1000])
                 ax.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+
+            # Remove y-axis labels and ticks
+            ax.set_ylabel("")
+            ax.yaxis.set_ticks([])
 
         # Adjust layout and save the figure
         plt.tight_layout()
