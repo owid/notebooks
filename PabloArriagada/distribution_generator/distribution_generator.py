@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,9 +21,34 @@ COUNTRIES = [
     ["Denmark", "Democratic Republic of Congo"],
     ["Denmark", "Kenya"],
     ["Denmark", "Niger"],
-    {"Denmark", "Syria"},
-    {"United States", "Burundi"},
+    ["Denmark", "Syria"],
+    ["United States", "Burundi"],
 ]
+
+# Define values for different periods
+PERIOD_VALUES = {
+    "day": {"factor": 1, "log_ticks": [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]},
+    "month": {
+        "factor": 30,
+        "log_ticks": [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000],
+    },
+    "year": {
+        "factor": 365,
+        "log_ticks": [
+            100,
+            200,
+            500,
+            1000,
+            2000,
+            5000,
+            10000,
+            20000,
+            50000,
+            100000,
+            200000,
+        ],
+    },
+}
 
 # Define  version of PIP and 1000 bins data
 PIP_VERSION = "2024-10-07"
@@ -43,20 +68,21 @@ def run() -> None:
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
 
     for countries in COUNTRIES:
-        # # Overlapping distributions with independent density estimates
-        # distributional_plots(
-        #     data=df_thousand_bins,
-        #     df_main_indicators=df_main_indicators,
-        #     x="avg",
-        #     weights="pop",
-        #     log_scale=True,
-        #     multiple="layer",
-        #     hue="country",
-        #     hue_order=countries,
-        #     years=[2024],
-        #     legend=True,
-        #     common_norm=False,
-        # )
+        # Overlapping distributions with independent density estimates
+        distributional_plots(
+            data=df_thousand_bins,
+            df_main_indicators=df_main_indicators,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=countries,
+            years=[2024],
+            legend=True,
+            common_norm=False,
+            period="year",
+        )
 
         distributional_plots_per_row(
             data=df_thousand_bins,
@@ -70,22 +96,24 @@ def run() -> None:
             years=[2024],
             legend=True,
             common_norm=False,
+            period="year",
         )
 
-    # # Stacked distributions with common density estimate
-    # distributional_plots(
-    #     data=df_thousand_bins,
-    #     df_main_indicators=df_main_indicators,
-    #     x="avg",
-    #     weights="pop",
-    #     log_scale=True,
-    #     multiple="stack",
-    #     hue="country",
-    #     hue_order=["Denmark", "Ethiopia"],
-    #     years=[2024],
-    #     legend=True,
-    #     common_norm=True,
-    # )
+    # Stacked distributions with common density estimate
+    distributional_plots(
+        data=df_thousand_bins,
+        df_main_indicators=df_main_indicators,
+        x="avg",
+        weights="pop",
+        log_scale=True,
+        multiple="stack",
+        hue="region",
+        hue_order=None,
+        years=[2024],
+        legend=True,
+        common_norm=True,
+        period="year",
+    )
 
 
 def distributional_plots(
@@ -100,6 +128,7 @@ def distributional_plots(
     years: List[int] = None,
     legend: bool = True,
     common_norm: bool = True,
+    period: Literal["day", "month", "year"] = "day",
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
@@ -113,29 +142,44 @@ def distributional_plots(
     data = data[data["year"].isin(years)].reset_index(drop=True)
 
     # Define filename according to the hue_order
-    if len(hue_order) <= 5:
-        filename = "_".join(hue_order)
-    elif len(hue_order) > 5:
-        filename = "multiple_countries"
-    else:
+    if hue_order is None:
         filename = "all_countries"
+    elif len(hue_order) <= 5:
+        filename = "_".join(hue_order)
+    else:
+        filename = "multiple_countries"
+
+    # Define the income period values
+    period_factor = PERIOD_VALUES[period]["factor"]
+    log_ticks = PERIOD_VALUES[period]["log_ticks"]
+
+    data[x] = data[x] * period_factor
+
+    # Define IPL for the period
+    ipl = INTERNATIONAL_POVERTY_LINE * period_factor
 
     for year in years:
         data_year = data[data["year"] == year].reset_index(drop=True)
 
         # Define world mean
-        world_mean_year = df_main_indicators.loc[
-            (df_main_indicators["country"] == "World")
-            & (df_main_indicators["year"] == year),
-            "mean",
-        ].values[0]
+        world_mean_year = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "mean",
+            ].values[0]
+            * period_factor
+        )
 
         # Define world median
-        world_median_year = df_main_indicators.loc[
-            (df_main_indicators["country"] == "World")
-            & (df_main_indicators["year"] == year),
-            "median",
-        ].values[0]
+        world_median_year = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "median",
+            ].values[0]
+            * period_factor
+        )
 
         # Plot a kde with seaborn
         kde_plot = sns.kdeplot(
@@ -151,24 +195,18 @@ def distributional_plots(
             common_norm=common_norm,
         )
 
-        if log_scale:
-            # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
-            # kde_plot.set(xscale="log")
-            kde_plot.set_xticks([1, 2, 5, 10, 20, 50, 100, 200, 500, 1000])
-            kde_plot.get_xaxis().set_major_formatter(plt.ScalarFormatter())
-
         # Add a vertical line for the international poverty line
         plt.axvline(
-            x=INTERNATIONAL_POVERTY_LINE,
+            x=ipl,
             color="lightgrey",
             linestyle="--",
             linewidth=0.8,
         )
         plt.text(
-            x=INTERNATIONAL_POVERTY_LINE,  # x-coordinate for the text
+            x=ipl,  # x-coordinate for the text
             y=plt.ylim()[1]
             * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-            s=f"International Poverty Line: ${INTERNATIONAL_POVERTY_LINE}",  # Text string to display
+            s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
             color="grey",  # Color of the text
             rotation=90,  # Rotate the text 90 degrees
             verticalalignment="top",  # Align the text vertically at the top
@@ -214,6 +252,21 @@ def distributional_plots(
             kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
             kde_plot.legend_.set_loc("upper left")
 
+        if log_scale:
+            # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
+            # kde_plot.set(xscale="log")
+            kde_plot.set_xticks(log_ticks)
+            kde_plot.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+
+        # Remove y-axis labels and ticks
+        kde_plot.set_ylabel("")
+        kde_plot.yaxis.set_ticks([])
+        kde_plot.set_xlabel(f"Income or consumption ({period})")
+        kde_plot.spines["top"].set_visible(False)
+        kde_plot.spines["right"].set_visible(False)
+        kde_plot.spines["bottom"].set_visible(False)
+        kde_plot.spines["left"].set_visible(False)
+
         fig = kde_plot.get_figure()
         fig.set_size_inches(WIDTH / 100, HEIGHT / 100)
         fig.savefig(
@@ -236,6 +289,7 @@ def distributional_plots_per_row(
     years: List[int] = None,
     legend: bool = True,
     common_norm: bool = True,
+    period: Literal["day", "month", "year"] = "day",
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -249,29 +303,44 @@ def distributional_plots_per_row(
     data = data[data["year"].isin(years)].reset_index(drop=True)
 
     # Define filename according to the hue_order
-    if len(hue_order) <= 5:
-        filename = "_".join(hue_order)
-    elif len(hue_order) > 5:
-        filename = "multiple_countries"
-    else:
+    if hue_order is None:
         filename = "all_countries"
+    elif len(hue_order) <= 5:
+        filename = "_".join(hue_order)
+    else:
+        filename = "multiple_countries"
+
+    # Define the income period values
+    period_factor = PERIOD_VALUES[period]["factor"]
+    log_ticks = PERIOD_VALUES[period]["log_ticks"]
+
+    data[x] = data[x] * period_factor
+
+    # Define IPL for the period
+    ipl = INTERNATIONAL_POVERTY_LINE * period_factor
 
     for year in years:
         data_year = data[data["year"] == year].reset_index(drop=True)
 
         # Define world mean
-        world_mean_year = df_main_indicators.loc[
-            (df_main_indicators["country"] == "World")
-            & (df_main_indicators["year"] == year),
-            "mean",
-        ].values[0]
+        world_mean_year = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "mean",
+            ].values[0]
+            * period_factor
+        )
 
         # Define world median
-        world_median_year = df_main_indicators.loc[
-            (df_main_indicators["country"] == "World")
-            & (df_main_indicators["year"] == year),
-            "median",
-        ].values[0]
+        world_median_year = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "median",
+            ].values[0]
+            * period_factor
+        )
 
         # Create a figure with subplots for each country
         fig, axes = plt.subplots(
@@ -297,22 +366,11 @@ def distributional_plots_per_row(
 
             # Add a vertical line for the international poverty line
             ax.axvline(
-                x=INTERNATIONAL_POVERTY_LINE,
+                x=ipl,
                 color="lightgrey",
                 linestyle="--",
                 linewidth=0.8,
             )
-            if ax == axes[-1]:
-                ax.text(
-                    x=INTERNATIONAL_POVERTY_LINE,
-                    y=-0.4,
-                    s=f"International Poverty Line:\n${INTERNATIONAL_POVERTY_LINE}",
-                    color="grey",
-                    rotation=0,
-                    verticalalignment="top",
-                    horizontalalignment="center",
-                    fontsize=8,
-                )
 
             # Add a vertical line for the world mean
             ax.axvline(
@@ -321,17 +379,6 @@ def distributional_plots_per_row(
                 linestyle="--",
                 linewidth=0.8,
             )
-            if ax == axes[-1]:
-                ax.text(
-                    x=world_mean_year,
-                    y=-0.4,
-                    s=f"World mean:\n${round(world_mean_year,2):.2f}",
-                    color="grey",
-                    rotation=0,
-                    verticalalignment="top",
-                    horizontalalignment="center",
-                    fontsize=8,
-                )
 
             # Add a vertical line for the world median
             ax.axvline(
@@ -340,15 +387,39 @@ def distributional_plots_per_row(
                 linestyle="--",
                 linewidth=0.8,
             )
+
+            # Add line labels only to the last axis
             if ax == axes[-1]:
                 ax.text(
+                    x=ipl,
+                    y=plt.ylim()[1],
+                    s=f"International\nPoverty Line:\n${round(ipl,2):.2f}",
+                    color="grey",
+                    rotation=90,
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    fontsize=8,
+                )
+
+                ax.text(
+                    x=world_mean_year,
+                    y=plt.ylim()[1],
+                    s=f"World mean:\n${round(world_mean_year,2):.2f}",
+                    color="grey",
+                    rotation=90,
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    fontsize=8,
+                )
+
+                ax.text(
                     x=world_median_year,
-                    y=-0.4,
+                    y=plt.ylim()[1],
                     s=f"World median:\n${round(world_median_year,2):.2f}",
                     color="grey",
-                    rotation=0,
+                    rotation=90,
                     verticalalignment="top",
-                    horizontalalignment="center",
+                    horizontalalignment="left",
                     fontsize=8,
                 )
 
@@ -366,13 +437,13 @@ def distributional_plots_per_row(
             if log_scale:
                 # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
                 ax.set_xscale("log")
-                ax.set_xticks([1, 2, 5, 10, 20, 50, 100, 200, 500, 1000])
+                ax.set_xticks(log_ticks)
                 ax.get_xaxis().set_major_formatter(plt.ScalarFormatter())
 
             # Remove y-axis labels and ticks
             ax.set_ylabel("")
             ax.yaxis.set_ticks([])
-            ax.set_xlabel("")
+            ax.set_xlabel(f"Income or consumption ({period})")
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
             ax.spines["bottom"].set_visible(False)
