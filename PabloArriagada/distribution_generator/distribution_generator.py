@@ -629,7 +629,7 @@ def distributional_plots_per_row(
                     x=data[x].max() * 1.5,
                     y=ax.get_ylim()[0],
                     s=f"{welfare_type.capitalize()} data from {year_to_write}",
-                    color="lightgrey",
+                    color="grey",
                     rotation=0,
                     verticalalignment="bottom",
                     fontsize=8,
