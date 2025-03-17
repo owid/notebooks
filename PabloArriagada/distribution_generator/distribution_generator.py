@@ -50,6 +50,9 @@ PERIOD_VALUES = {
     },
 }
 
+# Set correction factor of the median to show the label in the plot
+CORRECTION_FACTOR_LABEL = 0.8
+
 # Define  version of PIP and 1000 bins data
 PIP_VERSION = "2024-10-07"
 THOUSAND_BINS_VERSION = "2025-03-10"
@@ -81,7 +84,7 @@ def run() -> None:
             years=[2024],
             legend=True,
             common_norm=False,
-            period="year",
+            period="day",
         )
         distributional_plots(
             data=df_percentiles,
@@ -95,7 +98,7 @@ def run() -> None:
             years=[2024],
             legend=False,
             common_norm=False,
-            period="year",
+            period="day",
             survey_based=True,
             preferred_reporting_level="national",
             preferred_welfare_type="income",
@@ -112,7 +115,24 @@ def run() -> None:
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
             years=[2024],
             common_norm=False,
-            period="year",
+            period="day",
+        )
+
+        distributional_plots_per_row(
+            data=df_percentiles,
+            df_main_indicators=df_main_indicators,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
+            years=[2024],
+            common_norm=False,
+            period="day",
+            survey_based=True,
+            preferred_reporting_level="national",
+            preferred_welfare_type="income",
         )
 
     # Stacked distributions with common density estimate
@@ -128,7 +148,7 @@ def run() -> None:
         years=[2024],
         legend=True,
         common_norm=True,
-        period="year",
+        period="day",
     )
 
 
@@ -153,7 +173,7 @@ def distributional_plots(
     Plot distributional data with seaborn, with multiple options for customization.
     """
 
-    # Filter the data with the hue adn hue_order
+    # Filter the data with the hue and hue_order
     if hue_order is not None:
         data = data[data[hue].isin(hue_order)].reset_index(drop=True)
 
@@ -161,7 +181,7 @@ def distributional_plots(
     if years is None:
         years = list(data["year"].unique())
 
-    # If the dataset contains the columns welfare_type and reporting_level, filter the data differently
+    # If the dataset is survey-based, filter the data differently
     if survey_based:
         data_reference_year = []
         # Assign a reference year
@@ -184,8 +204,6 @@ def distributional_plots(
                     observed=True,
                 )["diff_year"].idxmin()
             ].reset_index(drop=True)
-
-            print(data_reference_year_by_year)
 
             # If there are duplicates for the same country in "reporting_level", select preferred_reporting_level if available
             data_reference_year_by_year = data_reference_year_by_year.sort_values(
@@ -349,7 +367,7 @@ def distributional_plots(
                 country_data = data_year[data_year[hue] == country]
                 year_to_write = country_data["year"].iloc[0] if survey_based else year
                 plt.text(
-                    x=country_data[x].median(),
+                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
                     y=plt.ylim()[0],
                     s=f"{country} ({year_to_write})",
                     color="black",
@@ -395,17 +413,85 @@ def distributional_plots_per_row(
     years: List[int] = None,
     common_norm: bool = True,
     period: Literal["day", "month", "year"] = "day",
+    survey_based: bool = False,
+    preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
+    preferred_welfare_type: Literal["income", "consumption", None] = None,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
     """
+    # Filter the data with the hue and hue_order
+    if hue_order is not None:
+        data = data[data[hue].isin(hue_order)].reset_index(drop=True)
 
     # If no years are provided, use all years in the data
     if years is None:
         years = list(data["year"].unique())
 
-    # Filter data by years
-    data = data[data["year"].isin(years)].reset_index(drop=True)
+        # If the dataset is survey-based, filter the data differently
+    if survey_based:
+        data_reference_year = []
+        # Assign a reference year
+        for year in years:
+            data_reference_year_by_year = data.copy()
+
+            # Assign the reference year
+            data_reference_year_by_year["reference_year"] = year
+
+            # Calculate the difference between the reference year and the year
+            data_reference_year_by_year["diff_year"] = (
+                data_reference_year_by_year["reference_year"]
+                - data_reference_year_by_year["year"]
+            )
+
+            # By country, select the data with the minimum difference
+            data_reference_year_by_year = data_reference_year_by_year.loc[
+                data_reference_year_by_year.groupby(
+                    ["country", "reporting_level", "welfare_type", "percentile"],
+                    observed=True,
+                )["diff_year"].idxmin()
+            ].reset_index(drop=True)
+
+            # If there are duplicates for the same country in "reporting_level", select preferred_reporting_level if available
+            data_reference_year_by_year = data_reference_year_by_year.sort_values(
+                by=["reporting_level"],
+                key=lambda col: col == preferred_reporting_level,
+                ascending=False,
+            ).drop_duplicates(
+                subset=["country", "welfare_type", "percentile"], keep="first"
+            )
+
+            # If there are duplicates for the same country in "welfare_type", select preferred_welfare_tpye if available
+            data_reference_year_by_year = data_reference_year_by_year.sort_values(
+                by=["welfare_type"],
+                key=lambda col: col == preferred_welfare_type,
+                ascending=False,
+            ).drop_duplicates(
+                subset=["country", "reporting_level", "percentile"], keep="first"
+            )
+
+            # Resort the data
+            data_reference_year_by_year = data_reference_year_by_year.sort_values(
+                by=[
+                    "country",
+                    "year",
+                    "reference_year",
+                    "reporting_level",
+                    "welfare_type",
+                    "percentile",
+                ]
+            )
+
+            # Append the data to the list
+            data_reference_year.append(data_reference_year_by_year)
+
+        # Concatenate the data
+        data = pd.concat(data_reference_year, ignore_index=True)
+
+    # If the data doesn't come from the survey-based data, use the data as is
+    else:
+        # Filter data by years
+        data = data[data["year"].isin(years)].reset_index(drop=True)
 
     # Define filename according to the hue_order
     if hue_order is None:
@@ -425,7 +511,10 @@ def distributional_plots_per_row(
     ipl = INTERNATIONAL_POVERTY_LINE * period_factor
 
     for year in years:
-        data_year = data[data["year"] == year].reset_index(drop=True)
+        if survey_based:
+            data_year = data[data["reference_year"] == year].reset_index(drop=True)
+        else:
+            data_year = data[data["year"] == year].reset_index(drop=True)
 
         # Define world mean
         world_mean_year = (
@@ -529,15 +618,43 @@ def distributional_plots_per_row(
                 )
 
             # Add the name of the country at the middle of the distribution, bottom
-            ax.text(
-                x=country_data[x].median(),
-                y=ax.get_ylim()[0],
-                s=country,
-                color="black",
-                rotation=0,
-                verticalalignment="bottom",
-                fontsize=10,
-            )
+            year_to_write = country_data["year"].iloc[0] if survey_based else year
+
+            if survey_based:
+                # Only plot the country
+                ax.text(
+                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
+                    y=ax.get_ylim()[0],
+                    s=f"{country}",
+                    color="black",
+                    rotation=0,
+                    verticalalignment="bottom",
+                    fontsize=10,
+                )
+                # Add the year and welfare type to the plot
+                reporting_level = country_data["reporting_level"].iloc[0]
+                welfare_type = country_data["welfare_type"].iloc[0]
+
+                ax.text(
+                    x=data[x].max() * 1.5,
+                    y=ax.get_ylim()[0],
+                    s=f"{welfare_type.capitalize()} data from {year_to_write}",
+                    color="lightgrey",
+                    rotation=0,
+                    verticalalignment="bottom",
+                    fontsize=8,
+                )
+
+            else:
+                ax.text(
+                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
+                    y=ax.get_ylim()[0],
+                    s=f"{country} ({year_to_write})",
+                    color="black",
+                    rotation=0,
+                    verticalalignment="bottom",
+                    fontsize=10,
+                )
 
             if log_scale:
                 # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
@@ -563,7 +680,7 @@ def distributional_plots_per_row(
         # Adjust layout and save the figure
         plt.tight_layout()
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg"
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg"
         )
         plt.close(fig)
 
