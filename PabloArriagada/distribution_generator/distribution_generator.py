@@ -83,6 +83,23 @@ def run() -> None:
             common_norm=False,
             period="year",
         )
+        distributional_plots(
+            data=df_percentiles,
+            df_main_indicators=df_main_indicators,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=countries,
+            years=[2024],
+            legend=False,
+            common_norm=False,
+            period="year",
+            survey_based=True,
+            preferred_reporting_level="national",
+            preferred_welfare_type="income",
+        )
 
         distributional_plots_per_row(
             data=df_thousand_bins,
@@ -128,17 +145,88 @@ def distributional_plots(
     legend: bool = True,
     common_norm: bool = True,
     period: Literal["day", "month", "year"] = "day",
+    survey_based: bool = False,
+    preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
+    preferred_welfare_type: Literal["income", "consumption", None] = None,
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
     """
 
+    # Filter the data with the hue adn hue_order
+    if hue_order is not None:
+        data = data[data[hue].isin(hue_order)].reset_index(drop=True)
+
     # If no years are provided, use all years in the data
     if years is None:
         years = list(data["year"].unique())
 
-    # Filter data by years
-    data = data[data["year"].isin(years)].reset_index(drop=True)
+    # If the dataset contains the columns welfare_type and reporting_level, filter the data differently
+    if survey_based:
+        data_reference_year = []
+        # Assign a reference year
+        for year in years:
+            data_reference_year_by_year = data.copy()
+
+            # Assign the reference year
+            data_reference_year_by_year["reference_year"] = year
+
+            # Calculate the difference between the reference year and the year
+            data_reference_year_by_year["diff_year"] = (
+                data_reference_year_by_year["reference_year"]
+                - data_reference_year_by_year["year"]
+            )
+
+            # By country, select the data with the minimum difference
+            data_reference_year_by_year = data_reference_year_by_year.loc[
+                data_reference_year_by_year.groupby(
+                    ["country", "reporting_level", "welfare_type", "percentile"],
+                    observed=True,
+                )["diff_year"].idxmin()
+            ].reset_index(drop=True)
+
+            print(data_reference_year_by_year)
+
+            # If there are duplicates for the same country in "reporting_level", select preferred_reporting_level if available
+            data_reference_year_by_year = data_reference_year_by_year.sort_values(
+                by=["reporting_level"],
+                key=lambda col: col == preferred_reporting_level,
+                ascending=False,
+            ).drop_duplicates(
+                subset=["country", "welfare_type", "percentile"], keep="first"
+            )
+
+            # If there are duplicates for the same country in "welfare_type", select preferred_welfare_tpye if available
+            data_reference_year_by_year = data_reference_year_by_year.sort_values(
+                by=["welfare_type"],
+                key=lambda col: col == preferred_welfare_type,
+                ascending=False,
+            ).drop_duplicates(
+                subset=["country", "reporting_level", "percentile"], keep="first"
+            )
+
+            # Resort the data
+            data_reference_year_by_year = data_reference_year_by_year.sort_values(
+                by=[
+                    "country",
+                    "year",
+                    "reference_year",
+                    "reporting_level",
+                    "welfare_type",
+                    "percentile",
+                ]
+            )
+
+            # Append the data to the list
+            data_reference_year.append(data_reference_year_by_year)
+
+        # Concatenate the data
+        data = pd.concat(data_reference_year, ignore_index=True)
+
+    # If the data doesn't come from the survey-based data, use the data as is
+    else:
+        # Filter data by years
+        data = data[data["year"].isin(years)].reset_index(drop=True)
 
     # Define filename according to the hue_order
     if hue_order is None:
@@ -158,7 +246,10 @@ def distributional_plots(
     ipl = INTERNATIONAL_POVERTY_LINE * period_factor
 
     for year in years:
-        data_year = data[data["year"] == year].reset_index(drop=True)
+        if survey_based:
+            data_year = data[data["reference_year"] == year].reset_index(drop=True)
+        else:
+            data_year = data[data["year"] == year].reset_index(drop=True)
 
         # Define world mean
         world_mean_year = (
@@ -252,6 +343,20 @@ def distributional_plots(
             kde_plot.legend_.set_loc("upper left")
             # Make the title sentence case
             kde_plot.legend_.set_title(hue.capitalize())
+        else:
+            # For each plot, write the name of the country at the middle of the distribution, bottom
+            for country in hue_order:
+                country_data = data_year[data_year[hue] == country]
+                year_to_write = country_data["year"].iloc[0] if survey_based else year
+                plt.text(
+                    x=country_data[x].median(),
+                    y=plt.ylim()[0],
+                    s=f"{country} ({year_to_write})",
+                    color="black",
+                    rotation=0,
+                    verticalalignment="bottom",
+                    fontsize=10,
+                )
 
         if log_scale:
             # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
@@ -271,7 +376,7 @@ def distributional_plots(
         fig = kde_plot.get_figure()
         fig.set_size_inches(WIDTH / 100, HEIGHT / 100)
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}.svg"
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}.svg"
         )
         plt.close(fig)
 
