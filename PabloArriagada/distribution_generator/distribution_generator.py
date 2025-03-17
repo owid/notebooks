@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List, Literal
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -50,8 +49,6 @@ PERIOD_VALUES = {
     },
 }
 
-# Define color palette
-COLOR_PALETTE = "deep"
 
 # Set correction factor of the median to show the label in the plot
 CORRECTION_FACTOR_LABEL = 0.8
@@ -73,8 +70,9 @@ def run() -> None:
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
 
-    # Set seaborn style
+    # Set seaborn style and color palette
     sns.set_style("ticks")
+    sns.set_palette("deep")
 
     for countries in COUNTRIES:
         # Overlapping distributions with independent density estimates
@@ -426,9 +424,6 @@ def distributional_plots_per_row(
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
     """
-
-    # Set color palette
-    sns.set_palette(COLOR_PALETTE)
 
     # Filter the data with the hue and hue_order
     if hue_order is not None:
