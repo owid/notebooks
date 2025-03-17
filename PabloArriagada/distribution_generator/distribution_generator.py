@@ -50,6 +50,9 @@ PERIOD_VALUES = {
     },
 }
 
+# Define color palette
+COLOR_PALETTE = "deep"
+
 # Set correction factor of the median to show the label in the plot
 CORRECTION_FACTOR_LABEL = 0.8
 
@@ -69,6 +72,9 @@ def run() -> None:
     df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
+
+    # Set seaborn style
+    sns.set_style("ticks")
 
     for countries in COUNTRIES:
         # Overlapping distributions with independent density estimates
@@ -420,6 +426,10 @@ def distributional_plots_per_row(
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
     """
+
+    # Set color palette
+    sns.set_palette(COLOR_PALETTE)
+
     # Filter the data with the hue and hue_order
     if hue_order is not None:
         data = data[data[hue].isin(hue_order)].reset_index(drop=True)
