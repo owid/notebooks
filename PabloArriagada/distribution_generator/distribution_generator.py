@@ -94,7 +94,6 @@ def run() -> None:
             hue="country",
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
             years=[2024],
-            legend=True,
             common_norm=False,
             period="year",
         )
@@ -251,6 +250,8 @@ def distributional_plots(
             # Move the legend inside the plot
             kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
             kde_plot.legend_.set_loc("upper left")
+            # Make the title sentence case
+            kde_plot.legend_.set_title(hue.capitalize())
 
         if log_scale:
             # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
@@ -287,7 +288,6 @@ def distributional_plots_per_row(
     hue: str,
     hue_order: List[str] = None,
     years: List[int] = None,
-    legend: bool = True,
     common_norm: bool = True,
     period: Literal["day", "month", "year"] = "day",
 ) -> None:
