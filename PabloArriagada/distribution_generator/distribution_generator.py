@@ -621,16 +621,6 @@ def distributional_plots_per_row(
             year_to_write = country_data["year"].iloc[0] if survey_based else year
 
             if survey_based:
-                # Only plot the country
-                ax.text(
-                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
-                    y=ax.get_ylim()[0],
-                    s=f"{country}",
-                    color="black",
-                    rotation=0,
-                    verticalalignment="bottom",
-                    fontsize=10,
-                )
                 # Add the year and welfare type to the plot
                 reporting_level = country_data["reporting_level"].iloc[0]
                 welfare_type = country_data["welfare_type"].iloc[0]
@@ -645,16 +635,16 @@ def distributional_plots_per_row(
                     fontsize=8,
                 )
 
-            else:
-                ax.text(
-                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
-                    y=ax.get_ylim()[0],
-                    s=f"{country} ({year_to_write})",
-                    color="black",
-                    rotation=0,
-                    verticalalignment="bottom",
-                    fontsize=10,
-                )
+            # Only plot the country name
+            ax.text(
+                x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
+                y=ax.get_ylim()[0],
+                s=f"{country}",
+                color="black",
+                rotation=0,
+                verticalalignment="bottom",
+                fontsize=10,
+            )
 
             if log_scale:
                 # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
