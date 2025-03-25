@@ -395,6 +395,9 @@ def distributional_plots(
         kde_plot.spines["bottom"].set_visible(False)
         kde_plot.spines["left"].set_visible(False)
 
+        # Add a base line for each plot in the x axis
+        plt.axhline(y=0, color="gray", linewidth=0.5)
+
         fig = kde_plot.get_figure()
         fig.set_size_inches(WIDTH / 100, HEIGHT / 100)
         fig.savefig(
@@ -665,6 +668,9 @@ def distributional_plots_per_row(
             ax.spines["right"].set_visible(False)
             ax.spines["bottom"].set_visible(False)
             ax.spines["left"].set_visible(False)
+
+            # Add a base line for each plot in the x axis
+            ax.axhline(y=0, color="gray", linewidth=0.5)
 
             # Remove x-axis ticks for all axes except the last
             if ax != axes[-1]:
