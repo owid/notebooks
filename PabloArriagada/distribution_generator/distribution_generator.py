@@ -10,9 +10,16 @@ PARENT_DIR = Path(__file__).parent.absolute()
 # Define International Poverty Line
 INTERNATIONAL_POVERTY_LINE = 2.15
 
+# Define poverty line for high-income countries
+POVERTY_LINE_HIGH_INCOME = 30
+
 # Define width and height of the plot
 WIDTH = 1500
 HEIGHT = 750
+
+# For Pen Parade
+WIDTH_PEN = 1000
+HEIGHT_PEN = 1000
 
 # Define pair of countries to estimate data
 COUNTRIES = [
@@ -155,6 +162,45 @@ def run() -> None:
         period="day",
     )
 
+    # Pen parades
+    pen_parade(
+        data=df_percentiles,
+        df_main_indicators=df_main_indicators,
+        x="percentile",
+        y="thr",
+        weights=None,
+        log_scale=False,
+        hue="country",
+        hue_order=["World"],
+        years=[2024],
+        fill=True,
+        legend=False,
+        add_lines=True,
+        period="day",
+        survey_based=True,
+        preferred_reporting_level="national",
+        preferred_welfare_type="income",
+    )
+
+    pen_parade(
+        data=df_percentiles,
+        df_main_indicators=df_main_indicators,
+        x="percentile",
+        y="thr",
+        weights=None,
+        log_scale=True,
+        hue="country",
+        hue_order=["Chile", "Peru", "Uruguay"],
+        years=[2024],
+        fill=False,
+        legend=True,
+        add_lines=False,
+        period="day",
+        survey_based=True,
+        preferred_reporting_level="national",
+        preferred_welfare_type="income",
+    )
+
 
 def distributional_plots(
     data: pd.DataFrame,
@@ -187,63 +233,12 @@ def distributional_plots(
 
     # If the dataset is survey-based, filter the data differently
     if survey_based:
-        data_reference_year = []
-        # Assign a reference year
-        for year in years:
-            data_reference_year_by_year = data.copy()
-
-            # Assign the reference year
-            data_reference_year_by_year["reference_year"] = year
-
-            # Calculate the difference between the reference year and the year
-            data_reference_year_by_year["diff_year"] = (
-                data_reference_year_by_year["reference_year"]
-                - data_reference_year_by_year["year"]
-            )
-
-            # By country, select the data with the minimum difference
-            data_reference_year_by_year = data_reference_year_by_year.loc[
-                data_reference_year_by_year.groupby(
-                    ["country", "reporting_level", "welfare_type", "percentile"],
-                    observed=True,
-                )["diff_year"].idxmin()
-            ].reset_index(drop=True)
-
-            # If there are duplicates for the same country in "reporting_level", select preferred_reporting_level if available
-            data_reference_year_by_year = data_reference_year_by_year.sort_values(
-                by=["reporting_level"],
-                key=lambda col: col == preferred_reporting_level,
-                ascending=False,
-            ).drop_duplicates(
-                subset=["country", "welfare_type", "percentile"], keep="first"
-            )
-
-            # If there are duplicates for the same country in "welfare_type", select preferred_welfare_tpye if available
-            data_reference_year_by_year = data_reference_year_by_year.sort_values(
-                by=["welfare_type"],
-                key=lambda col: col == preferred_welfare_type,
-                ascending=False,
-            ).drop_duplicates(
-                subset=["country", "reporting_level", "percentile"], keep="first"
-            )
-
-            # Resort the data
-            data_reference_year_by_year = data_reference_year_by_year.sort_values(
-                by=[
-                    "country",
-                    "year",
-                    "reference_year",
-                    "reporting_level",
-                    "welfare_type",
-                    "percentile",
-                ]
-            )
-
-            # Append the data to the list
-            data_reference_year.append(data_reference_year_by_year)
-
-        # Concatenate the data
-        data = pd.concat(data_reference_year, ignore_index=True)
+        data = filter_survey_data(
+            data=data,
+            years=years,
+            preferred_reporting_level=preferred_reporting_level,
+            preferred_welfare_type=preferred_welfare_type,
+        )
 
     # If the data doesn't come from the survey-based data, use the data as is
     else:
@@ -385,6 +380,9 @@ def distributional_plots(
             # kde_plot.set(xscale="log")
             kde_plot.set_xticks(log_ticks)
             kde_plot.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+        else:
+            # Show data in multiples of 10
+            kde_plot.set_xticks(range(0, int(data[x].max()) + 10, 10))
 
         # Remove y-axis labels and ticks
         kde_plot.set_ylabel("")
@@ -436,65 +434,14 @@ def distributional_plots_per_row(
     if years is None:
         years = list(data["year"].unique())
 
-        # If the dataset is survey-based, filter the data differently
+    # If the dataset is survey-based, filter the data differently
     if survey_based:
-        data_reference_year = []
-        # Assign a reference year
-        for year in years:
-            data_reference_year_by_year = data.copy()
-
-            # Assign the reference year
-            data_reference_year_by_year["reference_year"] = year
-
-            # Calculate the difference between the reference year and the year
-            data_reference_year_by_year["diff_year"] = (
-                data_reference_year_by_year["reference_year"]
-                - data_reference_year_by_year["year"]
-            )
-
-            # By country, select the data with the minimum difference
-            data_reference_year_by_year = data_reference_year_by_year.loc[
-                data_reference_year_by_year.groupby(
-                    ["country", "reporting_level", "welfare_type", "percentile"],
-                    observed=True,
-                )["diff_year"].idxmin()
-            ].reset_index(drop=True)
-
-            # If there are duplicates for the same country in "reporting_level", select preferred_reporting_level if available
-            data_reference_year_by_year = data_reference_year_by_year.sort_values(
-                by=["reporting_level"],
-                key=lambda col: col == preferred_reporting_level,
-                ascending=False,
-            ).drop_duplicates(
-                subset=["country", "welfare_type", "percentile"], keep="first"
-            )
-
-            # If there are duplicates for the same country in "welfare_type", select preferred_welfare_tpye if available
-            data_reference_year_by_year = data_reference_year_by_year.sort_values(
-                by=["welfare_type"],
-                key=lambda col: col == preferred_welfare_type,
-                ascending=False,
-            ).drop_duplicates(
-                subset=["country", "reporting_level", "percentile"], keep="first"
-            )
-
-            # Resort the data
-            data_reference_year_by_year = data_reference_year_by_year.sort_values(
-                by=[
-                    "country",
-                    "year",
-                    "reference_year",
-                    "reporting_level",
-                    "welfare_type",
-                    "percentile",
-                ]
-            )
-
-            # Append the data to the list
-            data_reference_year.append(data_reference_year_by_year)
-
-        # Concatenate the data
-        data = pd.concat(data_reference_year, ignore_index=True)
+        data = filter_survey_data(
+            data=data,
+            years=years,
+            preferred_reporting_level=preferred_reporting_level,
+            preferred_welfare_type=preferred_welfare_type,
+        )
 
     # If the data doesn't come from the survey-based data, use the data as is
     else:
@@ -682,6 +629,411 @@ def distributional_plots_per_row(
         plt.tight_layout()
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg"
+        )
+        plt.close(fig)
+
+    return None
+
+
+def filter_survey_data(
+    data: pd.DataFrame,
+    years: List[int],
+    preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
+    preferred_welfare_type: Literal["income", "consumption", None] = None,
+) -> pd.DataFrame:
+    """
+    Filter survey data by years, to select the most recent data available and preferring preferred_reporting_level and preferred_welfare_type.
+    """
+
+    data_reference_year = []
+    # Assign a reference year
+    for year in years:
+        data_reference_year_by_year = data.copy()
+
+        # Assign the reference year
+        data_reference_year_by_year["reference_year"] = year
+
+        # Calculate the difference between the reference year and the year
+        data_reference_year_by_year["diff_year"] = (
+            data_reference_year_by_year["reference_year"]
+            - data_reference_year_by_year["year"]
+        )
+
+        # By country, select the data with the minimum difference
+        data_reference_year_by_year = data_reference_year_by_year.loc[
+            data_reference_year_by_year.groupby(
+                ["country", "reporting_level", "welfare_type", "percentile"],
+                observed=True,
+            )["diff_year"].idxmin()
+        ].reset_index(drop=True)
+
+        # If there are duplicates for the same country in "reporting_level", select preferred_reporting_level if available
+        data_reference_year_by_year = data_reference_year_by_year.sort_values(
+            by=["reporting_level"],
+            key=lambda col: col == preferred_reporting_level,
+            ascending=False,
+        ).drop_duplicates(
+            subset=["country", "welfare_type", "percentile"], keep="first"
+        )
+
+        # If there are duplicates for the same country in "welfare_type", select preferred_welfare_tpye if available
+        data_reference_year_by_year = data_reference_year_by_year.sort_values(
+            by=["welfare_type"],
+            key=lambda col: col == preferred_welfare_type,
+            ascending=False,
+        ).drop_duplicates(
+            subset=["country", "reporting_level", "percentile"], keep="first"
+        )
+
+        # Resort the data
+        data_reference_year_by_year = data_reference_year_by_year.sort_values(
+            by=[
+                "country",
+                "year",
+                "reference_year",
+                "reporting_level",
+                "welfare_type",
+                "percentile",
+            ]
+        )
+
+        # Append the data to the list
+        data_reference_year.append(data_reference_year_by_year)
+
+    # Concatenate the data
+    data = pd.concat(data_reference_year, ignore_index=True)
+
+    return data
+
+
+def pen_parade(
+    data: pd.DataFrame,
+    df_main_indicators: pd.DataFrame,
+    x: str,
+    y: str,
+    weights: str,
+    log_scale: bool,
+    hue: str,
+    hue_order: List[str] = None,
+    years: List[int] = None,
+    fill: bool = False,
+    legend: Literal["auto", "brief", "full", False] = "auto",
+    add_lines: bool = True,
+    period: Literal["day", "month", "year"] = "day",
+    survey_based: bool = False,
+    preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
+    preferred_welfare_type: Literal["income", "consumption", None] = None,
+) -> None:
+    """
+    Plot Pen parades (percentiles vs. income) with seaborn, with multiple options for customization.
+    """
+
+    # Filter the data with the hue and hue_order
+    if hue_order is not None:
+        data = data[data[hue].isin(hue_order)].reset_index(drop=True)
+
+    # If no years are provided, use all years in the data
+    if years is None:
+        years = list(data["year"].unique())
+
+    # If the dataset is survey-based, filter the data differently
+    if survey_based:
+        data = filter_survey_data(
+            data=data,
+            years=years,
+            preferred_reporting_level=preferred_reporting_level,
+            preferred_welfare_type=preferred_welfare_type,
+        )
+
+    # If the data doesn't come from the survey-based data, use the data as is
+    else:
+        # Filter data by years
+        data = data[data["year"].isin(years)].reset_index(drop=True)
+
+    # Define filename according to the hue_order
+    if hue_order is None:
+        filename = "all_countries"
+    elif len(hue_order) <= 5:
+        filename = "_".join(hue_order)
+    else:
+        filename = "multiple_countries"
+
+    # Define the income period values
+    period_factor = PERIOD_VALUES[period]["factor"]
+    log_ticks = PERIOD_VALUES[period]["log_ticks"]
+
+    data[y] = data[y] * period_factor
+
+    # Define IPL for the period
+    ipl = INTERNATIONAL_POVERTY_LINE * period_factor
+
+    for year in years:
+        if survey_based:
+            data_year = data[data["reference_year"] == year].reset_index(drop=True)
+        else:
+            data_year = data[data["year"] == year].reset_index(drop=True)
+
+        # Define world mean
+        world_mean_year = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "mean",
+            ].values[0]
+            * period_factor
+        )
+
+        # Define world median
+        world_median_year = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "median",
+            ].values[0]
+            * period_factor
+        )
+
+        # Define the % of people below the high-income country poverty line
+        world_share_below_high_income_line = df_main_indicators.loc[
+            (df_main_indicators["country"] == "World")
+            & (df_main_indicators["year"] == year),
+            f"headcount_ratio_{POVERTY_LINE_HIGH_INCOME*100:.0f}",
+        ].values[0]
+
+        # Define the 90th percentile of the world
+        world_90th_percentile = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "decile9_thr",
+            ].values[0]
+            * period_factor
+        )
+
+        # Define the 99th percentile of the world
+        world_99th_percentile = (
+            df_main_indicators.loc[
+                (df_main_indicators["country"] == "World")
+                & (df_main_indicators["year"] == year),
+                "top1_thr",
+            ].values[0]
+            * period_factor
+        )
+
+        # Create a line plot with seaborn
+        line_plot = sns.lineplot(
+            data=data_year,
+            x=x,
+            y=y,
+            weights=weights,
+            hue=hue,
+            hue_order=hue_order,
+            legend=legend,
+        )
+
+        if fill:
+            # Fill the area under the curve
+            line_plot.fill_between(
+                data=data_year,
+                x=x,
+                y1=y,
+                alpha=0.5,
+            )
+
+        if log_scale:
+            # Customize y-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
+            line_plot.set_yscale("log")
+            line_plot.set_yticks(log_ticks)
+            line_plot.get_yaxis().set_major_formatter(plt.ScalarFormatter())
+        else:
+            line_plot.get_yaxis().set_major_formatter(plt.ScalarFormatter())
+
+        if add_lines:
+            # Add a horizontal line for the international poverty line
+            plt.axhline(
+                y=ipl,
+                color=sns.color_palette("deep")[3],
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=99,
+                y=ipl,
+                s=f"International Poverty Line: ${round(ipl,2):.2f}\n",
+                color="black",
+                rotation=0,
+                horizontalalignment="right",
+                fontsize=8,
+                linespacing=0.5,
+            )
+
+            # Add a horizontal line for the world mean
+            plt.axhline(
+                y=world_mean_year,
+                color=sns.color_palette("deep")[3],
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=99,
+                y=world_mean_year,
+                s=f"World mean: ${round(world_mean_year,2):.2f}\n",
+                color="black",
+                rotation=0,
+                horizontalalignment="right",
+                fontsize=8,
+                linespacing=0.5,
+            )
+
+            # Add a horizontal line for the world median
+            plt.axhline(
+                y=world_median_year,
+                color=sns.color_palette("deep")[3],
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=99,
+                y=world_median_year,
+                s=f"World median: ${round(world_median_year,2):.2f}\n",
+                color="black",
+                rotation=0,
+                horizontalalignment="right",
+                fontsize=8,
+                linespacing=0.5,
+            )
+            plt.text(
+                x=0,
+                y=world_median_year,
+                s=f"The poorest 50% live on less than ${round(world_median_year,2):.2f} a {period}\n",
+                color="black",
+                rotation=0,
+                horizontalalignment="left",
+                fontsize=9,
+                linespacing=0.5,
+            )
+
+            # Add an horizontal line for a poverty line representative of a high-income country
+            plt.axhline(
+                y=POVERTY_LINE_HIGH_INCOME * period_factor,
+                color=sns.color_palette("deep")[3],
+                linestyle="-",
+                linewidth=1,
+            )
+            plt.text(
+                x=0,
+                y=POVERTY_LINE_HIGH_INCOME * period_factor,
+                s=f"${round(POVERTY_LINE_HIGH_INCOME * period_factor,2):.0f} corresponds to the poverty line of a high-income country\n",
+                color="black",
+                rotation=0,
+                horizontalalignment="left",
+                fontsize=9,
+                linespacing=0.5,
+            )
+            plt.text(
+                x=0,
+                y=POVERTY_LINE_HIGH_INCOME * period_factor,
+                s=f"\nGlobally, {world_share_below_high_income_line/100:.1%} live on less than ${round(POVERTY_LINE_HIGH_INCOME * period_factor,2):.0f} a {period}",
+                color="black",
+                rotation=0,
+                horizontalalignment="left",
+                verticalalignment="top",
+                fontsize=8,
+                linespacing=0.5,
+            )
+
+            # Add a horizontal line for the 90th percentile of the world
+            plt.axhline(
+                y=world_90th_percentile,
+                color=sns.color_palette("deep")[3],
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=99,
+                y=world_90th_percentile,
+                s=f"${round(world_90th_percentile,2):.2f}\n",
+                color="black",
+                rotation=0,
+                horizontalalignment="right",
+                fontsize=8,
+                linespacing=0.5,
+            )
+            plt.text(
+                x=99,
+                y=world_90th_percentile,
+                s=f"\n10% is richer",
+                color="black",
+                rotation=0,
+                horizontalalignment="right",
+                verticalalignment="top",
+                fontsize=8,
+                linespacing=0.5,
+            )
+
+            # Add a horizontal line for the 99th percentile of the world
+            plt.axhline(
+                y=world_99th_percentile,
+                color=sns.color_palette("deep")[3],
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=99,
+                y=world_99th_percentile,
+                s=f"${round(world_99th_percentile,2):.2f}\n",
+                color="black",
+                rotation=0,
+                horizontalalignment="right",
+                fontsize=8,
+                linespacing=0.5,
+            )
+            plt.text(
+                x=99,
+                y=world_99th_percentile,
+                s=f"\n1% is richer",
+                color="black",
+                rotation=0,
+                horizontalalignment="right",
+                verticalalignment="top",
+                fontsize=8,
+                linespacing=0.5,
+            )
+
+        # Remove y-axis labels and ticks
+        line_plot.set_ylabel("")
+        line_plot.yaxis.set_label_position("right")
+        line_plot.set_xlabel(f"Percentage of the population")
+        line_plot.spines["top"].set_visible(False)
+        line_plot.spines["right"].set_visible(False)
+        line_plot.spines["bottom"].set_visible(False)
+        line_plot.spines["left"].set_visible(False)
+
+        # Change format of x-axis to percentage
+        line_plot.get_xaxis().set_major_formatter(
+            plt.FuncFormatter(lambda x, _: f"{x/100:.0%}")
+        )
+
+        # Do the same for the y-axis, with $
+        line_plot.get_yaxis().set_major_formatter(
+            plt.FuncFormatter(lambda x, _: f"${x:.0f} per {period}")
+        )
+
+        # Make the plot tighter, with the y axis closer to the plot and the x axis being shown between 0 and 100
+        line_plot.set_xlim(0, 100)
+        line_plot.set_ylim(0, line_plot.get_ylim()[1])
+
+        # Move y axis to the right
+        line_plot.yaxis.tick_right()
+
+        # Draw a line for each axis
+        line_plot.axhline(y=0, color="black", linewidth=0.5)
+        line_plot.axvline(x=100, color="black", linewidth=0.5)
+
+        fig = line_plot.get_figure()
+        fig.set_size_inches(WIDTH_PEN / 100, HEIGHT_PEN / 100)
+        fig.savefig(
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg"
         )
         plt.close(fig)
 
