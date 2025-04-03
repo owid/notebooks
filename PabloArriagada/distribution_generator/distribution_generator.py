@@ -81,6 +81,24 @@ def run() -> None:
     sns.set_style("ticks")
     sns.set_palette("deep")
 
+    # For Chile
+    distributional_plots(
+        data=df_thousand_bins,
+        df_main_indicators=df_main_indicators,
+        x="avg",
+        weights="pop",
+        log_scale=True,
+        multiple="layer",
+        hue="country",
+        hue_order=["Burundi", "Ethiopia", "Syria"],
+        years=[2024],
+        fill=False,
+        legend=True,
+        common_norm=False,
+        period="day",
+        add_ipl="area",
+    )
+
     for countries in COUNTRIES:
         # Overlapping distributions with independent density estimates
         distributional_plots(
@@ -212,12 +230,16 @@ def distributional_plots(
     hue: str,
     hue_order: List[str] = None,
     years: List[int] = None,
+    fill: bool = True,
     legend: bool = True,
     common_norm: bool = True,
     period: Literal["day", "month", "year"] = "day",
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
+    add_ipl: Literal["line", "area", None] = "line",
+    add_world_mean: Literal["line", "area", None] = "line",
+    add_world_median: Literal["line", "area", None] = "line",
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
@@ -293,7 +315,7 @@ def distributional_plots(
             data=data_year,
             x=x,
             weights=weights,
-            fill=True,
+            fill=fill,
             log_scale=log_scale,
             hue=hue,
             hue_order=hue_order,
@@ -302,57 +324,74 @@ def distributional_plots(
             common_norm=common_norm,
         )
 
-        # Add a vertical line for the international poverty line
-        plt.axvline(
-            x=ipl,
-            color="lightgrey",
-            linestyle="--",
-            linewidth=0.8,
-        )
-        plt.text(
-            x=ipl,  # x-coordinate for the text
-            y=plt.ylim()[1]
-            * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-            s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
-            color="grey",  # Color of the text
-            rotation=90,  # Rotate the text 90 degrees
-            verticalalignment="top",  # Align the text vertically at the top
-            fontsize=8,  # Font size of the text
-        )
+        if add_ipl == "line":
+            # Add a vertical line for the international poverty line
+            plt.axvline(
+                x=ipl,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=ipl,  # x-coordinate for the text
+                y=plt.ylim()[1]
+                * 0.99,  # y-coordinate for the text, positioned near the top of the plot
+                s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
+                color="grey",  # Color of the text
+                rotation=90,  # Rotate the text 90 degrees
+                verticalalignment="top",  # Align the text vertically at the top
+                fontsize=8,  # Font size of the text
+            )
+        elif add_ipl == "area":
+            # Calculate the number of countries selected
+            number_of_countries = len(hue_order)
 
-        # Add a vertical line for the world mean, in the same format as the international poverty line
-        plt.axvline(
-            x=world_mean_year,
-            color="lightgrey",
-            linestyle="--",
-            linewidth=0.8,
-        )
-        plt.text(
-            x=world_mean_year,
-            y=plt.ylim()[1] * 0.99,
-            s=f"World mean: ${round(world_mean_year,2):.2f}",
-            color="grey",
-            rotation=90,
-            verticalalignment="top",
-            fontsize=8,
-        )
+            for i in range(0, number_of_countries):
+                # Highlight the curve until x=ipl
+                line = kde_plot.lines[i]
+                x_line, y_line = line.get_data()
+                kde_plot.fill_between(
+                    x=x_line, y1=y_line, where=x_line <= ipl, alpha=0.5
+                )
+                kde_plot.fill_between(
+                    x=x_line, y1=y_line, where=x_line > ipl, alpha=0.5
+                )
 
-        # Add a vertical line for the world median, in the same format as the international poverty line
-        plt.axvline(
-            x=world_median_year,
-            color="lightgrey",
-            linestyle="--",
-            linewidth=0.8,
-        )
-        plt.text(
-            x=world_median_year,
-            y=plt.ylim()[1] * 0.99,
-            s=f"World median: ${round(world_median_year,2):.2f}",
-            color="grey",
-            rotation=90,
-            verticalalignment="top",
-            fontsize=8,
-        )
+        if add_world_mean == "line":
+            # Add a vertical line for the world mean, in the same format as the international poverty line
+            plt.axvline(
+                x=world_mean_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=world_mean_year,
+                y=plt.ylim()[1] * 0.99,
+                s=f"World mean: ${round(world_mean_year,2):.2f}",
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                fontsize=8,
+            )
+
+        if add_world_median == "line":
+            # Add a vertical line for the world median, in the same format as the international poverty line
+            plt.axvline(
+                x=world_median_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=world_median_year,
+                y=plt.ylim()[1] * 0.99,
+                s=f"World median: ${round(world_median_year,2):.2f}",
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                fontsize=8,
+            )
 
         if legend:
             # Move the legend inside the plot
