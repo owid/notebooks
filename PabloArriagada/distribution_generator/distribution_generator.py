@@ -31,6 +31,12 @@ COUNTRIES = [
     ["United States", "Burundi"],
 ]
 
+# Define poverty lines to plot areas under the curve in the global distribution
+POVERTY_LINES_AREA_GLOBAL = [
+    [30],
+    [2.15, 10, 30, 100],
+]
+
 # Define values for different periods
 PERIOD_VALUES = {
     "day": {"factor": 1, "log_ticks": [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]},
@@ -95,6 +101,55 @@ def run() -> None:
     sns.set_style("ticks")
     sns.set_palette("deep")
 
+    # Plot global distribution, separating in two with the International Poverty Line
+    for lines in POVERTY_LINES_AREA_GLOBAL:
+        distributional_plots(
+            data=df_percentiles,
+            df_main_indicators=df_main_indicators,
+            x="thr",
+            weights=None,
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=["World"],
+            years=[2024],
+            fill=False,
+            legend=True,
+            common_norm=False,
+            period="day",
+            add_ipl=None,
+            add_world_mean=None,
+            add_world_median=None,
+            add_multiple_lines_day=lines,
+            gridsize=1000,
+            width=1500,
+            height=200,
+        )
+
+    # For UK vs Madagascar data
+    distributional_plots(
+        data=df_percentiles,
+        df_main_indicators=df_main_indicators,
+        x="avg",
+        weights="pop",
+        log_scale=True,
+        multiple="layer",
+        hue="country",
+        hue_order=["Madagascar", "United Kingdom"],
+        years=[2024],
+        fill=False,
+        legend=False,
+        common_norm=False,
+        period="day",
+        add_ipl="area",
+        add_world_mean=None,
+        add_world_median=None,
+        add_multiple_lines_day=None,
+        gridsize=1000,
+        width=1500,
+        height=200,
+    )
+
     # For Chile
     distributional_plots(
         data=df_thousand_bins,
@@ -109,7 +164,7 @@ def run() -> None:
         fill=False,
         legend=True,
         common_norm=False,
-        gridsize=100_000,
+        gridsize=1000,
         period="day",
         add_ipl="area",
         add_world_mean="area",
@@ -160,11 +215,15 @@ def run() -> None:
             hue="country",
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
             years=[2024],
+            fill=False,
             common_norm=False,
+            gridsize=100_000,
             period="day",
             add_ipl="line",
             add_world_mean="line",
             add_world_median="line",
+            add_national_lines=True,
+            df_national_lines=df_national_lines,
         )
 
         distributional_plots_per_row(
@@ -177,7 +236,9 @@ def run() -> None:
             hue="country",
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
             years=[2024],
+            fill=False,
             common_norm=False,
+            gridsize=100_000,
             period="day",
             survey_based=True,
             preferred_reporting_level="national",
@@ -185,6 +246,8 @@ def run() -> None:
             add_ipl="line",
             add_world_mean="line",
             add_world_median="line",
+            add_national_lines=True,
+            df_national_lines=df_national_lines,
         )
 
     # Stacked distributions with common density estimate
@@ -264,6 +327,9 @@ def distributional_plots(
     add_ipl: Literal["line", "area", None] = "line",
     add_world_mean: Literal["line", "area", None] = "line",
     add_world_median: Literal["line", "area", None] = "line",
+    add_multiple_lines_day: List[float] = None,
+    width: int = WIDTH,
+    height: int = HEIGHT,
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
@@ -272,6 +338,9 @@ def distributional_plots(
     # Filter the data with the hue and hue_order
     if hue_order is not None:
         data = data[data[hue].isin(hue_order)].reset_index(drop=True)
+
+        # Calculate the number of countries selected
+        number_of_countries = len(hue_order)
 
     # If no years are provided, use all years in the data
     if years is None:
@@ -298,6 +367,15 @@ def distributional_plots(
         filename = "_".join(hue_order)
     else:
         filename = "multiple_countries"
+
+    # Define multiple_areas, depending on the add_multiple_lines_day
+    if add_multiple_lines_day is not None:
+        # Define the filename according to the add_multiple_lines_day
+        filename_multiple_areas = "_".join(
+            [str(round(value, 2)) for value in add_multiple_lines_day]
+        )
+    else:
+        filename_multiple_areas = "none"
 
     # Define the income period values
     period_factor = PERIOD_VALUES[period]["factor"]
@@ -350,7 +428,9 @@ def distributional_plots(
         )
 
         if not fill:
-            draw_complete_area_under_curve(kde_plot=kde_plot, hue_order=hue_order)
+            draw_complete_area_under_curve(
+                kde_plot=kde_plot, number_of_countries=number_of_countries
+            )
 
         if add_ipl == "line":
             # Add a vertical line for the international poverty line
@@ -373,8 +453,8 @@ def distributional_plots(
         elif add_ipl == "area":
             draw_area_under_curve(
                 kde_plot=kde_plot,
-                hue_order=hue_order,
-                value=ipl,
+                number_of_countries=number_of_countries,
+                values=[ipl],
             )
 
         if add_world_mean == "line":
@@ -397,9 +477,9 @@ def distributional_plots(
 
         elif add_world_mean == "area":
             draw_area_under_curve(
+                number_of_countries=number_of_countries,
                 kde_plot=kde_plot,
-                hue_order=hue_order,
-                value=world_mean_year,
+                values=[world_mean_year],
             )
 
         if add_world_median == "line":
@@ -422,8 +502,19 @@ def distributional_plots(
         elif add_world_median == "area":
             draw_area_under_curve(
                 kde_plot=kde_plot,
-                hue_order=hue_order,
-                value=world_median_year,
+                number_of_countries=number_of_countries,
+                values=[world_median_year],
+            )
+
+        if add_multiple_lines_day is not None:
+            # Multiply the values by the period factor
+            add_multiple_lines_day = [
+                value * period_factor for value in add_multiple_lines_day
+            ]
+            draw_area_under_curve(
+                kde_plot=kde_plot,
+                number_of_countries=number_of_countries,
+                values=add_multiple_lines_day,
             )
 
         if legend:
@@ -469,9 +560,9 @@ def distributional_plots(
         plt.axhline(y=0, color="gray", linewidth=0.5)
 
         fig = kde_plot.get_figure()
-        fig.set_size_inches(WIDTH / 100, HEIGHT / 100)
+        fig.set_size_inches(width / 100, height / 100)
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}.svg"
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}.svg"
         )
         plt.close(fig)
 
@@ -488,7 +579,9 @@ def distributional_plots_per_row(
     hue: str,
     hue_order: List[str] = None,
     years: List[int] = None,
+    fill: bool = True,
     common_norm: bool = True,
+    gridsize: int = 200,
     period: Literal["day", "month", "year"] = "day",
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
@@ -498,6 +591,8 @@ def distributional_plots_per_row(
     add_world_median: Literal["line", "area", None] = "line",
     add_national_lines: bool = False,
     df_national_lines: pd.DataFrame = None,
+    width: int = WIDTH,
+    height: int = HEIGHT,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -578,7 +673,7 @@ def distributional_plots_per_row(
         fig, axes = plt.subplots(
             nrows=len(hue_order),
             ncols=1,
-            figsize=(WIDTH / 100, HEIGHT / 100),
+            figsize=(width / 100, height / 100),
             sharex=True,  # Share the x-axis across all subplots
         )
 
@@ -586,18 +681,31 @@ def distributional_plots_per_row(
             country_data = data_year[data_year[hue] == country]
 
             # Plot a kde with seaborn
-            sns.kdeplot(
+            kde_plot = sns.kdeplot(
                 data=country_data,
                 x=x,
                 weights=weights,
-                fill=True,
+                fill=fill,
                 log_scale=log_scale,
                 ax=ax,
                 common_norm=common_norm,
+                gridsize=gridsize,
             )
 
-            if add_national_lines:
+            if not fill:
+                draw_complete_area_under_curve(kde_plot=kde_plot)
 
+            if add_national_lines:
+                # Calculate national_poverty_line
+                national_poverty_line = df_national_lines.loc[
+                    (df_national_lines["country"] == country),
+                    "national_poverty_line",
+                ].values[0]
+
+                draw_area_under_curve(
+                    kde_plot=kde_plot,
+                    values=[national_poverty_line],
+                )
 
             if add_ipl == "line":
                 # Add a vertical line for the international poverty line
@@ -815,6 +923,8 @@ def pen_parade(
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
+    width: int = WIDTH_PEN,
+    height: int = HEIGHT_PEN,
 ) -> None:
     """
     Plot Pen parades (percentiles vs. income) with seaborn, with multiple options for customization.
@@ -1123,7 +1233,7 @@ def pen_parade(
         line_plot.axvline(x=100, color="black", linewidth=0.5)
 
         fig = line_plot.get_figure()
-        fig.set_size_inches(WIDTH_PEN / 100, HEIGHT_PEN / 100)
+        fig.set_size_inches(width / 100, height / 100)
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg"
         )
@@ -1133,42 +1243,41 @@ def pen_parade(
 
 
 def draw_area_under_curve(
-    kde_plot: plt.Axes, hue_order: List[str], value: float
+    kde_plot: plt.Axes,
+    values: List[float],
+    number_of_countries: int = 1,
 ) -> None:
     """
     Draw the area under the curve for the distributional plots.
     """
 
-    # Calculate the number of countries selected
-    number_of_countries = len(hue_order)
-
     # For each of these countries, in order, highlight the area under the curve
     for i in range(0, number_of_countries):
-        # Obtain the line of the kde_plot
-        line = kde_plot.lines[i]
+        for value in values:
+            # Obtain the line of the kde_plot
+            line = kde_plot.lines[i]
 
-        # Obtain the x and y data of the line
-        x_line, y_line = line.get_data()
+            # Obtain the x and y data of the line
+            x_line, y_line = line.get_data()
 
-        # Fill the area under the curve for values below the international poverty line
-        kde_plot.fill_between(
-            x=x_line,
-            y1=y_line,
-            where=(x_line <= value),
-            alpha=0.3,
-            color=line.get_color(),
-        )
+            # Fill the area under the curve for values below the international poverty line
+            kde_plot.fill_between(
+                x=x_line,
+                y1=y_line,
+                where=(x_line <= value),
+                alpha=0.3,
+                color=line.get_color(),
+            )
 
     return None
 
 
-def draw_complete_area_under_curve(kde_plot: plt.Axes, hue_order: List[str]) -> None:
+def draw_complete_area_under_curve(
+    kde_plot: plt.Axes, number_of_countries: int = 1
+) -> None:
     """
     Draw the area under the curve for the distributional plots.
     """
-
-    # Calculate the number of countries selected
-    number_of_countries = len(hue_order)
 
     # For each of these countries, in order, highlight the area under the curve
     for i in range(0, number_of_countries):
