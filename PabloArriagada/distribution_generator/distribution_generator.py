@@ -70,12 +70,26 @@ THOUSAND_BINS_URL = f"http://catalog.ourworldindata.org/garden/wb/{THOUSAND_BINS
 PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/percentiles_income_consumption_2017.feather?nocache"
 MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/income_consumption_2017.feather?nocache"
 
+# Define column names and their new names in the national_lines data
+NATIONAL_LINES_COLUMNS = {
+    "Entity": "country",
+    "Year": "year",
+    "World Bank income group": "income_group",
+    "Harmonized national poverty line": "national_poverty_line",
+}
+
 
 def run() -> None:
     # Read data
     df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
+    df_national_lines = pd.read_csv(f"{PARENT_DIR}/national_poverty_lines.csv")
+
+    # Rename columns in the national_lines data
+    df_national_lines = df_national_lines.rename(
+        columns=NATIONAL_LINES_COLUMNS, errors="raise"
+    )
 
     # Set seaborn style and color palette
     sns.set_style("ticks")
@@ -95,8 +109,11 @@ def run() -> None:
         fill=False,
         legend=True,
         common_norm=False,
+        gridsize=100_000,
         period="day",
         add_ipl="area",
+        add_world_mean="area",
+        add_world_median="area",
     )
 
     for countries in COUNTRIES:
@@ -145,6 +162,9 @@ def run() -> None:
             years=[2024],
             common_norm=False,
             period="day",
+            add_ipl="line",
+            add_world_mean="line",
+            add_world_median="line",
         )
 
         distributional_plots_per_row(
@@ -162,6 +182,9 @@ def run() -> None:
             survey_based=True,
             preferred_reporting_level="national",
             preferred_welfare_type="income",
+            add_ipl="line",
+            add_world_mean="line",
+            add_world_median="line",
         )
 
     # Stacked distributions with common density estimate
@@ -233,6 +256,7 @@ def distributional_plots(
     fill: bool = True,
     legend: bool = True,
     common_norm: bool = True,
+    gridsize: int = 200,
     period: Literal["day", "month", "year"] = "day",
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
@@ -322,7 +346,11 @@ def distributional_plots(
             multiple=multiple,
             legend=legend,
             common_norm=common_norm,
+            gridsize=gridsize,
         )
+
+        if not fill:
+            draw_complete_area_under_curve(kde_plot=kde_plot, hue_order=hue_order)
 
         if add_ipl == "line":
             # Add a vertical line for the international poverty line
@@ -343,19 +371,11 @@ def distributional_plots(
                 fontsize=8,  # Font size of the text
             )
         elif add_ipl == "area":
-            # Calculate the number of countries selected
-            number_of_countries = len(hue_order)
-
-            for i in range(0, number_of_countries):
-                # Highlight the curve until x=ipl
-                line = kde_plot.lines[i]
-                x_line, y_line = line.get_data()
-                kde_plot.fill_between(
-                    x=x_line, y1=y_line, where=x_line <= ipl, alpha=0.5
-                )
-                kde_plot.fill_between(
-                    x=x_line, y1=y_line, where=x_line > ipl, alpha=0.5
-                )
+            draw_area_under_curve(
+                kde_plot=kde_plot,
+                hue_order=hue_order,
+                value=ipl,
+            )
 
         if add_world_mean == "line":
             # Add a vertical line for the world mean, in the same format as the international poverty line
@@ -375,6 +395,13 @@ def distributional_plots(
                 fontsize=8,
             )
 
+        elif add_world_mean == "area":
+            draw_area_under_curve(
+                kde_plot=kde_plot,
+                hue_order=hue_order,
+                value=world_mean_year,
+            )
+
         if add_world_median == "line":
             # Add a vertical line for the world median, in the same format as the international poverty line
             plt.axvline(
@@ -391,6 +418,12 @@ def distributional_plots(
                 rotation=90,
                 verticalalignment="top",
                 fontsize=8,
+            )
+        elif add_world_median == "area":
+            draw_area_under_curve(
+                kde_plot=kde_plot,
+                hue_order=hue_order,
+                value=world_median_year,
             )
 
         if legend:
@@ -460,6 +493,11 @@ def distributional_plots_per_row(
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
+    add_ipl: Literal["line", "area", None] = "line",
+    add_world_mean: Literal["line", "area", None] = "line",
+    add_world_median: Literal["line", "area", None] = "line",
+    add_national_lines: bool = False,
+    df_national_lines: pd.DataFrame = None,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -486,6 +524,12 @@ def distributional_plots_per_row(
     else:
         # Filter data by years
         data = data[data["year"].isin(years)].reset_index(drop=True)
+
+    if add_national_lines:
+        # Filter national lines data by hue_order
+        df_national_lines = df_national_lines[
+            df_national_lines[hue].isin(hue_order)
+        ].reset_index(drop=True)
 
     # Define filename according to the hue_order
     if hue_order is None:
@@ -552,64 +596,73 @@ def distributional_plots_per_row(
                 common_norm=common_norm,
             )
 
-            # Add a vertical line for the international poverty line
-            ax.axvline(
-                x=ipl,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
+            if add_national_lines:
 
-            # Add a vertical line for the world mean
-            ax.axvline(
-                x=world_mean_year,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
 
-            # Add a vertical line for the world median
-            ax.axvline(
-                x=world_median_year,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
+            if add_ipl == "line":
+                # Add a vertical line for the international poverty line
+                ax.axvline(
+                    x=ipl,
+                    color="lightgrey",
+                    linestyle="--",
+                    linewidth=0.8,
+                )
+
+            if add_world_mean == "line":
+                # Add a vertical line for the world mean
+                ax.axvline(
+                    x=world_mean_year,
+                    color="lightgrey",
+                    linestyle="--",
+                    linewidth=0.8,
+                )
+
+            if add_world_median == "line":
+                # Add a vertical line for the world median
+                ax.axvline(
+                    x=world_median_year,
+                    color="lightgrey",
+                    linestyle="--",
+                    linewidth=0.8,
+                )
 
             # Add line labels only to the last axis
             if ax == axes[-1]:
-                ax.text(
-                    x=ipl,
-                    y=plt.ylim()[1],
-                    s=f"International\nPoverty Line:\n${round(ipl,2):.2f}",
-                    color="grey",
-                    rotation=90,
-                    verticalalignment="top",
-                    horizontalalignment="left",
-                    fontsize=8,
-                )
+                if add_ipl == "line":
+                    ax.text(
+                        x=ipl,
+                        y=plt.ylim()[1],
+                        s=f"International\nPoverty Line:\n${round(ipl,2):.2f}",
+                        color="grey",
+                        rotation=90,
+                        verticalalignment="top",
+                        horizontalalignment="left",
+                        fontsize=8,
+                    )
 
-                ax.text(
-                    x=world_mean_year,
-                    y=plt.ylim()[1],
-                    s=f"World mean:\n${round(world_mean_year,2):.2f}",
-                    color="grey",
-                    rotation=90,
-                    verticalalignment="top",
-                    horizontalalignment="left",
-                    fontsize=8,
-                )
+                if add_world_mean == "line":
+                    ax.text(
+                        x=world_mean_year,
+                        y=plt.ylim()[1],
+                        s=f"World mean:\n${round(world_mean_year,2):.2f}",
+                        color="grey",
+                        rotation=90,
+                        verticalalignment="top",
+                        horizontalalignment="left",
+                        fontsize=8,
+                    )
 
-                ax.text(
-                    x=world_median_year,
-                    y=plt.ylim()[1],
-                    s=f"World median:\n${round(world_median_year,2):.2f}",
-                    color="grey",
-                    rotation=90,
-                    verticalalignment="top",
-                    horizontalalignment="left",
-                    fontsize=8,
-                )
+                if add_world_median == "line":
+                    ax.text(
+                        x=world_median_year,
+                        y=plt.ylim()[1],
+                        s=f"World median:\n${round(world_median_year,2):.2f}",
+                        color="grey",
+                        rotation=90,
+                        verticalalignment="top",
+                        horizontalalignment="left",
+                        fontsize=8,
+                    )
 
             # Add the name of the country at the middle of the distribution, bottom
             year_to_write = country_data["year"].iloc[0] if survey_based else year
@@ -1075,6 +1128,63 @@ def pen_parade(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg"
         )
         plt.close(fig)
+
+    return None
+
+
+def draw_area_under_curve(
+    kde_plot: plt.Axes, hue_order: List[str], value: float
+) -> None:
+    """
+    Draw the area under the curve for the distributional plots.
+    """
+
+    # Calculate the number of countries selected
+    number_of_countries = len(hue_order)
+
+    # For each of these countries, in order, highlight the area under the curve
+    for i in range(0, number_of_countries):
+        # Obtain the line of the kde_plot
+        line = kde_plot.lines[i]
+
+        # Obtain the x and y data of the line
+        x_line, y_line = line.get_data()
+
+        # Fill the area under the curve for values below the international poverty line
+        kde_plot.fill_between(
+            x=x_line,
+            y1=y_line,
+            where=(x_line <= value),
+            alpha=0.3,
+            color=line.get_color(),
+        )
+
+    return None
+
+
+def draw_complete_area_under_curve(kde_plot: plt.Axes, hue_order: List[str]) -> None:
+    """
+    Draw the area under the curve for the distributional plots.
+    """
+
+    # Calculate the number of countries selected
+    number_of_countries = len(hue_order)
+
+    # For each of these countries, in order, highlight the area under the curve
+    for i in range(0, number_of_countries):
+        # Obtain the line of the kde_plot
+        line = kde_plot.lines[i]
+
+        # Obtain the x and y data of the line
+        x_line, y_line = line.get_data()
+
+        # Fill the area under the curve for values below the international poverty line
+        kde_plot.fill_between(
+            x=x_line,
+            y1=y_line,
+            alpha=0.2,
+            color=line.get_color(),
+        )
 
     return None
 
