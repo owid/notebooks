@@ -123,7 +123,7 @@ def run() -> None:
             add_multiple_lines_day=lines,
             gridsize=1000,
             width=1500,
-            height=200,
+            height=400,
         )
 
     # For UK vs Madagascar data
@@ -147,7 +147,10 @@ def run() -> None:
         add_multiple_lines_day=None,
         gridsize=1000,
         width=1500,
-        height=200,
+        height=400,
+        survey_based=True,
+        preferred_reporting_level="national",
+        preferred_welfare_type="income",
     )
 
     # For Chile
@@ -186,6 +189,8 @@ def run() -> None:
             legend=True,
             common_norm=False,
             period="day",
+            width=1500,
+            height=400,
         )
         distributional_plots(
             data=df_percentiles,
@@ -203,6 +208,8 @@ def run() -> None:
             survey_based=True,
             preferred_reporting_level="national",
             preferred_welfare_type="income",
+            width=1500,
+            height=400,
         )
 
         distributional_plots_per_row(
