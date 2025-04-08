@@ -64,7 +64,7 @@ PERIOD_VALUES = {
 
 
 # Set correction factor of the median to show the label in the plot
-CORRECTION_FACTOR_LABEL = 0.8
+CORRECTION_FACTOR_LABEL = 1
 
 # Define  version of PIP and 1000 bins data
 PIP_VERSION = "2024-10-07"
@@ -91,6 +91,7 @@ def run() -> None:
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
     df_national_lines = pd.read_csv(f"{PARENT_DIR}/national_poverty_lines.csv")
+    df_pip_filled = pd.read_csv(f"{PARENT_DIR}/pip_filled_215.csv")
 
     # Rename columns in the national_lines data
     df_national_lines = df_national_lines.rename(
@@ -542,6 +543,7 @@ def distributional_plots(
                     color="black",
                     rotation=0,
                     verticalalignment="bottom",
+                    horizontalalignment="center",
                     fontsize=10,
                 )
 
@@ -1303,6 +1305,12 @@ def draw_complete_area_under_curve(
         )
 
     return None
+
+def draw_marimekko_chart(
+        data=pd.DataFrame,
+        x: str,
+        y: str,
+)
 
 
 if __name__ == "__main__":
