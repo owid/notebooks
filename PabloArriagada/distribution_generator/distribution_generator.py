@@ -91,7 +91,6 @@ def run() -> None:
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
     df_national_lines = pd.read_csv(f"{PARENT_DIR}/national_poverty_lines.csv")
-    df_pip_filled = pd.read_csv(f"{PARENT_DIR}/pip_filled_215.csv")
 
     # Rename columns in the national_lines data
     df_national_lines = df_national_lines.rename(
@@ -101,6 +100,9 @@ def run() -> None:
     # Set seaborn style and color palette
     sns.set_style("ticks")
     sns.set_palette("deep")
+
+    # Show texts and not curves for annotations
+    plt.rcParams["svg.fonttype"] = "none"
 
     # Plot global distribution, separating in two with the International Poverty Line
     for lines in POVERTY_LINES_AREA_GLOBAL:
@@ -569,9 +571,15 @@ def distributional_plots(
         plt.axhline(y=0, color="gray", linewidth=0.5)
 
         fig = kde_plot.get_figure()
+
+        # Remove the clipping of the figure
+        for o in fig.findobj():
+            o.set_clip_on(False)
+
         fig.set_size_inches(width / 100, height / 100)
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}.svg"
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}.svg",
+            bbox_inches="tight",
         )
         plt.close(fig)
 
@@ -836,8 +844,14 @@ def distributional_plots_per_row(
 
         # Adjust layout and save the figure
         plt.tight_layout()
+
+        # Remove the clipping of the figure
+        for o in fig.findobj():
+            o.set_clip_on(False)
+
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg"
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg",
+            bbox_inches="tight",
         )
         plt.close(fig)
 
@@ -1242,9 +1256,15 @@ def pen_parade(
         line_plot.axvline(x=100, color="black", linewidth=0.5)
 
         fig = line_plot.get_figure()
+
+        # Remove the clipping of the figure
+        for o in fig.findobj():
+            o.set_clip_on(False)
+
         fig.set_size_inches(width / 100, height / 100)
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg"
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg",
+            bbox_inches="tight",
         )
         plt.close(fig)
 
@@ -1305,12 +1325,6 @@ def draw_complete_area_under_curve(
         )
 
     return None
-
-def draw_marimekko_chart(
-        data=pd.DataFrame,
-        x: str,
-        y: str,
-)
 
 
 if __name__ == "__main__":
