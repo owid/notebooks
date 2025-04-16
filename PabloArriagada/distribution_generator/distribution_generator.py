@@ -21,6 +21,9 @@ HEIGHT = 750
 WIDTH_PEN = 1000
 HEIGHT_PEN = 1000
 
+# Define gridsize for when I need higher resolution
+GRIDSIZE_HIGHER_RESOLUTION = 1000
+
 # Define pair of countries to estimate data
 COUNTRIES = [
     ["Denmark", "Ethiopia"],
@@ -124,7 +127,7 @@ def run() -> None:
             add_world_mean=None,
             add_world_median=None,
             add_multiple_lines_day=lines,
-            gridsize=1000,
+            gridsize=GRIDSIZE_HIGHER_RESOLUTION,
             width=1500,
             height=400,
         )
@@ -148,7 +151,7 @@ def run() -> None:
         add_world_mean=None,
         add_world_median=None,
         add_multiple_lines_day=None,
-        gridsize=1000,
+        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         width=1500,
         height=400,
         survey_based=True,
@@ -170,7 +173,7 @@ def run() -> None:
         fill=False,
         legend=True,
         common_norm=False,
-        gridsize=1000,
+        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="day",
         add_ipl="area",
         add_world_mean="area",
@@ -227,7 +230,7 @@ def run() -> None:
             years=[2024],
             fill=False,
             common_norm=False,
-            gridsize=100_000,
+            gridsize=GRIDSIZE_HIGHER_RESOLUTION,
             period="day",
             add_ipl="line",
             add_world_mean="line",
@@ -248,7 +251,7 @@ def run() -> None:
             years=[2024],
             fill=False,
             common_norm=False,
-            gridsize=100_000,
+            gridsize=GRIDSIZE_HIGHER_RESOLUTION,
             period="day",
             survey_based=True,
             preferred_reporting_level="national",
