@@ -66,7 +66,7 @@ rename_vector <- c(
   "Malignant neoplasms of kidney and renal pelvis (C64-C65)" = "Kidney cancer",
   "Malignant neoplasms of lip, oral cavity and pharynx (C00-C14)" = "Oral and pharyngeal cancer",
   "Malignant neoplasms of liver and intrahepatic bile ducts (C22)" = "Liver cancer",
-  "Malignant neoplasms of lymphoid, hematopoietic and related tissue (C81-C96)" = "Lymphoid and blood cancers",
+  "Malignant neoplasms of lymphoid, hematopoietic and related tissue (C81-C96)" = "Cat_Lymphoid and blood cancers",
   "Malignant neoplasms of meninges, brain and other parts of central nervous system (C70-C72)" = "Brain and CNS cancers",
   "Malignant neoplasms of trachea, bronchus and lung (C33-C34)" = "Lung cancer",
   "Multiple myeloma and immunoproliferative neoplasms (C88,C90)" = "Multiple myeloma",
@@ -102,7 +102,8 @@ coded_df$ICD_long <- factor(coded_df$ICD_long,
 # Remove the category from the main df
 coded_df <- coded_df %>% 
   filter(!ICD_long %in% c(
-    "Cat_Malignant cancers"
+    "Cat_Malignant cancers",
+    "Cat_Lymphoid and blood cancers"
   ))
 
 # Specify OWID colors
@@ -119,8 +120,7 @@ coded_df_line <- coded_df %>%
     "Other unspecified lymphoid cancers", 
     "Laryngeal cancer", 
     "Hodgkin disease",
-    "Other lymphoid and blood cancers",
-    "Lymphoid and blood cancers"
+    "Other lymphoid and blood cancers"
   ))
 
 # In the line chart, replace Cervical, Breast, Uterine, and Ovarian cancer death rates with female only death rates. Replace Prostate cancer with male only death rates.
