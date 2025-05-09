@@ -209,7 +209,7 @@ coded_df <- coded_df %>%
 # Define the groups to be merged
 merge_groups <- list(
   list(
-    new_category = "Lymphatic and blood cancers",
+    new_category = "Non-leukemia lymphatic and blood cancers",
     old_categories = c("Hodgkin disease", "Non-Hodgkin lymphoma", "Multiple myeloma", "Other lymphoid and blood cancers")
   ),
   # list(
@@ -277,7 +277,7 @@ ggplot(final_df, aes(x = Age, y = Percentage_Deaths_ICD, fill = ICD_long)) +
     x = "Age",
     y = "",
     fill = "ICD-10 113 category",
-    caption = "Data source: CDC Wonder database, using data on the underlying cause of death from 2018–2022\nChart by Saloni Dattani\nFor clarity, several cancer categories have been merged. 'Lymphatic and blood cancers' includes Hodgkin disease, Non-Hodgkin lymphoma, multiple myeloma, and other lymphoid and blood cancers.\n'Head, neck, and oral cancers' includes oral, pharyngeal, and laryngeal cancers. 'Other/unspecified cancers' combines in situ, uncertain, benign, and other unspecified cancers."
+    caption = "Data source: CDC Wonder database, using data on the underlying cause of death from 2018–2022\nChart by Saloni Dattani\nFor clarity, several cancer categories have been merged. 'Non-leukemia lymphatic and blood cancers' includes Hodgkin disease, Non-Hodgkin lymphoma, multiple myeloma, and other lymphoid and blood cancers.\n'Head, neck, and oral cancers' includes oral, pharyngeal, and laryngeal cancers. 'Other/unspecified cancers' combines in situ, uncertain, benign, and other unspecified cancers."
   ) +
   theme_minimal() + 
   guides(fill = guide_legend(title.position = "top")) +
@@ -306,7 +306,7 @@ ggplot(final_df, aes(x = Age, y = Deaths_n, fill = ICD_long)) +
     x = "Age",
     y = "",
     fill = "ICD cause of death category",
-    caption = "Data source: CDC Wonder database (2018–2022)\nChart by Saloni Dattani\nFor clarity, several cancer categories have been merged. 'Lymphatic and blood cancers' includes Hodgkin disease, Non-Hodgkin lymphoma, multiple myeloma, and other lymphoid and blood cancers.\n'Head, neck, and oral cancers' includes oral, pharyngeal, and laryngeal cancers. 'Other/unspecified cancers' combines in situ, uncertain, benign, and other unspecified cancers."
+    caption = "Data source: CDC Wonder database (2018–2022)\nChart by Saloni Dattani\nFor clarity, several cancer categories have been merged. 'Non-leukemia lymphatic and blood cancers' includes Hodgkin disease, Non-Hodgkin lymphoma, multiple myeloma, and other lymphoid and blood cancers.\n'Head, neck, and oral cancers' includes oral, pharyngeal, and laryngeal cancers. 'Other/unspecified cancers' combines in situ, uncertain, benign, and other unspecified cancers."
   ) +
   theme_minimal() + 
   guides(fill = guide_legend(title.position = "top")) +
