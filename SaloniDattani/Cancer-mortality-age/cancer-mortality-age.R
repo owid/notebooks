@@ -20,6 +20,7 @@ loadfonts(device = "all") # use "win" for Windows, "mac" for macOS
 # !!! Download and replace this with path to folder
 data_folder <- ""
 
+
 # Import
 raw_df <- read_tsv(paste0(data_folder, "Underlying Cause of Death, 2018-2022, Single Race-Cancer-ICD-10-113.txt"))
 colnames(raw_df) <- c("Notes", "Age_long", "Age",  "ICD_long", "ICD", "Deaths_n", "Population", "Death_crude_rate")
@@ -73,6 +74,8 @@ rename_vector <- c(
   "Other and unspecified malignant neoplasms of lymphoid, hematopoietic and related tissue (C96)" = "Other lymphoid and blood cancers"
 )
 
+# Note that Malignant neoplasms of lymphoid, hematopoietic and related tissue (C81-C96) includes several other categories; it will be removed later.
+
 # Apply the renaming
 coded_df <- coded_df %>%
   mutate(ICD_long = recode(ICD_long, !!!rename_vector))
@@ -116,7 +119,8 @@ coded_df_line <- coded_df %>%
     "Other unspecified lymphoid cancers", 
     "Laryngeal cancer", 
     "Hodgkin disease",
-    "Other lymphoid and blood cancers"
+    "Other lymphoid and blood cancers",
+    "Lymphoid and blood cancers"
   ))
 
 # In the line chart, replace Cervical, Breast, Uterine, and Ovarian cancer death rates with female only death rates. Replace Prostate cancer with male only death rates.
@@ -135,10 +139,10 @@ coded_gender_df <- coded_gender_df %>%
 # Remove NAs
 coded_gender_df <- coded_gender_df %>% 
   filter(!is.na(Gender), 
-    !is.na(Age_long), 
-    !is.na(ICD), 
-    !is.na(Deaths_n), 
-    !is.na(Population))
+         !is.na(Age_long), 
+         !is.na(ICD), 
+         !is.na(Deaths_n), 
+         !is.na(Population))
 
 
 # Order the ICD categories in alphabetical order
@@ -147,13 +151,13 @@ coded_gender_df$ICD_long <- factor(coded_gender_df$ICD_long,
 
 # Remove prostate, breast, cervical, uterine, ovarian cancers from the original line chart
 coded_df_line <- coded_df_line %>%
-                  filter(!ICD_long %in% c("Prostate cancer", "Breast cancer", "Ovarian cancer", "Uterine cancer", "Cervical cancer"))
+  filter(!ICD_long %in% c("Prostate cancer", "Breast cancer", "Ovarian cancer", "Uterine cancer", "Cervical cancer"))
 # Keep only these cancers in the coded gender_df and add this to the df
 # Retain the rows where Gender is F where ICD_long is one of Breast cancer, Uterine cancer or Ovarian cancer; and also retain rows where Gender is M where ICD_long is Prostate cancer
 coded_gender_df <- coded_gender_df %>%
-                    filter(ICD_long %in% c("Prostate cancer", "Breast cancer", "Ovarian cancer", "Uterine cancer", "Cervical cancer"))  %>%
-                    filter((Gender == "F" & ICD_long %in% c("Breast cancer", "Uterine cancer", "Ovarian cancer", "Cervical cancer")) | (Gender == "M" & ICD_long == "Prostate cancer")) %>%
-                    select(-c(Gender_long, Gender))
+  filter(ICD_long %in% c("Prostate cancer", "Breast cancer", "Ovarian cancer", "Uterine cancer", "Cervical cancer"))  %>%
+  filter((Gender == "F" & ICD_long %in% c("Breast cancer", "Uterine cancer", "Ovarian cancer", "Cervical cancer")) | (Gender == "M" & ICD_long == "Prostate cancer")) %>%
+  select(-c(Gender_long, Gender))
 
 joined_line_df <- bind_rows(coded_df_line, coded_gender_df)
 
@@ -187,13 +191,18 @@ ggplot(joined_line_df, aes(x = Age, y = Death_crude_rate, color = ICD_long)) +
   theme_minimal() + 
   guides(fill = guide_legend(title.position = "top")) +
   theme(text = element_text(family = "Lato"),
-    strip.text.x = element_text(size = 12),
-    axis.text = element_text(size = 10),
-    axis.title = element_text(size = 12),
-    legend.position = "none", # Remove legend
-    plot.title = element_text(face = "bold", size = 16))
+        strip.text.x = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        legend.position = "none", # Remove legend
+        plot.title = element_text(face = "bold", size = 16))
 ggsave(paste0(data_folder, "cancer-death-rates-by-age-usa.svg"), height=8, width=12)
 
+# Remove these cancers from the panels of the share chart, since its a broader group 
+coded_df <- coded_df %>%
+  filter(!ICD_long %in% c(
+    "Lymphoid and blood cancers"
+  ))
 
 # Combine some of the cancers for the share chart
 
@@ -201,12 +210,12 @@ ggsave(paste0(data_folder, "cancer-death-rates-by-age-usa.svg"), height=8, width
 merge_groups <- list(
   list(
     new_category = "Lymphatic and blood cancers",
-    old_categories = c("Lymphoid and blood cancers", "Hodgkin disease", "Non-Hodgkin lymphoma", "Multiple myeloma", "Other lymphoid and blood cancers")
+    old_categories = c("Hodgkin disease", "Non-Hodgkin lymphoma", "Multiple myeloma", "Other lymphoid and blood cancers")
   ),
- # list(
- #   new_category = "Digestive system cancers",
- #   old_categories = c("Colorectal cancer", "Esophageal cancer", "Liver cancer", "Pancreatic cancer", "Stomach cancer")
- # ),
+  # list(
+  #   new_category = "Digestive system cancers",
+  #   old_categories = c("Colorectal cancer", "Esophageal cancer", "Liver cancer", "Pancreatic cancer", "Stomach cancer")
+  # ),
   list(
     new_category = "Cervical, uterine, and ovarian cancers",
     old_categories = c("Cervical cancer", "Uterine cancer", "Ovarian cancer")
@@ -273,15 +282,15 @@ ggplot(final_df, aes(x = Age, y = Percentage_Deaths_ICD, fill = ICD_long)) +
   theme_minimal() + 
   guides(fill = guide_legend(title.position = "top")) +
   theme(text = element_text(family = "Lato"),
-    strip.text.x = element_text(size = 12, face = "bold"),
-    axis.text = element_text(size = 10),
-    axis.title = element_text(size = 12),
-    legend.position = "right", # Place legend at the right
-    legend.box = "vertical", # Arrange legend items horizontally
-    plot.title = element_text(face = "bold", size = 16),
-    panel.grid.major.y = element_blank(), # Remove y-axis major grid lines
-    panel.grid.minor.y = element_blank() # Remove y-axis minor grid lines 
-    #axis.text.y = element_text(margin = margin(r = -20)) # Move y-axis text closer to the axis
+        strip.text.x = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        legend.position = "right", # Place legend at the right
+        legend.box = "vertical", # Arrange legend items horizontally
+        plot.title = element_text(face = "bold", size = 16),
+        panel.grid.major.y = element_blank(), # Remove y-axis major grid lines
+        panel.grid.minor.y = element_blank() # Remove y-axis minor grid lines 
+        #axis.text.y = element_text(margin = margin(r = -20)) # Move y-axis text closer to the axis
   )  
 ggsave(paste0(data_folder, "cancer-deaths-relative-share-by-age-usa.svg"), height=8, width=10)
 
@@ -302,15 +311,14 @@ ggplot(final_df, aes(x = Age, y = Deaths_n, fill = ICD_long)) +
   theme_minimal() + 
   guides(fill = guide_legend(title.position = "top")) +
   theme(text = element_text(family = "Lato"),
-    strip.text.x = element_text(size = 12, face = "bold"),
-    axis.text = element_text(size = 10),
-    axis.title = element_text(size = 12),
-    legend.position = "right", # Place legend at the right
-    legend.box = "vertical", # Arrange legend items horizontally
-    plot.title = element_text(face = "bold", size = 16),
-    panel.grid.major.y = element_blank(), # Remove y-axis major grid lines
-    panel.grid.minor.y = element_blank(), # Remove y-axis minor grid lines 
-    axis.text.y = element_text(margin = margin(r = -20)) # Move y-axis text closer to the axis
+        strip.text.x = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        legend.position = "right", # Place legend at the right
+        legend.box = "vertical", # Arrange legend items horizontally
+        plot.title = element_text(face = "bold", size = 16),
+        panel.grid.major.y = element_blank(), # Remove y-axis major grid lines
+        panel.grid.minor.y = element_blank(), # Remove y-axis minor grid lines 
+        axis.text.y = element_text(margin = margin(r = -20)) # Move y-axis text closer to the axis
   )  
 ggsave(paste0(data_folder, "cancer-number-deaths-by-age-usa.svg"), height=8, width=10)
-
