@@ -15,6 +15,8 @@ You can update the chart with new data from the CDC Wonder database here: https:
 
 The output plot is also available in the folder.
 
+Note: Categories are not shown when the total number of deaths per single-year age group was less than 10.
+
 **Update log**
 - 9 May 2025: I identified a coding error in the data on lymphatic and blood cancers and corrected it.
   - The error meant that the category 'lymphatic and blood cancers' wrongly included the category lymphoid and blood cancers `(C81-C96)`, plus its subcategories aside from leukemia — i.e. lymphoid and blood cancers `(C81, C82–C85, C88, C90, C96)`. This meant that it was double counting many cases.
