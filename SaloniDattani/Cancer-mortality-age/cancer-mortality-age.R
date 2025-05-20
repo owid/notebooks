@@ -88,6 +88,7 @@ coded_df <- coded_df %>%
     !is.na(Deaths_n), 
     !is.na(Population))
 
+
 # Calculate the % of deaths in each age and gender group that are in each ICD code
 coded_df <- coded_df %>%
   group_by(Age) %>% #, Gender) %>%
@@ -201,7 +202,7 @@ ggsave(paste0(data_folder, "cancer-death-rates-by-age-usa.svg"), height=8, width
 # Remove these cancers from the panels of the share chart, since its a broader group 
 coded_df <- coded_df %>%
   filter(!ICD_long %in% c(
-    "Lymphoid and blood cancers"
+    "Cat_Lymphoid and blood cancers"
   ))
 
 # Combine some of the cancers for the share chart
