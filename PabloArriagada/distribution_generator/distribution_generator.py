@@ -749,7 +749,7 @@ def distributional_plots_per_row(
                 ax.text(
                     x=national_poverty_line,
                     y=plt.ylim()[0] - 0.05 * (plt.ylim()[1] - plt.ylim()[0]),
-                    s=f"${round(national_poverty_line,2):.2f} The poverty line in {country}",
+                    s=f"${round(national_poverty_line,2):.2f} The poverty line in {country}*",
                     color="grey",
                     rotation=0,
                     verticalalignment="top",
