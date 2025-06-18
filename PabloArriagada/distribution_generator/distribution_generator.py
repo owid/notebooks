@@ -8,7 +8,10 @@ import seaborn as sns
 PARENT_DIR = Path(__file__).parent.absolute()
 
 # Define International Poverty Line
-INTERNATIONAL_POVERTY_LINE = 2.15
+INTERNATIONAL_POVERTY_LINE = 3
+
+# Define latest year
+LATEST_YEAR = 2025
 
 # Define poverty line for high-income countries
 POVERTY_LINE_HIGH_INCOME = 30
@@ -37,7 +40,7 @@ COUNTRIES = [
 # Define poverty lines to plot areas under the curve in the global distribution
 POVERTY_LINES_AREA_GLOBAL = [
     [30],
-    [2.15, 10, 30, 100],
+    [3, 10, 30, 100],
 ]
 
 # Define values for different periods
@@ -70,14 +73,16 @@ PERIOD_VALUES = {
 CORRECTION_FACTOR_LABEL = 1
 
 # Define  version of PIP and 1000 bins data
-PIP_VERSION = "2024-10-07"
-THOUSAND_BINS_VERSION = "2025-03-10"
+PIP_VERSION = "2025-06-05"
+THOUSAND_BINS_VERSION = "2025-06-11"
+NATIONAL_LINES_VERSION = "2025-06-11"
 
 # Define URLs
 
 THOUSAND_BINS_URL = f"http://catalog.ourworldindata.org/garden/wb/{THOUSAND_BINS_VERSION}/thousand_bins_distribution/thousand_bins_distribution.feather?nocache"
-PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/percentiles_income_consumption_2017.feather?nocache"
-MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/income_consumption_2017.feather?nocache"
+PERCENTILES_URL = f"http://staging-site-data-world-bank-pip-f7d786:8881/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/percentiles_income_consumption_2021.feather?nocache"
+MAIN_INDICATORS_URL = f"http://staging-site-data-world-bank-pip-f7d786:8881/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/income_consumption_2021.feather?nocache"
+NATIONAL_LINES_URL = f"http://staging-site-data-world-bank-pip-f7d786:8881/garden/wb/{NATIONAL_LINES_VERSION}/harmonized_national_poverty_lines/harmonized_national_poverty_lines.csv?nocache"
 
 # Define column names and their new names in the national_lines data
 NATIONAL_LINES_COLUMNS = {
@@ -118,7 +123,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=["World"],
-            years=[2024],
+            years=[LATEST_YEAR],
             fill=False,
             legend=True,
             common_norm=False,
@@ -142,7 +147,7 @@ def run() -> None:
         multiple="layer",
         hue="country",
         hue_order=["Madagascar", "United Kingdom"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=False,
         legend=False,
         common_norm=False,
@@ -169,7 +174,7 @@ def run() -> None:
         multiple="layer",
         hue="country",
         hue_order=["Burundi", "Ethiopia", "Syria"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=False,
         legend=True,
         common_norm=False,
@@ -191,7 +196,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=countries,
-            years=[2024],
+            years=[LATEST_YEAR],
             legend=True,
             common_norm=False,
             period="day",
@@ -207,7 +212,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=countries,
-            years=[2024],
+            years=[LATEST_YEAR],
             legend=False,
             common_norm=False,
             period="day",
@@ -227,7 +232,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-            years=[2024],
+            years=[LATEST_YEAR],
             fill=False,
             common_norm=False,
             gridsize=GRIDSIZE_HIGHER_RESOLUTION,
@@ -248,7 +253,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-            years=[2024],
+            years=[LATEST_YEAR],
             fill=False,
             common_norm=False,
             gridsize=GRIDSIZE_HIGHER_RESOLUTION,
@@ -273,7 +278,7 @@ def run() -> None:
         multiple="stack",
         hue="region",
         hue_order=None,
-        years=[2024],
+        years=[LATEST_YEAR],
         legend=True,
         common_norm=True,
         period="day",
@@ -289,7 +294,7 @@ def run() -> None:
         log_scale=False,
         hue="country",
         hue_order=["World"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=True,
         legend=False,
         add_lines=True,
@@ -308,7 +313,7 @@ def run() -> None:
         log_scale=True,
         hue="country",
         hue_order=["Chile", "Peru", "Uruguay"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=False,
         legend=True,
         add_lines=False,
