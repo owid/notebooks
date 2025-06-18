@@ -82,15 +82,7 @@ NATIONAL_LINES_VERSION = "2025-06-11"
 THOUSAND_BINS_URL = f"http://catalog.ourworldindata.org/garden/wb/{THOUSAND_BINS_VERSION}/thousand_bins_distribution/thousand_bins_distribution.feather?nocache"
 PERCENTILES_URL = f"http://staging-site-data-world-bank-pip-f7d786:8881/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/percentiles_income_consumption_2021.feather?nocache"
 MAIN_INDICATORS_URL = f"http://staging-site-data-world-bank-pip-f7d786:8881/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/income_consumption_2021.feather?nocache"
-NATIONAL_LINES_URL = f"http://staging-site-data-world-bank-pip-f7d786:8881/garden/wb/{NATIONAL_LINES_VERSION}/harmonized_national_poverty_lines/harmonized_national_poverty_lines.csv?nocache"
-
-# Define column names and their new names in the national_lines data
-NATIONAL_LINES_COLUMNS = {
-    "Entity": "country",
-    "Year": "year",
-    "World Bank income group": "income_group",
-    "Harmonized national poverty line": "national_poverty_line",
-}
+NATIONAL_LINES_URL = f"http://staging-site-data-world-bank-pip-f7d786:8881/garden/wb/{NATIONAL_LINES_VERSION}/harmonized_national_poverty_lines/harmonized_national_poverty_lines.feather?nocache"
 
 
 def run() -> None:
@@ -98,12 +90,7 @@ def run() -> None:
     df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
-    df_national_lines = pd.read_csv(f"{PARENT_DIR}/national_poverty_lines.csv")
-
-    # Rename columns in the national_lines data
-    df_national_lines = df_national_lines.rename(
-        columns=NATIONAL_LINES_COLUMNS, errors="raise"
-    )
+    df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
 
     # Set seaborn style and color palette
     sns.set_style("ticks")
@@ -262,8 +249,8 @@ def run() -> None:
             preferred_reporting_level="national",
             preferred_welfare_type="income",
             add_ipl="line",
-            add_world_mean="line",
-            add_world_median="line",
+            add_world_mean=None,
+            add_world_median=None,
             add_national_lines=True,
             df_national_lines=df_national_lines,
         )
@@ -299,9 +286,7 @@ def run() -> None:
         legend=False,
         add_lines=True,
         period="day",
-        survey_based=True,
-        preferred_reporting_level="national",
-        preferred_welfare_type="income",
+        survey_based=False,
     )
 
     pen_parade(
@@ -724,7 +709,7 @@ def distributional_plots_per_row(
                 # Calculate national_poverty_line
                 national_poverty_line = df_national_lines.loc[
                     (df_national_lines["country"] == country),
-                    "national_poverty_line",
+                    "harmonized_national_poverty_line",
                 ].values[0]
 
                 draw_area_under_curve(
@@ -757,6 +742,19 @@ def distributional_plots_per_row(
                     color="lightgrey",
                     linestyle="--",
                     linewidth=0.8,
+                )
+
+            if add_national_lines:
+                # Add a vertical line for the national poverty line
+                ax.text(
+                    x=national_poverty_line,
+                    y=plt.ylim()[0] - 0.05 * (plt.ylim()[1] - plt.ylim()[0]),
+                    s=f"${round(national_poverty_line,2):.2f} The poverty line in {country}",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    fontsize=8,
                 )
 
             # Add line labels only to the last axis
