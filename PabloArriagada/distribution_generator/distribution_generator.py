@@ -92,6 +92,12 @@ def run() -> None:
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
     df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
 
+    # in df_national_lines, replace the value of "harmonized_national_poverty_line" for United States with 27.10
+    df_national_lines.loc[
+        (df_national_lines["country"] == "United States"),
+        "harmonized_national_poverty_line",
+    ] = 27.10
+
     # Set seaborn style and color palette
     sns.set_style("ticks")
     sns.set_palette("deep")
