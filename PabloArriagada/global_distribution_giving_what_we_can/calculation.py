@@ -158,8 +158,6 @@ def combine_ppp_cpi_and_export(
         columns={PPP_YEAR: f"cpi_{PPP_YEAR}", MAX_YEAR_CPI: f"cpi_{MAX_YEAR_CPI}"}
     )
 
-    print(df_cpi)
-
     # Calculate the inflation rate between PPP_YEAR and the maximum year
     df_cpi["inflation_rate"] = df_cpi[f"cpi_{MAX_YEAR_CPI}"] / df_cpi[f"cpi_{PPP_YEAR}"]
 
