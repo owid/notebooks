@@ -8,7 +8,10 @@ import seaborn as sns
 PARENT_DIR = Path(__file__).parent.absolute()
 
 # Define International Poverty Line
-INTERNATIONAL_POVERTY_LINE = 2.15
+INTERNATIONAL_POVERTY_LINE = 3
+
+# Define latest year
+LATEST_YEAR = 2025
 
 # Define poverty line for high-income countries
 POVERTY_LINE_HIGH_INCOME = 30
@@ -37,7 +40,7 @@ COUNTRIES = [
 # Define poverty lines to plot areas under the curve in the global distribution
 POVERTY_LINES_AREA_GLOBAL = [
     [30],
-    [2.15, 10, 30, 100],
+    [3, 10, 30, 100],
 ]
 
 # Define values for different periods
@@ -70,22 +73,16 @@ PERIOD_VALUES = {
 CORRECTION_FACTOR_LABEL = 1
 
 # Define  version of PIP and 1000 bins data
-PIP_VERSION = "2024-10-07"
-THOUSAND_BINS_VERSION = "2025-03-10"
+PIP_VERSION = "2025-06-05"
+THOUSAND_BINS_VERSION = "2025-06-11"
+NATIONAL_LINES_VERSION = "2025-06-11"
 
 # Define URLs
 
 THOUSAND_BINS_URL = f"http://catalog.ourworldindata.org/garden/wb/{THOUSAND_BINS_VERSION}/thousand_bins_distribution/thousand_bins_distribution.feather?nocache"
-PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/percentiles_income_consumption_2017.feather?nocache"
-MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/income_consumption_2017.feather?nocache"
-
-# Define column names and their new names in the national_lines data
-NATIONAL_LINES_COLUMNS = {
-    "Entity": "country",
-    "Year": "year",
-    "World Bank income group": "income_group",
-    "Harmonized national poverty line": "national_poverty_line",
-}
+PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/percentiles_income_consumption_2021.feather?nocache"
+MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/income_consumption_2021.feather?nocache"
+NATIONAL_LINES_URL = f"http://catalog.ourworldindata.org/garden/wb/{NATIONAL_LINES_VERSION}/harmonized_national_poverty_lines/harmonized_national_poverty_lines.feather?nocache"
 
 
 def run() -> None:
@@ -93,12 +90,13 @@ def run() -> None:
     df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
-    df_national_lines = pd.read_csv(f"{PARENT_DIR}/national_poverty_lines.csv")
+    df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
 
-    # Rename columns in the national_lines data
-    df_national_lines = df_national_lines.rename(
-        columns=NATIONAL_LINES_COLUMNS, errors="raise"
-    )
+    # in df_national_lines, replace the value of "harmonized_national_poverty_line" for United States with 27.10
+    df_national_lines.loc[
+        (df_national_lines["country"] == "United States"),
+        "harmonized_national_poverty_line",
+    ] = 27.10
 
     # Set seaborn style and color palette
     sns.set_style("ticks")
@@ -118,7 +116,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=["World"],
-            years=[2024],
+            years=[LATEST_YEAR],
             fill=False,
             legend=True,
             common_norm=False,
@@ -142,7 +140,7 @@ def run() -> None:
         multiple="layer",
         hue="country",
         hue_order=["Madagascar", "United Kingdom"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=False,
         legend=False,
         common_norm=False,
@@ -169,7 +167,7 @@ def run() -> None:
         multiple="layer",
         hue="country",
         hue_order=["Burundi", "Ethiopia", "Syria"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=False,
         legend=True,
         common_norm=False,
@@ -191,7 +189,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=countries,
-            years=[2024],
+            years=[LATEST_YEAR],
             legend=True,
             common_norm=False,
             period="day",
@@ -207,7 +205,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=countries,
-            years=[2024],
+            years=[LATEST_YEAR],
             legend=False,
             common_norm=False,
             period="day",
@@ -227,7 +225,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-            years=[2024],
+            years=[LATEST_YEAR],
             fill=False,
             common_norm=False,
             gridsize=GRIDSIZE_HIGHER_RESOLUTION,
@@ -248,7 +246,7 @@ def run() -> None:
             multiple="layer",
             hue="country",
             hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-            years=[2024],
+            years=[LATEST_YEAR],
             fill=False,
             common_norm=False,
             gridsize=GRIDSIZE_HIGHER_RESOLUTION,
@@ -257,8 +255,8 @@ def run() -> None:
             preferred_reporting_level="national",
             preferred_welfare_type="income",
             add_ipl="line",
-            add_world_mean="line",
-            add_world_median="line",
+            add_world_mean=None,
+            add_world_median=None,
             add_national_lines=True,
             df_national_lines=df_national_lines,
         )
@@ -273,7 +271,7 @@ def run() -> None:
         multiple="stack",
         hue="region",
         hue_order=None,
-        years=[2024],
+        years=[LATEST_YEAR],
         legend=True,
         common_norm=True,
         period="day",
@@ -289,14 +287,12 @@ def run() -> None:
         log_scale=False,
         hue="country",
         hue_order=["World"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=True,
         legend=False,
         add_lines=True,
         period="day",
-        survey_based=True,
-        preferred_reporting_level="national",
-        preferred_welfare_type="income",
+        survey_based=False,
     )
 
     pen_parade(
@@ -308,7 +304,7 @@ def run() -> None:
         log_scale=True,
         hue="country",
         hue_order=["Chile", "Peru", "Uruguay"],
-        years=[2024],
+        years=[LATEST_YEAR],
         fill=False,
         legend=True,
         add_lines=False,
@@ -719,7 +715,7 @@ def distributional_plots_per_row(
                 # Calculate national_poverty_line
                 national_poverty_line = df_national_lines.loc[
                     (df_national_lines["country"] == country),
-                    "national_poverty_line",
+                    "harmonized_national_poverty_line",
                 ].values[0]
 
                 draw_area_under_curve(
@@ -752,6 +748,19 @@ def distributional_plots_per_row(
                     color="lightgrey",
                     linestyle="--",
                     linewidth=0.8,
+                )
+
+            if add_national_lines:
+                # Add a vertical line for the national poverty line
+                ax.text(
+                    x=national_poverty_line,
+                    y=plt.ylim()[0] - 0.05 * (plt.ylim()[1] - plt.ylim()[0]),
+                    s=f"${round(national_poverty_line,2):.2f} The poverty line in {country}*",
+                    color="grey",
+                    rotation=0,
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    fontsize=8,
                 )
 
             # Add line labels only to the last axis
