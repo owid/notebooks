@@ -25,17 +25,20 @@ import pandas as pd
 PARENT_DIR = Path(__file__).parent.absolute()
 
 # Define OWID version of PIP data
-PIP_VERSION = "2024-03-27"
+PIP_VERSION = "2025-06-05"
 
 # Define PIP percentiles URL
-PIP_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/percentiles_income_consumption_2017.feather"
+PIP_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/world_bank_pip_percentiles.feather"
 
 # Define paths for the PPP and CPI data
-PPP_FILE_PATH = f"{PARENT_DIR}/API_PA.NUS.PRVT.PP_DS2_en_csv_v2_374406.csv"
-CPI_FILE_PATH = f"{PARENT_DIR}/API_FP.CPI.TOTL_DS2_en_csv_v2_381228.csv"
+PPP_FILE_PATH = f"{PARENT_DIR}/API_PA.NUS.PRVT.PP_DS2_en_csv_v2_22915.csv"
+CPI_FILE_PATH = f"{PARENT_DIR}/API_FP.CPI.TOTL_DS2_en_csv_v2_37831.csv"
 
 # Define maximum year for CPI
-MAX_YEAR_CPI = 2022
+MAX_YEAR_CPI = 2024
+
+# Define PPP year
+PPP_YEAR = 2021
 
 
 def run() -> None:
@@ -43,6 +46,11 @@ def run() -> None:
     df_percentiles = pd.read_feather(PIP_URL)
     df_ppp_factors = pd.read_csv(PPP_FILE_PATH, skiprows=4)
     df_cpi = pd.read_csv(CPI_FILE_PATH, skiprows=4)
+
+    # In df_percentiles, select ppp_version == PPP_YEAR
+    df_percentiles = df_percentiles[
+        df_percentiles["ppp_version"] == PPP_YEAR
+    ].reset_index(drop=True)
 
     process_percentiles_and_export(df_percentiles)
     combine_ppp_cpi_and_export(df_ppp_factors, df_cpi)
@@ -52,10 +60,11 @@ def process_percentiles_and_export(df_percentiles: pd.DataFrame) -> None:
     """
     Process the percentiles dataframe to calculate the global distribution of Giving What We Can.
     """
-    # Filter data to only include country=World and ppp_version = 2017
-    df_percentiles = df_percentiles[(df_percentiles["country"] == "World")].reset_index(
-        drop=True
-    )
+    # Filter data to only include country=World and year MAX_YEAR_CPI
+    df_percentiles = df_percentiles[
+        (df_percentiles["country"] == "World")
+        & (df_percentiles["year"] == MAX_YEAR_CPI)
+    ].reset_index(drop=True)
 
     # Compare thr values with the one in the previous row
     df_percentiles["thr_previous"] = (
@@ -104,13 +113,13 @@ def combine_ppp_cpi_and_export(
     df_ppp_factors = df_ppp_factors.drop(columns=columns_to_drop)
     df_cpi = df_cpi.drop(columns=columns_to_drop)
 
-    # Select in df_ppp_factors only the columns of interest (Country Name, Country Code, 2017)
-    df_ppp_factors = df_ppp_factors[["Country Name", "Country Code", "2017"]]
+    # Select in df_ppp_factors only the columns of interest (Country Name, Country Code, PPP_YEAR)
+    df_ppp_factors = df_ppp_factors[["Country Name", "Country Code", str(PPP_YEAR)]]
     df_ppp_factors = df_ppp_factors.rename(
         columns={
             "Country Name": "country",
             "Country Code": "country_code",
-            "2017": "ppp_2017",
+            str(PPP_YEAR): f"ppp_{PPP_YEAR}",
         }
     )
 
@@ -127,41 +136,45 @@ def combine_ppp_cpi_and_export(
 
     # Assert if I filter by MAX_YEAR_CPI I will get a non-empty dataframe
     mask = df_cpi["year"] == MAX_YEAR_CPI
-    assert not df_cpi[mask].empty, f"No data CPI for {MAX_YEAR_CPI}"
+    assert not df_cpi[mask].empty, f"No CPI data for {MAX_YEAR_CPI}"
 
     # Assert if I filter by MAX_YEAR_CPI I will get a cpi column full of nan
     assert (
         not df_cpi[mask]["cpi"].isna().all()
     ), f"CPI column is full of empty values for {MAX_YEAR_CPI}"
 
-    # Filter for 2017 and the maximum year
+    # Filter for PPP_YEAR and the maximum year
     df_cpi = df_cpi[
-        (df_cpi["year"] == 2017) | (df_cpi["year"] == MAX_YEAR_CPI)
+        (df_cpi["year"] == PPP_YEAR) | (df_cpi["year"] == MAX_YEAR_CPI)
     ].reset_index(drop=True)
 
-    # Make table wide, by naming the columns cpi_2017 and cpi_max
+    # Make table wide, by naming the columns cpi_PPP_YEAR and cpi_max
     df_cpi = df_cpi.pivot(
         index="country_code", columns="year", values="cpi"
     ).reset_index()
 
     # Rename columns
     df_cpi = df_cpi.rename(
-        columns={2017: "cpi_2017", MAX_YEAR_CPI: f"cpi_{MAX_YEAR_CPI}"}
+        columns={PPP_YEAR: f"cpi_{PPP_YEAR}", MAX_YEAR_CPI: f"cpi_{MAX_YEAR_CPI}"}
     )
 
-    # Calculate the inflation rate between 2017 and the maximum year
-    df_cpi["inflation_rate"] = df_cpi[f"cpi_{MAX_YEAR_CPI}"] / df_cpi["cpi_2017"]
+    print(df_cpi)
+
+    # Calculate the inflation rate between PPP_YEAR and the maximum year
+    df_cpi["inflation_rate"] = df_cpi[f"cpi_{MAX_YEAR_CPI}"] / df_cpi[f"cpi_{PPP_YEAR}"]
 
     # Merge df_ppp_factors and df_cpi
     df_ppp = pd.merge(
         df_ppp_factors,
-        df_cpi[["country_code", "cpi_2017", f"cpi_{MAX_YEAR_CPI}", "inflation_rate"]],
+        df_cpi[
+            ["country_code", f"cpi_{PPP_YEAR}", f"cpi_{MAX_YEAR_CPI}", "inflation_rate"]
+        ],
         on="country_code",
         how="left",
     )
 
     # Calculate the ppp conversion factor for the most recent year
-    df_ppp["ppp_factor"] = df_ppp["ppp_2017"] * df_ppp["inflation_rate"]
+    df_ppp["ppp_factor"] = df_ppp[f"ppp_{PPP_YEAR}"] * df_ppp["inflation_rate"]
 
     # Remove empty values of pa_nus_prvt_pp
     df_ppp = df_ppp[~df_ppp["ppp_factor"].isna()].reset_index(drop=True)
