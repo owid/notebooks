@@ -121,6 +121,7 @@ def run() -> None:
             legend=True,
             common_norm=False,
             period="day",
+            survey_based=True,
             add_ipl=None,
             add_world_mean=None,
             add_world_median=None,
@@ -152,7 +153,7 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         width=1500,
         height=400,
-        survey_based=True,
+        survey_based=False,
         preferred_reporting_level="national",
         preferred_welfare_type="income",
     )
@@ -173,6 +174,7 @@ def run() -> None:
         common_norm=False,
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="day",
+        survey_based=True,
         add_ipl="area",
         add_world_mean="area",
         add_world_median="area",
@@ -193,6 +195,7 @@ def run() -> None:
             legend=True,
             common_norm=False,
             period="day",
+            survey_based=False,
             width=1500,
             height=400,
         )
@@ -230,6 +233,7 @@ def run() -> None:
             common_norm=False,
             gridsize=GRIDSIZE_HIGHER_RESOLUTION,
             period="day",
+            survey_based=False,
             add_ipl="line",
             add_world_mean="line",
             add_world_median="line",
@@ -275,6 +279,7 @@ def run() -> None:
         legend=True,
         common_norm=True,
         period="day",
+        survey_based=False,
     )
 
     # Pen parades
@@ -292,7 +297,7 @@ def run() -> None:
         legend=False,
         add_lines=True,
         period="day",
-        survey_based=False,
+        survey_based=True,
     )
 
     pen_parade(
