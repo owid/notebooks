@@ -446,21 +446,12 @@ def distributional_plots(
                 f"Using {percentile_or_quantile} to fade in tails: {percentiles_to_fade}"
             )
 
-            bottom_percentile = data_year.loc[
-                data_year[percentile_or_quantile] == percentiles_to_fade[0], x
-            ].values[0]
-            top_percentile = data_year.loc[
-                data_year[percentile_or_quantile] == percentiles_to_fade[1], x
-            ].values[0]
-
-            print(
-                f"Bottom percentile value: {bottom_percentile}, Top percentile value: {top_percentile}"
-            )
-            print(data_year)
-
-            clip = (bottom_percentile, top_percentile)
-        else:
-            clip = None
+            bottom_percentile_data = data_year[
+                data_year[percentile_or_quantile] == percentiles_to_fade[0]
+            ].reset_index(drop=True)
+            top_percentile_data = data_year[
+                data_year[percentile_or_quantile] == percentiles_to_fade[1]
+            ].reset_index(drop=True)
 
         # Plot a kde with seaborn
         kde_plot = sns.kdeplot(
@@ -475,7 +466,6 @@ def distributional_plots(
             legend=legend,
             common_norm=common_norm,
             gridsize=gridsize,
-            clip=clip,
         )
 
         if not fill:
