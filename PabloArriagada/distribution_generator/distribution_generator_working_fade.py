@@ -458,74 +458,21 @@ def distributional_plots(
                 kde_plot=kde_plot, number_of_countries=number_of_countries
             )
 
-        if add_ipl == "line":
-            # Add a vertical line for the international poverty line
-            plt.axvline(
-                x=ipl,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
-            plt.text(
-                x=ipl,  # x-coordinate for the text
-                y=plt.ylim()[1]
-                * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-                s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
-                color="grey",  # Color of the text
-                rotation=90,  # Rotate the text 90 degrees
-                verticalalignment="top",  # Align the text vertically at the top
-                fontsize=8,  # Font size of the text
-            )
-        elif add_ipl == "area":
+        if add_ipl == "area":
             draw_area_under_curve(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
                 values=[ipl],
             )
 
-        if add_world_mean == "line":
-            # Add a vertical line for the world mean, in the same format as the international poverty line
-            plt.axvline(
-                x=world_mean_year,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
-            plt.text(
-                x=world_mean_year,
-                y=plt.ylim()[1] * 0.99,
-                s=f"World mean: ${round(world_mean_year,2):.2f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
-
-        elif add_world_mean == "area":
+        if add_world_mean == "area":
             draw_area_under_curve(
                 number_of_countries=number_of_countries,
                 kde_plot=kde_plot,
                 values=[world_mean_year],
             )
 
-        if add_world_median == "line":
-            # Add a vertical line for the world median, in the same format as the international poverty line
-            plt.axvline(
-                x=world_median_year,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
-            plt.text(
-                x=world_median_year,
-                y=plt.ylim()[1] * 0.99,
-                s=f"World median: ${round(world_median_year,2):.2f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
-        elif add_world_median == "area":
+        if add_world_median == "area":
             draw_area_under_curve(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
@@ -542,28 +489,6 @@ def distributional_plots(
                 number_of_countries=number_of_countries,
                 values=add_multiple_lines_day,
             )
-
-        if legend:
-            # Move the legend inside the plot
-            kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
-            kde_plot.legend_.set_loc("upper left")
-            # Make the title sentence case
-            kde_plot.legend_.set_title(hue.capitalize())
-        else:
-            # For each plot, write the name of the country at the middle of the distribution, bottom
-            for country in hue_order:
-                country_data = data_year[data_year[hue] == country]
-                year_to_write = country_data["year"].iloc[0] if survey_based else year
-                plt.text(
-                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
-                    y=plt.ylim()[0],
-                    s=f"{country} ({year_to_write})",
-                    color="black",
-                    rotation=0,
-                    verticalalignment="bottom",
-                    horizontalalignment="center",
-                    fontsize=10,
-                )
 
         if log_scale:
             # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
@@ -601,6 +526,83 @@ def distributional_plots(
             except Exception:
                 # Fail silently if fade can't be applied (do not break plotting pipeline)
                 pass
+
+        if add_ipl == "line":
+            # Add a vertical line for the international poverty line
+            plt.axvline(
+                x=ipl,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=ipl,  # x-coordinate for the text
+                y=plt.ylim()[1]
+                * 0.99,  # y-coordinate for the text, positioned near the top of the plot
+                s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
+                color="grey",  # Color of the text
+                rotation=90,  # Rotate the text 90 degrees
+                verticalalignment="top",  # Align the text vertically at the top
+                fontsize=8,  # Font size of the text
+            )
+
+        if add_world_mean == "line":
+            # Add a vertical line for the world mean, in the same format as the international poverty line
+            plt.axvline(
+                x=world_mean_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=world_mean_year,
+                y=plt.ylim()[1] * 0.99,
+                s=f"World mean: ${round(world_mean_year,2):.2f}",
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                fontsize=8,
+            )
+
+        if add_world_median == "line":
+            # Add a vertical line for the world median, in the same format as the international poverty line
+            plt.axvline(
+                x=world_median_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=world_median_year,
+                y=plt.ylim()[1] * 0.99,
+                s=f"World median: ${round(world_median_year,2):.2f}",
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                fontsize=8,
+            )
+
+        if legend:
+            # Move the legend inside the plot
+            kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
+            kde_plot.legend_.set_loc("upper left")
+            # Make the title sentence case
+            kde_plot.legend_.set_title(hue.capitalize())
+        else:
+            # For each plot, write the name of the country at the middle of the distribution, bottom
+            for country in hue_order:
+                country_data = data_year[data_year[hue] == country]
+                year_to_write = country_data["year"].iloc[0] if survey_based else year
+                plt.text(
+                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
+                    y=plt.ylim()[0],
+                    s=f"{country} ({year_to_write})",
+                    color="black",
+                    rotation=0,
+                    verticalalignment="bottom",
+                    horizontalalignment="center",
+                    fontsize=10,
+                )
 
         # Remove the clipping of the figure
         for o in fig.findobj():
