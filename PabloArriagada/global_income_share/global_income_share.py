@@ -6,7 +6,7 @@ import pandas as pd
 PARENT_DIR = Path(__file__).parent.absolute()
 
 # Define  version of PIP data
-VERSION = "2025-03-10"
+VERSION = "2025-06-11"
 
 # Define PIP percentiles URL
 
@@ -32,12 +32,16 @@ df["decile"] = df["cum_pop_perc"].apply(lambda x: np.ceil(x / 10))
 
 # Calculate the weighted average of avg, using pop as weights, by decile and year
 df["avg"] = df["avg"] * df["pop"]
-df = df.groupby(["year", "decile"]).agg(
-    {
-        "avg": "sum",
-        "pop": "sum",
-    }
-).reset_index()
+df = (
+    df.groupby(["year", "decile"])
+    .agg(
+        {
+            "avg": "sum",
+            "pop": "sum",
+        }
+    )
+    .reset_index()
+)
 
 # Divide avg by the total avg, to get the share of the total income by year
 df["share"] = df.groupby("year")["avg"].transform(lambda x: x / x.sum() * 100)
