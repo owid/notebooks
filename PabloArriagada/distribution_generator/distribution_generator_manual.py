@@ -433,25 +433,21 @@ def distributional_plots(
             # Check if the dataframe has a percentile or a quantile column
             if "percentile" in data_year.columns:
                 percentile_or_quantile = "percentile"
+                percentiles_quantiles_to_fade = percentiles_to_fade
             elif "quantile" in data_year.columns:
                 percentile_or_quantile = "quantile"
 
                 # Divide values in percentiles_to_fade by 10
-                percentiles_to_fade = [p * 10 for p in percentiles_to_fade]
+                percentiles_quantiles_to_fade = [p * 10 for p in percentiles_to_fade]
             else:
                 raise KeyError(
                     "Expected either 'percentile' or 'quantile' column in data_year"
                 )
-            print(
-                f"Using {percentile_or_quantile} to fade in tails: {percentiles_to_fade}"
-            )
 
-            bottom_percentile_data = data_year[
-                data_year[percentile_or_quantile] == percentiles_to_fade[0]
-            ].reset_index(drop=True)
-            top_percentile_data = data_year[
-                data_year[percentile_or_quantile] == percentiles_to_fade[1]
-            ].reset_index(drop=True)
+            data_year = data_year[
+                (data_year[percentile_or_quantile] > percentiles_quantiles_to_fade[0])
+                & (data_year[percentile_or_quantile] < percentiles_quantiles_to_fade[1])
+            ]
 
         # Plot a kde with seaborn
         kde_plot = sns.kdeplot(
@@ -641,6 +637,8 @@ def distributional_plots_per_row(
     df_national_lines: pd.DataFrame = None,
     width: int = WIDTH,
     height: int = HEIGHT,
+    add_fade_in_tails: bool = True,
+    percentiles_to_fade: List[float] = [1, 99],
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -727,6 +725,35 @@ def distributional_plots_per_row(
 
         for ax, country in zip(axes, hue_order):
             country_data = data_year[data_year[hue] == country]
+
+            # Define values of percentiles
+            if add_fade_in_tails:
+                # Check if the dataframe has a percentile or a quantile column
+                if "percentile" in country_data.columns:
+                    percentile_or_quantile = "percentile"
+                    percentiles_quantiles_to_fade = percentiles_to_fade
+                elif "quantile" in country_data.columns:
+                    percentile_or_quantile = "quantile"
+
+                    # Divide values in percentiles_to_fade by 10
+                    percentiles_quantiles_to_fade = [
+                        p * 10 for p in percentiles_to_fade
+                    ]
+                else:
+                    raise KeyError(
+                        "Expected either 'percentile' or 'quantile' column in country_data"
+                    )
+
+                country_data = country_data[
+                    (
+                        country_data[percentile_or_quantile]
+                        > percentiles_quantiles_to_fade[0]
+                    )
+                    & (
+                        country_data[percentile_or_quantile]
+                        < percentiles_quantiles_to_fade[1]
+                    )
+                ]
 
             # Plot a kde with seaborn
             kde_plot = sns.kdeplot(
