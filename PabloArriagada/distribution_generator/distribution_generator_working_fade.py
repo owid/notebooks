@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import List, Literal
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -344,9 +345,20 @@ def distributional_plots(
     add_multiple_lines_day: List[float] = None,
     width: int = WIDTH,
     height: int = HEIGHT,
+    # Tail fade parameters
+    tail_fade: bool = True,
+    tail_fade_lower: float = 1.0,
+    tail_fade_upper: float = 99.0,
+    tail_fade_fraction: float = 0.5,
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
+    Tail fading: If tail_fade is True, the lower and upper tails of the KDE lines and filled areas
+    (if any) are smoothly faded out. The fading starts at the value of x corresponding to the
+    specified percentiles (tail_fade_lower / tail_fade_upper) computed on the (already period-adjusted)
+    pooled data for the selected subset (all countries/years in the specific plot) and transitions
+    linearly to full transparency over a fraction (tail_fade_fraction) of the distance from the
+    percentile value toward the extreme min / max of x in the sample.
     """
 
     # Filter the data with the hue and hue_order
@@ -446,74 +458,21 @@ def distributional_plots(
                 kde_plot=kde_plot, number_of_countries=number_of_countries
             )
 
-        if add_ipl == "line":
-            # Add a vertical line for the international poverty line
-            plt.axvline(
-                x=ipl,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
-            plt.text(
-                x=ipl,  # x-coordinate for the text
-                y=plt.ylim()[1]
-                * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-                s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
-                color="grey",  # Color of the text
-                rotation=90,  # Rotate the text 90 degrees
-                verticalalignment="top",  # Align the text vertically at the top
-                fontsize=8,  # Font size of the text
-            )
-        elif add_ipl == "area":
+        if add_ipl == "area":
             draw_area_under_curve(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
                 values=[ipl],
             )
 
-        if add_world_mean == "line":
-            # Add a vertical line for the world mean, in the same format as the international poverty line
-            plt.axvline(
-                x=world_mean_year,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
-            plt.text(
-                x=world_mean_year,
-                y=plt.ylim()[1] * 0.99,
-                s=f"World mean: ${round(world_mean_year,2):.2f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
-
-        elif add_world_mean == "area":
+        if add_world_mean == "area":
             draw_area_under_curve(
                 number_of_countries=number_of_countries,
                 kde_plot=kde_plot,
                 values=[world_mean_year],
             )
 
-        if add_world_median == "line":
-            # Add a vertical line for the world median, in the same format as the international poverty line
-            plt.axvline(
-                x=world_median_year,
-                color="lightgrey",
-                linestyle="--",
-                linewidth=0.8,
-            )
-            plt.text(
-                x=world_median_year,
-                y=plt.ylim()[1] * 0.99,
-                s=f"World median: ${round(world_median_year,2):.2f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
-        elif add_world_median == "area":
+        if add_world_median == "area":
             draw_area_under_curve(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
@@ -530,28 +489,6 @@ def distributional_plots(
                 number_of_countries=number_of_countries,
                 values=add_multiple_lines_day,
             )
-
-        if legend:
-            # Move the legend inside the plot
-            kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
-            kde_plot.legend_.set_loc("upper left")
-            # Make the title sentence case
-            kde_plot.legend_.set_title(hue.capitalize())
-        else:
-            # For each plot, write the name of the country at the middle of the distribution, bottom
-            for country in hue_order:
-                country_data = data_year[data_year[hue] == country]
-                year_to_write = country_data["year"].iloc[0] if survey_based else year
-                plt.text(
-                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
-                    y=plt.ylim()[0],
-                    s=f"{country} ({year_to_write})",
-                    color="black",
-                    rotation=0,
-                    verticalalignment="bottom",
-                    horizontalalignment="center",
-                    fontsize=10,
-                )
 
         if log_scale:
             # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
@@ -575,6 +512,97 @@ def distributional_plots(
         plt.axhline(y=0, color="gray", linewidth=0.5)
 
         fig = kde_plot.get_figure()
+
+        # Apply tail fade after all plot elements are present (lines, fills, annotations)
+        if tail_fade:
+            try:
+                _apply_tail_fade(
+                    ax=kde_plot,
+                    data_for_percentiles=data_year[x],
+                    lower_percentile=tail_fade_lower,
+                    upper_percentile=tail_fade_upper,
+                    fade_fraction=tail_fade_fraction,
+                )
+            except Exception:
+                # Fail silently if fade can't be applied (do not break plotting pipeline)
+                pass
+
+        if add_ipl == "line":
+            # Add a vertical line for the international poverty line
+            plt.axvline(
+                x=ipl,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=ipl,  # x-coordinate for the text
+                y=plt.ylim()[1]
+                * 0.99,  # y-coordinate for the text, positioned near the top of the plot
+                s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
+                color="grey",  # Color of the text
+                rotation=90,  # Rotate the text 90 degrees
+                verticalalignment="top",  # Align the text vertically at the top
+                fontsize=8,  # Font size of the text
+            )
+
+        if add_world_mean == "line":
+            # Add a vertical line for the world mean, in the same format as the international poverty line
+            plt.axvline(
+                x=world_mean_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=world_mean_year,
+                y=plt.ylim()[1] * 0.99,
+                s=f"World mean: ${round(world_mean_year,2):.2f}",
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                fontsize=8,
+            )
+
+        if add_world_median == "line":
+            # Add a vertical line for the world median, in the same format as the international poverty line
+            plt.axvline(
+                x=world_median_year,
+                color="lightgrey",
+                linestyle="--",
+                linewidth=0.8,
+            )
+            plt.text(
+                x=world_median_year,
+                y=plt.ylim()[1] * 0.99,
+                s=f"World median: ${round(world_median_year,2):.2f}",
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                fontsize=8,
+            )
+
+        if legend:
+            # Move the legend inside the plot
+            kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
+            kde_plot.legend_.set_loc("upper left")
+            # Make the title sentence case
+            kde_plot.legend_.set_title(hue.capitalize())
+        else:
+            # For each plot, write the name of the country at the middle of the distribution, bottom
+            for country in hue_order:
+                country_data = data_year[data_year[hue] == country]
+                year_to_write = country_data["year"].iloc[0] if survey_based else year
+                plt.text(
+                    x=country_data[x].median() * CORRECTION_FACTOR_LABEL,
+                    y=plt.ylim()[0],
+                    s=f"{country} ({year_to_write})",
+                    color="black",
+                    rotation=0,
+                    verticalalignment="bottom",
+                    horizontalalignment="center",
+                    fontsize=10,
+                )
 
         # Remove the clipping of the figure
         for o in fig.findobj():
@@ -614,9 +642,15 @@ def distributional_plots_per_row(
     df_national_lines: pd.DataFrame = None,
     width: int = WIDTH,
     height: int = HEIGHT,
+    # Tail fade parameters
+    tail_fade: bool = True,
+    tail_fade_lower: float = 1.0,
+    tail_fade_upper: float = 99.0,
+    tail_fade_fraction: float = 0.5,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
+    Tail fading logic identical to distributional_plots (applied per subplot using pooled data of each row).
     """
 
     # Filter the data with the hue and hue_order
@@ -811,7 +845,7 @@ def distributional_plots_per_row(
 
             if survey_based:
                 # Add the year and welfare type to the plot
-                reporting_level = country_data["reporting_level"].iloc[0]
+                # Keep only welfare_type (reporting_level not displayed currently)
                 welfare_type = country_data["welfare_type"].iloc[0]
 
                 ax.text(
@@ -859,12 +893,27 @@ def distributional_plots_per_row(
                     axis="x", which="both", bottom=False, top=False, labelbottom=False
                 )
 
+            # Apply tail fade for this subplot
+            if tail_fade:
+                try:
+                    _apply_tail_fade(
+                        ax=ax,
+                        data_for_percentiles=country_data[x],
+                        lower_percentile=tail_fade_lower,
+                        upper_percentile=tail_fade_upper,
+                        fade_fraction=tail_fade_fraction,
+                    )
+                except Exception:
+                    pass
+
         # Adjust layout and save the figure
         plt.tight_layout()
 
         # Remove the clipping of the figure
         for o in fig.findobj():
             o.set_clip_on(False)
+
+        # (Per-row tail fade applied inside loop.)
 
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg",
@@ -1204,7 +1253,7 @@ def pen_parade(
             plt.text(
                 x=99,
                 y=world_90th_percentile,
-                s=f"\n10% is richer",
+                s="\n10% is richer",
                 color="black",
                 rotation=0,
                 horizontalalignment="right",
@@ -1233,7 +1282,7 @@ def pen_parade(
             plt.text(
                 x=99,
                 y=world_99th_percentile,
-                s=f"\n1% is richer",
+                s="\n1% is richer",
                 color="black",
                 rotation=0,
                 horizontalalignment="right",
@@ -1245,7 +1294,7 @@ def pen_parade(
         # Remove y-axis labels and ticks
         line_plot.set_ylabel("")
         line_plot.yaxis.set_label_position("right")
-        line_plot.set_xlabel(f"Percentage of the population")
+        line_plot.set_xlabel("Percentage of the population")
         line_plot.spines["top"].set_visible(False)
         line_plot.spines["right"].set_visible(False)
         line_plot.spines["bottom"].set_visible(False)
@@ -1340,6 +1389,78 @@ def draw_complete_area_under_curve(
             alpha=0.2,
             color=line.get_color(),
         )
+
+    return None
+
+
+def _apply_tail_fade(
+    ax: plt.Axes,
+    data_for_percentiles: pd.Series | np.ndarray,
+    lower_percentile: float,
+    upper_percentile: float,
+    fade_fraction: float,
+) -> None:
+    """Apply a horizontal (x-axis) tail fade overlay on an existing axes.
+
+    The fade starts at the percentile thresholds and reaches full opacity (thus fully hiding)
+    halfway (controlled by fade_fraction) toward the min / max. Implemented by overlaying
+    semi-transparent white gradients so that underlying lines, markers, and filled areas
+    gradually disappear in the tails without abrupt cutoffs.
+    """
+    if data_for_percentiles is None or len(data_for_percentiles) == 0:
+        return
+    x_vals = np.asarray(data_for_percentiles)
+    # Use axis limits (may extend beyond raw data range due to KDE support); ensures no uncovered tails
+    current_xlim = ax.get_xlim()
+    data_min = np.nanmin(x_vals)
+    data_max = np.nanmax(x_vals)
+    x_min = min(current_xlim[0], data_min)
+    x_max = max(current_xlim[1], data_max)
+    lower_thr = np.nanpercentile(x_vals, lower_percentile)
+    upper_thr = np.nanpercentile(x_vals, upper_percentile)
+    if not (x_min < lower_thr < upper_thr < x_max):
+        return
+    # Determine fade end points (where overlay reaches full opacity) using axis-range based fraction
+    lower_fade_end = lower_thr - (lower_thr - x_min) * fade_fraction
+    upper_fade_end = upper_thr + (x_max - upper_thr) * fade_fraction
+    lower_fade_end = max(x_min, lower_fade_end)
+    upper_fade_end = min(x_max, upper_fade_end)
+    y0, y1 = ax.get_ylim()
+
+    def _gradient_rect(x_start: float, x_end: float, invert: bool) -> None:
+        if x_start == x_end:
+            return
+        N = 256
+        # Create RGBA gradient (1 x N x 4)
+        alphas = np.linspace(0.0, 1.0, N)
+        if invert:
+            alphas = alphas[::-1]
+        # White color with varying alpha
+        grad = np.ones((1, N, 4))
+        grad[..., 3] = alphas
+        ax.imshow(
+            grad,
+            aspect="auto",
+            extent=(x_start, x_end, y0, y1),
+            origin="lower",
+            zorder=10,
+            interpolation="bicubic",
+            clip_on=True,
+        )
+
+    # Left tail: two-part fade: full opaque outer segment (axis min to fade_end), gradient (fade_end to threshold)
+    if lower_fade_end > x_min:
+        ax.axvspan(x_min, lower_fade_end, color="white", alpha=1.0, zorder=9, lw=0)
+    _gradient_rect(lower_fade_end, lower_thr, invert=True)
+
+    # Right tail
+    if upper_fade_end < x_max:
+        ax.axvspan(upper_fade_end, x_max, color="white", alpha=1.0, zorder=9, lw=0)
+    _gradient_rect(upper_thr, upper_fade_end, invert=False)
+
+    # Restore y limits (imshow/axvspan might alter them)
+    ax.set_ylim(y0, y1)
+    ax.set_xlim(x_min, x_max)
 
     return None
 

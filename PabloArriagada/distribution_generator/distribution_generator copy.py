@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import List, Literal
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -121,7 +122,6 @@ def run() -> None:
             legend=True,
             common_norm=False,
             period="day",
-            survey_based=False,
             add_ipl=None,
             add_world_mean=None,
             add_world_median=None,
@@ -174,7 +174,6 @@ def run() -> None:
         common_norm=False,
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="day",
-        survey_based=False,
         add_ipl="area",
         add_world_mean="area",
         add_world_median="area",
@@ -195,7 +194,6 @@ def run() -> None:
             legend=True,
             common_norm=False,
             period="day",
-            survey_based=False,
             width=1500,
             height=400,
         )
@@ -219,51 +217,50 @@ def run() -> None:
             height=400,
         )
 
-    distributional_plots_per_row(
-        data=df_thousand_bins,
-        df_main_indicators=df_main_indicators,
-        x="avg",
-        weights="pop",
-        log_scale=True,
-        multiple="layer",
-        hue="country",
-        hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-        years=[LATEST_YEAR],
-        fill=False,
-        common_norm=False,
-        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
-        period="day",
-        survey_based=False,
-        add_ipl="line",
-        add_world_mean="line",
-        add_world_median="line",
-        add_national_lines=True,
-        df_national_lines=df_national_lines,
-    )
+        distributional_plots_per_row(
+            data=df_thousand_bins,
+            df_main_indicators=df_main_indicators,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
+            years=[LATEST_YEAR],
+            fill=False,
+            common_norm=False,
+            gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+            period="day",
+            add_ipl="line",
+            add_world_mean="line",
+            add_world_median="line",
+            add_national_lines=True,
+            df_national_lines=df_national_lines,
+        )
 
-    distributional_plots_per_row(
-        data=df_percentiles,
-        df_main_indicators=df_main_indicators,
-        x="avg",
-        weights="pop",
-        log_scale=True,
-        multiple="layer",
-        hue="country",
-        hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-        years=[LATEST_YEAR],
-        fill=False,
-        common_norm=False,
-        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
-        period="day",
-        survey_based=True,
-        preferred_reporting_level="national",
-        preferred_welfare_type="income",
-        add_ipl="line",
-        add_world_mean=None,
-        add_world_median=None,
-        add_national_lines=True,
-        df_national_lines=df_national_lines,
-    )
+        distributional_plots_per_row(
+            data=df_percentiles,
+            df_main_indicators=df_main_indicators,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
+            years=[LATEST_YEAR],
+            fill=False,
+            common_norm=False,
+            gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+            period="day",
+            survey_based=True,
+            preferred_reporting_level="national",
+            preferred_welfare_type="income",
+            add_ipl="line",
+            add_world_mean=None,
+            add_world_median=None,
+            add_national_lines=True,
+            df_national_lines=df_national_lines,
+        )
 
     # Stacked distributions with common density estimate
     distributional_plots(
@@ -279,7 +276,6 @@ def run() -> None:
         legend=True,
         common_norm=True,
         period="day",
-        survey_based=False,
     )
 
     # Pen parades
@@ -344,6 +340,10 @@ def distributional_plots(
     add_multiple_lines_day: List[float] = None,
     width: int = WIDTH,
     height: int = HEIGHT,
+    tail_fade: bool = True,
+    tail_fade_low_percentile: float = 1.0,
+    tail_fade_high_percentile: float = 99.0,
+    tail_fade_segments: int = 100,
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
@@ -426,12 +426,15 @@ def distributional_plots(
             * period_factor
         )
 
-        # Plot a kde with seaborn
+        # Plot a kde with seaborn (defer fill for custom fading if tail_fade is enabled)
+        seaborn_fill = (
+            fill and not tail_fade
+        )  # avoid seaborn fill if we will custom fade
         kde_plot = sns.kdeplot(
             data=data_year,
             x=x,
             weights=weights,
-            fill=fill,
+            fill=seaborn_fill,
             log_scale=log_scale,
             hue=hue,
             hue_order=hue_order,
@@ -441,10 +444,26 @@ def distributional_plots(
             gridsize=gridsize,
         )
 
-        if not fill:
+        if not seaborn_fill:
             draw_complete_area_under_curve(
-                kde_plot=kde_plot, number_of_countries=number_of_countries
+                kde_plot=kde_plot,
+                number_of_countries=locals().get(
+                    "number_of_countries", len(kde_plot.lines)
+                ),
             )
+
+        # Apply tail fading to each density line (and associated filled area) if requested
+        if tail_fade:
+            for idx, line in enumerate(kde_plot.lines):
+                apply_tail_fade_to_kde(
+                    ax=kde_plot,
+                    line=line,
+                    base_area_alpha=0.2 if not fill else 0.5,
+                    low_pct=tail_fade_low_percentile,
+                    high_pct=tail_fade_high_percentile,
+                    n_segments=tail_fade_segments,
+                    apply_fill=fill,
+                )
 
         if add_ipl == "line":
             # Add a vertical line for the international poverty line
@@ -614,6 +633,10 @@ def distributional_plots_per_row(
     df_national_lines: pd.DataFrame = None,
     width: int = WIDTH,
     height: int = HEIGHT,
+    tail_fade: bool = True,
+    tail_fade_low_percentile: float = 1.0,
+    tail_fade_high_percentile: float = 99.0,
+    tail_fade_segments: int = 60,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -701,20 +724,33 @@ def distributional_plots_per_row(
         for ax, country in zip(axes, hue_order):
             country_data = data_year[data_year[hue] == country]
 
-            # Plot a kde with seaborn
+            # Plot a kde with seaborn (defer fill for custom fading if tail_fade is enabled)
+            seaborn_fill = fill and not tail_fade
             kde_plot = sns.kdeplot(
                 data=country_data,
                 x=x,
                 weights=weights,
-                fill=fill,
+                fill=seaborn_fill,
                 log_scale=log_scale,
                 ax=ax,
                 common_norm=common_norm,
                 gridsize=gridsize,
             )
 
-            if not fill:
+            if not seaborn_fill:
                 draw_complete_area_under_curve(kde_plot=kde_plot)
+
+            if tail_fade:
+                for line in kde_plot.lines:
+                    apply_tail_fade_to_kde(
+                        ax=kde_plot,
+                        line=line,
+                        base_area_alpha=0.2 if not fill else 0.5,
+                        low_pct=tail_fade_low_percentile,
+                        high_pct=tail_fade_high_percentile,
+                        n_segments=tail_fade_segments,
+                        apply_fill=fill,
+                    )
 
             if add_national_lines:
                 # Calculate national_poverty_line
@@ -811,7 +847,7 @@ def distributional_plots_per_row(
 
             if survey_based:
                 # Add the year and welfare type to the plot
-                reporting_level = country_data["reporting_level"].iloc[0]
+                # reporting_level not currently displayed; keep only welfare_type
                 welfare_type = country_data["welfare_type"].iloc[0]
 
                 ax.text(
@@ -1204,7 +1240,7 @@ def pen_parade(
             plt.text(
                 x=99,
                 y=world_90th_percentile,
-                s=f"\n10% is richer",
+                s="\n10% is richer",
                 color="black",
                 rotation=0,
                 horizontalalignment="right",
@@ -1233,7 +1269,7 @@ def pen_parade(
             plt.text(
                 x=99,
                 y=world_99th_percentile,
-                s=f"\n1% is richer",
+                s="\n1% is richer",
                 color="black",
                 rotation=0,
                 horizontalalignment="right",
@@ -1242,48 +1278,48 @@ def pen_parade(
                 linespacing=0.5,
             )
 
-        # Remove y-axis labels and ticks
-        line_plot.set_ylabel("")
-        line_plot.yaxis.set_label_position("right")
-        line_plot.set_xlabel(f"Percentage of the population")
-        line_plot.spines["top"].set_visible(False)
-        line_plot.spines["right"].set_visible(False)
-        line_plot.spines["bottom"].set_visible(False)
-        line_plot.spines["left"].set_visible(False)
+    # Remove y-axis labels and ticks
+    line_plot.set_ylabel("")
+    line_plot.yaxis.set_label_position("right")
+    line_plot.set_xlabel("Percentage of the population")
+    line_plot.spines["top"].set_visible(False)
+    line_plot.spines["right"].set_visible(False)
+    line_plot.spines["bottom"].set_visible(False)
+    line_plot.spines["left"].set_visible(False)
 
-        # Change format of x-axis to percentage
-        line_plot.get_xaxis().set_major_formatter(
-            plt.FuncFormatter(lambda x, _: f"{x/100:.0%}")
-        )
+    # Change format of x-axis to percentage
+    line_plot.get_xaxis().set_major_formatter(
+        plt.FuncFormatter(lambda x, _: f"{x/100:.0%}")
+    )
 
-        # Do the same for the y-axis, with $
-        line_plot.get_yaxis().set_major_formatter(
-            plt.FuncFormatter(lambda x, _: f"${x:.0f} per {period}")
-        )
+    # Do the same for the y-axis, with $
+    line_plot.get_yaxis().set_major_formatter(
+        plt.FuncFormatter(lambda x, _: f"${x:.0f} per {period}")
+    )
 
-        # Make the plot tighter, with the y axis closer to the plot and the x axis being shown between 0 and 100
-        line_plot.set_xlim(0, 100)
-        line_plot.set_ylim(0, line_plot.get_ylim()[1])
+    # Make the plot tighter, with the y axis closer to the plot and the x axis being shown between 0 and 100
+    line_plot.set_xlim(0, 100)
+    line_plot.set_ylim(0, line_plot.get_ylim()[1])
 
-        # Move y axis to the right
-        line_plot.yaxis.tick_right()
+    # Move y axis to the right
+    line_plot.yaxis.tick_right()
 
-        # Draw a line for each axis
-        line_plot.axhline(y=0, color="black", linewidth=0.5)
-        line_plot.axvline(x=100, color="black", linewidth=0.5)
+    # Draw a line for each axis
+    line_plot.axhline(y=0, color="black", linewidth=0.5)
+    line_plot.axvline(x=100, color="black", linewidth=0.5)
 
-        fig = line_plot.get_figure()
+    fig = line_plot.get_figure()
 
-        # Remove the clipping of the figure
-        for o in fig.findobj():
-            o.set_clip_on(False)
+    # Remove the clipping of the figure
+    for o in fig.findobj():
+        o.set_clip_on(False)
 
-        fig.set_size_inches(width / 100, height / 100)
-        fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg",
-            bbox_inches="tight",
-        )
-        plt.close(fig)
+    fig.set_size_inches(width / 100, height / 100)
+    fig.savefig(
+        f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg",
+        bbox_inches="tight",
+    )
+    plt.close(fig)
 
     return None
 
@@ -1340,6 +1376,157 @@ def draw_complete_area_under_curve(
             alpha=0.2,
             color=line.get_color(),
         )
+
+    return None
+
+
+def apply_tail_fade_to_kde(
+    ax: plt.Axes,
+    line: plt.Line2D,
+    base_area_alpha: float,
+    low_pct: float,
+    high_pct: float,
+    n_segments: int = 60,
+    apply_fill: bool = True,
+) -> None:
+    """Apply a smooth tail fade to a KDE line (and optionally its filled area) based on KDE-derived percentiles.
+
+    The fade starts exactly at the given percentiles (estimated from the line's numerical CDF) and smoothly transitions
+    to zero opacity at the extreme ends without any hard cut. Works independently per line.
+    """
+    if low_pct < 0 or high_pct > 100 or low_pct >= high_pct:
+        return
+
+    x, y = line.get_data()
+    if len(x) < 4:
+        return
+
+    # Ensure arrays are numpy
+    x = np.asarray(x)
+    y = np.asarray(y)
+    # Compute CDF from the KDE line via trapezoidal integration
+    # (y already approximates the density)
+    cdf = np.concatenate([[0], np.cumsum((y[1:] + y[:-1]) * 0.5 * (x[1:] - x[:-1]))])
+    total = cdf[-1]
+    if total <= 0:
+        return
+    cdf = cdf / total
+
+    # Interpolate x positions at desired percentiles
+    p_low = low_pct / 100.0
+    p_high = high_pct / 100.0
+    try:
+        x_low = np.interp(p_low, cdf, x)
+        x_high = np.interp(p_high, cdf, x)
+    except Exception:
+        return
+
+    x_min, x_max = x.min(), x.max()
+    color = line.get_color()
+
+    # Hide original line (we'll redraw with gradient)
+    line.set_alpha(0)
+
+    def _draw_segmented_line(
+        x_seg: np.ndarray, y_seg: np.ndarray, alphas: np.ndarray
+    ) -> None:
+        # Draw small line segments with varying alpha
+        for i in range(len(x_seg) - 1):
+            ax.plot(x_seg[i : i + 2], y_seg[i : i + 2], color=color, alpha=alphas[i])
+
+    # Insert boundary points (x_low, x_high) into the polyline to guarantee alpha=1 continuity
+    def insert_point(
+        x_arr: np.ndarray, y_arr: np.ndarray, x_new: float
+    ) -> tuple[np.ndarray, np.ndarray]:
+        if (
+            (x_new <= x_arr.min())
+            or (x_new >= x_arr.max())
+            or np.any(np.isclose(x_arr, x_new))
+        ):
+            return x_arr, y_arr
+        y_new = np.interp(x_new, x_arr, y_arr)
+        x_concat = np.concatenate([x_arr, [x_new]])
+        y_concat = np.concatenate([y_arr, [y_new]])
+        order = np.argsort(x_concat)
+        return x_concat[order], y_concat[order]
+
+    x, y = insert_point(x, y, x_low)
+    x, y = insert_point(x, y, x_high)
+
+    # Recompute masks after insertion
+    central_mask = (x >= x_low) & (x <= x_high)
+    left_mask = x < x_low
+    right_mask = x > x_high
+
+    # Central region (solid alpha)
+    if central_mask.sum() >= 2:
+        ax.plot(x[central_mask], y[central_mask], color=color, alpha=1.0, linewidth=1.2)
+
+    # Left tail: fade from 0 at x_min to 1 at x_low (inclusive)
+    if left_mask.sum() >= 2:
+        x_left = x[left_mask]
+        y_left = y[left_mask]
+        fade_vals = (x_left - x_min) / (x_low - x_min)
+        fade_vals = np.clip(fade_vals, 0, 1)
+        if len(fade_vals) > 0:
+            fade_vals[-1] = 1.0  # ensure last (closest to x_low) is fully opaque
+        _draw_segmented_line(x_left, y_left, fade_vals)
+
+    # Right tail: fade from 1 at x_high to 0 at x_max (inclusive)
+    if right_mask.sum() >= 2:
+        x_right = x[right_mask]
+        y_right = y[right_mask]
+        distance = (x_right - x_high) / (x_max - x_high)
+        fade_vals = 1 - np.clip(distance, 0, 1)
+        if len(fade_vals) > 0:
+            fade_vals[0] = 1.0  # ensure first (closest to x_high) is fully opaque
+        _draw_segmented_line(x_right, y_right, fade_vals)
+
+    if not apply_fill:
+        return
+
+    # Rebuild (faded) filled area under curve using many thin vertical slices per tail plus solid center
+    if central_mask.sum() >= 2:
+        ax.fill_between(
+            x[central_mask], y[central_mask], alpha=base_area_alpha, color=color
+        )
+
+    # Helper to draw tail gradient using slices
+    def _fill_tail(x_tail: np.ndarray, y_tail: np.ndarray, alphas: np.ndarray) -> None:
+        # Reduce number of slices if extremely fine
+        if len(x_tail) > n_segments:
+            # Resample indices evenly
+            idx = np.linspace(0, len(x_tail) - 1, n_segments).astype(int)
+            x_t = x_tail[idx]
+            y_t = y_tail[idx]
+            a_t = np.interp(x_t, x_tail, alphas)
+        else:
+            x_t, y_t, a_t = x_tail, y_tail, alphas
+        for i in range(len(x_t) - 1):
+            xs = x_t[i : i + 2]
+            ys = y_t[i : i + 2]
+            alpha_slice = a_t[i] * base_area_alpha
+            if alpha_slice <= 0:
+                continue
+            ax.fill_between(xs, [0, 0], ys, color=color, alpha=alpha_slice, linewidth=0)
+
+    if left_mask.sum() >= 2:
+        x_left = x[left_mask]
+        y_left = y[left_mask]
+        alphas_left = (x_left - x_min) / (x_low - x_min)
+        alphas_left = np.clip(alphas_left, 0, 1)
+        if len(alphas_left) > 0:
+            alphas_left[-1] = 1.0
+        _fill_tail(x_left, y_left, alphas_left)
+
+    if right_mask.sum() >= 2:
+        x_right = x[right_mask]
+        y_right = y[right_mask]
+        dist = (x_right - x_high) / (x_max - x_high)
+        alphas_right = 1 - np.clip(dist, 0, 1)
+        if len(alphas_right) > 0:
+            alphas_right[0] = 1.0
+        _fill_tail(x_right, y_right, alphas_right)
 
     return None
 

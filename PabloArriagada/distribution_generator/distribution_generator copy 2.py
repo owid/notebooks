@@ -2,8 +2,10 @@ from pathlib import Path
 from typing import List, Literal
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.collections import LineCollection
 
 PARENT_DIR = Path(__file__).parent.absolute()
 
@@ -121,7 +123,6 @@ def run() -> None:
             legend=True,
             common_norm=False,
             period="day",
-            survey_based=False,
             add_ipl=None,
             add_world_mean=None,
             add_world_median=None,
@@ -174,7 +175,6 @@ def run() -> None:
         common_norm=False,
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="day",
-        survey_based=False,
         add_ipl="area",
         add_world_mean="area",
         add_world_median="area",
@@ -195,7 +195,6 @@ def run() -> None:
             legend=True,
             common_norm=False,
             period="day",
-            survey_based=False,
             width=1500,
             height=400,
         )
@@ -219,51 +218,50 @@ def run() -> None:
             height=400,
         )
 
-    distributional_plots_per_row(
-        data=df_thousand_bins,
-        df_main_indicators=df_main_indicators,
-        x="avg",
-        weights="pop",
-        log_scale=True,
-        multiple="layer",
-        hue="country",
-        hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-        years=[LATEST_YEAR],
-        fill=False,
-        common_norm=False,
-        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
-        period="day",
-        survey_based=False,
-        add_ipl="line",
-        add_world_mean="line",
-        add_world_median="line",
-        add_national_lines=True,
-        df_national_lines=df_national_lines,
-    )
+        distributional_plots_per_row(
+            data=df_thousand_bins,
+            df_main_indicators=df_main_indicators,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
+            years=[LATEST_YEAR],
+            fill=False,
+            common_norm=False,
+            gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+            period="day",
+            add_ipl="line",
+            add_world_mean="line",
+            add_world_median="line",
+            add_national_lines=True,
+            df_national_lines=df_national_lines,
+        )
 
-    distributional_plots_per_row(
-        data=df_percentiles,
-        df_main_indicators=df_main_indicators,
-        x="avg",
-        weights="pop",
-        log_scale=True,
-        multiple="layer",
-        hue="country",
-        hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
-        years=[LATEST_YEAR],
-        fill=False,
-        common_norm=False,
-        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
-        period="day",
-        survey_based=True,
-        preferred_reporting_level="national",
-        preferred_welfare_type="income",
-        add_ipl="line",
-        add_world_mean=None,
-        add_world_median=None,
-        add_national_lines=True,
-        df_national_lines=df_national_lines,
-    )
+        distributional_plots_per_row(
+            data=df_percentiles,
+            df_main_indicators=df_main_indicators,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="layer",
+            hue="country",
+            hue_order=["Ethiopia", "Bangladesh", "Vietnam", "Turkey", "United States"],
+            years=[LATEST_YEAR],
+            fill=False,
+            common_norm=False,
+            gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+            period="day",
+            survey_based=True,
+            preferred_reporting_level="national",
+            preferred_welfare_type="income",
+            add_ipl="line",
+            add_world_mean=None,
+            add_world_median=None,
+            add_national_lines=True,
+            df_national_lines=df_national_lines,
+        )
 
     # Stacked distributions with common density estimate
     distributional_plots(
@@ -279,7 +277,6 @@ def run() -> None:
         legend=True,
         common_norm=True,
         period="day",
-        survey_based=False,
     )
 
     # Pen parades
@@ -342,11 +339,22 @@ def distributional_plots(
     add_world_mean: Literal["line", "area", None] = "line",
     add_world_median: Literal["line", "area", None] = "line",
     add_multiple_lines_day: List[float] = None,
+    # Tail fading parameters
+    tail_fader: bool = True,
+    tail_lower_percentile: float = 1.0,
+    tail_upper_percentile: float = 99.0,
+    tail_min_fraction: float = 0.015,
+    tail_fade_halfway: bool = True,
     width: int = WIDTH,
     height: int = HEIGHT,
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
+    Adds optional tail fading ("tail fader") that smoothly fades out the extreme tails of the KDE
+    beyond the selected percentiles. The percentiles refer to the KDE-implied cumulative density,
+    not the empirical data. Fade starts exactly at the chosen percentile x-coordinates (full
+    opacity there) and decreases linearly towards the minimum / maximum support where it reaches
+    full transparency, avoiding any hard cut.
     """
 
     # Filter the data with the hue and hue_order
@@ -580,6 +588,21 @@ def distributional_plots(
         for o in fig.findobj():
             o.set_clip_on(False)
 
+        # Tail fade (first fade line strokes, then overlay fill fade)
+        if tail_fader:
+            _fade_kde_lines(
+                ax=kde_plot,
+                lower_percentile=tail_lower_percentile,
+                upper_percentile=tail_upper_percentile,
+                min_fraction=tail_min_fraction,
+            )
+            _apply_tail_fade(
+                ax=kde_plot,
+                lower_percentile=tail_lower_percentile,
+                upper_percentile=tail_upper_percentile,
+                min_fraction=tail_min_fraction,
+            )
+
         fig.set_size_inches(width / 100, height / 100)
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}.svg",
@@ -612,11 +635,17 @@ def distributional_plots_per_row(
     add_world_median: Literal["line", "area", None] = "line",
     add_national_lines: bool = False,
     df_national_lines: pd.DataFrame = None,
+    # Tail fading parameters
+    tail_fader: bool = True,
+    tail_lower_percentile: float = 1.0,
+    tail_upper_percentile: float = 99.0,
+    tail_min_fraction: float = 0.015,
     width: int = WIDTH,
     height: int = HEIGHT,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
+    Adds optional tail fading ("tail fader") similar to distributional_plots.
     """
 
     # Filter the data with the hue and hue_order
@@ -811,7 +840,7 @@ def distributional_plots_per_row(
 
             if survey_based:
                 # Add the year and welfare type to the plot
-                reporting_level = country_data["reporting_level"].iloc[0]
+                # Capture welfare type (reporting level not shown currently)
                 welfare_type = country_data["welfare_type"].iloc[0]
 
                 ax.text(
@@ -865,6 +894,22 @@ def distributional_plots_per_row(
         # Remove the clipping of the figure
         for o in fig.findobj():
             o.set_clip_on(False)
+
+        # Apply tail fade per axis (lines then fill)
+        if tail_fader:
+            for ax in axes:
+                _fade_kde_lines(
+                    ax=ax,
+                    lower_percentile=tail_lower_percentile,
+                    upper_percentile=tail_upper_percentile,
+                    min_fraction=tail_min_fraction,
+                )
+                _apply_tail_fade(
+                    ax=ax,
+                    lower_percentile=tail_lower_percentile,
+                    upper_percentile=tail_upper_percentile,
+                    min_fraction=tail_min_fraction,
+                )
 
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg",
@@ -1204,7 +1249,7 @@ def pen_parade(
             plt.text(
                 x=99,
                 y=world_90th_percentile,
-                s=f"\n10% is richer",
+                s="\n10% is richer",
                 color="black",
                 rotation=0,
                 horizontalalignment="right",
@@ -1233,7 +1278,7 @@ def pen_parade(
             plt.text(
                 x=99,
                 y=world_99th_percentile,
-                s=f"\n1% is richer",
+                s="\n1% is richer",
                 color="black",
                 rotation=0,
                 horizontalalignment="right",
@@ -1245,7 +1290,7 @@ def pen_parade(
         # Remove y-axis labels and ticks
         line_plot.set_ylabel("")
         line_plot.yaxis.set_label_position("right")
-        line_plot.set_xlabel(f"Percentage of the population")
+        line_plot.set_xlabel("Percentage of the population")
         line_plot.spines["top"].set_visible(False)
         line_plot.spines["right"].set_visible(False)
         line_plot.spines["bottom"].set_visible(False)
@@ -1342,6 +1387,250 @@ def draw_complete_area_under_curve(
         )
 
     return None
+
+
+def _compute_kde_percentile_positions(
+    x_line: np.ndarray, y_line: np.ndarray, percentiles: List[float]
+) -> List[float]:
+    """Given x and y for a KDE line, compute x positions corresponding to cumulative percentiles.
+
+    Uses trapezoidal integration to approximate the CDF. Percentiles in [0,100].
+    Returns list of x coordinates (np.nan if percentile outside support).
+    """
+    # Ensure sorted by x (Seaborn should already provide sorted)
+    order = np.argsort(x_line)
+    x = x_line[order]
+    y = y_line[order]
+    # Compute cumulative integral
+    dx = np.diff(x)
+    # Trapezoids
+    area_segments = 0.5 * (y[:-1] + y[1:]) * dx
+    cum_area = np.concatenate([[0], np.cumsum(area_segments)])
+    total_area = cum_area[-1]
+    if total_area <= 0:
+        return [np.nan for _ in percentiles]
+    cdf = cum_area / total_area
+    positions = []
+    for p in percentiles:
+        target = p / 100.0
+        if target <= 0:
+            positions.append(x[0])
+            continue
+        if target >= 1:
+            positions.append(x[-1])
+            continue
+        # Find where cdf crosses target
+        idx = np.searchsorted(cdf, target) - 1
+        idx = np.clip(idx, 0, len(x) - 2)
+        # Linear interpolation within the segment (cdf[idx] -> cdf[idx+1])
+        cdf0, cdf1 = cdf[idx], cdf[idx + 1]
+        if cdf1 == cdf0:
+            positions.append(x[idx])
+        else:
+            t = (target - cdf0) / (cdf1 - cdf0)
+            positions.append(x[idx] + t * (x[idx + 1] - x[idx]))
+    return positions
+
+
+def _apply_tail_fade(
+    ax: plt.Axes,
+    lower_percentile: float,
+    upper_percentile: float,
+    background_color=None,
+    min_fraction: float = 0.0,
+) -> None:
+    """Apply a smooth fade to the tails of KDE lines on an axis.
+
+    Strategy: Determine x_lower / x_upper from KDE-implied CDF for each density line.
+    Then overlay gradient polygons (background colored) over tails so that at the
+    percentile boundary opacity=0 (no masking) and at the extreme min/max opacity=1,
+    achieving a visual fade of the underlying density (fill + line) without altering data.
+    """
+    if lower_percentile is None or upper_percentile is None:
+        return
+    if lower_percentile <= 0 and upper_percentile >= 100:
+        return
+    if background_color is None:
+        # ax.get_facecolor returns RGBA; use as-is
+        background_color = ax.get_facecolor()
+
+    # Collect only KDE lines (exclude vertical annotation lines: those have only 2 points or constant x)
+    kde_lines = []
+    for line in ax.lines:
+        x_data, y_data = line.get_data()
+        if len(x_data) < 5:
+            continue  # skip simple vertical lines
+        # Skip if y all same (unlikely for KDE)
+        if np.allclose(np.diff(x_data), 0):
+            continue
+        kde_lines.append(line)
+
+    for line in kde_lines:
+        x_line, y_line = line.get_data()
+        x_line = np.asarray(x_line)
+        y_line = np.asarray(y_line)
+        if len(x_line) < 5:
+            continue
+        x_lower, x_upper = _compute_kde_percentile_positions(
+            x_line, y_line, [lower_percentile, upper_percentile]
+        )
+        x_min, x_max = x_line[0], x_line[-1]
+        x_range = x_max - x_min if x_max > x_min else 1.0
+        if lower_percentile > 0 and (x_lower - x_min) < min_fraction * x_range:
+            x_lower = x_min + min_fraction * x_range
+        if upper_percentile < 100 and (x_max - x_upper) < min_fraction * x_range:
+            x_upper = x_max - min_fraction * x_range
+        # Left tail fade
+        if lower_percentile > 0 and x_lower > x_min:
+            mask_left = x_line < x_lower
+            if mask_left.any():
+                _overlay_gradient(
+                    ax,
+                    x_line[mask_left],
+                    y_line[mask_left],
+                    side="left",
+                    boundary_x=x_lower,
+                    x_extreme=x_min,
+                    background_color=background_color,
+                )
+        # Right tail fade
+        if upper_percentile < 100 and x_upper < x_max:
+            mask_right = x_line > x_upper
+            if mask_right.any():
+                _overlay_gradient(
+                    ax,
+                    x_line[mask_right],
+                    y_line[mask_right],
+                    side="right",
+                    boundary_x=x_upper,
+                    x_extreme=x_max,
+                    background_color=background_color,
+                )
+
+
+def _overlay_gradient(
+    ax: plt.Axes,
+    x_tail: np.ndarray,
+    y_tail: np.ndarray,
+    side: Literal["left", "right"],
+    boundary_x: float,
+    x_extreme: float,
+    background_color,
+    n_segments: int = 40,
+) -> None:
+    """Overlay a set of small polygons forming a linear alpha gradient over a tail region.
+
+    side: which tail. boundary_x: percentile boundary (alpha 0). x_extreme: extreme end (alpha 1).
+    """
+    # Ensure ordering appropriate
+    order = np.argsort(x_tail)
+    x_tail = x_tail[order]
+    y_tail = y_tail[order]
+    # Interpolate extra points so gradient appears smooth
+    x_dense = np.linspace(x_tail[0], x_tail[-1], n_segments + 1)
+    y_dense = np.interp(x_dense, x_tail, y_tail)
+    # For each adjacent pair create polygon with alpha based on distance to boundary vs extreme
+    for i in range(len(x_dense) - 1):
+        xa, xb = x_dense[i], x_dense[i + 1]
+        ya, yb = y_dense[i], y_dense[i + 1]
+        # Determine alpha (mask strength) at segment center
+        xc = 0.5 * (xa + xb)
+        if side == "left":
+            # alpha 1 at extreme (x_extreme), 0 at boundary_x
+            if boundary_x == x_extreme:
+                continue
+            alpha = 1 - (xc - x_extreme) / (boundary_x - x_extreme)
+        else:  # right
+            if boundary_x == x_extreme:
+                continue
+            alpha = 1 - (x_extreme - xc) / (x_extreme - boundary_x)
+        alpha = np.clip(alpha, 0, 1)
+        verts = [(xa, 0), (xb, 0), (xb, yb), (xa, ya)]
+        poly = plt.Polygon(
+            verts,
+            closed=True,
+            facecolor=background_color,
+            edgecolor=None,
+            alpha=alpha,
+            linewidth=0,
+        )
+        ax.add_patch(poly)
+
+
+def _fade_kde_lines(
+    ax: plt.Axes,
+    lower_percentile: float,
+    upper_percentile: float,
+    min_fraction: float = 0.0,
+) -> None:
+    """Replace KDE lines on an axis with LineCollections whose alpha fades in tails.
+
+    Alpha profile:
+      - 0 at extreme min / max
+      - Linearly ramps to 1 at lower / upper percentile boundaries
+      - 1 in the central region between boundaries
+    """
+    if lower_percentile <= 0 and upper_percentile >= 100:
+        return
+
+    new_collections = []
+    lines_to_remove = []
+    for line in ax.lines:
+        x_data, y_data = line.get_data()
+        if len(x_data) < 5:
+            continue  # skip annotation lines
+        if np.allclose(np.diff(x_data), 0):
+            continue
+        x = np.asarray(x_data)
+        y = np.asarray(y_data)
+        # Compute percentile boundaries
+        x_lower, x_upper = _compute_kde_percentile_positions(
+            x, y, [lower_percentile, upper_percentile]
+        )
+        x_min, x_max = x[0], x[-1]
+        x_range = x_max - x_min if x_max > x_min else 1.0
+        if lower_percentile > 0 and (x_lower - x_min) < min_fraction * x_range:
+            x_lower = x_min + min_fraction * x_range
+        if upper_percentile < 100 and (x_max - x_upper) < min_fraction * x_range:
+            x_upper = x_max - min_fraction * x_range
+        # Build segments
+        segments = []
+        colors = []
+        base_color = line.get_color()
+        lw = line.get_linewidth()
+        for i in range(len(x) - 1):
+            xa, xb = x[i], x[i + 1]
+            ya, yb = y[i], y[i + 1]
+            xm = 0.5 * (xa + xb)
+            if lower_percentile > 0 and xm < x_lower:
+                if x_lower == x_min:
+                    alpha = 1.0
+                else:
+                    alpha = (xm - x_min) / (x_lower - x_min)
+            elif upper_percentile < 100 and xm > x_upper:
+                if x_max == x_upper:
+                    alpha = 1.0
+                else:
+                    alpha = (x_max - xm) / (x_max - x_upper)
+            else:
+                alpha = 1.0
+            alpha = float(np.clip(alpha, 0, 1))
+            segments.append([[xa, ya], [xb, yb]])
+            # Set color with modified alpha
+            if isinstance(base_color, str):
+                rgba = list(plt.matplotlib.colors.to_rgba(base_color))
+            else:
+                rgba = list(base_color)
+            rgba[3] = alpha
+            colors.append(tuple(rgba))
+        if segments:
+            lc = LineCollection(segments, colors=colors, linewidths=lw)
+            new_collections.append(lc)
+            lines_to_remove.append(line)
+    for lc in new_collections:
+        ax.add_collection(lc)
+    for line in lines_to_remove:
+        line.set_visible(False)
 
 
 if __name__ == "__main__":
