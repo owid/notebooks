@@ -13,7 +13,7 @@ To run and modify these notebooks from your browser, one of the easiest ways is 
 
 ### Local setup for running these notebooks
 
-We are not yet using poetry or pipenv yet to standardize our jupyter setups precicely. Below is the recommended setup for running the notebooks in this repository.
+We are not yet using poetry or pipenv to standardize our jupyter setups precicely. Below is the recommended setup for running the notebooks in this repository.
 
 #### MacOS
 
