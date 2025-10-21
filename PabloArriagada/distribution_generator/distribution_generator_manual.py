@@ -2,8 +2,11 @@ from pathlib import Path
 from typing import List, Literal
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
+from scipy.optimize import minimize
+from scipy.stats import norm
 
 PARENT_DIR = Path(__file__).parent.absolute()
 
@@ -319,6 +322,157 @@ def run() -> None:
         preferred_welfare_type="income",
     )
 
+    # # For synthetic data
+
+    # (
+    #     synthetic_data_uk_gapminder,
+    #     generated_mean_uk_gapminder,
+    #     generated_gini_uk_gapminder,
+    #     target_mean_uk_gapminder,
+    #     target_gini_uk_gapminder,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="United Kingdom-Gapminder",
+    #     year=1820,
+    #     target_mean=3784.226727,
+    #     target_gini=0.5845,
+    # )
+
+    # (
+    #     synthetic_data_uk_moatsos,
+    #     generated_mean_uk_moatsos,
+    #     generated_gini_uk_moatsos,
+    #     target_mean_uk_moatsos,
+    #     target_gini_uk_moatsos,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="United Kingdom-Moatsos",
+    #     year=1820,
+    #     target_mean=1250.072,
+    #     target_gini=0.5927,
+    # )
+    # (
+    #     synthetic_data_uk_mpd_gapminder,
+    #     generated_mean_uk_mpd_gapminder,
+    #     generated_gini_uk_mpd_gapminder,
+    #     target_mean_uk_mpd_gapminder,
+    #     target_gini_uk_mpd_gapminder,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="United Kingdom-MPD-Gapminder",
+    #     year=1820,
+    #     target_mean=3306,
+    #     target_gini=0.5845,
+    # )
+    # (
+    #     synthetic_data_uk_mpd_moatsos,
+    #     generated_mean_uk_mpd_moatsos,
+    #     generated_gini_uk_mpd_moatsos,
+    #     target_mean_uk_mpd_moatsos,
+    #     target_gini_uk_mpd_moatsos,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="United Kingdom-MPD-Moatsos",
+    #     year=1820,
+    #     target_mean=3306,
+    #     target_gini=0.5927,
+    # )
+
+    # (
+    #     synthetic_data_sweden_gapminder,
+    #     generated_mean_sweden_gapminder,
+    #     generated_gini_sweden_gapminder,
+    #     target_mean_sweden_gapminder,
+    #     target_gini_sweden_gapminder,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="Sweden-Gapminder",
+    #     year=1820,
+    #     target_mean=1619.685668,
+    #     target_gini=0.4956,
+    # )
+    # (
+    #     synthetic_data_sweden_moatsos,
+    #     generated_mean_sweden_moatsos,
+    #     generated_gini_sweden_moatsos,
+    #     target_mean_sweden_moatsos,
+    #     target_gini_sweden_moatsos,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="Sweden-Moatsos",
+    #     year=1820,
+    #     target_mean=445.4332,
+    #     target_gini=0.5544166,
+    # )
+    # (
+    #     synthetic_data_sweden_mpd_gapminder,
+    #     generated_mean_sweden_mpd_gapminder,
+    #     generated_gini_sweden_mpd_gapminder,
+    #     target_mean_sweden_mpd_gapminder,
+    #     target_gini_sweden_mpd_gapminder,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="Sweden-MPD-Gapminder",
+    #     year=1820,
+    #     target_mean=1415,
+    #     target_gini=0.4956,
+    # )
+    # (
+    #     synthetic_data_sweden_mpd_moatsos,
+    #     generated_mean_sweden_mpd_moatsos,
+    #     generated_gini_sweden_mpd_moatsos,
+    #     target_mean_sweden_mpd_moatsos,
+    #     target_gini_sweden_mpd_moatsos,
+    # ) = generate_synthetic_data_from_mean_gini(
+    #     country="Sweden-MPD-Moatsos",
+    #     year=1820,
+    #     target_mean=1415,
+    #     target_gini=0.5544166,
+    # )
+
+    # distributional_plots(
+    #     data=synthetic_data_uk_gapminder,
+    #     df_main_indicators=None,
+    #     x="avg",
+    #     weights=None,
+    #     log_scale=True,
+    #     multiple="layer",
+    #     hue="country",
+    #     hue_order=["United Kingdom-Gapminder"],
+    #     years=[1820],
+    #     fill=False,
+    #     legend=False,
+    #     common_norm=False,
+    #     period="day",
+    #     add_ipl=None,
+    #     add_world_mean=None,
+    #     add_world_median=None,
+    #     add_multiple_lines_day=[2.15 * 365],
+    #     gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+    #     width=1500,
+    #     height=400,
+    #     survey_based=False,
+    #     add_fade_in_tails=False,
+    # )
+
+    # distributional_plots(
+    #     data=synthetic_data_sweden_mpd_moatsos,
+    #     df_main_indicators=None,
+    #     x="avg",
+    #     weights=None,
+    #     log_scale=True,
+    #     multiple="layer",
+    #     hue="country",
+    #     hue_order=["Sweden-MPD-Moatsos"],
+    #     years=[1820],
+    #     fill=False,
+    #     legend=False,
+    #     common_norm=False,
+    #     period="day",
+    #     add_ipl=None,
+    #     add_world_mean=None,
+    #     add_world_median=None,
+    #     add_multiple_lines_day=[1.90 * 365],
+    #     gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+    #     width=1500,
+    #     height=400,
+    #     survey_based=False,
+    #     add_fade_in_tails=False,
+    # )
+
 
 def distributional_plots(
     data: pd.DataFrame,
@@ -344,6 +498,8 @@ def distributional_plots(
     add_multiple_lines_day: List[float] = None,
     width: int = WIDTH,
     height: int = HEIGHT,
+    add_fade_in_tails: bool = True,
+    percentiles_to_fade: List[float] = [1, 99],
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
@@ -406,25 +562,47 @@ def distributional_plots(
         else:
             data_year = data[data["year"] == year].reset_index(drop=True)
 
-        # Define world mean
-        world_mean_year = (
-            df_main_indicators.loc[
-                (df_main_indicators["country"] == "World")
-                & (df_main_indicators["year"] == year),
-                "mean",
-            ].values[0]
-            * period_factor
-        )
+        if df_main_indicators is not None:
+            # Define world mean
+            world_mean_year = (
+                df_main_indicators.loc[
+                    (df_main_indicators["country"] == "World")
+                    & (df_main_indicators["year"] == year),
+                    "mean",
+                ].values[0]
+                * period_factor
+            )
 
-        # Define world median
-        world_median_year = (
-            df_main_indicators.loc[
-                (df_main_indicators["country"] == "World")
-                & (df_main_indicators["year"] == year),
-                "median",
-            ].values[0]
-            * period_factor
-        )
+            # Define world median
+            world_median_year = (
+                df_main_indicators.loc[
+                    (df_main_indicators["country"] == "World")
+                    & (df_main_indicators["year"] == year),
+                    "median",
+                ].values[0]
+                * period_factor
+            )
+
+        # Define values of percentiles
+        if add_fade_in_tails:
+            # Check if the dataframe has a percentile or a quantile column
+            if "percentile" in data_year.columns:
+                percentile_or_quantile = "percentile"
+                percentiles_quantiles_to_fade = percentiles_to_fade
+            elif "quantile" in data_year.columns:
+                percentile_or_quantile = "quantile"
+
+                # Divide values in percentiles_to_fade by 10
+                percentiles_quantiles_to_fade = [p * 10 for p in percentiles_to_fade]
+            else:
+                raise KeyError(
+                    "Expected either 'percentile' or 'quantile' column in data_year"
+                )
+
+            data_year = data_year[
+                (data_year[percentile_or_quantile] > percentiles_quantiles_to_fade[0])
+                & (data_year[percentile_or_quantile] < percentiles_quantiles_to_fade[1])
+            ]
 
         # Plot a kde with seaborn
         kde_plot = sns.kdeplot(
@@ -614,6 +792,8 @@ def distributional_plots_per_row(
     df_national_lines: pd.DataFrame = None,
     width: int = WIDTH,
     height: int = HEIGHT,
+    add_fade_in_tails: bool = True,
+    percentiles_to_fade: List[float] = [1, 99],
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -700,6 +880,35 @@ def distributional_plots_per_row(
 
         for ax, country in zip(axes, hue_order):
             country_data = data_year[data_year[hue] == country]
+
+            # Define values of percentiles
+            if add_fade_in_tails:
+                # Check if the dataframe has a percentile or a quantile column
+                if "percentile" in country_data.columns:
+                    percentile_or_quantile = "percentile"
+                    percentiles_quantiles_to_fade = percentiles_to_fade
+                elif "quantile" in country_data.columns:
+                    percentile_or_quantile = "quantile"
+
+                    # Divide values in percentiles_to_fade by 10
+                    percentiles_quantiles_to_fade = [
+                        p * 10 for p in percentiles_to_fade
+                    ]
+                else:
+                    raise KeyError(
+                        "Expected either 'percentile' or 'quantile' column in country_data"
+                    )
+
+                country_data = country_data[
+                    (
+                        country_data[percentile_or_quantile]
+                        > percentiles_quantiles_to_fade[0]
+                    )
+                    & (
+                        country_data[percentile_or_quantile]
+                        < percentiles_quantiles_to_fade[1]
+                    )
+                ]
 
             # Plot a kde with seaborn
             kde_plot = sns.kdeplot(
@@ -1342,6 +1551,81 @@ def draw_complete_area_under_curve(
         )
 
     return None
+
+
+#######################################
+# SYNTHETIC DATA GENERATION
+#######################################
+
+
+def generate_synthetic_data_from_mean_gini(
+    country: str, year: int, target_mean, target_gini, size=100_000_000, seed=2_000
+):
+    """
+    Generate synthetic data from a lognormal distribution that approximates a given mean and Gini coefficient.
+
+    Parameters:
+        target_mean (float): Desired mean of the synthetic distribution.
+        target_gini (float): Desired Gini coefficient of the distribution.
+        size (int): Number of samples to generate (default: 1000).
+        seed (int or None): Random seed for reproducibility (default: None).
+
+    Returns:
+        np.ndarray: Synthetic data array.
+    """
+
+    # Set random seed if provided
+    if seed is not None:
+        np.random.seed(seed)
+
+    # Gini of a lognormal: G = 2 * Φ(σ/√2) - 1
+    def lognormal_gini(sigma: float) -> float:
+        return 2 * norm.cdf(sigma / np.sqrt(2)) - 1
+
+    # Objective function to minimize: match mean and Gini
+    def objective(params: np.ndarray) -> float:
+        mu, sigma = params
+        mean = np.exp(mu + sigma**2 / 2)
+        gini = lognormal_gini(sigma)
+        # Weighted sum to prioritize Gini matching (since mean is easier to match)
+        return 1 * (mean - target_mean) ** 2 + 100 * (gini - target_gini) ** 2
+
+    def gini(array: np.ndarray) -> float:
+        # Use the definition for population Gini
+        array = np.sort(array)
+        n = array.size
+        index = np.arange(1, n + 1)
+        return (2 * np.sum(index * array)) / (n * np.sum(array)) - (n + 1) / n
+
+    # Initial guess
+    initial_guess = [np.log(target_mean), 1.0]
+
+    # Use a deterministic optimizer and tighter tolerance for reproducibility
+    result = minimize(
+        objective,
+        initial_guess,
+        bounds=[(None, None), (1e-6, None)],
+        method="L-BFGS-B",
+        options={"ftol": 1e-12, "gtol": 1e-8, "maxiter": 1e12},
+    )
+    mu_opt, sigma_opt = result.x
+
+    # Use a fixed random seed for reproducibility
+    rng = np.random.default_rng(seed)
+    synthetic_data = rng.lognormal(mean=mu_opt, sigma=sigma_opt, size=size)
+
+    # Calculate the mean and Gini of the generated data
+    generated_mean = np.mean(synthetic_data)
+    generated_gini = gini(synthetic_data)
+
+    # Make synthetic data a dataframe, with the column name "avg"
+    synthetic_data = pd.DataFrame(synthetic_data, columns=["avg"])
+
+    # Add the columns "country" and "year"
+    synthetic_data["country"] = country
+    synthetic_data["year"] = year
+
+    return synthetic_data, generated_mean, generated_gini, target_mean, target_gini
 
 
 if __name__ == "__main__":
