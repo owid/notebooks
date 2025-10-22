@@ -1,4 +1,6 @@
 """
+LAST UPDATED: October 2025
+
 SCRIPT TO CALCULATE GLOBAL DISTRIBUTION OF GIVING WHAT WE CAN
 This script calculates the global distribution of Giving What We Can, using the World Bank PIP data, together with CPI and PPP conversion factors from the World Development Indicators.
 The script exports the results to a csv file.
@@ -25,14 +27,14 @@ import pandas as pd
 PARENT_DIR = Path(__file__).parent.absolute()
 
 # Define OWID version of PIP data
-PIP_VERSION = "2025-06-05"
+PIP_VERSION = "2025-10-09"
 
 # Define PIP percentiles URL
 PIP_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip/world_bank_pip_percentiles.feather"
 
 # Define paths for the PPP and CPI data
-PPP_FILE_PATH = f"{PARENT_DIR}/API_PA.NUS.PRVT.PP_DS2_en_csv_v2_22915.csv"
-CPI_FILE_PATH = f"{PARENT_DIR}/API_FP.CPI.TOTL_DS2_en_csv_v2_37831.csv"
+PPP_FILE_PATH = f"{PARENT_DIR}/API_PA.NUS.PRVT.PP_DS2_en_csv_v2_5762.csv"
+CPI_FILE_PATH = f"{PARENT_DIR}/API_FP.CPI.TOTL_DS2_en_csv_v2_129887.csv"
 
 # Define maximum year for CPI
 MAX_YEAR_CPI = 2024
