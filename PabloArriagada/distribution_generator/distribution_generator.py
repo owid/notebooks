@@ -344,12 +344,13 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="day",
         survey_based=False,
-        add_ipl="area",
+        add_ipl=None,
         add_world_mean=None,
         add_world_median=None,
+        add_multiple_lines_day=[3, 30],
         x_axis_range=(0.05, 300),
-        width=1500,
-        height=200,
+        width=1150,
+        height=220,
     )
 
     # # For synthetic data
@@ -797,10 +798,13 @@ def distributional_plots(
                 kde_plot.set_xticks(filtered_ticks)
             else:
                 kde_plot.set_xticks(log_ticks)
-            kde_plot.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+            # Add dollar sign prefix to tick labels with integer formatting
+            kde_plot.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
         else:
             # Show data in multiples of 10
             kde_plot.set_xticks(range(0, int(data[x].max()) + 10, 10))
+            # Add dollar sign prefix to tick labels with integer formatting
+            kde_plot.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
 
         # Remove y-axis labels and ticks
         kde_plot.set_ylabel("")
@@ -817,16 +821,21 @@ def distributional_plots(
         fig = kde_plot.get_figure()
 
         # Remove the clipping of the figure
-        # Only disable clipping when x_axis_range is not specified
-        # to ensure consistent figure dimensions with bbox_inches="tight"
-        if x_axis_range is None:
-            for o in fig.findobj():
-                o.set_clip_on(False)
+        for o in fig.findobj():
+            o.set_clip_on(False)
 
         fig.set_size_inches(width / 100, height / 100)
+
+        # When using fixed axis range, use fixed subplot adjustments for perfect alignment
+        if x_axis_range is not None:
+            plt.subplots_adjust(left=0.04, right=0.96, top=0.95, bottom=0.22)
+
+        # Use bbox_inches="tight" only when x_axis_range is not specified
+        # to maintain alignment when using fixed axis ranges
+        save_kwargs = {} if x_axis_range is not None else {"bbox_inches": "tight"}
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}.svg",
-            bbox_inches="tight",
+            **save_kwargs,
         )
         plt.close(fig)
 
@@ -1146,7 +1155,11 @@ def distributional_plots_per_row(
                     ax.set_xticks(filtered_ticks)
                 else:
                     ax.set_xticks(log_ticks)
-                ax.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+                # Add dollar sign prefix to tick labels with integer formatting
+                ax.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
+            else:
+                # Add dollar sign prefix to tick labels with integer formatting for non-log scale
+                ax.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
 
             # Remove y-axis labels and ticks
             ax.set_ylabel("")
@@ -1167,18 +1180,22 @@ def distributional_plots_per_row(
                 )
 
         # Adjust layout and save the figure
-        plt.tight_layout()
+        if x_axis_range is not None:
+            # Use fixed subplot adjustments for perfect alignment
+            plt.subplots_adjust(left=0.04, right=0.96, top=0.98, bottom=0.20)
+        else:
+            plt.tight_layout()
 
         # Remove the clipping of the figure
-        # Only disable clipping when x_axis_range is not specified
-        # to ensure consistent figure dimensions with bbox_inches="tight"
-        if x_axis_range is None:
-            for o in fig.findobj():
-                o.set_clip_on(False)
+        for o in fig.findobj():
+            o.set_clip_on(False)
 
+        # Use bbox_inches="tight" only when x_axis_range is not specified
+        # to maintain alignment when using fixed axis ranges
+        save_kwargs = {} if x_axis_range is not None else {"bbox_inches": "tight"}
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg",
-            bbox_inches="tight",
+            **save_kwargs,
         )
         plt.close(fig)
 
