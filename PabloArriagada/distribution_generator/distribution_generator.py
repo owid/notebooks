@@ -86,6 +86,8 @@ THOUSAND_BINS_HISTORICAL_VERSION = "2025-10-23"
 THOUSAND_BINS_URL = f"http://catalog.ourworldindata.org/garden/wb/{THOUSAND_BINS_VERSION}/thousand_bins_distribution/thousand_bins_distribution.feather?nocache"
 PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/percentiles_income_consumption_2021.feather?nocache"
 THOUSAND_BINS_HISTORICAL_URL = f"http://staging-site-data-historical-poverty-esti:8881/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis.feather?nocache"
+THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL = f"http://staging-site-data-historical-poverty-esti:8881/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis_all_lognormal.feather?nocache"
+
 
 MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/income_consumption_2021.feather?nocache"
 NATIONAL_LINES_URL = f"http://catalog.ourworldindata.org/garden/wb/{NATIONAL_LINES_VERSION}/harmonized_national_poverty_lines/harmonized_national_poverty_lines.feather?nocache"
@@ -96,6 +98,9 @@ def run() -> None:
     df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
     df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_thousand_bins_historical = pd.read_feather(THOUSAND_BINS_HISTORICAL_URL)
+    df_thousand_bins_historical_all_lognormal = pd.read_feather(
+        THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL
+    )
 
     df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
     df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
@@ -338,6 +343,31 @@ def run() -> None:
         hue="country",
         hue_order=["Sweden"],
         years=[1820, 1920, LATEST_YEAR],
+        fill=False,
+        legend=False,
+        common_norm=False,
+        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+        period="day",
+        survey_based=False,
+        add_ipl=None,
+        add_world_mean=None,
+        add_world_median=None,
+        add_multiple_lines_day=[3, 30],
+        x_axis_range=(0.05, 300),
+        width=1150,
+        height=220,
+    )
+
+    distributional_plots(
+        data=df_thousand_bins_historical_all_lognormal,
+        df_main_indicators=None,
+        x="avg",
+        weights="pop",
+        log_scale=True,
+        multiple="layer",
+        hue="country",
+        hue_order=["Sweden"],
+        years=[LATEST_YEAR],
         fill=False,
         legend=False,
         common_norm=False,
@@ -799,12 +829,16 @@ def distributional_plots(
             else:
                 kde_plot.set_xticks(log_ticks)
             # Add dollar sign prefix to tick labels with integer formatting
-            kde_plot.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
+            kde_plot.get_xaxis().set_major_formatter(
+                plt.FuncFormatter(lambda x, p: f"${x:.0f}")
+            )
         else:
             # Show data in multiples of 10
             kde_plot.set_xticks(range(0, int(data[x].max()) + 10, 10))
             # Add dollar sign prefix to tick labels with integer formatting
-            kde_plot.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
+            kde_plot.get_xaxis().set_major_formatter(
+                plt.FuncFormatter(lambda x, p: f"${x:.0f}")
+            )
 
         # Remove y-axis labels and ticks
         kde_plot.set_ylabel("")
@@ -1156,10 +1190,14 @@ def distributional_plots_per_row(
                 else:
                     ax.set_xticks(log_ticks)
                 # Add dollar sign prefix to tick labels with integer formatting
-                ax.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
+                ax.get_xaxis().set_major_formatter(
+                    plt.FuncFormatter(lambda x, p: f"${x:.0f}")
+                )
             else:
                 # Add dollar sign prefix to tick labels with integer formatting for non-log scale
-                ax.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:.0f}'))
+                ax.get_xaxis().set_major_formatter(
+                    plt.FuncFormatter(lambda x, p: f"${x:.0f}")
+                )
 
             # Remove y-axis labels and ticks
             ax.set_ylabel("")
