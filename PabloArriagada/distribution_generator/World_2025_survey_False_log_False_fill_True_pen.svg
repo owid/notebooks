@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="645pt" height="598.329688pt" viewBox="0 0 645 598.329688" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="662.229687pt" height="598.329688pt" viewBox="0 0 662.229687 598.329688" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2025-12-08T10:58:20.688897</dc:date>
+    <dc:date>2026-01-02T17:38:48.243435</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -22,8 +22,8 @@
  <g id="figure_1">
   <g id="patch_1">
    <path d="M 0 598.329688 
-L 645 598.329688 
-L 645 0 
+L 662.229687 598.329688 
+L 662.229687 0 
 L 0 0 
 z
 " style="fill: #ffffff"/>
@@ -41,12 +41,12 @@ z
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m4e3e323601" d="M 0 0 
+       <path id="m1370516d57" d="M 0 0 
 L 0 3.5 
 " style="stroke: #262626; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m4e3e323601" x="14.426563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m1370516d57" x="14.426563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -56,7 +56,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use xlink:href="#m4e3e323601" x="126.026563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m1370516d57" x="126.026563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -66,7 +66,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use xlink:href="#m4e3e323601" x="237.626563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m1370516d57" x="237.626563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -76,7 +76,7 @@ L 0 3.5
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m4e3e323601" x="349.226562" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m1370516d57" x="349.226562" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -86,7 +86,7 @@ L 0 3.5
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use xlink:href="#m4e3e323601" x="460.826563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m1370516d57" x="460.826563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -96,7 +96,7 @@ L 0 3.5
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m4e3e323601" x="572.426563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m1370516d57" x="572.426563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -111,201 +111,171 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_7">
       <defs>
-       <path id="m8f08e529c5" d="M 0 0 
+       <path id="m5e7ab3d26b" d="M 0 0 
 L 3.5 0 
 " style="stroke: #262626; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m5e7ab3d26b" x="572.426563" y="561.6" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="565.508594" transform="rotate(-0 579.426563 565.508594)">$0 per day</text>
+      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="565.508594" transform="rotate(-0 579.426563 565.508594)">$0 per month</text>
      </g>
     </g>
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="497.405471" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m5e7ab3d26b" x="572.426563" y="454.282927" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="501.314065" transform="rotate(-0 579.426563 501.314065)">$20 per day</text>
+      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="458.191521" transform="rotate(-0 579.426563 458.191521)">$1000 per month</text>
      </g>
     </g>
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="433.210942" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m5e7ab3d26b" x="572.426563" y="346.965854" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="437.119536" transform="rotate(-0 579.426563 437.119536)">$40 per day</text>
+      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="350.874447" transform="rotate(-0 579.426563 350.874447)">$2000 per month</text>
      </g>
     </g>
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="369.016413" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m5e7ab3d26b" x="572.426563" y="239.64878" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="372.925007" transform="rotate(-0 579.426563 372.925007)">$60 per day</text>
+      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="243.557374" transform="rotate(-0 579.426563 243.557374)">$3000 per month</text>
      </g>
     </g>
     <g id="ytick_5">
      <g id="line2d_11">
       <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="304.821884" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m5e7ab3d26b" x="572.426563" y="132.331707" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="308.730478" transform="rotate(-0 579.426563 308.730478)">$80 per day</text>
+      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="136.240301" transform="rotate(-0 579.426563 136.240301)">$4000 per month</text>
      </g>
     </g>
     <g id="ytick_6">
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="240.627356" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+       <use xlink:href="#m5e7ab3d26b" x="572.426563" y="25.014634" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="244.535949" transform="rotate(-0 579.426563 244.535949)">$100 per day</text>
-     </g>
-    </g>
-    <g id="ytick_7">
-     <g id="line2d_13">
-      <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="176.432827" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
-      </g>
-     </g>
-     <g id="text_14">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="180.34142" transform="rotate(-0 579.426563 180.34142)">$120 per day</text>
-     </g>
-    </g>
-    <g id="ytick_8">
-     <g id="line2d_14">
-      <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="112.238298" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
-      </g>
-     </g>
-     <g id="text_15">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="116.146892" transform="rotate(-0 579.426563 116.146892)">$140 per day</text>
-     </g>
-    </g>
-    <g id="ytick_9">
-     <g id="line2d_15">
-      <g>
-       <use xlink:href="#m8f08e529c5" x="572.426563" y="48.043769" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
-      </g>
-     </g>
-     <g id="text_16">
-      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="51.952363" transform="rotate(-0 579.426563 51.952363)">$160 per day</text>
+      <text style="font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start; fill: #262626" x="579.426563" y="28.923228" transform="rotate(-0 579.426563 28.923228)">$5000 per month</text>
      </g>
     </g>
    </g>
    <g id="FillBetweenPolyCollection_1"/>
    <g id="FillBetweenPolyCollection_2">
     <defs>
-     <path id="mdd38687714" d="M 20.006563 -36.729688 
-L 20.006563 -39.52215 
-L 25.586563 -40.709748 
-L 31.166563 -41.672666 
-L 36.746563 -42.539292 
-L 42.326563 -43.277529 
-L 47.906563 -43.983669 
-L 53.486563 -44.689809 
-L 59.066563 -45.26756 
-L 64.646563 -45.84531 
-L 70.226563 -46.423061 
-L 75.806563 -46.936618 
-L 81.386563 -47.450174 
-L 86.966563 -47.96373 
-L 92.546563 -48.413092 
-L 98.126563 -48.862453 
-L 103.706563 -49.311815 
-L 109.286563 -49.761177 
-L 114.866563 -50.210538 
-L 120.446563 -50.595706 
-L 126.026563 -51.045068 
-L 131.606563 -51.430234 
-L 137.186563 -51.815401 
-L 142.766563 -52.264764 
-L 148.346563 -52.649931 
-L 153.926563 -53.099292 
-L 159.506563 -53.420264 
-L 165.086563 -53.901724 
-L 170.666563 -54.222696 
-L 176.246563 -54.704155 
-L 181.826563 -55.185615 
-L 187.406563 -55.506587 
-L 192.986563 -55.988046 
-L 198.566563 -56.469505 
-L 204.146563 -56.950965 
-L 209.726563 -57.432422 
-L 215.306563 -57.913882 
-L 220.886563 -58.395341 
-L 226.466563 -58.8768 
-L 232.046563 -59.35826 
-L 237.626563 -60.000204 
-L 243.206563 -60.481663 
-L 248.786563 -61.123608 
-L 254.366563 -61.765554 
-L 259.946563 -62.407499 
-L 265.526563 -63.049444 
-L 271.106562 -63.691388 
-L 276.686563 -64.333336 
-L 282.266563 -65.135768 
-L 287.846563 -65.938199 
-L 293.426563 -66.740631 
-L 299.006562 -67.543063 
-L 304.586563 -68.505978 
-L 310.166563 -69.468897 
-L 315.746562 -70.431815 
-L 321.326563 -71.394734 
-L 326.906563 -72.357652 
-L 332.486562 -73.320568 
-L 338.066563 -74.60446 
-L 343.646563 -75.88835 
-L 349.226562 -77.172242 
-L 354.806563 -78.456131 
-L 360.386562 -80.060994 
-L 365.966563 -81.344884 
-L 371.546563 -82.949747 
-L 377.126562 -84.55461 
-L 382.706563 -86.480447 
-L 388.286563 -88.406284 
-L 393.866562 -90.332122 
-L 399.446563 -92.257953 
-L 405.026563 -94.504763 
-L 410.606562 -97.072542 
-L 416.186563 -99.640327 
-L 421.766563 -102.208106 
-L 427.346563 -105.096858 
-L 432.926563 -108.306585 
-L 438.506562 -111.837285 
-L 444.086563 -115.367985 
-L 449.666563 -119.540627 
-L 455.246562 -124.034249 
-L 460.826563 -128.848839 
-L 466.406563 -133.984396 
-L 471.986562 -139.761901 
-L 477.566563 -146.181354 
-L 483.146563 -152.921787 
-L 488.726562 -160.304156 
-L 494.306563 -168.649439 
-L 499.886562 -177.636683 
-L 505.466563 -187.58683 
-L 511.046563 -198.499905 
-L 516.626562 -210.375883 
-L 522.206563 -224.177717 
-L 527.786563 -239.263421 
-L 533.366563 -256.916917 
-L 538.946563 -277.138203 
-L 544.526563 -302.174055 
-L 550.106563 -333.950351 
-L 555.686563 -375.676795 
-L 561.266563 -440.192292 
+     <path id="m6b09982886" d="M 20.006563 -36.729688 
+L 20.006563 -39.691639 
+L 25.586563 -40.850663 
+L 31.166563 -41.752126 
+L 36.746563 -42.557004 
+L 42.326563 -43.297492 
+L 47.906563 -43.941394 
+L 53.486563 -44.585298 
+L 59.066563 -45.2292 
+L 64.646563 -45.744322 
+L 70.226563 -46.323834 
+L 75.806563 -46.838956 
+L 81.386563 -47.354078 
+L 86.966563 -47.80481 
+L 92.546563 -48.319931 
+L 98.126563 -48.770663 
+L 103.706563 -49.221395 
+L 109.286563 -49.672126 
+L 114.866563 -50.122858 
+L 120.446563 -50.509201 
+L 126.026563 -50.959932 
+L 131.606563 -51.346273 
+L 137.186563 -51.797004 
+L 142.766563 -52.183346 
+L 148.346563 -52.569688 
+L 153.926563 -52.988224 
+L 159.506563 -53.471151 
+L 165.086563 -53.793102 
+L 170.666563 -54.276029 
+L 176.246563 -54.59798 
+L 181.826563 -55.080907 
+L 187.406563 -55.563834 
+L 192.986563 -56.046761 
+L 198.566563 -56.368712 
+L 204.146563 -56.851639 
+L 209.726563 -57.334566 
+L 215.306563 -57.817492 
+L 220.886563 -58.300419 
+L 226.466563 -58.944322 
+L 232.046563 -59.427248 
+L 237.626563 -60.071151 
+L 243.206563 -60.554078 
+L 248.786563 -61.19798 
+L 254.366563 -61.841883 
+L 259.946563 -62.485785 
+L 265.526563 -63.129688 
+L 271.106562 -63.773588 
+L 276.686563 -64.578468 
+L 282.266563 -65.22237 
+L 287.846563 -66.027248 
+L 293.426563 -66.832127 
+L 299.006562 -67.79798 
+L 304.586563 -68.602858 
+L 310.166563 -69.568712 
+L 315.746562 -70.534566 
+L 321.326563 -71.500419 
+L 326.906563 -72.788224 
+L 332.486562 -73.754078 
+L 338.066563 -75.041883 
+L 343.646563 -76.329688 
+L 349.226562 -77.617492 
+L 354.806563 -78.905297 
+L 360.386562 -80.515053 
+L 365.966563 -82.124809 
+L 371.546563 -83.734566 
+L 377.126562 -85.344322 
+L 382.706563 -87.276029 
+L 388.286563 -89.207733 
+L 393.866562 -91.139444 
+L 399.446563 -93.393102 
+L 405.026563 -95.646761 
+L 410.606562 -98.22237 
+L 416.186563 -100.79798 
+L 421.766563 -103.695541 
+L 427.346563 -106.593102 
+L 432.926563 -109.812614 
+L 438.506562 -113.354078 
+L 444.086563 -117.217492 
+L 449.666563 -121.402858 
+L 455.246562 -125.910175 
+L 460.826563 -130.739444 
+L 466.406563 -136.212614 
+L 471.986562 -142.007736 
+L 477.566563 -148.124809 
+L 483.146563 -155.207736 
+L 488.726562 -162.934566 
+L 494.306563 -170.983346 
+L 499.886562 -179.99798 
+L 505.466563 -189.656517 
+L 511.046563 -200.602858 
+L 516.626562 -212.515053 
+L 522.206563 -226.037005 
+L 527.786563 -241.168712 
+L 533.366563 -258.876029 
+L 538.946563 -279.158956 
+L 544.526563 -304.271151 
+L 550.106563 -336.144322 
+L 555.686563 -377.99798 
+L 561.266563 -441.744322 
 L 566.846563 -564.729688 
 L 566.846563 -36.729688 
 L 566.846563 -36.729688 
@@ -411,188 +381,188 @@ z
 " style="stroke: #ffffff; stroke-opacity: 0.5"/>
     </defs>
     <g>
-     <use xlink:href="#mdd38687714" x="0" y="598.329688" style="fill: #4c72b0; fill-opacity: 0.5; stroke: #ffffff; stroke-opacity: 0.5"/>
+     <use xlink:href="#m6b09982886" x="0" y="598.329688" style="fill: #4c72b0; fill-opacity: 0.5; stroke: #ffffff; stroke-opacity: 0.5"/>
     </g>
    </g>
-   <g id="line2d_16">
-    <path d="M 20.006563 558.807538 
-L 25.586563 557.619939 
-L 31.166563 556.657021 
-L 36.746563 555.790395 
-L 42.326563 555.052158 
-L 47.906563 554.346018 
-L 53.486563 553.639878 
-L 59.066563 553.062127 
-L 64.646563 552.484377 
-L 70.226563 551.906626 
-L 75.806563 551.39307 
-L 81.386563 550.879514 
-L 86.966563 550.365957 
-L 92.546563 549.916595 
-L 98.126563 549.467234 
-L 103.706563 549.017872 
-L 109.286563 548.568511 
-L 114.866563 548.11915 
-L 120.446563 547.733981 
-L 126.026563 547.28462 
-L 131.606563 546.899453 
-L 137.186563 546.514286 
-L 142.766563 546.064924 
-L 148.346563 545.679757 
-L 153.926563 545.230395 
-L 159.506563 544.909423 
-L 165.086563 544.427964 
-L 170.666563 544.106991 
-L 176.246563 543.625532 
-L 181.826563 543.144073 
-L 187.406563 542.823101 
-L 192.986563 542.341641 
-L 198.566563 541.860182 
-L 204.146563 541.378723 
-L 209.726563 540.897265 
-L 215.306563 540.415806 
-L 220.886563 539.934347 
-L 226.466563 539.452887 
-L 232.046563 538.971428 
-L 237.626563 538.329483 
-L 243.206563 537.848024 
-L 248.786563 537.206079 
-L 254.366563 536.564133 
-L 259.946563 535.922188 
-L 265.526563 535.280244 
-L 271.106562 534.638299 
-L 276.686563 533.996351 
-L 282.266563 533.19392 
-L 287.846563 532.391488 
-L 293.426563 531.589057 
-L 299.006562 530.786625 
-L 304.586563 529.823709 
-L 310.166563 528.860791 
-L 315.746562 527.897872 
-L 321.326563 526.934954 
-L 326.906563 525.972035 
-L 332.486562 525.00912 
-L 338.066563 523.725227 
-L 343.646563 522.441338 
-L 349.226562 521.157446 
-L 354.806563 519.873556 
-L 360.386562 518.268693 
-L 365.966563 516.984804 
-L 371.546563 515.37994 
-L 377.126562 513.775077 
-L 382.706563 511.84924 
-L 388.286563 509.923403 
-L 393.866562 507.997566 
-L 399.446563 506.071735 
-L 405.026563 503.824924 
-L 410.606562 501.257145 
-L 416.186563 498.68936 
-L 421.766563 496.121582 
-L 427.346563 493.232829 
-L 432.926563 490.023103 
-L 438.506562 486.492402 
-L 444.086563 482.961702 
-L 449.666563 478.78906 
-L 455.246562 474.295438 
-L 460.826563 469.480849 
-L 466.406563 464.345291 
-L 471.986562 458.567786 
-L 477.566563 452.148333 
-L 483.146563 445.4079 
-L 488.726562 438.025532 
-L 494.306563 429.680248 
-L 499.886562 420.693004 
-L 505.466563 410.742857 
-L 511.046563 399.829782 
-L 516.626562 387.953804 
-L 522.206563 374.151971 
-L 527.786563 359.066266 
-L 533.366563 341.412771 
-L 538.946563 321.191484 
-L 544.526563 296.155633 
-L 550.106563 264.379336 
-L 555.686563 222.652892 
-L 561.266563 158.137396 
+   <g id="line2d_13">
+    <path d="M 20.006563 558.638049 
+L 25.586563 557.479025 
+L 31.166563 556.577561 
+L 36.746563 555.772683 
+L 42.326563 555.032195 
+L 47.906563 554.388293 
+L 53.486563 553.74439 
+L 59.066563 553.100487 
+L 64.646563 552.585366 
+L 70.226563 552.005853 
+L 75.806563 551.490731 
+L 81.386563 550.97561 
+L 86.966563 550.524878 
+L 92.546563 550.009756 
+L 98.126563 549.559025 
+L 103.706563 549.108293 
+L 109.286563 548.657561 
+L 114.866563 548.20683 
+L 120.446563 547.820487 
+L 126.026563 547.369755 
+L 131.606563 546.983415 
+L 137.186563 546.532684 
+L 142.766563 546.146341 
+L 148.346563 545.759999 
+L 153.926563 545.341463 
+L 159.506563 544.858537 
+L 165.086563 544.536585 
+L 170.666563 544.053659 
+L 176.246563 543.731707 
+L 181.826563 543.24878 
+L 187.406563 542.765854 
+L 192.986563 542.282927 
+L 198.566563 541.960976 
+L 204.146563 541.478049 
+L 209.726563 540.995122 
+L 215.306563 540.512195 
+L 220.886563 540.029268 
+L 226.466563 539.385366 
+L 232.046563 538.902439 
+L 237.626563 538.258537 
+L 243.206563 537.77561 
+L 248.786563 537.131707 
+L 254.366563 536.487805 
+L 259.946563 535.843902 
+L 265.526563 535.2 
+L 271.106562 534.556099 
+L 276.686563 533.75122 
+L 282.266563 533.107317 
+L 287.846563 532.302439 
+L 293.426563 531.497561 
+L 299.006562 530.531707 
+L 304.586563 529.726829 
+L 310.166563 528.760976 
+L 315.746562 527.795122 
+L 321.326563 526.829268 
+L 326.906563 525.541463 
+L 332.486562 524.57561 
+L 338.066563 523.287805 
+L 343.646563 522 
+L 349.226562 520.712195 
+L 354.806563 519.42439 
+L 360.386562 517.814634 
+L 365.966563 516.204878 
+L 371.546563 514.595122 
+L 377.126562 512.985366 
+L 382.706563 511.053659 
+L 388.286563 509.121954 
+L 393.866562 507.190244 
+L 399.446563 504.936585 
+L 405.026563 502.682927 
+L 410.606562 500.107317 
+L 416.186563 497.531707 
+L 421.766563 494.634146 
+L 427.346563 491.736585 
+L 432.926563 488.517073 
+L 438.506562 484.97561 
+L 444.086563 481.112195 
+L 449.666563 476.926829 
+L 455.246562 472.419512 
+L 460.826563 467.590244 
+L 466.406563 462.117073 
+L 471.986562 456.321951 
+L 477.566563 450.204878 
+L 483.146563 443.121951 
+L 488.726562 435.395122 
+L 494.306563 427.346341 
+L 499.886562 418.331707 
+L 505.466563 408.673171 
+L 511.046563 397.726829 
+L 516.626562 385.814634 
+L 522.206563 372.292683 
+L 527.786563 357.160976 
+L 533.366563 339.453659 
+L 538.946563 319.170732 
+L 544.526563 294.058537 
+L 550.106563 262.185366 
+L 555.686563 220.331707 
+L 561.266563 156.585366 
 L 566.846563 33.6 
 " style="fill: none; stroke: #4c72b0; stroke-width: 1.5; stroke-linecap: round"/>
    </g>
-   <g id="line2d_17">
-    <path d="M 14.426563 551.970821 
-L 572.426563 551.970821 
+   <g id="line2d_14">
+    <path d="M 14.426563 551.941463 
+L 572.426563 551.941463 
 " style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #c44e52; stroke-width: 0.8"/>
    </g>
+   <g id="line2d_15">
+    <path d="M 14.426563 491.247469 
+L 572.426563 491.247469 
+" style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #c44e52; stroke-width: 0.8"/>
+   </g>
+   <g id="line2d_16">
+    <path d="M 14.426563 531.497561 
+L 572.426563 531.497561 
+" style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #c44e52; stroke-width: 0.8"/>
+   </g>
+   <g id="line2d_17">
+    <path d="M 14.426563 465.014634 
+L 572.426563 465.014634 
+" style="fill: none; stroke: #c44e52; stroke-linecap: round"/>
+   </g>
    <g id="line2d_18">
-    <path d="M 14.426563 491.986933 
-L 572.426563 491.986933 
+    <path d="M 14.426563 385.814634 
+L 572.426563 385.814634 
 " style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #c44e52; stroke-width: 0.8"/>
    </g>
    <g id="line2d_19">
-    <path d="M 14.426563 531.589057 
-L 572.426563 531.589057 
-" style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #c44e52; stroke-width: 0.8"/>
-   </g>
-   <g id="line2d_20">
-    <path d="M 14.426563 465.308207 
-L 572.426563 465.308207 
-" style="fill: none; stroke: #c44e52; stroke-linecap: round"/>
-   </g>
-   <g id="line2d_21">
-    <path d="M 14.426563 387.953804 
-L 572.426563 387.953804 
-" style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #c44e52; stroke-width: 0.8"/>
-   </g>
-   <g id="line2d_22">
     <path d="M 14.426563 33.6 
 L 572.426563 33.6 
 " style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #c44e52; stroke-width: 0.8"/>
    </g>
-   <g id="line2d_23">
+   <g id="line2d_20">
     <path d="M 14.426563 561.6 
 L 572.426563 561.6 
 " style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: round"/>
    </g>
-   <g id="line2d_24">
+   <g id="line2d_21">
     <path d="M 572.426563 561.6 
 L 572.426563 7.2 
 " style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: round"/>
    </g>
+   <g id="text_14">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(447.219063 547.394588)">International Poverty Line: $90.00</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 551.941463)"/>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(490.504063 486.794344)">World mean: $655.56</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 491.247469)"/>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(484.277812 527.044436)">World median: $280.50</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 531.497561)"/>
+   </g>
    <g id="text_17">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(451.667812 547.423946)">International Poverty Line: $3.00</text>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 551.970821)"/>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 526.487795)">The poorest 50% live on less than $280.50 a month</text>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 531.497561)"/>
    </g>
    <g id="text_18">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(494.952812 487.533808)">World mean: $21.69</text>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 491.986933)"/>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 459.8994)">$900 corresponds to the poverty line of a high-income country</text>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 465.014634)"/>
    </g>
    <g id="text_19">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(493.175313 527.135932)">World median: $9.35</text>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 531.589057)"/>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 470.740884)"/>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 475.457759)">Globally, 80.5% live on less than $900 a month</text>
    </g>
    <g id="text_20">
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 526.473822)">The poorest 50% live on less than $9.35 a day</text>
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 531.589057)"/>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(533.482813 381.361509)">$1638.00</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 385.814634)"/>
    </g>
    <g id="text_21">
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 460.192972)">$30 corresponds to the poverty line of a high-income country</text>
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 465.308207)"/>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 391.540884)"/>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(520.610312 395.994009)">10% is richer</text>
    </g>
    <g id="text_22">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 471.034457)"/>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(14.426563 475.751332)">Globally, 80.8% live on less than $30 a day</text>
-   </g>
-   <g id="text_23">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(542.380312 383.500679)">$54.10</text>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 387.953804)"/>
-   </g>
-   <g id="text_24">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 393.680054)"/>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(520.610312 398.133179)">10% is richer</text>
-   </g>
-   <g id="text_25">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(537.931563 29.146875)">$164.50</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(533.482813 29.146875)">$4920.00</text>
     <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 33.6)"/>
    </g>
-   <g id="text_26">
+   <g id="text_23">
     <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(566.846563 39.32625)"/>
     <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif" transform="translate(525.059062 43.779375)">1% is richer</text>
    </g>
