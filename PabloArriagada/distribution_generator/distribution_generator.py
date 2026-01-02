@@ -34,7 +34,7 @@ GRIDSIZE_HIGHER_RESOLUTION = 1000
 COUNTRIES = [
     ["Denmark", "Ethiopia"],
     ["Denmark", "Democratic Republic of Congo"],
-    ["Denmark", "Kenya"],
+    ["Denmark", "Madagascar"],
     ["Denmark", "Niger"],
     ["Denmark", "Syria"],
     ["United States", "Burundi"],
@@ -76,8 +76,8 @@ PERIOD_VALUES = {
 CORRECTION_FACTOR_LABEL = 1
 
 # Define  version of PIP and 1000 bins data
-PIP_VERSION = "2025-06-05"
-THOUSAND_BINS_VERSION = "2025-06-11"
+PIP_VERSION = "2025-10-09"
+THOUSAND_BINS_VERSION = "2025-10-13"
 NATIONAL_LINES_VERSION = "2025-06-11"
 THOUSAND_BINS_HISTORICAL_VERSION = "2025-10-23"
 
@@ -85,8 +85,8 @@ THOUSAND_BINS_HISTORICAL_VERSION = "2025-10-23"
 
 THOUSAND_BINS_URL = f"http://catalog.ourworldindata.org/garden/wb/{THOUSAND_BINS_VERSION}/thousand_bins_distribution/thousand_bins_distribution.feather?nocache"
 PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/percentiles_income_consumption_2021.feather?nocache"
-THOUSAND_BINS_HISTORICAL_URL = f"http://staging-site-data-historical-poverty-esti:8881/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis.feather?nocache"
-THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL = f"http://staging-site-data-historical-poverty-esti:8881/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis_all_lognormal.feather?nocache"
+THOUSAND_BINS_HISTORICAL_URL = f"http://catalog.ourworldindata.org/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis.feather?nocache"
+THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL = f"http://catalog.ourworldindata.org/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis_all_lognormal.feather?nocache"
 
 
 MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/income_consumption_2021.feather?nocache"
@@ -309,7 +309,7 @@ def run() -> None:
         fill=True,
         legend=False,
         add_lines=True,
-        period="day",
+        period="month",
         survey_based=False,
     )
 
