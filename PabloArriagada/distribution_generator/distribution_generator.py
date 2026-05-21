@@ -1455,8 +1455,9 @@ def pen_parade(
             data_year = data[data["year"] == year].reset_index(drop=True)
 
         # Anchor each per-hue line at (x=0, y=0) so the curve starts at the origin instead
-        # of at percentile=1.
-        if len(data_year) > 0:
+        # of at percentile=1. Skipped on log-scale because log(0) = -inf would blank the
+        # plot (the line/fill points get clipped and nothing renders).
+        if len(data_year) > 0 and not log_scale:
             zero_rows = data_year.drop_duplicates(subset=[hue]).copy()
             zero_rows[x] = 0
             zero_rows[y] = 0
@@ -1824,7 +1825,10 @@ def pen_parade(
                         0,
                         y_high,
                         title="Poverty",
-                        text=f"{world_share_hi:.0f}% of the world population live on less than ${brace_y:.0f} per {period}",
+                        text=(
+                            f"{world_share_hi:.0f}% of the world population\n"
+                            f"live on less than ${brace_y:.0f} per {period}"
+                        ),
                         box_alignment=(1.0, 0.0),
                     )
                 if brace_y == world_median_year:
