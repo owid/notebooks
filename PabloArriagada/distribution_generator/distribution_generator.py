@@ -1536,13 +1536,25 @@ def pen_parade(
         reference_ticks: list[tuple[float, str]] = []
 
         if add_lines:
+            def axhline_over_curve(y_value):
+                """Dotted reference line at y_value, but only over the filled curve
+                area (from where the curve crosses y_value to the right edge), so the
+                line doesn't clutter the white space where the brackets live."""
+                above_y = data_year[data_year[y] >= y_value]
+                if above_y.empty:
+                    xmin_frac = 0.0
+                else:
+                    xmin_frac = float(above_y[x].min()) / 100.0
+                plt.axhline(
+                    y=y_value,
+                    xmin=xmin_frac,
+                    color=REFERENCE_LINE_COLOR,
+                    linestyle=":",
+                    linewidth=0.8,
+                )
+
             # International poverty line
-            plt.axhline(
-                y=ipl,
-                color=REFERENCE_LINE_COLOR,
-                linestyle=":",
-                linewidth=0.8,
-            )
+            axhline_over_curve(ipl)
             reference_ticks.append(
                 (ipl, f"← ${ipl:.{dollar_decimals}f} per {period}")
             )
@@ -1554,33 +1566,18 @@ def pen_parade(
             month_factor = PERIOD_VALUES["month"]["factor"]
             for monthly_value in (900, 500):
                 line_y = monthly_value * period_factor / month_factor
-                plt.axhline(
-                    y=line_y,
-                    color=REFERENCE_LINE_COLOR,
-                    linestyle=":",
-                    linewidth=0.8,
-                )
+                axhline_over_curve(line_y)
                 reference_ticks.append(
                     (line_y, f"← ${line_y:.{dollar_decimals}f} per {period}")
                 )
 
             # World median
-            plt.axhline(
-                y=world_median_year,
-                color=REFERENCE_LINE_COLOR,
-                linestyle=":",
-                linewidth=0.8,
-            )
+            axhline_over_curve(world_median_year)
             reference_ticks.append(
                 (world_median_year, f"← ${world_median_year:.{dollar_decimals}f} per {period} — the global median income")
             )
             # 90th percentile of the world
-            plt.axhline(
-                y=world_90th_percentile,
-                color=REFERENCE_LINE_COLOR,
-                linestyle=":",
-                linewidth=0.8,
-            )
+            axhline_over_curve(world_90th_percentile)
             reference_ticks.append(
                 (
                     world_90th_percentile,
@@ -1615,12 +1612,7 @@ def pen_parade(
                     annotation_clip=False,
                 )
             else:
-                plt.axhline(
-                    y=world_99th_percentile,
-                    color=REFERENCE_LINE_COLOR,
-                    linestyle=":",
-                    linewidth=0.8,
-                )
+                axhline_over_curve(world_99th_percentile)
                 reference_ticks.append((world_99th_percentile, p99_label.replace("↑", "→")))
 
             # Country median reference lines (most-recent value at or before the plot year).
@@ -1670,12 +1662,7 @@ def pen_parade(
             for country_name, country_median in country_medians_lookup.items():
                 if country_name in merged_country_labels:
                     continue
-                plt.axhline(
-                    y=country_median,
-                    color=REFERENCE_LINE_COLOR,
-                    linestyle=":",
-                    linewidth=0.8,
-                )
+                axhline_over_curve(country_median)
                 reference_ticks.append(
                     (
                         country_median,
@@ -1706,12 +1693,7 @@ def pen_parade(
                             reference_ticks[idx] = (combined_value, combined_label)
                             break
                     continue
-                plt.axhline(
-                    y=group_median,
-                    color=REFERENCE_LINE_COLOR,
-                    linestyle=":",
-                    linewidth=0.8,
-                )
+                axhline_over_curve(group_median)
                 reference_ticks.append(
                     (
                         group_median,
