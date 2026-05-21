@@ -1719,6 +1719,33 @@ def pen_parade(
                     )
                 )
 
+            # Red square brackets ([) ABOVE selected reference lines, spanning from x=0
+            # out to where the curve crosses that y value — a simple bracket with vertical
+            # end-caps and a flat top, marking the share of the world earning less than
+            # each threshold.
+            brace_values = [
+                ipl,
+                world_median_year,
+                POVERTY_LINE_HIGH_INCOME * period_factor,
+            ]
+            y_range = y_at_cut if y_at_cut is not None else line_plot.get_ylim()[1]
+            brace_height_data = y_range * 0.012  # height of the bracket
+            for brace_y in brace_values:
+                above = data_year[data_year[y] >= brace_y]
+                if above.empty:
+                    continue
+                x_brace_end = float(above[x].min())
+                if x_brace_end <= 1:
+                    continue
+                y_low = brace_y
+                y_high = brace_y + brace_height_data
+                bx = [0.0, 0.0, x_brace_end, x_brace_end]
+                by = [y_low, y_high, y_high, y_low]
+                line_plot.plot(
+                    bx, by, color=sns.color_palette("deep")[3], linewidth=1.5,
+                    clip_on=False, solid_capstyle="butt", solid_joinstyle="miter",
+                )
+
         # Remove y-axis labels and ticks
         line_plot.set_ylabel("")
         line_plot.yaxis.set_label_position("right")
