@@ -1755,6 +1755,22 @@ def pen_parade(
         else:
             line_plot.set_ylim(0, line_plot.get_ylim()[1])
 
+        # Fade the top band of the chart so the line/fill near the cap dissolve into white
+        # without a hard edge — clearer (transparent) at the very top, opaque white below,
+        # spanning the full x-range so the steep rising portion of the curve is covered too.
+        if y_at_cut is not None:
+            fade = np.ones((256, 1, 4))
+            fade[:, :, :3] = 1.0  # white RGB
+            fade[:, :, 3] = np.linspace(1, 0, 256).reshape(-1, 1)  # opaque bottom → clear top
+            fade_y_bottom = y_at_cut * 0.85
+            line_plot.imshow(
+                fade,
+                extent=[0, 100, fade_y_bottom, y_at_cut],
+                aspect="auto",
+                zorder=3,
+                interpolation="bilinear",
+            )
+
         # Move y axis to the right
         line_plot.yaxis.tick_right()
 
