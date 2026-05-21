@@ -1633,13 +1633,14 @@ def pen_parade(
                 import textwrap
 
                 wrapped_p99 = textwrap.fill(p99_label, width=28)
-                # Anchor at (cut_percentile, ymax) — where the curve exits the top of the plot.
-                # va="bottom" places the label just above the axes top edge.
+                # Anchor at the top-right of the axes so the label sits in the same
+                # right-margin column as the other y-tick labels, just above the topmost
+                # tick. ha="left" + a small +x offset mirror the default tick-label pad.
                 line_plot.annotate(
                     wrapped_p99,
-                    xy=(cut_percentile, 1.0),
-                    xycoords=("data", "axes fraction"),
-                    xytext=(8, 6),
+                    xy=(1.0, 1.0),
+                    xycoords="axes fraction",
+                    xytext=(4, 4),
                     textcoords="offset points",
                     ha="left",
                     va="bottom",
