@@ -1429,17 +1429,30 @@ def pen_parade(
         else:
             data_year = data[data["year"] == year].reset_index(drop=True)
 
+        # Anchor each per-hue line at (x=0, y=0) so the curve starts at the origin instead
+        # of at percentile=1.
+        if len(data_year) > 0:
+            zero_rows = data_year.drop_duplicates(subset=[hue]).copy()
+            zero_rows[x] = 0
+            zero_rows[y] = 0
+            data_year = pd.concat([zero_rows, data_year], ignore_index=True).reset_index(drop=True)
+
         # Compute the y-value at cut_percentile (used to set the y-axis cap and to anchor
         # the p99 annotation). Keep ALL x rows so the curve spans the full x range, and
         # CLAMP y values above the cut to y_at_cut so the curve plateaus at the top rather
         # than disappearing (or relying on axes clipping, which we keep disabled globally
-        # for Figma editing).
+        # for Figma editing). Also extend the plateau to x=100 so the cap line reaches the
+        # right edge of the chart, even when the source data tops out at percentile 99.
         if cut_percentile < 100 and len(data_year) > 0:
             cut_subset = data_year[data_year[x] <= cut_percentile]
             y_at_cut = float(cut_subset[y].max()) if len(cut_subset) else None
             if y_at_cut is not None:
                 data_year = data_year.copy()
                 data_year.loc[data_year[y] > y_at_cut, y] = y_at_cut
+                plateau_end = data_year.drop_duplicates(subset=[hue], keep="last").copy()
+                plateau_end[x] = 100
+                plateau_end[y] = y_at_cut
+                data_year = pd.concat([data_year, plateau_end], ignore_index=True).reset_index(drop=True)
         else:
             y_at_cut = None
 
