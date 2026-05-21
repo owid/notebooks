@@ -1512,6 +1512,7 @@ def pen_parade(
             hue=hue,
             hue_order=hue_order,
             legend=legend,
+            linewidth=2.5,
         )
 
         if fill:
@@ -1785,7 +1786,18 @@ def pen_parade(
 
         # Draw a line for each axis
         line_plot.axhline(y=0, color="black", linewidth=0.5)
-        line_plot.axvline(x=100, color="black", linewidth=0.5)
+        # Right-hand y-axis line. When the chart is cut, extend it slightly above the cap
+        # (clip_on=False), visually hinting that the data continues above the visible range.
+        if y_at_cut is not None:
+            line_plot.plot(
+                [100, 100],
+                [0, y_at_cut * 1.10],
+                color="black",
+                linewidth=0.5,
+                clip_on=False,
+            )
+        else:
+            line_plot.axvline(x=100, color="black", linewidth=0.5)
 
         fig = line_plot.get_figure()
 
