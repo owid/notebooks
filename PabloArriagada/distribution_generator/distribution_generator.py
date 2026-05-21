@@ -23,9 +23,9 @@ POVERTY_LINE_HIGH_INCOME = 30
 WIDTH = 1500
 HEIGHT = 750
 
-# For Pen Parade — 1:1.25 (taller than wide)
+# For Pen Parade — roughly 1:1
 WIDTH_PEN = 1000
-HEIGHT_PEN = 1250
+HEIGHT_PEN = 1000
 
 # Color used for reference lines (IPL, World median, $900/$500 lines, country medians, etc.)
 REFERENCE_LINE_COLOR = "#6c7a89"
@@ -757,7 +757,7 @@ def distributional_plots(
             plt.axvline(
                 x=ipl,
                 color="lightgrey",
-                linestyle="--",
+                linestyle=":",
                 linewidth=0.8,
             )
             plt.text(
@@ -782,7 +782,7 @@ def distributional_plots(
             plt.axvline(
                 x=world_mean_year,
                 color="lightgrey",
-                linestyle="--",
+                linestyle=":",
                 linewidth=0.8,
             )
             plt.text(
@@ -807,7 +807,7 @@ def distributional_plots(
             plt.axvline(
                 x=world_median_year,
                 color="lightgrey",
-                linestyle="--",
+                linestyle=":",
                 linewidth=0.8,
             )
             plt.text(
@@ -1118,7 +1118,7 @@ def distributional_plots_per_row(
                 ax.axvline(
                     x=ipl,
                     color="lightgrey",
-                    linestyle="--",
+                    linestyle=":",
                     linewidth=0.8,
                 )
 
@@ -1127,7 +1127,7 @@ def distributional_plots_per_row(
                 ax.axvline(
                     x=world_mean_year,
                     color="lightgrey",
-                    linestyle="--",
+                    linestyle=":",
                     linewidth=0.8,
                 )
 
@@ -1136,7 +1136,7 @@ def distributional_plots_per_row(
                 ax.axvline(
                     x=world_median_year,
                     color="lightgrey",
-                    linestyle="--",
+                    linestyle=":",
                     linewidth=0.8,
                 )
 
@@ -1449,6 +1449,8 @@ def pen_parade(
         if cut_percentile < 100 and len(data_year) > 0:
             cut_subset = data_year[data_year[x] <= cut_percentile]
             y_at_cut = float(cut_subset[y].max()) if len(cut_subset) else None
+            # Fade band runs from 88% of the cap up to the cap.
+            y_at_fade_floor = y_at_cut * 0.88 if y_at_cut is not None else None
             if y_at_cut is not None:
                 data_year = data_year.copy()
                 data_year.loc[data_year[y] > y_at_cut, y] = y_at_cut
@@ -1458,6 +1460,7 @@ def pen_parade(
                 data_year = pd.concat([data_year, plateau_end], ignore_index=True).reset_index(drop=True)
         else:
             y_at_cut = None
+            y_at_fade_floor = None
 
         # Define world mean
         world_mean_year = (
@@ -1478,13 +1481,6 @@ def pen_parade(
             ].values[0]
             * period_factor
         )
-
-        # Define the % of people below the high-income country poverty line
-        world_share_below_high_income_line = df_main_indicators.loc[
-            (df_main_indicators["country"] == "World")
-            & (df_main_indicators["year"] == year),
-            f"headcount_ratio_{POVERTY_LINE_HIGH_INCOME*100:.0f}",
-        ].values[0]
 
         # Define the 90th percentile of the world
         world_90th_percentile = (
@@ -1544,11 +1540,11 @@ def pen_parade(
             plt.axhline(
                 y=ipl,
                 color=REFERENCE_LINE_COLOR,
-                linestyle="--",
+                linestyle=":",
                 linewidth=0.8,
             )
             reference_ticks.append(
-                (ipl, f"← International Poverty Line: ${ipl:.{dollar_decimals}f}")
+                (ipl, f"← ${ipl:.{dollar_decimals}f} per {period}")
             )
 
             # Reference lines at the equivalent of $900/month and $500/month, in the
@@ -1561,7 +1557,7 @@ def pen_parade(
                 plt.axhline(
                     y=line_y,
                     color=REFERENCE_LINE_COLOR,
-                    linestyle="--",
+                    linestyle=":",
                     linewidth=0.8,
                 )
                 reference_ticks.append(
@@ -1572,57 +1568,17 @@ def pen_parade(
             plt.axhline(
                 y=world_median_year,
                 color=REFERENCE_LINE_COLOR,
-                linestyle="--",
+                linestyle=":",
                 linewidth=0.8,
             )
             reference_ticks.append(
-                (world_median_year, f"← World median: ${world_median_year:.{dollar_decimals}f}")
+                (world_median_year, f"← ${world_median_year:.{dollar_decimals}f} per {period} — the global median income")
             )
-            plt.text(
-                x=0,
-                y=world_median_year,
-                s=f"The poorest 50% live on less than ${world_median_year:.{dollar_decimals}f} a {period}\n",
-                color="black",
-                rotation=0,
-                horizontalalignment="left",
-                fontsize=9,
-                linespacing=0.5,
-            )
-
-            # High-income poverty line — narrative stays in the plot on the left.
-            plt.axhline(
-                y=POVERTY_LINE_HIGH_INCOME * period_factor,
-                color=REFERENCE_LINE_COLOR,
-                linestyle="-",
-                linewidth=1,
-            )
-            plt.text(
-                x=0,
-                y=POVERTY_LINE_HIGH_INCOME * period_factor,
-                s=f"${round(POVERTY_LINE_HIGH_INCOME * period_factor, 2):.0f} corresponds to the poverty line of a high-income country\n",
-                color="black",
-                rotation=0,
-                horizontalalignment="left",
-                fontsize=9,
-                linespacing=0.5,
-            )
-            plt.text(
-                x=0,
-                y=POVERTY_LINE_HIGH_INCOME * period_factor,
-                s=f"\nGlobally, {world_share_below_high_income_line / 100:.1%} live on less than ${round(POVERTY_LINE_HIGH_INCOME * period_factor, 2):.0f} a {period}",
-                color="black",
-                rotation=0,
-                horizontalalignment="left",
-                verticalalignment="top",
-                fontsize=8,
-                linespacing=0.5,
-            )
-
             # 90th percentile of the world
             plt.axhline(
                 y=world_90th_percentile,
                 color=REFERENCE_LINE_COLOR,
-                linestyle="--",
+                linestyle=":",
                 linewidth=0.8,
             )
             reference_ticks.append(
@@ -1662,12 +1618,27 @@ def pen_parade(
                 plt.axhline(
                     y=world_99th_percentile,
                     color=REFERENCE_LINE_COLOR,
-                    linestyle="--",
+                    linestyle=":",
                     linewidth=0.8,
                 )
                 reference_ticks.append((world_99th_percentile, p99_label.replace("↑", "→")))
 
             # Country median reference lines (most-recent value at or before the plot year).
+            # Pairs in COUNTRY_MEDIAN_MERGE_PAIRS that fall within MEDIAN_MERGE_TOLERANCE of
+            # each other are averaged into a single line; otherwise we assert so the chart
+            # author notices the divergence and decides how to lay them out.
+            COUNTRY_MEDIAN_MERGE_PAIRS = [("Sweden", "United Kingdom")]
+            MEDIAN_MERGE_TOLERANCE = 0.05  # 5%
+            # Display names: PIP's full country names → the shorter forms we want shown
+            # in the labels. Countries not listed fall back to their PIP name.
+            COUNTRY_DISPLAY_NAMES = {
+                "United States": "the USA",
+                "United Kingdom": "the UK",
+            }
+
+            def display_name(country: str) -> str:
+                return COUNTRY_DISPLAY_NAMES.get(country, country)
+            country_medians_lookup = {}
             for country_name in ["Norway", "United States", "Sweden", "United Kingdom"]:
                 country_rows = df_main_indicators[
                     (df_main_indicators["country"] == country_name)
@@ -1676,7 +1647,29 @@ def pen_parade(
                 ]
                 if country_rows.empty:
                     continue
-                country_median = country_rows.sort_values("year")["median"].iloc[-1] * period_factor
+                country_medians_lookup[country_name] = (
+                    country_rows.sort_values("year")["median"].iloc[-1] * period_factor
+                )
+
+            merged_country_labels = set()
+            merged_groups: list[tuple[float, list[str]]] = []
+            for a, b in COUNTRY_MEDIAN_MERGE_PAIRS:
+                if a not in country_medians_lookup or b not in country_medians_lookup:
+                    continue
+                med_a = country_medians_lookup[a]
+                med_b = country_medians_lookup[b]
+                relative_diff = abs(med_a - med_b) / max(med_a, med_b)
+                assert relative_diff <= MEDIAN_MERGE_TOLERANCE, (
+                    f"Country medians for {a} (${med_a:.2f}) and {b} (${med_b:.2f}) differ by "
+                    f"{relative_diff:.1%}, exceeding the {MEDIAN_MERGE_TOLERANCE:.0%} merge "
+                    f"tolerance. Adjust COUNTRY_MEDIAN_MERGE_PAIRS or lay them out separately."
+                )
+                merged_groups.append(((med_a + med_b) / 2, [a, b]))
+                merged_country_labels.update({a, b})
+
+            for country_name, country_median in country_medians_lookup.items():
+                if country_name in merged_country_labels:
+                    continue
                 plt.axhline(
                     y=country_median,
                     color=REFERENCE_LINE_COLOR,
@@ -1686,7 +1679,43 @@ def pen_parade(
                 reference_ticks.append(
                     (
                         country_median,
-                        f"← ${country_median:.{dollar_decimals}f} per {period} — the median income in {country_name}",
+                        f"← ${country_median:.{dollar_decimals}f} per {period} — the median income in {display_name(country_name)}",
+                    )
+                )
+
+            for group_median, group_countries in merged_groups:
+                group_label = " and ".join(display_name(c) for c in group_countries)
+                # If this merged country median is also within MEDIAN_MERGE_TOLERANCE of the
+                # world's 90th percentile, combine the two into a single reference label
+                # (and replace the existing p90 tick instead of adding a duplicate).
+                p90_diff = abs(group_median - world_90th_percentile) / max(
+                    group_median, world_90th_percentile
+                )
+                if p90_diff <= MEDIAN_MERGE_TOLERANCE:
+                    # Reuse the existing p90 axhline (already drawn) — don't add another at
+                    # the merged y, otherwise two near-identical lines would overlap.
+                    combined_value = world_90th_percentile
+                    combined_label = (
+                        f"← ${combined_value:.{dollar_decimals}f} per {period} — "
+                        f"the median income in {group_label}, and the income above "
+                        f"which the richest 10% of the world live"
+                    )
+                    # Replace the existing p90 tick (matched by "richest 10%" fragment).
+                    for idx, (_, label_text) in enumerate(reference_ticks):
+                        if "richest 10%" in label_text:
+                            reference_ticks[idx] = (combined_value, combined_label)
+                            break
+                    continue
+                plt.axhline(
+                    y=group_median,
+                    color=REFERENCE_LINE_COLOR,
+                    linestyle=":",
+                    linewidth=0.8,
+                )
+                reference_ticks.append(
+                    (
+                        group_median,
+                        f"← ${group_median:.{dollar_decimals}f} per {period} — the median income in {group_label}",
                     )
                 )
 
@@ -1714,13 +1743,13 @@ def pen_parade(
             sorted_refs = sorted(reference_ticks)
             yticks = [t[0] for t in sorted_refs]
             # Single-line labels; wrap onto new lines when wider than the reserved right margin.
-            wrap_width = 28  # characters; tune with the right-margin adjust below
+            wrap_width = 36  # characters; tune with the right-margin adjust below
             yticklabels = [textwrap.fill(t[1], width=wrap_width) for t in sorted_refs]
             line_plot.set_yticks(yticks)
             line_plot.set_yticklabels(yticklabels, fontsize=8, linespacing=1.5, va="center")
 
             # Reserve room on the right so long labels like "International Poverty Line" don't get clipped.
-            line_plot.get_figure().subplots_adjust(right=0.65)
+            line_plot.get_figure().subplots_adjust(right=0.55)
 
             # Per-label vertical offsets (with va="center", default places the block centered on tick):
             # - 1-line label: no offset needed (text is centered on tick).
@@ -1736,18 +1765,48 @@ def pen_parade(
 
             labels = line_plot.get_yticklabels()
             line_counts = [text.count("\n") + 1 for text in yticklabels]
+            # Anchor overrides for specific labels that sit too close to their neighbour
+            # for the automatic collision logic to look right. "above" lifts the label so
+            # its bottom sits at the tick; "below" drops it so its top sits at the tick.
+            # The fragment is matched against the (wrapped) label text.
+            anchor_overrides = {
+                "median income in Sweden": "above",
+                "richest 10%": "below",
+            }
+
+            def matched_anchor(text: str) -> str | None:
+                # If both the country-median and the p90 phrasings appear, the labels were
+                # already merged into one combined tick — keep it centered, not above/below.
+                if "median income in Sweden" in text and "richest 10%" in text:
+                    return None
+                for fragment, position in anchor_overrides.items():
+                    if fragment in text:
+                        return position
+                return None
+
             for i, label in enumerate(labels):
                 n = line_counts[i]
+                text = yticklabels[i]
                 # Default: first line centered on the tick.
                 default_offset = -line_height_points * (n - 1) / 2
                 # Pushed below: label sits entirely below its tick (first line just below).
                 pushed_offset = -line_height_points * (n + 1) / 2
 
-                min_gap_pixels = line_height_pixels * n + 4
-                has_close_above = (
-                    i + 1 < len(pixel_ys) and (pixel_ys[i + 1] - pixel_ys[i]) < min_gap_pixels
-                )
-                offset_y = pushed_offset if has_close_above else default_offset
+                override = matched_anchor(text)
+                if override == "above":
+                    # bottom of the label block sits at the tick → label extends upward
+                    offset_y = line_height_points * (n - 0.5)
+                elif override == "below":
+                    # top of the label block sits at the tick → label extends downward
+                    offset_y = -line_height_points * (n + 0.5)
+                else:
+                    min_gap_pixels = line_height_pixels * n + 4
+                    has_close_above = (
+                        i + 1 < len(pixel_ys)
+                        and (pixel_ys[i + 1] - pixel_ys[i]) < min_gap_pixels
+                    )
+                    offset_y = pushed_offset if has_close_above else default_offset
+
                 label.set_transform(
                     offset_copy(label.get_transform(), fig=fig, y=offset_y, units="points")
                 )
@@ -1770,7 +1829,7 @@ def pen_parade(
         # (so we don't see the faint top edge), while above the plateau the band fades
         # smoothly into the chart background.
         if y_at_cut is not None:
-            fade_y_bottom = y_at_cut * 0.85
+            fade_y_bottom = y_at_fade_floor if y_at_fade_floor is not None else y_at_cut * 0.85
             fade_y_top = y_at_cut * 1.10
             plateau_frac = (y_at_cut - fade_y_bottom) / (fade_y_top - fade_y_bottom)
             n = 256
