@@ -1765,27 +1765,37 @@ def pen_parade(
             ]
             y_range = y_at_cut if y_at_cut is not None else line_plot.get_ylim()[1]
             brace_height_data = y_range * 0.012  # height of the bracket
+            import textwrap
+
             from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
 
             red = sns.color_palette("deep")[3]
 
-            def styled_annotation(x, y, title, text, box_alignment):
-                """Multi-line annotation: bold title on top, regular text below. `text`
-                can contain ``\\n`` to split into multiple regular lines; all lines are
-                right-aligned within the box so they share their right edge."""
-                common = {"color": red, "fontsize": 9, "ha": "right", "multialignment": "right"}
-                children = [
-                    TextArea(title, textprops={**common, "fontweight": "bold"})
-                ]
-                for line in text.split("\n"):
+            def styled_annotation(x, y, title, text, box_alignment, wrap_width=32):
+                """Multi-line annotation: bold title on top, regular text below. The
+                `text` is auto-wrapped at `wrap_width` characters (preserving any explicit
+                ``\\n`` you do add). All lines are left-aligned within the box."""
+                common = {
+                    "color": red,
+                    "fontsize": 9,
+                    "ha": "left",
+                    "multialignment": "left",
+                }
+                children = [TextArea(title, textprops={**common, "fontweight": "bold"})]
+                wrapped_lines = []
+                for raw in text.split("\n"):
+                    wrapped_lines.extend(
+                        textwrap.fill(raw, width=wrap_width).split("\n")
+                    )
+                for line in wrapped_lines:
                     children.append(TextArea(line, textprops=common))
-                packer = VPacker(children=children, align="right", pad=0, sep=2)
+                packer = VPacker(children=children, align="left", pad=0, sep=2)
                 line_plot.add_artist(
                     AnnotationBbox(
                         packer,
                         (x, y),
                         xycoords="data",
-                        xybox=(-4, 0),
+                        xybox=(-130, 0),
                         boxcoords="offset points",
                         box_alignment=box_alignment,
                         frameon=False,
@@ -1825,22 +1835,16 @@ def pen_parade(
                         0,
                         y_high,
                         title="Poverty",
-                        text=(
-                            f"{world_share_hi:.0f}% of the world population\n"
-                            f"live on less than ${brace_y:.0f} per {period}"
-                        ),
-                        box_alignment=(1.0, 0.0),
+                        text=f"{world_share_hi:.0f}% of the world population live on less than ${brace_y:.0f} per {period}",
+                        box_alignment=(0.0, 0.0),
                     )
                 if brace_y == world_median_year:
                     styled_annotation(
                         0,
                         y_high,
                         title="Deep poverty",
-                        text=(
-                            "The poorer half of the world population — 4 billion people — \n"
-                            f"live on less than ${brace_y:.{dollar_decimals}f} per {period}"
-                        ),
-                        box_alignment=(1.0, 0.0),
+                        text=f"The poorer half of the world population — 4 billion people — live on less than ${brace_y:.{dollar_decimals}f} per {period}",
+                        box_alignment=(0.0, 0.0),
                     )
                 if brace_y == ipl:
                     world_share_ipl = df_main_indicators.loc[
@@ -1852,11 +1856,8 @@ def pen_parade(
                         0,
                         y_high,
                         title="Extreme poverty",
-                        text=(
-                            f"The poorest {world_share_ipl:.0f}%\n"
-                            f"live on less than ${brace_y:.{dollar_decimals}f} per {period}"
-                        ),
-                        box_alignment=(1.0, 0.0),
+                        text=f"The poorest {world_share_ipl:.0f}% live on less than ${brace_y:.{dollar_decimals}f} per {period}",
+                        box_alignment=(0.0, 0.0),
                     )
 
         # Remove y-axis labels and ticks
