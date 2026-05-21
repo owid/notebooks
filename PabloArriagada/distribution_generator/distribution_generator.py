@@ -13,11 +13,14 @@ PARENT_DIR = Path(__file__).parent.absolute()
 # Define International Poverty Line
 INTERNATIONAL_POVERTY_LINE = 3
 
-# Define latest year
-LATEST_YEAR = 2025
-
 # Define poverty line for high-income countries
 POVERTY_LINE_HIGH_INCOME = 30
+
+# PIP PPP version used throughout (filter applied when reading the dimensional tables).
+PPP_VERSION = 2021
+
+# Define latest year
+LATEST_YEAR = 2025
 
 # Define width and height of the plot
 WIDTH = 1500
@@ -29,6 +32,7 @@ HEIGHT_PEN = 1000
 
 # Color used for reference lines (IPL, World median, $900/$500 lines, country medians, etc.)
 REFERENCE_LINE_COLOR = "#6c7a89"
+
 
 # Define gridsize for when I need higher resolution
 GRIDSIZE_HIGHER_RESOLUTION = 1000
@@ -106,35 +110,43 @@ def run() -> None:
     # World Bank PIP dimensional tables → flat shapes the plotting code expects.
     # Percentiles: legacy table was filtered to ppp_version=2021; replicate by filtering here.
     df_percentiles = pd.read_feather(PERCENTILES_URL)
-    df_percentiles = df_percentiles[df_percentiles["ppp_version"] == 2021].reset_index(drop=True)
+    df_percentiles = df_percentiles[
+        df_percentiles["ppp_version"] == PPP_VERSION
+    ].reset_index(drop=True)
 
     # Main indicators (used only for World aggregates): rebuild a flat per-(country, year)
     # frame from complete_series by selecting the right slice for each column family.
     df_complete = pd.read_feather(COMPLETE_SERIES_URL)
-    base = (df_complete["ppp_version"] == 2021) & (df_complete["welfare_type"] == "income or consumption")
-    df_summary = df_complete[base & df_complete["decile"].isna() & df_complete["poverty_line"].isna()][
-        ["country", "year", "mean", "median", "top1_thr"]
-    ]
-    df_decile9 = df_complete[base & (df_complete["decile"] == "9") & df_complete["poverty_line"].isna()][
-        ["country", "year", "thr"]
-    ].rename(columns={"thr": "decile9_thr"})
-    df_pov30 = df_complete[base & df_complete["decile"].isna() & (df_complete["poverty_line"] == "3000")][
-        ["country", "year", "headcount_ratio"]
-    ].rename(columns={"headcount_ratio": "headcount_ratio_3000"})
-    df_main_indicators = df_summary.merge(df_decile9, on=["country", "year"], how="left").merge(
-        df_pov30, on=["country", "year"], how="left"
+    base = (df_complete["ppp_version"] == PPP_VERSION) & (
+        df_complete["welfare_type"] == "income or consumption"
     )
+    df_summary = df_complete[
+        base & df_complete["decile"].isna() & df_complete["poverty_line"].isna()
+    ][["country", "year", "mean", "median", "top1_thr"]]
+    df_decile9 = df_complete[
+        base & (df_complete["decile"] == "9") & df_complete["poverty_line"].isna()
+    ][["country", "year", "thr"]].rename(columns={"thr": "decile9_thr"})
+    df_pov30 = df_complete[
+        base & df_complete["decile"].isna() & (df_complete["poverty_line"] == "3000")
+    ][["country", "year", "headcount_ratio"]].rename(
+        columns={"headcount_ratio": "headcount_ratio_3000"}
+    )
+    df_main_indicators = df_summary.merge(
+        df_decile9, on=["country", "year"], how="left"
+    ).merge(df_pov30, on=["country", "year"], how="left")
     # Add country-level rows for a handful of reference countries. PIP stores each country's
     # smoothed combined series under either welfare_type="income" or "consumption"
     # (whichever the country reports primarily); the combined "income or consumption" label
     # is only used for the World aggregate. Prefer consumption when both are available
     # (PIP's preferred welfare measure for most countries), fall back to income otherwise.
     country_extras = df_complete[
-        (df_complete["ppp_version"] == 2021)
+        (df_complete["ppp_version"] == PPP_VERSION)
         & df_complete["welfare_type"].isin(["consumption", "income"])
         & df_complete["decile"].isna()
         & df_complete["poverty_line"].isna()
-        & df_complete["country"].isin(["Norway", "United States", "Sweden", "United Kingdom"])
+        & df_complete["country"].isin(
+            ["Norway", "United States", "Sweden", "United Kingdom"]
+        )
     ][["country", "year", "mean", "median", "top1_thr", "welfare_type"]]
     # "consumption" sorts before "income" alphabetically, so keep="first" prefers consumption.
     country_extras = (
@@ -142,7 +154,9 @@ def run() -> None:
         .drop_duplicates(subset=["country", "year"], keep="first")
         .drop(columns="welfare_type")
     )
-    df_main_indicators = pd.concat([df_main_indicators, country_extras], ignore_index=True)
+    df_main_indicators = pd.concat(
+        [df_main_indicators, country_extras], ignore_index=True
+    )
 
     # Skipped while iterating on pen parade (no national-lines consumer enabled).
     # df_national_lines.loc[
@@ -764,7 +778,7 @@ def distributional_plots(
                 x=ipl,  # x-coordinate for the text
                 y=plt.ylim()[1]
                 * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-                s=f"International Poverty Line: ${round(ipl,2):.2f}",  # Text string to display
+                s=f"International Poverty Line: ${round(ipl, 2):.2f}",  # Text string to display
                 color="grey",  # Color of the text
                 rotation=90,  # Rotate the text 90 degrees
                 verticalalignment="top",  # Align the text vertically at the top
@@ -788,7 +802,7 @@ def distributional_plots(
             plt.text(
                 x=world_mean_year,
                 y=plt.ylim()[1] * 0.99,
-                s=f"World mean: ${round(world_mean_year,2):.2f}",
+                s=f"World mean: ${round(world_mean_year, 2):.2f}",
                 color="grey",
                 rotation=90,
                 verticalalignment="top",
@@ -813,7 +827,7 @@ def distributional_plots(
             plt.text(
                 x=world_median_year,
                 y=plt.ylim()[1] * 0.99,
-                s=f"World median: ${round(world_median_year,2):.2f}",
+                s=f"World median: ${round(world_median_year, 2):.2f}",
                 color="grey",
                 rotation=90,
                 verticalalignment="top",
@@ -1145,7 +1159,7 @@ def distributional_plots_per_row(
                 ax.text(
                     x=national_poverty_line,
                     y=plt.ylim()[0] - 0.05 * (plt.ylim()[1] - plt.ylim()[0]),
-                    s=f"${round(national_poverty_line,2):.2f} The poverty line in {country}*",
+                    s=f"${round(national_poverty_line, 2):.2f} The poverty line in {country}*",
                     color="grey",
                     rotation=0,
                     verticalalignment="top",
@@ -1159,7 +1173,7 @@ def distributional_plots_per_row(
                     ax.text(
                         x=ipl,
                         y=plt.ylim()[1],
-                        s=f"International\nPoverty Line:\n${round(ipl,2):.2f}",
+                        s=f"International\nPoverty Line:\n${round(ipl, 2):.2f}",
                         color="grey",
                         rotation=90,
                         verticalalignment="top",
@@ -1171,7 +1185,7 @@ def distributional_plots_per_row(
                     ax.text(
                         x=world_mean_year,
                         y=plt.ylim()[1],
-                        s=f"World mean:\n${round(world_mean_year,2):.2f}",
+                        s=f"World mean:\n${round(world_mean_year, 2):.2f}",
                         color="grey",
                         rotation=90,
                         verticalalignment="top",
@@ -1183,7 +1197,7 @@ def distributional_plots_per_row(
                     ax.text(
                         x=world_median_year,
                         y=plt.ylim()[1],
-                        s=f"World median:\n${round(world_median_year,2):.2f}",
+                        s=f"World median:\n${round(world_median_year, 2):.2f}",
                         color="grey",
                         rotation=90,
                         verticalalignment="top",
@@ -1438,7 +1452,9 @@ def pen_parade(
             zero_rows = data_year.drop_duplicates(subset=[hue]).copy()
             zero_rows[x] = 0
             zero_rows[y] = 0
-            data_year = pd.concat([zero_rows, data_year], ignore_index=True).reset_index(drop=True)
+            data_year = pd.concat(
+                [zero_rows, data_year], ignore_index=True
+            ).reset_index(drop=True)
 
         # Compute the y-value at cut_percentile (used to set the y-axis cap and to anchor
         # the p99 annotation). Keep ALL x rows so the curve spans the full x range, and
@@ -1454,10 +1470,14 @@ def pen_parade(
             if y_at_cut is not None:
                 data_year = data_year.copy()
                 data_year.loc[data_year[y] > y_at_cut, y] = y_at_cut
-                plateau_end = data_year.drop_duplicates(subset=[hue], keep="last").copy()
+                plateau_end = data_year.drop_duplicates(
+                    subset=[hue], keep="last"
+                ).copy()
                 plateau_end[x] = 100
                 plateau_end[y] = y_at_cut
-                data_year = pd.concat([data_year, plateau_end], ignore_index=True).reset_index(drop=True)
+                data_year = pd.concat(
+                    [data_year, plateau_end], ignore_index=True
+                ).reset_index(drop=True)
         else:
             y_at_cut = None
             y_at_fade_floor = None
@@ -1536,6 +1556,7 @@ def pen_parade(
         reference_ticks: list[tuple[float, str]] = []
 
         if add_lines:
+
             def axhline_over_curve(y_value):
                 """Dotted reference line at y_value, but only over the filled curve
                 area (from where the curve crosses y_value to the right edge), so the
@@ -1555,9 +1576,7 @@ def pen_parade(
 
             # International poverty line
             axhline_over_curve(ipl)
-            reference_ticks.append(
-                (ipl, f"← ${ipl:.{dollar_decimals}f} per {period}")
-            )
+            reference_ticks.append((ipl, f"← ${ipl:.{dollar_decimals}f} per {period}"))
 
             # Reference lines at the equivalent of $900/month and $500/month, in the
             # chart's current period units. Defined in monthly terms then rescaled by
@@ -1574,7 +1593,10 @@ def pen_parade(
             # World median
             axhline_over_curve(world_median_year)
             reference_ticks.append(
-                (world_median_year, f"← ${world_median_year:.{dollar_decimals}f} per {period} — the global median income")
+                (
+                    world_median_year,
+                    f"← ${world_median_year:.{dollar_decimals}f} per {period} — the global median income",
+                )
             )
             # 90th percentile of the world
             axhline_over_curve(world_90th_percentile)
@@ -1589,9 +1611,7 @@ def pen_parade(
             # If the chart was cut below percentile 99, the 99th threshold sits above the
             # visible y range — draw the label above the cropped top of the chart, anchored
             # at x = cut_percentile (the right edge of the visible plot), as in the reference.
-            p99_label = (
-                f"↑ The richest 1% live on more than ${world_99th_percentile:.{dollar_decimals}f} per {period}"
-            )
+            p99_label = f"↑ The richest 1% live on more than ${world_99th_percentile:.{dollar_decimals}f} per {period}"
             if cut_percentile < 99:
                 import textwrap
 
@@ -1613,7 +1633,9 @@ def pen_parade(
                 )
             else:
                 axhline_over_curve(world_99th_percentile)
-                reference_ticks.append((world_99th_percentile, p99_label.replace("↑", "→")))
+                reference_ticks.append(
+                    (world_99th_percentile, p99_label.replace("↑", "→"))
+                )
 
             # Country median reference lines (most-recent value at or before the plot year).
             # Pairs in COUNTRY_MEDIAN_MERGE_PAIRS that fall within MEDIAN_MERGE_TOLERANCE of
@@ -1630,6 +1652,7 @@ def pen_parade(
 
             def display_name(country: str) -> str:
                 return COUNTRY_DISPLAY_NAMES.get(country, country)
+
             country_medians_lookup = {}
             for country_name in ["Norway", "United States", "Sweden", "United Kingdom"]:
                 country_rows = df_main_indicators[
@@ -1724,8 +1747,13 @@ def pen_parade(
                 bx = [0.0, 0.0, x_brace_end, x_brace_end]
                 by = [y_low, y_high, y_high, y_low]
                 line_plot.plot(
-                    bx, by, color=sns.color_palette("deep")[3], linewidth=1.5,
-                    clip_on=False, solid_capstyle="butt", solid_joinstyle="miter",
+                    bx,
+                    by,
+                    color=sns.color_palette("deep")[3],
+                    linewidth=1.5,
+                    clip_on=False,
+                    solid_capstyle="butt",
+                    solid_joinstyle="miter",
                 )
 
         # Remove y-axis labels and ticks
@@ -1739,7 +1767,7 @@ def pen_parade(
 
         # Change format of x-axis to percentage
         line_plot.get_xaxis().set_major_formatter(
-            plt.FuncFormatter(lambda x, _: f"{x/100:.0%}")
+            plt.FuncFormatter(lambda x, _: f"{x / 100:.0%}")
         )
 
         # Replace the default dollar-amount y-tick labels with the reference-line labels.
@@ -1836,7 +1864,9 @@ def pen_parade(
         # (so we don't see the faint top edge), while above the plateau the band fades
         # smoothly into the chart background.
         if y_at_cut is not None:
-            fade_y_bottom = y_at_fade_floor if y_at_fade_floor is not None else y_at_cut * 0.85
+            fade_y_bottom = (
+                y_at_fade_floor if y_at_fade_floor is not None else y_at_cut * 0.85
+            )
             fade_y_top = y_at_cut * 1.10
             plateau_frac = (y_at_cut - fade_y_bottom) / (fade_y_top - fade_y_bottom)
             n = 256
