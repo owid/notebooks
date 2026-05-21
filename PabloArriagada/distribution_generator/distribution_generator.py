@@ -75,35 +75,52 @@ PERIOD_VALUES = {
 # Set correction factor of the median to show the label in the plot
 CORRECTION_FACTOR_LABEL = 1
 
-# Define  version of PIP and 1000 bins data
-PIP_VERSION = "2025-10-09"
-THOUSAND_BINS_VERSION = "2025-10-13"
+# Version of harmonized national poverty lines (only stale garden dep left; everything else uses external/latest).
 NATIONAL_LINES_VERSION = "2025-06-11"
-THOUSAND_BINS_HISTORICAL_VERSION = "2025-10-23"
 
 # Define URLs
+EXTERNAL_BASE = "http://catalog.ourworldindata.org/external/poverty_inequality/latest"
 
-THOUSAND_BINS_URL = f"http://catalog.ourworldindata.org/garden/wb/{THOUSAND_BINS_VERSION}/thousand_bins_distribution/thousand_bins_distribution.feather?nocache"
-PERCENTILES_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/percentiles_income_consumption_2021.feather?nocache"
-THOUSAND_BINS_HISTORICAL_URL = f"http://catalog.ourworldindata.org/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis.feather?nocache"
-THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL = f"http://catalog.ourworldindata.org/garden/poverty_inequality/{THOUSAND_BINS_HISTORICAL_VERSION}/historical_poverty/thousand_bins_interpolated_ginis_all_lognormal.feather?nocache"
+THOUSAND_BINS_URL = f"{EXTERNAL_BASE}/thousand_bins_distribution/thousand_bins_distribution.feather?nocache"
+THOUSAND_BINS_HISTORICAL_URL = f"{EXTERNAL_BASE}/historical_poverty/thousand_bins_interpolated_ginis.feather?nocache"
+THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL = f"{EXTERNAL_BASE}/historical_poverty/thousand_bins_interpolated_ginis_all_lognormal.feather?nocache"
 
+PERCENTILES_URL = f"{EXTERNAL_BASE}/world_bank_pip/percentiles.feather?nocache"
+COMPLETE_SERIES_URL = f"{EXTERNAL_BASE}/world_bank_pip/complete_series.feather?nocache"
 
-MAIN_INDICATORS_URL = f"http://catalog.ourworldindata.org/garden/wb/{PIP_VERSION}/world_bank_pip_legacy/income_consumption_2021.feather?nocache"
 NATIONAL_LINES_URL = f"http://catalog.ourworldindata.org/garden/wb/{NATIONAL_LINES_VERSION}/harmonized_national_poverty_lines/harmonized_national_poverty_lines.feather?nocache"
 
 
 def run() -> None:
-    # Read data
+    # Read external feather files (thousand_bins + historical reconstructions + national lines).
     df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
-    df_percentiles = pd.read_feather(PERCENTILES_URL)
     df_thousand_bins_historical = pd.read_feather(THOUSAND_BINS_HISTORICAL_URL)
     df_thousand_bins_historical_all_lognormal = pd.read_feather(
         THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL
     )
-
-    df_main_indicators = pd.read_feather(MAIN_INDICATORS_URL)
     df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
+
+    # World Bank PIP dimensional tables → flat shapes the plotting code expects.
+    # Percentiles: legacy table was filtered to ppp_version=2021; replicate by filtering here.
+    df_percentiles = pd.read_feather(PERCENTILES_URL)
+    df_percentiles = df_percentiles[df_percentiles["ppp_version"] == 2021].reset_index(drop=True)
+
+    # Main indicators (used only for World aggregates): rebuild a flat per-(country, year)
+    # frame from complete_series by selecting the right slice for each column family.
+    df_complete = pd.read_feather(COMPLETE_SERIES_URL)
+    base = (df_complete["ppp_version"] == 2021) & (df_complete["welfare_type"] == "income or consumption")
+    df_summary = df_complete[base & df_complete["decile"].isna() & df_complete["poverty_line"].isna()][
+        ["country", "year", "mean", "median", "top1_thr"]
+    ]
+    df_decile9 = df_complete[base & (df_complete["decile"] == "9") & df_complete["poverty_line"].isna()][
+        ["country", "year", "thr"]
+    ].rename(columns={"thr": "decile9_thr"})
+    df_pov30 = df_complete[base & df_complete["decile"].isna() & (df_complete["poverty_line"] == "3000")][
+        ["country", "year", "headcount_ratio"]
+    ].rename(columns={"headcount_ratio": "headcount_ratio_3000"})
+    df_main_indicators = df_summary.merge(df_decile9, on=["country", "year"], how="left").merge(
+        df_pov30, on=["country", "year"], how="left"
+    )
 
     # in df_national_lines, replace the value of "harmonized_national_poverty_line" for United States with 27.10
     df_national_lines.loc[
