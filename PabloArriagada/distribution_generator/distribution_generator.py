@@ -349,6 +349,7 @@ def run() -> None:
         add_lines=True,
         period="month",
         survey_based=False,
+        cut_percentile=95,
     )
 
     pen_parade(
@@ -1370,7 +1371,7 @@ def pen_parade(
     preferred_welfare_type: Literal["income", "consumption", None] = None,
     width: int = WIDTH_PEN,
     height: int = HEIGHT_PEN,
-    cut_percentile: float = 95,
+    cut_percentile: float = 100,
 ) -> None:
     """
     Plot Pen parades (percentiles vs. income) with seaborn, with multiple options for customization.
