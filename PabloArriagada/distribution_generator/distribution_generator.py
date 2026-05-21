@@ -27,6 +27,9 @@ HEIGHT = 750
 WIDTH_PEN = 1000
 HEIGHT_PEN = 1250
 
+# Color used for reference lines (IPL, World median, $900/$500 lines, country medians, etc.)
+REFERENCE_LINE_COLOR = "#6c7a89"
+
 # Define gridsize for when I need higher resolution
 GRIDSIZE_HIGHER_RESOLUTION = 1000
 
@@ -1540,34 +1543,40 @@ def pen_parade(
             # International poverty line
             plt.axhline(
                 y=ipl,
-                color=sns.color_palette("deep")[3],
+                color=REFERENCE_LINE_COLOR,
                 linestyle="--",
                 linewidth=0.8,
             )
             reference_ticks.append(
-                (ipl, f"→ International Poverty Line: ${ipl:.{dollar_decimals}f}")
+                (ipl, f"← International Poverty Line: ${ipl:.{dollar_decimals}f}")
             )
 
-            # World mean
-            plt.axhline(
-                y=world_mean_year,
-                color=sns.color_palette("deep")[3],
-                linestyle="--",
-                linewidth=0.8,
-            )
-            reference_ticks.append(
-                (world_mean_year, f"→ World mean: ${world_mean_year:.{dollar_decimals}f}")
-            )
+            # Reference lines at the equivalent of $900/month and $500/month, in the
+            # chart's current period units. Defined in monthly terms then rescaled by
+            # period_factor / month_factor so the same real-world amounts shift correctly
+            # when the chart switches between day / month / year periods.
+            month_factor = PERIOD_VALUES["month"]["factor"]
+            for monthly_value in (900, 500):
+                line_y = monthly_value * period_factor / month_factor
+                plt.axhline(
+                    y=line_y,
+                    color=REFERENCE_LINE_COLOR,
+                    linestyle="--",
+                    linewidth=0.8,
+                )
+                reference_ticks.append(
+                    (line_y, f"← ${line_y:.{dollar_decimals}f} per {period}")
+                )
 
             # World median
             plt.axhline(
                 y=world_median_year,
-                color=sns.color_palette("deep")[3],
+                color=REFERENCE_LINE_COLOR,
                 linestyle="--",
                 linewidth=0.8,
             )
             reference_ticks.append(
-                (world_median_year, f"→ World median: ${world_median_year:.{dollar_decimals}f}")
+                (world_median_year, f"← World median: ${world_median_year:.{dollar_decimals}f}")
             )
             plt.text(
                 x=0,
@@ -1583,7 +1592,7 @@ def pen_parade(
             # High-income poverty line — narrative stays in the plot on the left.
             plt.axhline(
                 y=POVERTY_LINE_HIGH_INCOME * period_factor,
-                color=sns.color_palette("deep")[3],
+                color=REFERENCE_LINE_COLOR,
                 linestyle="-",
                 linewidth=1,
             )
@@ -1612,14 +1621,14 @@ def pen_parade(
             # 90th percentile of the world
             plt.axhline(
                 y=world_90th_percentile,
-                color=sns.color_palette("deep")[3],
+                color=REFERENCE_LINE_COLOR,
                 linestyle="--",
                 linewidth=0.8,
             )
             reference_ticks.append(
                 (
                     world_90th_percentile,
-                    f"→ The richest 10% have an income of more than ${world_90th_percentile:.{dollar_decimals}f} per {period}",
+                    f"← The richest 10% have an income of more than ${world_90th_percentile:.{dollar_decimals}f} per {period}",
                 )
             )
 
@@ -1652,7 +1661,7 @@ def pen_parade(
             else:
                 plt.axhline(
                     y=world_99th_percentile,
-                    color=sns.color_palette("deep")[3],
+                    color=REFERENCE_LINE_COLOR,
                     linestyle="--",
                     linewidth=0.8,
                 )
@@ -1670,14 +1679,14 @@ def pen_parade(
                 country_median = country_rows.sort_values("year")["median"].iloc[-1] * period_factor
                 plt.axhline(
                     y=country_median,
-                    color=sns.color_palette("deep")[3],
+                    color=REFERENCE_LINE_COLOR,
                     linestyle=":",
                     linewidth=0.8,
                 )
                 reference_ticks.append(
                     (
                         country_median,
-                        f"→ ${country_median:.{dollar_decimals}f} per {period} — the median income in {country_name}",
+                        f"← ${country_median:.{dollar_decimals}f} per {period} — the median income in {country_name}",
                     )
                 )
 
