@@ -1738,15 +1738,15 @@ def pen_parade(
         if reference_ticks:
             import textwrap
 
-            from matplotlib.transforms import offset_copy
-
             sorted_refs = sorted(reference_ticks)
             yticks = [t[0] for t in sorted_refs]
-            # Single-line labels; wrap onto new lines when wider than the reserved right margin.
             wrap_width = 36  # characters; tune with the right-margin adjust below
             yticklabels = [textwrap.fill(t[1], width=wrap_width) for t in sorted_refs]
             line_plot.set_yticks(yticks)
-            line_plot.set_yticklabels(yticklabels, fontsize=8, linespacing=1.5, va="center")
+            # Hide the default tick labels; we'll place them manually below via annotate so
+            # we can actually apply a vertical offset (matplotlib's tick-label renderer
+            # ignores the offset_copy transform we'd otherwise use).
+            line_plot.set_yticklabels([""] * len(yticks))
 
             # Reserve room on the right so long labels like "International Poverty Line" don't get clipped.
             line_plot.get_figure().subplots_adjust(right=0.55)
@@ -1756,19 +1756,10 @@ def pen_parade(
             # - n-line wrapped label: shift block DOWN by (n-1)*line_height/2 so the FIRST line sits on the tick.
             # - When the tick above is too close (would overlap given label heights), drop this label entirely
             #   BELOW its tick by ~one label height so the two labels separate.
-            fig = line_plot.get_figure()
-            fig.canvas.draw()  # force layout so transData picks up the final axis range
-            trans = line_plot.transData
-            pixel_ys = [trans.transform((0, y))[1] for y in yticks]
             line_height_points = 8 * 1.5  # fontsize × linespacing
-            line_height_pixels = line_height_points * fig.dpi / 72.0
-
-            labels = line_plot.get_yticklabels()
-            line_counts = [text.count("\n") + 1 for text in yticklabels]
             # Anchor overrides for specific labels that sit too close to their neighbour
             # for the automatic collision logic to look right. "above" lifts the label so
             # its bottom sits at the tick; "below" drops it so its top sits at the tick.
-            # The fragment is matched against the (wrapped) label text.
             anchor_overrides = {
                 "median income in Sweden": "above",
                 "richest 10%": "below",
@@ -1784,31 +1775,38 @@ def pen_parade(
                         return position
                 return None
 
-            for i, label in enumerate(labels):
-                n = line_counts[i]
-                text = yticklabels[i]
-                # Default: first line centered on the tick.
-                default_offset = -line_height_points * (n - 1) / 2
-                # Pushed below: label sits entirely below its tick (first line just below).
-                pushed_offset = -line_height_points * (n + 1) / 2
-
+            # Place each label manually as an annotation in the right-margin column. This
+            # gives us actual vertical offset control (matplotlib's tick-label renderer
+            # ignores transform offsets, but annotate's textcoords="offset points" works).
+            tick_pad_points = 4  # mirrors matplotlib's default tick-label pad
+            for tick_y, text in zip(yticks, yticklabels):
+                n = text.count("\n") + 1
                 override = matched_anchor(text)
                 if override == "above":
-                    # bottom of the label block sits at the tick → label extends upward
-                    offset_y = line_height_points * (n - 0.5)
+                    # bottom of the label block sits at the tick → text extends upward
+                    offset_y = 0
+                    va = "bottom"
                 elif override == "below":
-                    # top of the label block sits at the tick → label extends downward
-                    offset_y = -line_height_points * (n + 0.5)
+                    # top of the label block sits at the tick → text extends downward
+                    offset_y = 0
+                    va = "top"
                 else:
-                    min_gap_pixels = line_height_pixels * n + 4
-                    has_close_above = (
-                        i + 1 < len(pixel_ys)
-                        and (pixel_ys[i + 1] - pixel_ys[i]) < min_gap_pixels
-                    )
-                    offset_y = pushed_offset if has_close_above else default_offset
-
-                label.set_transform(
-                    offset_copy(label.get_transform(), fig=fig, y=offset_y, units="points")
+                    # First line centered on the tick. With va="center", the bbox center
+                    # is at tick + offset_y; shifting down by (n-1)*line_height/2 puts the
+                    # first line at the tick. For n=1 the offset is zero.
+                    offset_y = -line_height_points * (n - 1) / 2
+                    va = "center"
+                line_plot.annotate(
+                    text,
+                    xy=(1.0, tick_y),
+                    xycoords=("axes fraction", "data"),
+                    xytext=(tick_pad_points, offset_y),
+                    textcoords="offset points",
+                    ha="left",
+                    va=va,
+                    fontsize=8,
+                    linespacing=1.5,
+                    annotation_clip=False,
                 )
         else:
             line_plot.get_yaxis().set_major_formatter(
