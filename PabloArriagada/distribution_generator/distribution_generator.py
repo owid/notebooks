@@ -23,9 +23,9 @@ POVERTY_LINE_HIGH_INCOME = 30
 WIDTH = 1500
 HEIGHT = 750
 
-# For Pen Parade
+# For Pen Parade — 1:1.25 (taller than wide)
 WIDTH_PEN = 1000
-HEIGHT_PEN = 1000
+HEIGHT_PEN = 1250
 
 # Define gridsize for when I need higher resolution
 GRIDSIZE_HIGHER_RESOLUTION = 1000
@@ -121,6 +121,25 @@ def run() -> None:
     df_main_indicators = df_summary.merge(df_decile9, on=["country", "year"], how="left").merge(
         df_pov30, on=["country", "year"], how="left"
     )
+    # Add country-level rows for a handful of reference countries. PIP stores each country's
+    # smoothed combined series under either welfare_type="income" or "consumption"
+    # (whichever the country reports primarily); the combined "income or consumption" label
+    # is only used for the World aggregate. Prefer consumption when both are available
+    # (PIP's preferred welfare measure for most countries), fall back to income otherwise.
+    country_extras = df_complete[
+        (df_complete["ppp_version"] == 2021)
+        & df_complete["welfare_type"].isin(["consumption", "income"])
+        & df_complete["decile"].isna()
+        & df_complete["poverty_line"].isna()
+        & df_complete["country"].isin(["Norway", "United States", "Sweden", "United Kingdom"])
+    ][["country", "year", "mean", "median", "top1_thr", "welfare_type"]]
+    # "consumption" sorts before "income" alphabetically, so keep="first" prefers consumption.
+    country_extras = (
+        country_extras.sort_values(["country", "year", "welfare_type"])
+        .drop_duplicates(subset=["country", "year"], keep="first")
+        .drop(columns="welfare_type")
+    )
+    df_main_indicators = pd.concat([df_main_indicators, country_extras], ignore_index=True)
 
     # Skipped while iterating on pen parade (no national-lines consumer enabled).
     # df_national_lines.loc[
@@ -1351,9 +1370,15 @@ def pen_parade(
     preferred_welfare_type: Literal["income", "consumption", None] = None,
     width: int = WIDTH_PEN,
     height: int = HEIGHT_PEN,
+    cut_percentile: float = 95,
 ) -> None:
     """
     Plot Pen parades (percentiles vs. income) with seaborn, with multiple options for customization.
+
+    ``cut_percentile`` truncates the x-axis at the given percentile (default 95) so the
+    rapidly rising top tail doesn't dominate the y-axis. Reference lines whose y-value sits
+    above the visible range (e.g. the 99th-percentile threshold when ``cut_percentile=95``)
+    are skipped automatically.
     """
 
     # Filter the data with the hue and hue_order
@@ -1389,6 +1414,8 @@ def pen_parade(
     # Define the income period values
     period_factor = PERIOD_VALUES[period]["factor"]
     log_ticks = PERIOD_VALUES[period]["log_ticks"]
+    # Show cents only for daily figures; monthly/yearly values are large enough that decimals are noise.
+    dollar_decimals = 2 if period == "day" else 0
 
     data[y] = data[y] * period_factor
 
@@ -1400,6 +1427,20 @@ def pen_parade(
             data_year = data[data["reference_year"] == year].reset_index(drop=True)
         else:
             data_year = data[data["year"] == year].reset_index(drop=True)
+
+        # Compute the y-value at cut_percentile (used to set the y-axis cap and to anchor
+        # the p99 annotation). Keep ALL x rows so the curve spans the full x range, and
+        # CLAMP y values above the cut to y_at_cut so the curve plateaus at the top rather
+        # than disappearing (or relying on axes clipping, which we keep disabled globally
+        # for Figma editing).
+        if cut_percentile < 100 and len(data_year) > 0:
+            cut_subset = data_year[data_year[x] <= cut_percentile]
+            y_at_cut = float(cut_subset[y].max()) if len(cut_subset) else None
+            if y_at_cut is not None:
+                data_year = data_year.copy()
+                data_year.loc[data_year[y] > y_at_cut, y] = y_at_cut
+        else:
+            y_at_cut = None
 
         # Define world mean
         world_mean_year = (
@@ -1488,7 +1529,9 @@ def pen_parade(
                 linestyle="--",
                 linewidth=0.8,
             )
-            reference_ticks.append((ipl, f"→ International Poverty Line\n${round(ipl, 2):.2f}"))
+            reference_ticks.append(
+                (ipl, f"→ International Poverty Line: ${ipl:.{dollar_decimals}f}")
+            )
 
             # World mean
             plt.axhline(
@@ -1497,7 +1540,9 @@ def pen_parade(
                 linestyle="--",
                 linewidth=0.8,
             )
-            reference_ticks.append((world_mean_year, f"→ World mean\n${round(world_mean_year, 2):.2f}"))
+            reference_ticks.append(
+                (world_mean_year, f"→ World mean: ${world_mean_year:.{dollar_decimals}f}")
+            )
 
             # World median
             plt.axhline(
@@ -1506,11 +1551,13 @@ def pen_parade(
                 linestyle="--",
                 linewidth=0.8,
             )
-            reference_ticks.append((world_median_year, f"→ World median\n${round(world_median_year, 2):.2f}"))
+            reference_ticks.append(
+                (world_median_year, f"→ World median: ${world_median_year:.{dollar_decimals}f}")
+            )
             plt.text(
                 x=0,
                 y=world_median_year,
-                s=f"The poorest 50% live on less than ${round(world_median_year, 2):.2f} a {period}\n",
+                s=f"The poorest 50% live on less than ${world_median_year:.{dollar_decimals}f} a {period}\n",
                 color="black",
                 rotation=0,
                 horizontalalignment="left",
@@ -1555,19 +1602,68 @@ def pen_parade(
                 linewidth=0.8,
             )
             reference_ticks.append(
-                (world_90th_percentile, f"→ ${round(world_90th_percentile, 2):.2f}\n10% is richer")
+                (
+                    world_90th_percentile,
+                    f"→ The richest 10% have an income of more than ${world_90th_percentile:.{dollar_decimals}f} per {period}",
+                )
             )
 
-            # 99th percentile of the world
-            plt.axhline(
-                y=world_99th_percentile,
-                color=sns.color_palette("deep")[3],
-                linestyle="--",
-                linewidth=0.8,
+            # 99th percentile of the world.
+            # If the chart was cut below percentile 99, the 99th threshold sits above the
+            # visible y range — draw the label above the cropped top of the chart, anchored
+            # at x = cut_percentile (the right edge of the visible plot), as in the reference.
+            p99_label = (
+                f"↑ The richest 1% live on more than ${world_99th_percentile:.{dollar_decimals}f} per {period}"
             )
-            reference_ticks.append(
-                (world_99th_percentile, f"→ ${round(world_99th_percentile, 2):.2f}\n1% is richer")
-            )
+            if cut_percentile < 99:
+                import textwrap
+
+                wrapped_p99 = textwrap.fill(p99_label, width=28)
+                # Anchor at (cut_percentile, ymax) — where the curve exits the top of the plot.
+                # va="bottom" places the label just above the axes top edge.
+                line_plot.annotate(
+                    wrapped_p99,
+                    xy=(cut_percentile, 1.0),
+                    xycoords=("data", "axes fraction"),
+                    xytext=(8, 6),
+                    textcoords="offset points",
+                    ha="left",
+                    va="bottom",
+                    fontsize=8,
+                    linespacing=1.5,
+                    annotation_clip=False,
+                )
+            else:
+                plt.axhline(
+                    y=world_99th_percentile,
+                    color=sns.color_palette("deep")[3],
+                    linestyle="--",
+                    linewidth=0.8,
+                )
+                reference_ticks.append((world_99th_percentile, p99_label.replace("↑", "→")))
+
+            # Country median reference lines (most-recent value at or before the plot year).
+            for country_name in ["Norway", "United States", "Sweden", "United Kingdom"]:
+                country_rows = df_main_indicators[
+                    (df_main_indicators["country"] == country_name)
+                    & (df_main_indicators["year"] <= year)
+                    & df_main_indicators["median"].notna()
+                ]
+                if country_rows.empty:
+                    continue
+                country_median = country_rows.sort_values("year")["median"].iloc[-1] * period_factor
+                plt.axhline(
+                    y=country_median,
+                    color=sns.color_palette("deep")[3],
+                    linestyle=":",
+                    linewidth=0.8,
+                )
+                reference_ticks.append(
+                    (
+                        country_median,
+                        f"→ ${country_median:.{dollar_decimals}f} per {period} — the median income in {country_name}",
+                    )
+                )
 
         # Remove y-axis labels and ticks
         line_plot.set_ylabel("")
@@ -1586,17 +1682,63 @@ def pen_parade(
         # Replace the default dollar-amount y-tick labels with the reference-line labels.
         # Falls back to the dollar formatter when there are no reference lines (add_lines=False).
         if reference_ticks:
-            yticks, yticklabels = zip(*sorted(reference_ticks))
-            line_plot.set_yticks(list(yticks))
-            line_plot.set_yticklabels(list(yticklabels), fontsize=8, linespacing=1.5)
+            import textwrap
+
+            from matplotlib.transforms import offset_copy
+
+            sorted_refs = sorted(reference_ticks)
+            yticks = [t[0] for t in sorted_refs]
+            # Single-line labels; wrap onto new lines when wider than the reserved right margin.
+            wrap_width = 28  # characters; tune with the right-margin adjust below
+            yticklabels = [textwrap.fill(t[1], width=wrap_width) for t in sorted_refs]
+            line_plot.set_yticks(yticks)
+            line_plot.set_yticklabels(yticklabels, fontsize=8, linespacing=1.5, va="center")
+
+            # Reserve room on the right so long labels like "International Poverty Line" don't get clipped.
+            line_plot.get_figure().subplots_adjust(right=0.65)
+
+            # Per-label vertical offsets (with va="center", default places the block centered on tick):
+            # - 1-line label: no offset needed (text is centered on tick).
+            # - n-line wrapped label: shift block DOWN by (n-1)*line_height/2 so the FIRST line sits on the tick.
+            # - When the tick above is too close (would overlap given label heights), drop this label entirely
+            #   BELOW its tick by ~one label height so the two labels separate.
+            fig = line_plot.get_figure()
+            fig.canvas.draw()  # force layout so transData picks up the final axis range
+            trans = line_plot.transData
+            pixel_ys = [trans.transform((0, y))[1] for y in yticks]
+            line_height_points = 8 * 1.5  # fontsize × linespacing
+            line_height_pixels = line_height_points * fig.dpi / 72.0
+
+            labels = line_plot.get_yticklabels()
+            line_counts = [text.count("\n") + 1 for text in yticklabels]
+            for i, label in enumerate(labels):
+                n = line_counts[i]
+                # Default: first line centered on the tick.
+                default_offset = -line_height_points * (n - 1) / 2
+                # Pushed below: label sits entirely below its tick (first line just below).
+                pushed_offset = -line_height_points * (n + 1) / 2
+
+                min_gap_pixels = line_height_pixels * n + 4
+                has_close_above = (
+                    i + 1 < len(pixel_ys) and (pixel_ys[i + 1] - pixel_ys[i]) < min_gap_pixels
+                )
+                offset_y = pushed_offset if has_close_above else default_offset
+                label.set_transform(
+                    offset_copy(label.get_transform(), fig=fig, y=offset_y, units="points")
+                )
         else:
             line_plot.get_yaxis().set_major_formatter(
                 plt.FuncFormatter(lambda x, _: f"${x:.0f} per {period}")
             )
 
-        # Make the plot tighter, with the y axis closer to the plot and the x axis being shown between 0 and 100
+        # The full distribution stays visible on the x-axis (0–100). The y-axis is clamped
+        # to the y-value at cut_percentile so the steeply-rising top tail doesn't dominate.
         line_plot.set_xlim(0, 100)
-        line_plot.set_ylim(0, line_plot.get_ylim()[1])
+        if y_at_cut is not None:
+            line_plot.set_ylim(0, y_at_cut)
+            line_plot.set_autoscaley_on(False)
+        else:
+            line_plot.set_ylim(0, line_plot.get_ylim()[1])
 
         # Move y axis to the right
         line_plot.yaxis.tick_right()
