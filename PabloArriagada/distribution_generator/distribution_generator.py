@@ -20,7 +20,7 @@ POVERTY_LINE_HIGH_INCOME = 30
 PPP_VERSION = 2021
 
 # Define latest year
-LATEST_YEAR = 2025
+LATEST_YEAR = 2026
 
 # Define width and height of the plot
 WIDTH = 1500
@@ -131,9 +131,17 @@ def run() -> None:
     ][["country", "year", "headcount_ratio"]].rename(
         columns={"headcount_ratio": "headcount_ratio_3000"}
     )
-    df_main_indicators = df_summary.merge(
-        df_decile9, on=["country", "year"], how="left"
-    ).merge(df_pov30, on=["country", "year"], how="left")
+    # PIP stores poverty_line in cents/day, so the IPL ($3/day) is "300".
+    df_pov_ipl = df_complete[
+        base & df_complete["decile"].isna() & (df_complete["poverty_line"] == "300")
+    ][["country", "year", "headcount_ratio"]].rename(
+        columns={"headcount_ratio": "headcount_ratio_300"}
+    )
+    df_main_indicators = (
+        df_summary.merge(df_decile9, on=["country", "year"], how="left")
+        .merge(df_pov30, on=["country", "year"], how="left")
+        .merge(df_pov_ipl, on=["country", "year"], how="left")
+    )
     # Add country-level rows for a handful of reference countries. PIP stores each country's
     # smoothed combined series under either welfare_type="income" or "consumption"
     # (whichever the country reports primarily); the combined "income or consumption" label
@@ -1735,6 +1743,37 @@ def pen_parade(
             ]
             y_range = y_at_cut if y_at_cut is not None else line_plot.get_ylim()[1]
             brace_height_data = y_range * 0.012  # height of the bracket
+            from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
+
+            red = sns.color_palette("deep")[3]
+
+            def styled_annotation(x, y, title, text, box_alignment):
+                """Multi-line annotation: bold title on top, regular text below. `text`
+                can contain ``\\n`` to split into multiple regular lines; all lines are
+                right-aligned within the box so they share their right edge."""
+                children = [
+                    TextArea(
+                        title,
+                        textprops={"color": red, "fontsize": 9, "fontweight": "bold"},
+                    )
+                ]
+                for line in text.split("\n"):
+                    children.append(
+                        TextArea(line, textprops={"color": red, "fontsize": 9})
+                    )
+                packer = VPacker(children=children, align="right", pad=0, sep=2)
+                line_plot.add_artist(
+                    AnnotationBbox(
+                        packer,
+                        (x, y),
+                        xycoords="data",
+                        box_alignment=box_alignment,
+                        frameon=False,
+                        pad=0,
+                    )
+                )
+
+            high_income_value = POVERTY_LINE_HIGH_INCOME * period_factor
             for brace_y in brace_values:
                 above = data_year[data_year[y] >= brace_y]
                 if above.empty:
@@ -1755,6 +1794,47 @@ def pen_parade(
                     solid_capstyle="butt",
                     solid_joinstyle="miter",
                 )
+                # Annotate the high-income bracket with the headcount share at $X.
+                if brace_y == high_income_value:
+                    world_share_hi = df_main_indicators.loc[
+                        (df_main_indicators["country"] == "World")
+                        & (df_main_indicators["year"] == year),
+                        "headcount_ratio_3000",
+                    ].values[0]
+                    styled_annotation(
+                        x_brace_end,
+                        y_high,
+                        title="Poverty",
+                        text=f"{world_share_hi:.0f}% of the world population live on less than ${brace_y:.0f} per {period}",
+                        box_alignment=(1.0, 0.0),
+                    )
+                if brace_y == world_median_year:
+                    styled_annotation(
+                        x_brace_end,
+                        y_high,
+                        title="Deep poverty",
+                        text=(
+                            "The poorer half of the world population — 4 billion people\n"
+                            f"live on less than ${brace_y:.{dollar_decimals}f} per {period}"
+                        ),
+                        box_alignment=(1.0, 0.0),
+                    )
+                if brace_y == ipl:
+                    world_share_ipl = df_main_indicators.loc[
+                        (df_main_indicators["country"] == "World")
+                        & (df_main_indicators["year"] == year),
+                        "headcount_ratio_300",
+                    ].values[0]
+                    styled_annotation(
+                        x_brace_end,
+                        y_high,
+                        title="Extreme poverty",
+                        text=(
+                            f"The poorest {world_share_ipl:.0f}%\n"
+                            f"live on less than ${brace_y:.{dollar_decimals}f} per {period}"
+                        ),
+                        box_alignment=(1.0, 0.0),
+                    )
 
         # Remove y-axis labels and ticks
         line_plot.set_ylabel("")
