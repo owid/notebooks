@@ -1,3 +1,4 @@
+import textwrap
 from pathlib import Path
 from typing import List, Literal
 
@@ -5,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
 from scipy.optimize import minimize
 from scipy.stats import norm
 
@@ -1643,8 +1645,6 @@ def pen_parade(
             # at x = cut_percentile (the right edge of the visible plot), as in the reference.
             p99_label = f"↑ The richest 1% live on more than ${world_99th_percentile:.{dollar_decimals}f} per {period}"
             if cut_percentile < 99:
-                import textwrap
-
                 wrapped_p99 = textwrap.fill(p99_label, width=28)
                 # Anchor at the top-right of the axes so the label sits in the same
                 # right-margin column as the other y-tick labels, just above the topmost
@@ -1765,21 +1765,19 @@ def pen_parade(
             ]
             y_range = y_at_cut if y_at_cut is not None else line_plot.get_ylim()[1]
             brace_height_data = y_range * 0.012  # height of the bracket
-            import textwrap
-
-            from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
 
             red = sns.color_palette("deep")[3]
 
             def styled_annotation(x, y, title, text, box_alignment, wrap_width=32):
                 """Multi-line annotation: bold title on top, regular text below. The
                 `text` is auto-wrapped at `wrap_width` characters (preserving any explicit
-                ``\\n`` you do add). All lines are left-aligned within the box."""
+                ``\\n`` you do add). All lines are right-aligned within the box so their
+                right edges sit flush against the y-axis."""
                 common = {
                     "color": red,
                     "fontsize": 9,
-                    "ha": "left",
-                    "multialignment": "left",
+                    "ha": "right",
+                    "multialignment": "right",
                 }
                 children = [TextArea(title, textprops={**common, "fontweight": "bold"})]
                 wrapped_lines = []
@@ -1789,13 +1787,13 @@ def pen_parade(
                     )
                 for line in wrapped_lines:
                     children.append(TextArea(line, textprops=common))
-                packer = VPacker(children=children, align="left", pad=0, sep=2)
+                packer = VPacker(children=children, align="right", pad=0, sep=2)
                 line_plot.add_artist(
                     AnnotationBbox(
                         packer,
                         (x, y),
                         xycoords="data",
-                        xybox=(-130, 0),
+                        xybox=(-5, 0),
                         boxcoords="offset points",
                         box_alignment=box_alignment,
                         frameon=False,
@@ -1836,7 +1834,7 @@ def pen_parade(
                         y_high,
                         title="Poverty",
                         text=f"{world_share_hi:.0f}% of the world population live on less than ${brace_y:.0f} per {period}",
-                        box_alignment=(0.0, 0.0),
+                        box_alignment=(1.0, 0.0),
                     )
                 if brace_y == world_median_year:
                     styled_annotation(
@@ -1844,7 +1842,7 @@ def pen_parade(
                         y_high,
                         title="Deep poverty",
                         text=f"The poorer half of the world population — 4 billion people — live on less than ${brace_y:.{dollar_decimals}f} per {period}",
-                        box_alignment=(0.0, 0.0),
+                        box_alignment=(1.0, 0.0),
                     )
                 if brace_y == ipl:
                     world_share_ipl = df_main_indicators.loc[
@@ -1857,7 +1855,7 @@ def pen_parade(
                         y_high,
                         title="Extreme poverty",
                         text=f"The poorest {world_share_ipl:.0f}% live on less than ${brace_y:.{dollar_decimals}f} per {period}",
-                        box_alignment=(0.0, 0.0),
+                        box_alignment=(1.0, 0.0),
                     )
 
         # Remove y-axis labels and ticks
@@ -1877,8 +1875,6 @@ def pen_parade(
         # Replace the default dollar-amount y-tick labels with the reference-line labels.
         # Falls back to the dollar formatter when there are no reference lines (add_lines=False).
         if reference_ticks:
-            import textwrap
-
             sorted_refs = sorted(reference_ticks)
             yticks = [t[0] for t in sorted_refs]
             wrap_width = 36  # characters; tune with the right-margin adjust below
