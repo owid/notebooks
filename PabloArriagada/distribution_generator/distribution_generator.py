@@ -1564,6 +1564,27 @@ def pen_parade(
         reference_ticks: list[tuple[float, str]] = []
 
         if add_lines:
+            # Poverty bands shaded in the same blue as the main fill — one per poverty
+            # line where the curve sits below that threshold. Overlapping fills stack
+            # their alphas, deepening the blue as the poverty line gets stricter.
+            x_data = data_year[x].to_numpy()
+            y_data = data_year[y].to_numpy()
+            poverty_fill_color = sns.color_palette("deep")[0]
+            for poverty_y in (
+                POVERTY_LINE_HIGH_INCOME * period_factor,
+                world_median_year,
+                ipl,
+            ):
+                line_plot.fill_between(
+                    x_data,
+                    0,
+                    y_data,
+                    where=(y_data <= poverty_y),
+                    alpha=0.3,
+                    color=poverty_fill_color,
+                    interpolate=True,
+                    linewidth=0,
+                )
 
             def axhline_over_curve(y_value):
                 """Dotted reference line at y_value, but only over the filled curve
@@ -1751,22 +1772,20 @@ def pen_parade(
                 """Multi-line annotation: bold title on top, regular text below. `text`
                 can contain ``\\n`` to split into multiple regular lines; all lines are
                 right-aligned within the box so they share their right edge."""
+                common = {"color": red, "fontsize": 9, "ha": "right", "multialignment": "right"}
                 children = [
-                    TextArea(
-                        title,
-                        textprops={"color": red, "fontsize": 9, "fontweight": "bold"},
-                    )
+                    TextArea(title, textprops={**common, "fontweight": "bold"})
                 ]
                 for line in text.split("\n"):
-                    children.append(
-                        TextArea(line, textprops={"color": red, "fontsize": 9})
-                    )
+                    children.append(TextArea(line, textprops=common))
                 packer = VPacker(children=children, align="right", pad=0, sep=2)
                 line_plot.add_artist(
                     AnnotationBbox(
                         packer,
                         (x, y),
                         xycoords="data",
+                        xybox=(-4, 0),
+                        boxcoords="offset points",
                         box_alignment=box_alignment,
                         frameon=False,
                         pad=0,
@@ -1802,7 +1821,7 @@ def pen_parade(
                         "headcount_ratio_3000",
                     ].values[0]
                     styled_annotation(
-                        x_brace_end,
+                        0,
                         y_high,
                         title="Poverty",
                         text=f"{world_share_hi:.0f}% of the world population live on less than ${brace_y:.0f} per {period}",
@@ -1810,11 +1829,11 @@ def pen_parade(
                     )
                 if brace_y == world_median_year:
                     styled_annotation(
-                        x_brace_end,
+                        0,
                         y_high,
                         title="Deep poverty",
                         text=(
-                            "The poorer half of the world population — 4 billion people\n"
+                            "The poorer half of the world population — 4 billion people — \n"
                             f"live on less than ${brace_y:.{dollar_decimals}f} per {period}"
                         ),
                         box_alignment=(1.0, 0.0),
@@ -1826,7 +1845,7 @@ def pen_parade(
                         "headcount_ratio_300",
                     ].values[0]
                     styled_annotation(
-                        x_brace_end,
+                        0,
                         y_high,
                         title="Extreme poverty",
                         text=(
