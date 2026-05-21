@@ -92,13 +92,13 @@ NATIONAL_LINES_URL = f"http://catalog.ourworldindata.org/garden/wb/{NATIONAL_LIN
 
 
 def run() -> None:
-    # Read external feather files (thousand_bins + historical reconstructions + national lines).
-    df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
-    df_thousand_bins_historical = pd.read_feather(THOUSAND_BINS_HISTORICAL_URL)
-    df_thousand_bins_historical_all_lognormal = pd.read_feather(
-        THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL
-    )
-    df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
+    # Skipped while iterating on pen parade — re-enable along with the disabled plot blocks below.
+    # df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
+    # df_thousand_bins_historical = pd.read_feather(THOUSAND_BINS_HISTORICAL_URL)
+    # df_thousand_bins_historical_all_lognormal = pd.read_feather(
+    #     THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL
+    # )
+    # df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
 
     # World Bank PIP dimensional tables → flat shapes the plotting code expects.
     # Percentiles: legacy table was filtered to ppp_version=2021; replicate by filtering here.
@@ -122,11 +122,11 @@ def run() -> None:
         df_pov30, on=["country", "year"], how="left"
     )
 
-    # in df_national_lines, replace the value of "harmonized_national_poverty_line" for United States with 27.10
-    df_national_lines.loc[
-        (df_national_lines["country"] == "United States"),
-        "harmonized_national_poverty_line",
-    ] = 27.10
+    # Skipped while iterating on pen parade (no national-lines consumer enabled).
+    # df_national_lines.loc[
+    #     (df_national_lines["country"] == "United States"),
+    #     "harmonized_national_poverty_line",
+    # ] = 27.10
 
     # Set seaborn style and color palette
     sns.set_style("ticks")
@@ -135,6 +135,7 @@ def run() -> None:
     # Show texts and not curves for annotations
     plt.rcParams["svg.fonttype"] = "none"
 
+    """  # disabled while iterating on pen parade — flip to delete this and the matching closer to re-enable
     # Plot global distribution, separating in two with the International Poverty Line
     for lines in POVERTY_LINES_AREA_GLOBAL:
         distributional_plots(
@@ -311,6 +312,7 @@ def run() -> None:
         period="day",
         survey_based=False,
     )
+    """  # end of block disabled while iterating on pen parade
 
     # Pen parades
     pen_parade(
@@ -349,6 +351,7 @@ def run() -> None:
         preferred_welfare_type="income",
     )
 
+    """  # disabled while iterating on pen parade — flip to delete this and the matching closer to re-enable
     # Historical data
     distributional_plots(
         data=df_thousand_bins_historical,
@@ -399,6 +402,7 @@ def run() -> None:
         width=1150,
         height=220,
     )
+    """  # end of block disabled while iterating on pen parade
 
     # # For synthetic data
 
@@ -1472,64 +1476,41 @@ def pen_parade(
         else:
             line_plot.get_yaxis().set_major_formatter(plt.ScalarFormatter())
 
+        # Reference-line ticks collected here become the y-axis tick labels, replacing the
+        # default dollar-amount labels with the labels that previously sat on each reference line.
+        reference_ticks: list[tuple[float, str]] = []
+
         if add_lines:
-            # Add a horizontal line for the international poverty line
+            # International poverty line
             plt.axhline(
                 y=ipl,
                 color=sns.color_palette("deep")[3],
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=99,
-                y=ipl,
-                s=f"International Poverty Line: ${round(ipl,2):.2f}\n",
-                color="black",
-                rotation=0,
-                horizontalalignment="right",
-                fontsize=8,
-                linespacing=0.5,
-            )
+            reference_ticks.append((ipl, f"→ International Poverty Line\n${round(ipl, 2):.2f}"))
 
-            # Add a horizontal line for the world mean
+            # World mean
             plt.axhline(
                 y=world_mean_year,
                 color=sns.color_palette("deep")[3],
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=99,
-                y=world_mean_year,
-                s=f"World mean: ${round(world_mean_year,2):.2f}\n",
-                color="black",
-                rotation=0,
-                horizontalalignment="right",
-                fontsize=8,
-                linespacing=0.5,
-            )
+            reference_ticks.append((world_mean_year, f"→ World mean\n${round(world_mean_year, 2):.2f}"))
 
-            # Add a horizontal line for the world median
+            # World median
             plt.axhline(
                 y=world_median_year,
                 color=sns.color_palette("deep")[3],
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=99,
-                y=world_median_year,
-                s=f"World median: ${round(world_median_year,2):.2f}\n",
-                color="black",
-                rotation=0,
-                horizontalalignment="right",
-                fontsize=8,
-                linespacing=0.5,
-            )
+            reference_ticks.append((world_median_year, f"→ World median\n${round(world_median_year, 2):.2f}"))
             plt.text(
                 x=0,
                 y=world_median_year,
-                s=f"The poorest 50% live on less than ${round(world_median_year,2):.2f} a {period}\n",
+                s=f"The poorest 50% live on less than ${round(world_median_year, 2):.2f} a {period}\n",
                 color="black",
                 rotation=0,
                 horizontalalignment="left",
@@ -1537,7 +1518,7 @@ def pen_parade(
                 linespacing=0.5,
             )
 
-            # Add an horizontal line for a poverty line representative of a high-income country
+            # High-income poverty line — narrative stays in the plot on the left.
             plt.axhline(
                 y=POVERTY_LINE_HIGH_INCOME * period_factor,
                 color=sns.color_palette("deep")[3],
@@ -1547,7 +1528,7 @@ def pen_parade(
             plt.text(
                 x=0,
                 y=POVERTY_LINE_HIGH_INCOME * period_factor,
-                s=f"${round(POVERTY_LINE_HIGH_INCOME * period_factor,2):.0f} corresponds to the poverty line of a high-income country\n",
+                s=f"${round(POVERTY_LINE_HIGH_INCOME * period_factor, 2):.0f} corresponds to the poverty line of a high-income country\n",
                 color="black",
                 rotation=0,
                 horizontalalignment="left",
@@ -1557,7 +1538,7 @@ def pen_parade(
             plt.text(
                 x=0,
                 y=POVERTY_LINE_HIGH_INCOME * period_factor,
-                s=f"\nGlobally, {world_share_below_high_income_line/100:.1%} live on less than ${round(POVERTY_LINE_HIGH_INCOME * period_factor,2):.0f} a {period}",
+                s=f"\nGlobally, {world_share_below_high_income_line / 100:.1%} live on less than ${round(POVERTY_LINE_HIGH_INCOME * period_factor, 2):.0f} a {period}",
                 color="black",
                 rotation=0,
                 horizontalalignment="left",
@@ -1566,62 +1547,26 @@ def pen_parade(
                 linespacing=0.5,
             )
 
-            # Add a horizontal line for the 90th percentile of the world
+            # 90th percentile of the world
             plt.axhline(
                 y=world_90th_percentile,
                 color=sns.color_palette("deep")[3],
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=99,
-                y=world_90th_percentile,
-                s=f"${round(world_90th_percentile,2):.2f}\n",
-                color="black",
-                rotation=0,
-                horizontalalignment="right",
-                fontsize=8,
-                linespacing=0.5,
-            )
-            plt.text(
-                x=99,
-                y=world_90th_percentile,
-                s=f"\n10% is richer",
-                color="black",
-                rotation=0,
-                horizontalalignment="right",
-                verticalalignment="top",
-                fontsize=8,
-                linespacing=0.5,
+            reference_ticks.append(
+                (world_90th_percentile, f"→ ${round(world_90th_percentile, 2):.2f}\n10% is richer")
             )
 
-            # Add a horizontal line for the 99th percentile of the world
+            # 99th percentile of the world
             plt.axhline(
                 y=world_99th_percentile,
                 color=sns.color_palette("deep")[3],
                 linestyle="--",
                 linewidth=0.8,
             )
-            plt.text(
-                x=99,
-                y=world_99th_percentile,
-                s=f"${round(world_99th_percentile,2):.2f}\n",
-                color="black",
-                rotation=0,
-                horizontalalignment="right",
-                fontsize=8,
-                linespacing=0.5,
-            )
-            plt.text(
-                x=99,
-                y=world_99th_percentile,
-                s=f"\n1% is richer",
-                color="black",
-                rotation=0,
-                horizontalalignment="right",
-                verticalalignment="top",
-                fontsize=8,
-                linespacing=0.5,
+            reference_ticks.append(
+                (world_99th_percentile, f"→ ${round(world_99th_percentile, 2):.2f}\n1% is richer")
             )
 
         # Remove y-axis labels and ticks
@@ -1638,10 +1583,16 @@ def pen_parade(
             plt.FuncFormatter(lambda x, _: f"{x/100:.0%}")
         )
 
-        # Do the same for the y-axis, with $
-        line_plot.get_yaxis().set_major_formatter(
-            plt.FuncFormatter(lambda x, _: f"${x:.0f} per {period}")
-        )
+        # Replace the default dollar-amount y-tick labels with the reference-line labels.
+        # Falls back to the dollar formatter when there are no reference lines (add_lines=False).
+        if reference_ticks:
+            yticks, yticklabels = zip(*sorted(reference_ticks))
+            line_plot.set_yticks(list(yticks))
+            line_plot.set_yticklabels(list(yticklabels), fontsize=8, linespacing=1.5)
+        else:
+            line_plot.get_yaxis().set_major_formatter(
+                plt.FuncFormatter(lambda x, _: f"${x:.0f} per {period}")
+            )
 
         # Make the plot tighter, with the y axis closer to the plot and the x axis being shown between 0 and 100
         line_plot.set_xlim(0, 100)
