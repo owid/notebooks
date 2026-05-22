@@ -197,7 +197,6 @@ def run() -> None:
             period="day",
             survey_based=False,
             add_ipl=None,
-            add_world_mean=None,
             add_world_median=None,
             add_multiple_lines_day=lines,
             gridsize=GRIDSIZE_HIGHER_RESOLUTION,
@@ -221,7 +220,6 @@ def run() -> None:
         common_norm=False,
         period="day",
         add_ipl="area",
-        add_world_mean=None,
         add_world_median=None,
         add_multiple_lines_day=None,
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
@@ -250,7 +248,6 @@ def run() -> None:
         period="day",
         survey_based=False,
         add_ipl="area",
-        add_world_mean="area",
         add_world_median="area",
     )
 
@@ -268,7 +265,7 @@ def run() -> None:
             years=[LATEST_YEAR],
             legend=True,
             common_norm=False,
-            period="day",
+            period="month",
             survey_based=False,
             width=1500,
             height=400,
@@ -285,7 +282,7 @@ def run() -> None:
             years=[LATEST_YEAR],
             legend=False,
             common_norm=False,
-            period="day",
+            period="month",
             survey_based=True,
             preferred_reporting_level="national",
             preferred_welfare_type="income",
@@ -309,7 +306,6 @@ def run() -> None:
         period="day",
         survey_based=False,
         add_ipl="line",
-        add_world_mean="line",
         add_world_median="line",
         add_national_lines=True,
         df_national_lines=df_national_lines,
@@ -333,7 +329,6 @@ def run() -> None:
         preferred_reporting_level="national",
         preferred_welfare_type="income",
         add_ipl="line",
-        add_world_mean=None,
         add_world_median=None,
         add_national_lines=True,
         df_national_lines=df_national_lines,
@@ -413,7 +408,6 @@ def run() -> None:
         period="day",
         survey_based=False,
         add_ipl=None,
-        add_world_mean=None,
         add_world_median=None,
         add_multiple_lines_day=[3, 30],
         width=1150,
@@ -440,7 +434,6 @@ def run() -> None:
         period="day",
         survey_based=False,
         add_ipl=None,
-        add_world_mean=None,
         add_world_median=None,
         width=1150,
         height=220,
@@ -469,7 +462,6 @@ def run() -> None:
         period="day",
         survey_based=False,
         add_ipl=None,
-        add_world_mean=None,
         add_world_median=None,
         add_multiple_lines_day=[3, 30],
         width=1150,
@@ -499,7 +491,6 @@ def distributional_plots(
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
     add_ipl: Literal["line", "area", None] = "line",
-    add_world_mean: Literal["line", "area", None] = "line",
     add_world_median: Literal["line", "area", None] = "line",
     add_multiple_lines_day: List[float] = None,
     width: int = WIDTH,
@@ -570,6 +561,9 @@ def distributional_plots(
     # Define the income period values
     period_factor = PERIOD_VALUES[period]["factor"]
     log_ticks = PERIOD_VALUES[period]["log_ticks"]
+    # Cents only make sense at the daily scale; monthly and yearly values are
+    # large enough that the decimal noise is distracting (matches pen_parade).
+    dollar_decimals = 2 if period == "day" else 0
 
     data[x] = data[x] * period_factor
 
@@ -581,6 +575,7 @@ def distributional_plots(
     x_axis_range: tuple | None = None  # set by the share_x_axis pre-pass below
     shared_y_max: float | None = None
     if share_x_axis or share_y_axis:
+
         def _filter_year(year_value):
             if survey_based:
                 sub = data[data["reference_year"] == year_value]
@@ -650,10 +645,19 @@ def distributional_plots(
                     continue
                 fig_pre, ax_pre = plt.subplots()
                 sns.kdeplot(
-                    data=data_year_pre, x=x, weights=weights, fill=False,
-                    log_scale=log_scale, hue=hue, hue_order=hue_order,
-                    multiple=multiple, legend=False, common_norm=common_norm,
-                    gridsize=gridsize, clip=clip_pre, ax=ax_pre,
+                    data=data_year_pre,
+                    x=x,
+                    weights=weights,
+                    fill=False,
+                    log_scale=log_scale,
+                    hue=hue,
+                    hue_order=hue_order,
+                    multiple=multiple,
+                    legend=False,
+                    common_norm=common_norm,
+                    gridsize=gridsize,
+                    clip=clip_pre,
+                    ax=ax_pre,
                 )
                 for line in ax_pre.lines:
                     ys = np.asarray(line.get_data()[1])
@@ -668,16 +672,6 @@ def distributional_plots(
             data_year = data[data["year"] == year].reset_index(drop=True)
 
         if df_main_indicators is not None:
-            # Define world mean
-            world_mean_year = (
-                df_main_indicators.loc[
-                    (df_main_indicators["country"] == "World")
-                    & (df_main_indicators["year"] == year),
-                    "mean",
-                ].values[0]
-                * period_factor
-            )
-
             # Define world median
             world_median_year = (
                 df_main_indicators.loc[
@@ -756,7 +750,7 @@ def distributional_plots(
                 x=ipl,  # x-coordinate for the text
                 y=plt.ylim()[1]
                 * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-                s=f"International Poverty Line: ${round(ipl, 2):.2f}",  # Text string to display
+                s=f"International Poverty Line: ${ipl:.{dollar_decimals}f}",  # Text string to display
                 color="grey",  # Color of the text
                 rotation=90,  # Rotate the text 90 degrees
                 verticalalignment="top",  # Align the text vertically at the top
@@ -767,31 +761,6 @@ def distributional_plots(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
                 values=[ipl],
-            )
-
-        if add_world_mean == "line":
-            # Add a vertical line for the world mean, in the same format as the international poverty line
-            plt.axvline(
-                x=world_mean_year,
-                color="lightgrey",
-                linestyle=":",
-                linewidth=0.8,
-            )
-            plt.text(
-                x=world_mean_year,
-                y=plt.ylim()[1] * 0.99,
-                s=f"World mean: ${round(world_mean_year, 2):.2f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
-            )
-
-        elif add_world_mean == "area":
-            draw_area_under_curve(
-                number_of_countries=number_of_countries,
-                kde_plot=kde_plot,
-                values=[world_mean_year],
             )
 
         if add_world_median == "line":
@@ -805,7 +774,7 @@ def distributional_plots(
             plt.text(
                 x=world_median_year,
                 y=plt.ylim()[1] * 0.99,
-                s=f"World median: ${round(world_median_year, 2):.2f}",
+                s=f"World median: ${world_median_year:.{dollar_decimals}f}",
                 color="grey",
                 rotation=90,
                 verticalalignment="top",
@@ -856,7 +825,9 @@ def distributional_plots(
             # past the current xlim makes matplotlib widen the axis to fit them,
             # which silently breaks share_x_axis (xlim jumps to the last tick).
             if x_axis_range is not None:
-                ticks = [t for t in log_ticks if x_axis_range[0] <= t <= x_axis_range[1]]
+                ticks = [
+                    t for t in log_ticks if x_axis_range[0] <= t <= x_axis_range[1]
+                ]
             else:
                 ticks = log_ticks
             kde_plot.set_xticks(ticks)
@@ -933,7 +904,6 @@ def distributional_plots_per_row(
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
     add_ipl: Literal["line", "area", None] = "line",
-    add_world_mean: Literal["line", "area", None] = "line",
     add_world_median: Literal["line", "area", None] = "line",
     add_national_lines: bool = False,
     df_national_lines: pd.DataFrame = None,
@@ -956,9 +926,17 @@ def distributional_plots_per_row(
     """
     if row_by == "year":
         _distributional_plots_year_rows(
-            data=data, x=x, weights=weights, country=hue_order[0], years=years,
-            log_scale=log_scale, gridsize=gridsize, period=period,
-            add_multiple_lines_day=None, width=width, height=height,
+            data=data,
+            x=x,
+            weights=weights,
+            country=hue_order[0],
+            years=years,
+            log_scale=log_scale,
+            gridsize=gridsize,
+            period=period,
+            add_multiple_lines_day=None,
+            width=width,
+            height=height,
             add_fade_in_tails=add_fade_in_tails,
             percentiles_to_fade=percentiles_to_fade,
         )
@@ -1003,6 +981,7 @@ def distributional_plots_per_row(
     # Define the income period values
     period_factor = PERIOD_VALUES[period]["factor"]
     log_ticks = PERIOD_VALUES[period]["log_ticks"]
+    dollar_decimals = 2 if period == "day" else 0
 
     data[x] = data[x] * period_factor
 
@@ -1019,16 +998,6 @@ def distributional_plots_per_row(
             data_year = data[data["reference_year"] == year].reset_index(drop=True)
         else:
             data_year = data[data["year"] == year].reset_index(drop=True)
-
-        # Define world mean
-        world_mean_year = (
-            df_main_indicators.loc[
-                (df_main_indicators["country"] == "World")
-                & (df_main_indicators["year"] == year),
-                "mean",
-            ].values[0]
-            * period_factor
-        )
 
         # Define world median
         world_median_year = (
@@ -1116,15 +1085,6 @@ def distributional_plots_per_row(
                     linewidth=0.8,
                 )
 
-            if add_world_mean == "line":
-                # Add a vertical line for the world mean
-                ax.axvline(
-                    x=world_mean_year,
-                    color="lightgrey",
-                    linestyle=":",
-                    linewidth=0.8,
-                )
-
             if add_world_median == "line":
                 # Add a vertical line for the world median
                 ax.axvline(
@@ -1139,7 +1099,7 @@ def distributional_plots_per_row(
                 ax.text(
                     x=national_poverty_line,
                     y=plt.ylim()[0] - 0.05 * (plt.ylim()[1] - plt.ylim()[0]),
-                    s=f"${round(national_poverty_line, 2):.2f} The poverty line in {country}*",
+                    s=f"${national_poverty_line:.{dollar_decimals}f} The poverty line in {country}*",
                     color="grey",
                     rotation=0,
                     verticalalignment="top",
@@ -1153,19 +1113,7 @@ def distributional_plots_per_row(
                     ax.text(
                         x=ipl,
                         y=plt.ylim()[1],
-                        s=f"International\nPoverty Line:\n${round(ipl, 2):.2f}",
-                        color="grey",
-                        rotation=90,
-                        verticalalignment="top",
-                        horizontalalignment="left",
-                        fontsize=8,
-                    )
-
-                if add_world_mean == "line":
-                    ax.text(
-                        x=world_mean_year,
-                        y=plt.ylim()[1],
-                        s=f"World mean:\n${round(world_mean_year, 2):.2f}",
+                        s=f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
                         color="grey",
                         rotation=90,
                         verticalalignment="top",
@@ -1177,7 +1125,7 @@ def distributional_plots_per_row(
                     ax.text(
                         x=world_median_year,
                         y=plt.ylim()[1],
-                        s=f"World median:\n${round(world_median_year, 2):.2f}",
+                        s=f"World median:\n${world_median_year:.{dollar_decimals}f}",
                         color="grey",
                         rotation=90,
                         verticalalignment="top",
@@ -1287,9 +1235,11 @@ def _distributional_plots_year_rows(
     data[x] = data[x] * period_factor
 
     fig, axes = plt.subplots(
-        nrows=len(years), ncols=1,
+        nrows=len(years),
+        ncols=1,
         figsize=(width / 100, height / 100 * len(years)),
-        sharex=True, sharey=True,
+        sharex=True,
+        sharey=True,
     )
     if len(years) == 1:
         axes = [axes]
@@ -1308,13 +1258,21 @@ def _distributional_plots_year_rows(
                     (data_year[pq] > bounds[0]) & (data_year[pq] < bounds[1])
                 ]
         sns.kdeplot(
-            data=data_year, x=x, weights=weights, log_scale=log_scale,
-            gridsize=gridsize, ax=ax, fill=False, legend=False,
+            data=data_year,
+            x=x,
+            weights=weights,
+            log_scale=log_scale,
+            gridsize=gridsize,
+            ax=ax,
+            fill=False,
+            legend=False,
         )
         if add_multiple_lines_day is not None:
             for line_value in add_multiple_lines_day:
                 ax.axvline(
-                    x=line_value * period_factor, color="lightgrey", linestyle=":",
+                    x=line_value * period_factor,
+                    color="lightgrey",
+                    linestyle=":",
                     linewidth=0.8,
                 )
 
@@ -1322,8 +1280,10 @@ def _distributional_plots_year_rows(
             x=data_year[x].median() if len(data_year) else 1.0,
             y=ax.get_ylim()[0],
             s=f"{country} ({year})",
-            color="black", verticalalignment="bottom",
-            horizontalalignment="center", fontsize=10,
+            color="black",
+            verticalalignment="bottom",
+            horizontalalignment="center",
+            fontsize=10,
         )
         ax.set_ylabel("")
         ax.yaxis.set_ticks([])
@@ -1335,7 +1295,9 @@ def _distributional_plots_year_rows(
 
     if log_scale:
         axes[-1].set_xticks(log_ticks)
-        axes[-1].get_xaxis().set_major_formatter(plt.FuncFormatter(lambda v, _: f"${v:g}"))
+        axes[-1].get_xaxis().set_major_formatter(
+            plt.FuncFormatter(lambda v, _: f"${v:g}")
+        )
     axes[-1].set_xlabel(f"Income or consumption ({period})")
 
     for o in fig.findobj():
@@ -1343,8 +1305,7 @@ def _distributional_plots_year_rows(
 
     fig.tight_layout()
     fig.savefig(
-        PARENT_DIR
-        / f"{country}_per_year_row_log_{log_scale}.svg",
+        PARENT_DIR / f"{country}_per_year_row_log_{log_scale}.svg",
         bbox_inches="tight",
     )
     plt.close(fig)
@@ -1565,16 +1526,6 @@ def pen_parade(
         # f-string `.{dollar_decimals}f` formatting in each label rounds for DISPLAY
         # (e.g. $289.50 → "$289"), so labels still match the rounded numbers shown
         # elsewhere in OWID's online data.
-
-        # Define world mean
-        world_mean_year = float(
-            df_main_indicators.loc[
-                (df_main_indicators["country"] == "World")
-                & (df_main_indicators["year"] == year),
-                "mean",
-            ].values[0]
-            * period_factor
-        )
 
         # Define world median
         world_median_year = float(
