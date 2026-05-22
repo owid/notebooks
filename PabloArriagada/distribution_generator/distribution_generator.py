@@ -896,9 +896,19 @@ def distributional_plots(
 
         fig.set_size_inches(width / 100, height / 100)
 
+        # When the per-year SVGs need to be stackable (share_x_axis / share_y_axis),
+        # pin the axes to a fixed fraction of the figure and disable `bbox_inches="tight"`.
+        # Otherwise matplotlib's tight crop varies by the visible content (e.g. the per-year
+        # country label that sits at the year-specific median), shifting the plot area
+        # horizontally across the saved SVGs.
+        if x_axis_range is not None or shared_y_max is not None:
+            plt.subplots_adjust(left=0.04, right=0.96, top=0.95, bottom=0.22)
+            save_kwargs = {}
+        else:
+            save_kwargs = {"bbox_inches": "tight"}
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}{filename_suffix}.svg",
-            bbox_inches="tight",
+            **save_kwargs,
         )
         plt.close(fig)
 
