@@ -405,7 +405,7 @@ def run() -> None:
         legend=False,
         common_norm=False,
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
-        period="day",
+        period="month",
         survey_based=False,
         add_ipl=None,
         add_world_median=None,
@@ -417,7 +417,8 @@ def run() -> None:
     )
 
     # Historical data — Option B: single SVG with all three years stacked,
-    # sharing both x and y axes (via row_by="year").
+    # sharing both x and y axes (via row_by="year"). Filled KDE with shaded
+    # regions under each curve at the $3/day IPL and the $30/day high-income line.
     distributional_plots_per_row(
         data=df_thousand_bins_historical,
         df_main_indicators=None,
@@ -428,16 +429,17 @@ def run() -> None:
         hue="country",
         hue_order=["Sweden"],
         years=[1820, 1920, LATEST_YEAR],
-        fill=False,
+        fill=True,
         common_norm=False,
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
-        period="day",
+        period="month",
         survey_based=False,
         add_ipl=None,
         add_world_median=None,
         width=1150,
         height=220,
         row_by="year",
+        add_multiple_lines_day=[3, 30],
     )
 
     # Same years from the all-lognormal companion dataset. Only the 2026 row
@@ -459,7 +461,7 @@ def run() -> None:
         legend=False,
         common_norm=False,
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
-        period="day",
+        period="month",
         survey_based=False,
         add_ipl=None,
         add_world_median=None,
@@ -468,6 +470,30 @@ def run() -> None:
         height=220,
         share_y_axis=True,
         share_x_axis=True,
+        filename_suffix="_lognormal",
+    )
+
+    distributional_plots_per_row(
+        data=df_thousand_bins_historical_all_lognormal,
+        df_main_indicators=None,
+        x="avg",
+        weights="pop",
+        log_scale=True,
+        multiple="layer",
+        hue="country",
+        hue_order=["Sweden"],
+        years=[1820, 1920, LATEST_YEAR],
+        fill=True,
+        common_norm=False,
+        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+        period="month",
+        survey_based=False,
+        add_ipl="line",
+        add_world_median=None,
+        width=1150,
+        height=220,
+        row_by="year",
+        add_multiple_lines_day=[3, 30],
         filename_suffix="_lognormal",
     )
 
@@ -912,6 +938,9 @@ def distributional_plots_per_row(
     add_fade_in_tails: bool = True,
     percentiles_to_fade: List[float] = [1, 99],
     row_by: Literal["country", "year"] = "country",
+    add_multiple_lines_day: List[float] | None = None,
+    add_high_income_pl: Literal["line", "area", None] = None,
+    filename_suffix: str = "",
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -927,6 +956,7 @@ def distributional_plots_per_row(
     if row_by == "year":
         _distributional_plots_year_rows(
             data=data,
+            df_main_indicators=df_main_indicators,
             x=x,
             weights=weights,
             country=hue_order[0],
@@ -934,11 +964,16 @@ def distributional_plots_per_row(
             log_scale=log_scale,
             gridsize=gridsize,
             period=period,
-            add_multiple_lines_day=None,
+            fill=fill,
+            add_multiple_lines_day=add_multiple_lines_day,
+            add_ipl=add_ipl,
+            add_world_median=add_world_median,
+            add_high_income_pl=add_high_income_pl,
             width=width,
             height=height,
             add_fade_in_tails=add_fade_in_tails,
             percentiles_to_fade=percentiles_to_fade,
+            filename_suffix=filename_suffix,
         )
         return None
 
@@ -1009,12 +1044,15 @@ def distributional_plots_per_row(
             * period_factor
         )
 
-        # Create a figure with subplots for each country
+        # Create a figure with subplots for each country. Share both axes so peak
+        # heights are directly comparable between countries — mirrors the
+        # share_y_axis / share_x_axis behavior of distributional_plots.
         fig, axes = plt.subplots(
             nrows=len(hue_order),
             ncols=1,
             figsize=(width / 100, height / 100),
-            sharex=True,  # Share the x-axis across all subplots
+            sharex=True,
+            sharey=True,
         )
 
         for ax, country in zip(axes, hue_order):
@@ -1076,23 +1114,10 @@ def distributional_plots_per_row(
                     values=[national_poverty_line],
                 )
 
-            if add_ipl == "line":
-                # Add a vertical line for the international poverty line
-                ax.axvline(
-                    x=ipl,
-                    color="lightgrey",
-                    linestyle=":",
-                    linewidth=0.8,
-                )
-
-            if add_world_median == "line":
-                # Add a vertical line for the world median
-                ax.axvline(
-                    x=world_median_year,
-                    color="lightgrey",
-                    linestyle=":",
-                    linewidth=0.8,
-                )
+            # IPL and world-median lines are constant across rows in this layout
+            # (one figure per year), so they're drawn once for the whole figure
+            # outside this loop via `_add_figure_spanning_vline`. Per-row axvlines
+            # leave a visible gap between subplots.
 
             if add_national_lines:
                 # Add a vertical line for the national poverty line
@@ -1196,12 +1221,22 @@ def distributional_plots_per_row(
 
         plt.tight_layout()
 
+        if add_ipl == "line":
+            _add_figure_spanning_vline(
+                fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
+            )
+        if add_world_median == "line":
+            _add_figure_spanning_vline(
+                fig, axes, world_median_year,
+                color="lightgrey", linestyle=":", linewidth=0.8,
+            )
+
         # Remove the clipping of the figure
         for o in fig.findobj():
             o.set_clip_on(False)
 
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg",
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows{filename_suffix}.svg",
             bbox_inches="tight",
         )
         plt.close(fig)
@@ -1215,14 +1250,20 @@ def _distributional_plots_year_rows(
     weights: str,
     country: str,
     years: List[int],
+    df_main_indicators: pd.DataFrame | None = None,
     log_scale: bool = True,
     gridsize: int = 200,
     period: Literal["day", "month", "year"] = "day",
+    fill: bool = False,
     add_multiple_lines_day: List[float] | None = None,
+    add_ipl: Literal["line", "area", None] = None,
+    add_world_median: Literal["line", "area", None] = None,
+    add_high_income_pl: Literal["line", "area", None] = None,
     width: int = WIDTH,
     height: int = HEIGHT,
     add_fade_in_tails: bool = True,
     percentiles_to_fade: List[float] = [1, 99],
+    filename_suffix: str = "",
 ) -> None:
     """
     Private helper for ``distributional_plots_per_row(row_by="year")``: one country
@@ -1230,9 +1271,73 @@ def _distributional_plots_year_rows(
     """
     period_factor = cast(int, PERIOD_VALUES[period]["factor"])
     log_ticks = cast(List[int], PERIOD_VALUES[period]["log_ticks"])
+    dollar_decimals = 2 if period == "day" else 0
+    ipl = INTERNATIONAL_POVERTY_LINE * period_factor
+    high_income_pl = POVERTY_LINE_HIGH_INCOME * period_factor
+
+    def _world_median_for(year_value: int) -> float | None:
+        if df_main_indicators is None:
+            return None
+        rows = df_main_indicators.loc[
+            (df_main_indicators["country"] == "World")
+            & (df_main_indicators["year"] == year_value),
+            "median",
+        ]
+        if rows.empty:
+            return None
+        return float(rows.values[0]) * period_factor
 
     data = data[data["country"] == country].copy()
     data[x] = data[x] * period_factor
+
+    def _fade(sub: pd.DataFrame) -> pd.DataFrame:
+        if not add_fade_in_tails:
+            return sub
+        if "percentile" in sub.columns:
+            pq, bounds = "percentile", percentiles_to_fade
+        elif "quantile" in sub.columns:
+            pq, bounds = "quantile", [p * 10 for p in percentiles_to_fade]
+        else:
+            return sub
+        return sub[(sub[pq] > bounds[0]) & (sub[pq] < bounds[1])]
+
+    # Pre-pass: compute the shared x range across years, extended to where each
+    # year's KDE naturally tapers (data ± cut*bw in log10 space), then unioned.
+    # Mirrors the share_x_axis logic in distributional_plots.
+    x_axis_range: tuple | None = None
+    if log_scale:
+        x_min = float("inf")
+        x_max = float("-inf")
+        for year in years:
+            sub = _fade(data[data["year"] == year])
+            if not len(sub):
+                continue
+            year_min = float(sub[x].min())
+            year_max = float(sub[x].max())
+            v = np.log10(sub[x].to_numpy(dtype=float))
+            if weights is not None:
+                w = sub[weights].to_numpy(dtype=float)
+            else:
+                w = np.ones(len(sub))
+            mean_v = float(np.average(v, weights=w))
+            var_v = float(np.average((v - mean_v) ** 2, weights=w))
+            std_v = float(np.sqrt(max(var_v, 0.0)))
+            w_sum = float(w.sum())
+            w_sq_sum = float((w * w).sum())
+            n_eff = (w_sum * w_sum / w_sq_sum) if w_sq_sum > 0 else 1.0
+            bw = std_v * n_eff ** (-1 / 5) if n_eff > 0 else 0.0
+            cut = 3  # seaborn default
+            year_min = year_min / 10 ** (cut * bw)
+            year_max = year_max * 10 ** (cut * bw)
+            x_min = min(x_min, year_min)
+            x_max = max(x_max, year_max)
+        if x_min < float("inf"):
+            x_axis_range = (x_min, x_max)
+
+    if log_scale and x_axis_range is not None:
+        clip_param = (np.log(x_axis_range[0]), np.log(x_axis_range[1]))
+    else:
+        clip_param = None
 
     fig, axes = plt.subplots(
         nrows=len(years),
@@ -1245,19 +1350,12 @@ def _distributional_plots_year_rows(
         axes = [axes]
 
     for ax, year in zip(axes, years):
-        data_year = data[data["year"] == year]
-        if add_fade_in_tails:
-            if "percentile" in data_year.columns:
-                pq, bounds = "percentile", percentiles_to_fade
-            elif "quantile" in data_year.columns:
-                pq, bounds = "quantile", [p * 10 for p in percentiles_to_fade]
-            else:
-                pq = None
-            if pq:
-                data_year = data_year[
-                    (data_year[pq] > bounds[0]) & (data_year[pq] < bounds[1])
-                ]
-        sns.kdeplot(
+        data_year = _fade(data[data["year"] == year])
+        # Always draw the line (fill=False) so we have a Line2D to read x/y from.
+        # If `fill` is requested, layer a full-area shading on top via
+        # draw_complete_area_under_curve. seaborn's own fill=True returns a
+        # PolyCollection instead of a Line2D, which breaks draw_area_under_curve.
+        kde_plot = sns.kdeplot(
             data=data_year,
             x=x,
             weights=weights,
@@ -1266,14 +1364,65 @@ def _distributional_plots_year_rows(
             ax=ax,
             fill=False,
             legend=False,
+            clip=clip_param,
         )
+        if fill:
+            draw_complete_area_under_curve(kde_plot=kde_plot)
         if add_multiple_lines_day is not None:
-            for line_value in add_multiple_lines_day:
-                ax.axvline(
-                    x=line_value * period_factor,
-                    color="lightgrey",
-                    linestyle=":",
-                    linewidth=0.8,
+            draw_area_under_curve(
+                kde_plot=kde_plot,
+                values=[v * period_factor for v in add_multiple_lines_day],
+            )
+        ref_line_kw = dict(color="lightgrey", linestyle=":", linewidth=0.8)
+
+        # `add_ipl` and `add_high_income_pl` are constant across years, so the line
+        # is drawn once for the whole figure outside the per-row loop (below) to
+        # avoid the visible gap between subplots that ax.axvline would leave.
+        if add_ipl == "area":
+            draw_area_under_curve(kde_plot=kde_plot, values=[ipl])
+        if add_high_income_pl == "area":
+            draw_area_under_curve(kde_plot=kde_plot, values=[high_income_pl])
+
+        world_median_year = _world_median_for(year)
+        if add_world_median == "line" and world_median_year is not None:
+            ax.axvline(x=world_median_year, **ref_line_kw)
+        elif add_world_median == "area" and world_median_year is not None:
+            draw_area_under_curve(kde_plot=kde_plot, values=[world_median_year])
+
+        # Labels only on the top row, matching the per-country layout.
+        if ax is axes[0]:
+            if add_ipl == "line":
+                ax.text(
+                    x=ipl,
+                    y=ax.get_ylim()[1],
+                    s=f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
+                    color="grey",
+                    rotation=90,
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    fontsize=8,
+                )
+            if add_high_income_pl == "line":
+                ax.text(
+                    x=high_income_pl,
+                    y=ax.get_ylim()[1],
+                    s=f"High-income\nPoverty Line:\n${high_income_pl:.{dollar_decimals}f}",
+                    color="grey",
+                    rotation=90,
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    fontsize=8,
+                )
+            if add_world_median == "line" and world_median_year is not None:
+                ax.text(
+                    x=world_median_year,
+                    y=ax.get_ylim()[1],
+                    s=f"World median:\n${world_median_year:.{dollar_decimals}f}",
+                    color="grey",
+                    rotation=90,
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    fontsize=8,
                 )
 
         ax.text(
@@ -1294,18 +1443,36 @@ def _distributional_plots_year_rows(
             ax.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
 
     if log_scale:
-        axes[-1].set_xticks(log_ticks)
+        # Filter ticks to within the shared x range so set_xticks doesn't widen
+        # the axis past the data, matching the share_x_axis logic in distributional_plots.
+        if x_axis_range is not None:
+            ticks = [t for t in log_ticks if x_axis_range[0] <= t <= x_axis_range[1]]
+        else:
+            ticks = log_ticks
+        axes[-1].set_xticks(ticks)
         axes[-1].get_xaxis().set_major_formatter(
             plt.FuncFormatter(lambda v, _: f"${v:g}")
         )
+    if x_axis_range is not None:
+        axes[-1].set_xlim(*x_axis_range)
     axes[-1].set_xlabel(f"Income or consumption ({period})")
+
+    # Lay out first so axes positions are stable before placing the spanning lines.
+    fig.tight_layout()
+    if add_ipl == "line":
+        _add_figure_spanning_vline(
+            fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
+        )
+    if add_high_income_pl == "line":
+        _add_figure_spanning_vline(
+            fig, axes, high_income_pl, color="lightgrey", linestyle=":", linewidth=0.8
+        )
 
     for o in fig.findobj():
         o.set_clip_on(False)
 
-    fig.tight_layout()
     fig.savefig(
-        PARENT_DIR / f"{country}_per_year_row_log_{log_scale}.svg",
+        PARENT_DIR / f"{country}_per_year_row_log_{log_scale}{filename_suffix}.svg",
         bbox_inches="tight",
     )
     plt.close(fig)
@@ -2086,6 +2253,25 @@ def draw_area_under_curve(
             )
 
     return None
+
+
+def _add_figure_spanning_vline(fig, axes, x, **kwargs) -> None:
+    """Draw a single dashed vertical line across every stacked subplot.
+
+    Per-axis ``ax.axvline(...)`` leaves a visible gap between subplots
+    (the per-axes line is clipped to its data area). This helper instead
+    adds a Line2D in a blended transform — data x from ``axes[0]``, figure-
+    fraction y — so the line spans from the bottom of the last axes to the
+    top of the first axes uninterrupted.
+    """
+    from matplotlib.lines import Line2D
+    from matplotlib.transforms import blended_transform_factory
+
+    trans = blended_transform_factory(axes[0].transData, fig.transFigure)
+    y_top = axes[0].get_position().y1
+    y_bottom = axes[-1].get_position().y0
+    line = Line2D([x, x], [y_bottom, y_top], transform=trans, **kwargs)
+    fig.add_artist(line)
 
 
 def draw_complete_area_under_curve(
