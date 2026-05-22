@@ -1,6 +1,6 @@
 import textwrap
 from pathlib import Path
-from typing import List, Literal
+from typing import List, Literal, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -1379,6 +1379,29 @@ def filter_survey_data(
     return data
 
 
+def interpolate_x_at_y(xs: np.ndarray, ys: np.ndarray, y_target: float) -> float | None:
+    """
+    Return the x at which a piecewise-linear curve defined by (xs, ys) first
+    reaches y_target, by linearly interpolating between the two flanking points.
+    Returns None if the curve never reaches y_target.
+
+    Assumes xs is sorted ascending. Used by the pen parade to land bracket end-caps
+    and dotted reference lines exactly on the curve, instead of snapping to the
+    nearest integer-percentile data point.
+    """
+    crossings = ys >= y_target
+    if not crossings.any():
+        return None
+    i_hi = int(np.argmax(crossings))
+    if i_hi == 0:
+        return float(xs[0])
+    y_lo, y_hi_val = ys[i_hi - 1], ys[i_hi]
+    x_lo, x_hi = xs[i_hi - 1], xs[i_hi]
+    if y_hi_val == y_lo:
+        return float(x_hi)
+    return float(x_lo + (y_target - y_lo) * (x_hi - x_lo) / (y_hi_val - y_lo))
+
+
 def pen_parade(
     data: pd.DataFrame,
     df_main_indicators: pd.DataFrame,
@@ -1439,9 +1462,10 @@ def pen_parade(
     else:
         filename = "multiple_countries"
 
-    # Define the income period values
-    period_factor = PERIOD_VALUES[period]["factor"]
-    log_ticks = PERIOD_VALUES[period]["log_ticks"]
+    # Define the income period values. PERIOD_VALUES mixes int factors with list
+    # log_ticks under the same dict, so cast each lookup back to its concrete type.
+    period_factor = cast(int, PERIOD_VALUES[period]["factor"])
+    log_ticks = cast(List[int], PERIOD_VALUES[period]["log_ticks"])
     # Show cents only for daily figures; monthly/yearly values are large enough that decimals are noise.
     dollar_decimals = 2 if period == "day" else 0
 
@@ -1589,15 +1613,18 @@ def pen_parade(
                     linewidth=0,
                 )
 
+            ref_sorted = data_year.sort_values(x).reset_index(drop=True)
+            ref_xs = ref_sorted[x].to_numpy()
+            ref_ys = ref_sorted[y].to_numpy()
+
             def axhline_over_curve(y_value):
                 """Dotted reference line at y_value, but only over the filled curve
                 area (from where the curve crosses y_value to the right edge), so the
-                line doesn't clutter the white space where the brackets live."""
-                above_y = data_year[data_year[y] >= y_value]
-                if above_y.empty:
-                    xmin_frac = 0.0
-                else:
-                    xmin_frac = float(above_y[x].min()) / 100.0
+                line doesn't clutter the white space where the brackets live. The
+                crossing x is interpolated so the dotted line meets the curve exactly,
+                rather than snapping to the next integer percentile."""
+                crossing_x = interpolate_x_at_y(ref_xs, ref_ys, y_value)
+                xmin_frac = 0.0 if crossing_x is None else crossing_x / 100.0
                 plt.axhline(
                     y=y_value,
                     xmin=xmin_frac,
@@ -1614,7 +1641,7 @@ def pen_parade(
             # chart's current period units. Defined in monthly terms then rescaled by
             # period_factor / month_factor so the same real-world amounts shift correctly
             # when the chart switches between day / month / year periods.
-            month_factor = PERIOD_VALUES["month"]["factor"]
+            month_factor = cast(int, PERIOD_VALUES["month"]["factor"])
             for monthly_value in (900, 500):
                 line_y = monthly_value * period_factor / month_factor
                 axhline_over_curve(line_y)
@@ -1803,11 +1830,11 @@ def pen_parade(
 
             high_income_value = POVERTY_LINE_HIGH_INCOME * period_factor
             for brace_y in brace_values:
-                above = data_year[data_year[y] >= brace_y]
-                if above.empty:
-                    continue
-                x_brace_end = float(above[x].min())
-                if x_brace_end <= 1:
+                # Interpolate so the bracket's right cap lands exactly where the
+                # curve crosses brace_y, rather than snapping to the next integer
+                # percentile (which would leave a visible gap).
+                x_brace_end = interpolate_x_at_y(ref_xs, ref_ys, brace_y)
+                if x_brace_end is None or x_brace_end <= 1:
                     continue
                 y_low = brace_y
                 y_high = brace_y + brace_height_data
@@ -2038,11 +2065,13 @@ def draw_area_under_curve(
             # Obtain the x and y data of the line
             x_line, y_line = line.get_data()
 
-            # Fill the area under the curve for values below the international poverty line
+            # interpolate=True extends the fill to the exact x where the `where`
+            # condition flips, rather than ending at the nearest KDE grid point.
             kde_plot.fill_between(
                 x=x_line,
                 y1=y_line,
                 where=(x_line <= value),
+                interpolate=True,
                 alpha=0.3,
                 color=line.get_color(),
             )
