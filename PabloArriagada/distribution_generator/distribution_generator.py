@@ -7,8 +7,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
-from scipy.optimize import minimize
-from scipy.stats import norm
 
 PARENT_DIR = Path(__file__).parent.absolute()
 
@@ -306,7 +304,6 @@ def run() -> None:
         period="day",
         survey_based=False,
         add_ipl="line",
-        add_world_median="line",
         add_national_lines=True,
         df_national_lines=df_national_lines,
     )
@@ -329,7 +326,6 @@ def run() -> None:
         preferred_reporting_level="national",
         preferred_welfare_type="income",
         add_ipl="line",
-        add_world_median=None,
         add_national_lines=True,
         df_national_lines=df_national_lines,
     )
@@ -434,8 +430,8 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="month",
         survey_based=False,
-        add_ipl=None,
-        add_world_median=None,
+        add_ipl="line",
+        add_high_income_pl="line",
         width=1150,
         height=220,
         row_by="year",
@@ -463,8 +459,6 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="month",
         survey_based=False,
-        add_ipl=None,
-        add_world_median=None,
         add_multiple_lines_day=[3, 30],
         width=1150,
         height=220,
@@ -489,7 +483,7 @@ def run() -> None:
         period="month",
         survey_based=False,
         add_ipl="line",
-        add_world_median=None,
+        add_high_income_pl="line",
         width=1150,
         height=220,
         row_by="year",
@@ -516,8 +510,8 @@ def distributional_plots(
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
-    add_ipl: Literal["line", "area", None] = "line",
-    add_world_median: Literal["line", "area", None] = "line",
+    add_ipl: Literal["line", "area", None] = None,
+    add_world_median: Literal["line", "area", None] = None,
     add_multiple_lines_day: List[float] = None,
     width: int = WIDTH,
     height: int = HEIGHT,
@@ -789,7 +783,7 @@ def distributional_plots(
                 values=[ipl],
             )
 
-        if add_world_median == "line":
+        if add_world_median == "line" and df_main_indicators is not None:
             # Add a vertical line for the world median, in the same format as the international poverty line
             plt.axvline(
                 x=world_median_year,
@@ -806,7 +800,7 @@ def distributional_plots(
                 verticalalignment="top",
                 fontsize=8,
             )
-        elif add_world_median == "area":
+        elif add_world_median == "area" and df_main_indicators is not None:
             draw_area_under_curve(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
@@ -929,8 +923,8 @@ def distributional_plots_per_row(
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
-    add_ipl: Literal["line", "area", None] = "line",
-    add_world_median: Literal["line", "area", None] = "line",
+    add_ipl: Literal["line", "area", None] = None,
+    add_world_median: Literal["line", "area", None] = None,
     add_national_lines: bool = False,
     df_national_lines: pd.DataFrame = None,
     width: int = WIDTH,
@@ -1132,31 +1126,9 @@ def distributional_plots_per_row(
                     fontsize=8,
                 )
 
-            # Add line labels only to the last axis
-            if ax == axes[-1]:
-                if add_ipl == "line":
-                    ax.text(
-                        x=ipl,
-                        y=plt.ylim()[1],
-                        s=f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
-                        color="grey",
-                        rotation=90,
-                        verticalalignment="top",
-                        horizontalalignment="left",
-                        fontsize=8,
-                    )
-
-                if add_world_median == "line":
-                    ax.text(
-                        x=world_median_year,
-                        y=plt.ylim()[1],
-                        s=f"World median:\n${world_median_year:.{dollar_decimals}f}",
-                        color="grey",
-                        rotation=90,
-                        verticalalignment="top",
-                        horizontalalignment="left",
-                        fontsize=8,
-                    )
+            # IPL / world-median labels are placed once in the figure margin
+            # below (via _add_figure_spanning_vline_label) so they appear above
+            # the whole stack rather than inside one of the subplots.
 
             # Add the name of the country at the middle of the distribution, bottom
             year_to_write = country_data["year"].iloc[0] if survey_based else year
@@ -1225,10 +1197,22 @@ def distributional_plots_per_row(
             _add_figure_spanning_vline(
                 fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
             )
+            _add_figure_spanning_vline_label(
+                fig, axes, ipl,
+                f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
+            )
         if add_world_median == "line":
             _add_figure_spanning_vline(
+                fig,
+                axes,
+                world_median_year,
+                color="lightgrey",
+                linestyle=":",
+                linewidth=0.8,
+            )
+            _add_figure_spanning_vline_label(
                 fig, axes, world_median_year,
-                color="lightgrey", linestyle=":", linewidth=0.8,
+                f"World median:\n${world_median_year:.{dollar_decimals}f}",
             )
 
         # Remove the clipping of the figure
@@ -1389,41 +1373,20 @@ def _distributional_plots_year_rows(
         elif add_world_median == "area" and world_median_year is not None:
             draw_area_under_curve(kde_plot=kde_plot, values=[world_median_year])
 
-        # Labels only on the top row, matching the per-country layout.
-        if ax is axes[0]:
-            if add_ipl == "line":
-                ax.text(
-                    x=ipl,
-                    y=ax.get_ylim()[1],
-                    s=f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
-                    color="grey",
-                    rotation=90,
-                    verticalalignment="top",
-                    horizontalalignment="left",
-                    fontsize=8,
-                )
-            if add_high_income_pl == "line":
-                ax.text(
-                    x=high_income_pl,
-                    y=ax.get_ylim()[1],
-                    s=f"High-income\nPoverty Line:\n${high_income_pl:.{dollar_decimals}f}",
-                    color="grey",
-                    rotation=90,
-                    verticalalignment="top",
-                    horizontalalignment="left",
-                    fontsize=8,
-                )
-            if add_world_median == "line" and world_median_year is not None:
-                ax.text(
-                    x=world_median_year,
-                    y=ax.get_ylim()[1],
-                    s=f"World median:\n${world_median_year:.{dollar_decimals}f}",
-                    color="grey",
-                    rotation=90,
-                    verticalalignment="top",
-                    horizontalalignment="left",
-                    fontsize=8,
-                )
+        # IPL and high-income labels are constant across rows and rendered once
+        # in the figure margin (below). World-median varies per year so its label
+        # stays in the top row inline.
+        if ax is axes[0] and add_world_median == "line" and world_median_year is not None:
+            ax.text(
+                x=world_median_year,
+                y=ax.get_ylim()[1],
+                s=f"World median:\n${world_median_year:.{dollar_decimals}f}",
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                horizontalalignment="left",
+                fontsize=8,
+            )
 
         ax.text(
             x=data_year[x].median() if len(data_year) else 1.0,
@@ -1463,9 +1426,17 @@ def _distributional_plots_year_rows(
         _add_figure_spanning_vline(
             fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
         )
+        _add_figure_spanning_vline_label(
+            fig, axes, ipl,
+            f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
+        )
     if add_high_income_pl == "line":
         _add_figure_spanning_vline(
             fig, axes, high_income_pl, color="lightgrey", linestyle=":", linewidth=0.8
+        )
+        _add_figure_spanning_vline_label(
+            fig, axes, high_income_pl,
+            f"High-income\nPoverty Line:\n${high_income_pl:.{dollar_decimals}f}",
         )
 
     for o in fig.findobj():
@@ -2272,6 +2243,62 @@ def _add_figure_spanning_vline(fig, axes, x, **kwargs) -> None:
     y_bottom = axes[-1].get_position().y0
     line = Line2D([x, x], [y_bottom, y_top], transform=trans, **kwargs)
     fig.add_artist(line)
+
+
+def _add_figure_spanning_vline_label(fig, axes, x, text) -> None:
+    """Place a label for a figure-spanning vertical reference line near the
+    top of the topmost subplot, anchored at data x.
+
+    The label sits *inside* axes[0] hanging from its top edge when there's
+    visual room (curve density at x is small relative to ylim), or *above*
+    axes[0] in the figure margin when the topmost curve is too tall at that x
+    to avoid overlap. Sweden 1820 at the IPL is an example of the first case;
+    Ethiopia at the IPL is an example of the second.
+    """
+    from matplotlib.text import Text
+    from matplotlib.transforms import blended_transform_factory
+
+    ax = axes[0]
+    inside_room = True
+    if ax.lines:
+        xs = np.asarray(ax.lines[0].get_data()[0])
+        ys = np.asarray(ax.lines[0].get_data()[1])
+        if xs.size and ys.size:
+            order = np.argsort(xs)
+            y_at_x = float(np.interp(x, xs[order], ys[order]))
+            ylim_max = ax.get_ylim()[1]
+            # Allow the label inside only if the curve at x leaves ≥50% of
+            # axes height free above it for the rotated label to hang into.
+            if ylim_max > 0 and y_at_x > 0.5 * ylim_max:
+                inside_room = False
+
+    if inside_room:
+        trans = blended_transform_factory(ax.transData, ax.transAxes)
+        ax.text(
+            x=x,
+            y=1.0,
+            s=text,
+            transform=trans,
+            color="grey",
+            rotation=90,
+            verticalalignment="top",
+            horizontalalignment="left",
+            fontsize=8,
+        )
+    else:
+        trans = blended_transform_factory(ax.transData, fig.transFigure)
+        label = Text(
+            x=x,
+            y=ax.get_position().y1 + 0.005,
+            text=text,
+            transform=trans,
+            color="grey",
+            rotation=90,
+            verticalalignment="bottom",
+            horizontalalignment="left",
+            fontsize=8,
+        )
+        fig.add_artist(label)
 
 
 def draw_complete_area_under_curve(
