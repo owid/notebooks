@@ -1517,8 +1517,15 @@ def pen_parade(
             y_at_cut = None
             y_at_fade_floor = None
 
+        # Keep raw float values for POSITIONING (bracket caps, dotted reference lines,
+        # and fill crossings all land on the curve at the semantically meaningful
+        # percentile — e.g. the world median ends up at p=50, not p≈49.93). The
+        # f-string `.{dollar_decimals}f` formatting in each label rounds for DISPLAY
+        # (e.g. $289.50 → "$289"), so labels still match the rounded numbers shown
+        # elsewhere in OWID's online data.
+
         # Define world mean
-        world_mean_year = (
+        world_mean_year = float(
             df_main_indicators.loc[
                 (df_main_indicators["country"] == "World")
                 & (df_main_indicators["year"] == year),
@@ -1528,7 +1535,7 @@ def pen_parade(
         )
 
         # Define world median
-        world_median_year = (
+        world_median_year = float(
             df_main_indicators.loc[
                 (df_main_indicators["country"] == "World")
                 & (df_main_indicators["year"] == year),
@@ -1538,7 +1545,7 @@ def pen_parade(
         )
 
         # Define the 90th percentile of the world
-        world_90th_percentile = (
+        world_90th_percentile = float(
             df_main_indicators.loc[
                 (df_main_indicators["country"] == "World")
                 & (df_main_indicators["year"] == year),
@@ -1548,7 +1555,7 @@ def pen_parade(
         )
 
         # Define the 99th percentile of the world
-        world_99th_percentile = (
+        world_99th_percentile = float(
             df_main_indicators.loc[
                 (df_main_indicators["country"] == "World")
                 & (df_main_indicators["year"] == year),
@@ -1591,31 +1598,40 @@ def pen_parade(
         reference_ticks: list[tuple[float, str]] = []
 
         if add_lines:
+            # Sorted (x, y) arrays for the curve — shared by the fill polygons,
+            # axhline_over_curve, and the bracket loop so they all interpolate
+            # against the same data.
+            ref_sorted = data_year.sort_values(x).reset_index(drop=True)
+            ref_xs = ref_sorted[x].to_numpy()
+            ref_ys = ref_sorted[y].to_numpy()
+
             # Poverty bands shaded in the same blue as the main fill — one per poverty
             # line where the curve sits below that threshold. Overlapping fills stack
             # their alphas, deepening the blue as the poverty line gets stricter.
-            x_data = data_year[x].to_numpy()
-            y_data = data_year[y].to_numpy()
+            # We build each polygon with the exact crossing point appended, because
+            # matplotlib's fill_between `interpolate=True` only kicks in when y1 and
+            # y2 actually cross — with y1=0 the curves never meet, so the fill would
+            # otherwise snap to the last integer percentile instead of the crossing.
             poverty_fill_color = sns.color_palette("deep")[0]
             for poverty_y in (
                 POVERTY_LINE_HIGH_INCOME * period_factor,
                 world_median_year,
                 ipl,
             ):
+                x_cross = interpolate_x_at_y(ref_xs, ref_ys, float(poverty_y))
+                if x_cross is None:
+                    continue
+                below_mask = ref_ys < poverty_y
+                fill_xs = np.concatenate([ref_xs[below_mask], [x_cross]])
+                fill_ys = np.concatenate([ref_ys[below_mask], [poverty_y]])
                 line_plot.fill_between(
-                    x_data,
+                    fill_xs,
                     0,
-                    y_data,
-                    where=(y_data <= poverty_y),
+                    fill_ys,
                     alpha=0.3,
                     color=poverty_fill_color,
-                    interpolate=True,
                     linewidth=0,
                 )
-
-            ref_sorted = data_year.sort_values(x).reset_index(drop=True)
-            ref_xs = ref_sorted[x].to_numpy()
-            ref_ys = ref_sorted[y].to_numpy()
 
             def axhline_over_curve(y_value):
                 """Dotted reference line at y_value, but only over the filled curve
@@ -1719,7 +1735,7 @@ def pen_parade(
                 ]
                 if country_rows.empty:
                     continue
-                country_medians_lookup[country_name] = (
+                country_medians_lookup[country_name] = float(
                     country_rows.sort_values("year")["median"].iloc[-1] * period_factor
                 )
 
