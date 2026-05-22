@@ -101,13 +101,12 @@ NATIONAL_LINES_URL = f"http://catalog.ourworldindata.org/garden/wb/{NATIONAL_LIN
 
 
 def run() -> None:
-    # Skipped while iterating on pen parade — re-enable along with the disabled plot blocks below.
-    # df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
-    # df_thousand_bins_historical = pd.read_feather(THOUSAND_BINS_HISTORICAL_URL)
-    # df_thousand_bins_historical_all_lognormal = pd.read_feather(
-    #     THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL
-    # )
-    # df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
+    df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
+    df_thousand_bins_historical = pd.read_feather(THOUSAND_BINS_HISTORICAL_URL)
+    df_thousand_bins_historical_all_lognormal = pd.read_feather(
+        THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL
+    )
+    df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
 
     # World Bank PIP dimensional tables → flat shapes the plotting code expects.
     # Percentiles: legacy table was filtered to ppp_version=2021; replicate by filtering here.
@@ -168,11 +167,10 @@ def run() -> None:
         [df_main_indicators, country_extras], ignore_index=True
     )
 
-    # Skipped while iterating on pen parade (no national-lines consumer enabled).
-    # df_national_lines.loc[
-    #     (df_national_lines["country"] == "United States"),
-    #     "harmonized_national_poverty_line",
-    # ] = 27.10
+    df_national_lines.loc[
+        (df_national_lines["country"] == "United States"),
+        "harmonized_national_poverty_line",
+    ] = 27.10
 
     # Set seaborn style and color palette
     sns.set_style("ticks")
@@ -181,7 +179,6 @@ def run() -> None:
     # Show texts and not curves for annotations
     plt.rcParams["svg.fonttype"] = "none"
 
-    """  # disabled while iterating on pen parade — flip to delete this and the matching closer to re-enable
     # Plot global distribution, separating in two with the International Poverty Line
     for lines in POVERTY_LINES_AREA_GLOBAL:
         distributional_plots(
@@ -358,7 +355,6 @@ def run() -> None:
         period="day",
         survey_based=False,
     )
-    """  # end of block disabled while iterating on pen parade
 
     # Pen parades
     pen_parade(
@@ -398,7 +394,6 @@ def run() -> None:
         preferred_welfare_type="income",
     )
 
-    """  # disabled while iterating on pen parade — flip to delete this and the matching closer to re-enable
     # Historical data
     distributional_plots(
         data=df_thousand_bins_historical,
@@ -449,7 +444,6 @@ def run() -> None:
         width=1150,
         height=220,
     )
-    """  # end of block disabled while iterating on pen parade
 
 
 def distributional_plots(
