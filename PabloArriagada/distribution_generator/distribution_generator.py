@@ -596,14 +596,39 @@ def distributional_plots(
                 sub = sub[(sub[pq] > bounds[0]) & (sub[pq] < bounds[1])]
             return sub
 
-        # Step 1: compute shared x range from data if requested
+        # Step 1: compute shared x range from data if requested. When the chart is
+        # log-scaled, extend each year's bounds to where seaborn's KDE actually
+        # ends (data ± cut*bw in log10 space, matching seaborn's default cut=3
+        # and Scott's bandwidth), then take the union across years. This means
+        # the axis right edge lands exactly where the curve naturally tapers to
+        # near-zero, rather than chopping the tail.
         if share_x_axis:
-            x_min, x_max = float("inf"), float("-inf")
+            x_min = float("inf")
+            x_max = float("-inf")
             for year in years:
                 sub = _filter_year(year)
-                if len(sub):
-                    x_min = min(x_min, float(sub[x].min()))
-                    x_max = max(x_max, float(sub[x].max()))
+                if not len(sub):
+                    continue
+                year_min = float(sub[x].min())
+                year_max = float(sub[x].max())
+                if log_scale:
+                    v = np.log10(sub[x].to_numpy(dtype=float))
+                    if weights is not None:
+                        w = sub[weights].to_numpy(dtype=float)
+                    else:
+                        w = np.ones(len(sub))
+                    mean_v = float(np.average(v, weights=w))
+                    var_v = float(np.average((v - mean_v) ** 2, weights=w))
+                    std_v = float(np.sqrt(max(var_v, 0.0)))
+                    w_sum = float(w.sum())
+                    w_sq_sum = float((w * w).sum())
+                    n_eff = (w_sum * w_sum / w_sq_sum) if w_sq_sum > 0 else 1.0
+                    bw = std_v * n_eff ** (-1 / 5) if n_eff > 0 else 0.0
+                    cut = 3  # matches seaborn's default
+                    year_min = year_min / 10 ** (cut * bw)
+                    year_max = year_max * 10 ** (cut * bw)
+                x_min = min(x_min, year_min)
+                x_max = max(x_max, year_max)
             if x_min < float("inf"):
                 x_axis_range = (x_min, x_max)
 
@@ -827,8 +852,14 @@ def distributional_plots(
                 )
 
         if log_scale:
-            # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
-            kde_plot.set_xticks(log_ticks)
+            # Restrict ticks to the visible range. Calling set_xticks with values
+            # past the current xlim makes matplotlib widen the axis to fit them,
+            # which silently breaks share_x_axis (xlim jumps to the last tick).
+            if x_axis_range is not None:
+                ticks = [t for t in log_ticks if x_axis_range[0] <= t <= x_axis_range[1]]
+            else:
+                ticks = log_ticks
+            kde_plot.set_xticks(ticks)
             # Add dollar sign prefix to tick labels with integer formatting
             kde_plot.get_xaxis().set_major_formatter(
                 plt.FuncFormatter(lambda x, p: f"${x:.0f}")
