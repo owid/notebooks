@@ -394,7 +394,8 @@ def run() -> None:
         preferred_welfare_type="income",
     )
 
-    # Historical data
+    # Historical data — Option A: three separate SVGs (1820, 1920, 2026) that all
+    # share a y-limit so peak heights are visually comparable across years.
     distributional_plots(
         data=df_thousand_bins_historical,
         df_main_indicators=None,
@@ -415,11 +416,42 @@ def run() -> None:
         add_world_mean=None,
         add_world_median=None,
         add_multiple_lines_day=[3, 30],
-        x_axis_range=(0.05, 300),
         width=1150,
         height=220,
+        share_y_axis=True,
+        share_x_axis=True,
     )
 
+    # Historical data — Option B: single SVG with all three years stacked,
+    # sharing both x and y axes (via row_by="year").
+    distributional_plots_per_row(
+        data=df_thousand_bins_historical,
+        df_main_indicators=None,
+        x="avg",
+        weights="pop",
+        log_scale=True,
+        multiple="layer",
+        hue="country",
+        hue_order=["Sweden"],
+        years=[1820, 1920, LATEST_YEAR],
+        fill=False,
+        common_norm=False,
+        gridsize=GRIDSIZE_HIGHER_RESOLUTION,
+        period="day",
+        survey_based=False,
+        add_ipl=None,
+        add_world_mean=None,
+        add_world_median=None,
+        width=1150,
+        height=220,
+        row_by="year",
+    )
+
+    # Same years from the all-lognormal companion dataset. Only the 2026 row
+    # actually differs from df_thousand_bins_historical; 1820 and 1920 are
+    # byte-identical between the two datasets but we render them anyway so the
+    # _lognormal SVGs are a complete drop-in set that shares its own y-max and
+    # x-range pre-pass (independent of the mix dataset).
     distributional_plots(
         data=df_thousand_bins_historical_all_lognormal,
         df_main_indicators=None,
@@ -429,7 +461,7 @@ def run() -> None:
         multiple="layer",
         hue="country",
         hue_order=["Sweden"],
-        years=[LATEST_YEAR],
+        years=[1820, 1920, LATEST_YEAR],
         fill=False,
         legend=False,
         common_norm=False,
@@ -440,9 +472,11 @@ def run() -> None:
         add_world_mean=None,
         add_world_median=None,
         add_multiple_lines_day=[3, 30],
-        x_axis_range=(0.05, 300),
         width=1150,
         height=220,
+        share_y_axis=True,
+        share_x_axis=True,
+        filename_suffix="_lognormal",
     )
 
 
@@ -472,10 +506,23 @@ def distributional_plots(
     height: int = HEIGHT,
     add_fade_in_tails: bool = True,
     percentiles_to_fade: List[float] = [1, 99],
-    x_axis_range: tuple = None,
+    share_y_axis: bool = False,
+    share_x_axis: bool = False,
+    filename_suffix: str = "",
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
+
+    ``share_y_axis``: when True, run a hidden pre-pass across all `years` to find
+    the maximum KDE density and lock every per-year figure's y-axis to that value.
+    Required if you want the saved SVGs to be visually comparable — without it,
+    matplotlib auto-scales each year independently and hides the inequality signal
+    (narrower distributions look the same height as wider ones).
+
+    ``share_x_axis``: when True, the pre-pass also computes the union of x-values
+    across years (after fading tails) and uses that as the shared x range —
+    applied to KDE clip, the data filter, and the figure's xlim — so every
+    per-year SVG shares the same horizontal scale.
     """
 
     # Filter the data with the hue and hue_order
@@ -529,6 +576,66 @@ def distributional_plots(
     # Define IPL for the period
     ipl = INTERNATIONAL_POVERTY_LINE * period_factor
 
+    # Optional pre-pass: pre-compute the union x-range and/or the max KDE density
+    # across years so per-year figures can share x / y limits.
+    x_axis_range: tuple | None = None  # set by the share_x_axis pre-pass below
+    shared_y_max: float | None = None
+    if share_x_axis or share_y_axis:
+        def _filter_year(year_value):
+            if survey_based:
+                sub = data[data["reference_year"] == year_value]
+            else:
+                sub = data[data["year"] == year_value]
+            if add_fade_in_tails:
+                if "percentile" in sub.columns:
+                    pq, bounds = "percentile", percentiles_to_fade
+                elif "quantile" in sub.columns:
+                    pq, bounds = "quantile", [p * 10 for p in percentiles_to_fade]
+                else:
+                    return sub
+                sub = sub[(sub[pq] > bounds[0]) & (sub[pq] < bounds[1])]
+            return sub
+
+        # Step 1: compute shared x range from data if requested
+        if share_x_axis:
+            x_min, x_max = float("inf"), float("-inf")
+            for year in years:
+                sub = _filter_year(year)
+                if len(sub):
+                    x_min = min(x_min, float(sub[x].min()))
+                    x_max = max(x_max, float(sub[x].max()))
+            if x_min < float("inf"):
+                x_axis_range = (x_min, x_max)
+
+        # Step 2: compute shared y max if requested (uses x_axis_range from step 1)
+        if share_y_axis:
+            if log_scale and x_axis_range is not None:
+                clip_pre = (np.log(x_axis_range[0]), np.log(x_axis_range[1]))
+            else:
+                clip_pre = x_axis_range
+            shared_y_max = 0.0
+            for year in years:
+                data_year_pre = _filter_year(year)
+                if x_axis_range is not None:
+                    data_year_pre = data_year_pre[
+                        (data_year_pre[x] >= x_axis_range[0])
+                        & (data_year_pre[x] <= x_axis_range[1])
+                    ]
+                if len(data_year_pre) == 0:
+                    continue
+                fig_pre, ax_pre = plt.subplots()
+                sns.kdeplot(
+                    data=data_year_pre, x=x, weights=weights, fill=False,
+                    log_scale=log_scale, hue=hue, hue_order=hue_order,
+                    multiple=multiple, legend=False, common_norm=common_norm,
+                    gridsize=gridsize, clip=clip_pre, ax=ax_pre,
+                )
+                for line in ax_pre.lines:
+                    ys = np.asarray(line.get_data()[1])
+                    if ys.size:
+                        shared_y_max = max(shared_y_max, float(np.nanmax(ys)))
+                plt.close(fig_pre)
+
     for year in years:
         if survey_based:
             data_year = data[data["reference_year"] == year].reset_index(drop=True)
@@ -577,15 +684,8 @@ def distributional_plots(
                 & (data_year[percentile_or_quantile] < percentiles_quantiles_to_fade[1])
             ]
 
-        # Filter data by x_axis_range if specified
-        # This ensures KDE calculation only uses data within the specified range
-        if x_axis_range is not None:
-            data_year = data_year[
-                (data_year[x] >= x_axis_range[0]) & (data_year[x] <= x_axis_range[1])
-            ].reset_index(drop=True)
-
-        # Determine clip parameter for KDE
-        # When log_scale=True, KDE is computed in log-space, so clip needs log-transformed values
+        # KDE clip in log space when log_scale=True; pinned to the shared x range so
+        # each year's curve extends across the same horizontal extent.
         if x_axis_range is not None and log_scale:
             clip_param = (np.log(x_axis_range[0]), np.log(x_axis_range[1]))
         else:
@@ -728,17 +828,7 @@ def distributional_plots(
 
         if log_scale:
             # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
-            # kde_plot.set(xscale="log")
-            # Filter ticks to only include values within x_axis_range if specified
-            if x_axis_range is not None:
-                filtered_ticks = [
-                    tick
-                    for tick in log_ticks
-                    if x_axis_range[0] <= tick <= x_axis_range[1]
-                ]
-                kde_plot.set_xticks(filtered_ticks)
-            else:
-                kde_plot.set_xticks(log_ticks)
+            kde_plot.set_xticks(log_ticks)
             # Add dollar sign prefix to tick labels with integer formatting
             kde_plot.get_xaxis().set_major_formatter(
                 plt.FuncFormatter(lambda x, p: f"${x:.0f}")
@@ -760,6 +850,10 @@ def distributional_plots(
         kde_plot.spines["bottom"].set_visible(False)
         kde_plot.spines["left"].set_visible(False)
 
+        # Lock y-axis to the shared max so the per-year SVGs can be visually compared.
+        if shared_y_max is not None and shared_y_max > 0:
+            kde_plot.set_ylim(0, shared_y_max * 1.05)
+
         # Add a base line for each plot in the x axis
         plt.axhline(y=0, color="gray", linewidth=0.5)
 
@@ -771,16 +865,9 @@ def distributional_plots(
 
         fig.set_size_inches(width / 100, height / 100)
 
-        # When using fixed axis range, use fixed subplot adjustments for perfect alignment
-        if x_axis_range is not None:
-            plt.subplots_adjust(left=0.04, right=0.96, top=0.95, bottom=0.22)
-
-        # Use bbox_inches="tight" only when x_axis_range is not specified
-        # to maintain alignment when using fixed axis ranges
-        save_kwargs = {} if x_axis_range is not None else {"bbox_inches": "tight"}
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}.svg",
-            **save_kwargs,
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}{filename_suffix}.svg",
+            bbox_inches="tight",
         )
         plt.close(fig)
 
@@ -789,7 +876,7 @@ def distributional_plots(
 
 def distributional_plots_per_row(
     data: pd.DataFrame,
-    df_main_indicators: pd.DataFrame,
+    df_main_indicators: pd.DataFrame | None,
     x: str,
     weights: str,
     log_scale: bool,
@@ -813,11 +900,28 @@ def distributional_plots_per_row(
     height: int = HEIGHT,
     add_fade_in_tails: bool = True,
     percentiles_to_fade: List[float] = [1, 99],
-    x_axis_range: tuple = None,
+    row_by: Literal["country", "year"] = "country",
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
+
+    ``row_by="country"`` (default): one figure per year, rows = countries in
+    ``hue_order``. Use this when you want to compare a fixed set of countries at
+    a single moment.
+
+    ``row_by="year"``: one figure with rows = years, country fixed to
+    ``hue_order[0]``. Axes share both x and y, so peak heights are directly
+    comparable across years. Use this when comparing one country across time.
     """
+    if row_by == "year":
+        _distributional_plots_year_rows(
+            data=data, x=x, weights=weights, country=hue_order[0], years=years,
+            log_scale=log_scale, gridsize=gridsize, period=period,
+            add_multiple_lines_day=None, width=width, height=height,
+            add_fade_in_tails=add_fade_in_tails,
+            percentiles_to_fade=percentiles_to_fade,
+        )
+        return None
 
     # Filter the data with the hue and hue_order
     if hue_order is not None:
@@ -863,6 +967,11 @@ def distributional_plots_per_row(
 
     # Define IPL for the period
     ipl = INTERNATIONAL_POVERTY_LINE * period_factor
+
+    # row_by="country" needs the world reference lookups; row_by="year" returned earlier.
+    assert df_main_indicators is not None, (
+        "distributional_plots_per_row(row_by='country') requires df_main_indicators"
+    )
 
     for year in years:
         if survey_based:
@@ -930,21 +1039,6 @@ def distributional_plots_per_row(
                     )
                 ]
 
-            # Filter data by x_axis_range if specified
-            # This ensures KDE calculation only uses data within the specified range
-            if x_axis_range is not None:
-                country_data = country_data[
-                    (country_data[x] >= x_axis_range[0])
-                    & (country_data[x] <= x_axis_range[1])
-                ].reset_index(drop=True)
-
-            # Determine clip parameter for KDE
-            # When log_scale=True, KDE is computed in log-space, so clip needs log-transformed values
-            if x_axis_range is not None and log_scale:
-                clip_param = (np.log(x_axis_range[0]), np.log(x_axis_range[1]))
-            else:
-                clip_param = x_axis_range
-
             # Plot a kde with seaborn
             kde_plot = sns.kdeplot(
                 data=country_data,
@@ -955,15 +1049,7 @@ def distributional_plots_per_row(
                 ax=ax,
                 common_norm=common_norm,
                 gridsize=gridsize,
-                clip=clip_param,
             )
-
-            # Set x-axis range immediately after plotting, before drawing areas
-            # This ensures all subsequent drawing operations respect the axis limits
-            if x_axis_range is not None:
-                ax.set_xlim(x_axis_range[0], x_axis_range[1])
-                # Also set margins to 0 to prevent automatic padding
-                ax.margins(x=0)
 
             if not fill:
                 draw_complete_area_under_curve(kde_plot=kde_plot)
@@ -1090,16 +1176,7 @@ def distributional_plots_per_row(
             if log_scale:
                 # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
                 ax.set_xscale("log")
-                # Filter ticks to only include values within x_axis_range if specified
-                if x_axis_range is not None:
-                    filtered_ticks = [
-                        tick
-                        for tick in log_ticks
-                        if x_axis_range[0] <= tick <= x_axis_range[1]
-                    ]
-                    ax.set_xticks(filtered_ticks)
-                else:
-                    ax.set_xticks(log_ticks)
+                ax.set_xticks(log_ticks)
                 # Add dollar sign prefix to tick labels with integer formatting
                 ax.get_xaxis().set_major_formatter(
                     plt.FuncFormatter(lambda x, p: f"${x:.0f}")
@@ -1128,27 +1205,108 @@ def distributional_plots_per_row(
                     axis="x", which="both", bottom=False, top=False, labelbottom=False
                 )
 
-        # Adjust layout and save the figure
-        if x_axis_range is not None:
-            # Use fixed subplot adjustments for perfect alignment
-            plt.subplots_adjust(left=0.04, right=0.96, top=0.98, bottom=0.20)
-        else:
-            plt.tight_layout()
+        plt.tight_layout()
 
         # Remove the clipping of the figure
         for o in fig.findobj():
             o.set_clip_on(False)
 
-        # Use bbox_inches="tight" only when x_axis_range is not specified
-        # to maintain alignment when using fixed axis ranges
-        save_kwargs = {} if x_axis_range is not None else {"bbox_inches": "tight"}
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_rows.svg",
-            **save_kwargs,
+            bbox_inches="tight",
         )
         plt.close(fig)
 
     return None
+
+
+def _distributional_plots_year_rows(
+    data: pd.DataFrame,
+    x: str,
+    weights: str,
+    country: str,
+    years: List[int],
+    log_scale: bool = True,
+    gridsize: int = 200,
+    period: Literal["day", "month", "year"] = "day",
+    add_multiple_lines_day: List[float] | None = None,
+    width: int = WIDTH,
+    height: int = HEIGHT,
+    add_fade_in_tails: bool = True,
+    percentiles_to_fade: List[float] = [1, 99],
+) -> None:
+    """
+    Private helper for ``distributional_plots_per_row(row_by="year")``: one country
+    across several years, one row per year, sharing both x and y axes.
+    """
+    period_factor = cast(int, PERIOD_VALUES[period]["factor"])
+    log_ticks = cast(List[int], PERIOD_VALUES[period]["log_ticks"])
+
+    data = data[data["country"] == country].copy()
+    data[x] = data[x] * period_factor
+
+    fig, axes = plt.subplots(
+        nrows=len(years), ncols=1,
+        figsize=(width / 100, height / 100 * len(years)),
+        sharex=True, sharey=True,
+    )
+    if len(years) == 1:
+        axes = [axes]
+
+    for ax, year in zip(axes, years):
+        data_year = data[data["year"] == year]
+        if add_fade_in_tails:
+            if "percentile" in data_year.columns:
+                pq, bounds = "percentile", percentiles_to_fade
+            elif "quantile" in data_year.columns:
+                pq, bounds = "quantile", [p * 10 for p in percentiles_to_fade]
+            else:
+                pq = None
+            if pq:
+                data_year = data_year[
+                    (data_year[pq] > bounds[0]) & (data_year[pq] < bounds[1])
+                ]
+        sns.kdeplot(
+            data=data_year, x=x, weights=weights, log_scale=log_scale,
+            gridsize=gridsize, ax=ax, fill=False, legend=False,
+        )
+        if add_multiple_lines_day is not None:
+            for line_value in add_multiple_lines_day:
+                ax.axvline(
+                    x=line_value * period_factor, color="lightgrey", linestyle=":",
+                    linewidth=0.8,
+                )
+
+        ax.text(
+            x=data_year[x].median() if len(data_year) else 1.0,
+            y=ax.get_ylim()[0],
+            s=f"{country} ({year})",
+            color="black", verticalalignment="bottom",
+            horizontalalignment="center", fontsize=10,
+        )
+        ax.set_ylabel("")
+        ax.yaxis.set_ticks([])
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+        ax.axhline(y=0, color="gray", linewidth=0.5)
+        if ax is not axes[-1]:
+            ax.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
+
+    if log_scale:
+        axes[-1].set_xticks(log_ticks)
+        axes[-1].get_xaxis().set_major_formatter(plt.FuncFormatter(lambda v, _: f"${v:g}"))
+    axes[-1].set_xlabel(f"Income or consumption ({period})")
+
+    for o in fig.findobj():
+        o.set_clip_on(False)
+
+    fig.tight_layout()
+    fig.savefig(
+        PARENT_DIR
+        / f"{country}_per_year_row_log_{log_scale}.svg",
+        bbox_inches="tight",
+    )
+    plt.close(fig)
 
 
 def filter_survey_data(
