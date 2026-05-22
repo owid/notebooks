@@ -459,6 +459,8 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="month",
         survey_based=False,
+        add_ipl=None,
+        add_world_median=None,
         add_multiple_lines_day=[3, 30],
         width=1150,
         height=220,
@@ -510,8 +512,8 @@ def distributional_plots(
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
-    add_ipl: Literal["line", "area", None] = None,
-    add_world_median: Literal["line", "area", None] = None,
+    add_ipl: Literal["line", "area", None] = "line",
+    add_world_median: Literal["line", "area", None] = "line",
     add_multiple_lines_day: List[float] = None,
     width: int = WIDTH,
     height: int = HEIGHT,
@@ -808,14 +810,13 @@ def distributional_plots(
             )
 
         if add_multiple_lines_day is not None:
-            # Multiply the values by the period factor
-            add_multiple_lines_day = [
-                value * period_factor for value in add_multiple_lines_day
-            ]
+            # Use a fresh local each iteration; otherwise the multiplied list
+            # leaks across years and the second year fills get multiplied again.
+            scaled_lines = [v * period_factor for v in add_multiple_lines_day]
             draw_area_under_curve(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
-                values=add_multiple_lines_day,
+                values=scaled_lines,
             )
 
         if legend:
@@ -923,8 +924,8 @@ def distributional_plots_per_row(
     survey_based: bool = False,
     preferred_reporting_level: Literal["national", "urban", "rural", None] = None,
     preferred_welfare_type: Literal["income", "consumption", None] = None,
-    add_ipl: Literal["line", "area", None] = None,
-    add_world_median: Literal["line", "area", None] = None,
+    add_ipl: Literal["line", "area", None] = "line",
+    add_world_median: Literal["line", "area", None] = "line",
     add_national_lines: bool = False,
     df_national_lines: pd.DataFrame = None,
     width: int = WIDTH,
