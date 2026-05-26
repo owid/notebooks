@@ -245,8 +245,9 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="day",
         survey_based=False,
-        add_ipl="area",
-        add_world_median="area",
+        add_ipl="line",
+        add_world_median="line",
+        add_multiple_lines_day=[3],
     )
 
     for countries in COUNTRIES:
@@ -413,7 +414,8 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="month",
         survey_based=False,
-        add_ipl=None,
+        add_ipl="line",
+        add_high_income_pl="line",
         add_world_median=None,
         add_multiple_lines_day=[3, 30],
         width=1150,
@@ -469,7 +471,8 @@ def run() -> None:
         gridsize=GRIDSIZE_HIGHER_RESOLUTION,
         period="month",
         survey_based=False,
-        add_ipl=None,
+        add_ipl="line",
+        add_high_income_pl="line",
         add_world_median=None,
         add_multiple_lines_day=[3, 30],
         width=1150,
@@ -784,10 +787,11 @@ def distributional_plots(
             _styled_reference_label(
                 kde_plot,
                 ipl,
-                plt.ylim()[1],
+                1.0,
                 title="International Poverty Line",
                 value=f"${ipl:.{dollar_decimals}f} per {period}",
                 ha="right",
+                xycoords=kde_plot.get_xaxis_transform(),
             )
         elif add_ipl == "area":
             draw_area_under_curve(
@@ -807,10 +811,11 @@ def distributional_plots(
             _styled_reference_label(
                 kde_plot,
                 world_median_year,
-                plt.ylim()[1],
+                1.0,
                 title="World median",
                 value=f"${world_median_year:.{dollar_decimals}f} per {period}",
                 ha="left",
+                xycoords=kde_plot.get_xaxis_transform(),
             )
         elif add_world_median == "area" and df_main_indicators is not None:
             draw_area_under_curve(
@@ -830,10 +835,11 @@ def distributional_plots(
             _styled_reference_label(
                 kde_plot,
                 high_income_pl,
-                plt.ylim()[1],
+                1.0,
                 title="High-income poverty line",
                 value=f"${high_income_pl:.{dollar_decimals}f} per {period}",
                 ha="left",
+                xycoords=kde_plot.get_xaxis_transform(),
             )
         elif add_high_income_pl == "area":
             draw_area_under_curve(
@@ -921,19 +927,13 @@ def distributional_plots(
 
         fig.set_size_inches(width / 100, height / 100)
 
-        # When the per-year SVGs need to be stackable (share_x_axis / share_y_axis),
-        # pin the axes to a fixed fraction of the figure and disable `bbox_inches="tight"`.
-        # Otherwise matplotlib's tight crop varies by the visible content (e.g. the per-year
-        # country label that sits at the year-specific median), shifting the plot area
-        # horizontally across the saved SVGs.
-        if x_axis_range is not None or shared_y_max is not None:
-            plt.subplots_adjust(left=0.04, right=0.96, top=0.95, bottom=0.22)
-            save_kwargs = {}
-        else:
-            save_kwargs = {"bbox_inches": "tight"}
+        # Use bbox_inches="tight" so reference-line labels above the chart are
+        # included in the saved SVG. For shared-axis cases the label content is
+        # the same across years (same IPL / high-income / world median), so the
+        # tight bbox produces consistent dimensions across SVGs.
         fig.savefig(
             f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_multiple_{multiple}_common_norm_{common_norm}_multiple_areas_{filename_multiple_areas}{filename_suffix}.svg",
-            **save_kwargs,
+            bbox_inches="tight",
         )
         plt.close(fig)
 
