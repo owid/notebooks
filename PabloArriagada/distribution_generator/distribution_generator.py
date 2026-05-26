@@ -306,6 +306,7 @@ def run() -> None:
         add_ipl="line",
         add_national_lines=True,
         df_national_lines=df_national_lines,
+        share_y_axis=False,
     )
 
     distributional_plots_per_row(
@@ -328,6 +329,7 @@ def run() -> None:
         add_ipl="line",
         add_national_lines=True,
         df_national_lines=df_national_lines,
+        share_y_axis=False,
     )
 
     # Stacked distributions with common density estimate
@@ -936,6 +938,8 @@ def distributional_plots_per_row(
     add_multiple_lines_day: List[float] | None = None,
     add_high_income_pl: Literal["line", "area", None] = None,
     filename_suffix: str = "",
+    share_x_axis: bool = True,
+    share_y_axis: bool = True,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -969,6 +973,8 @@ def distributional_plots_per_row(
             add_fade_in_tails=add_fade_in_tails,
             percentiles_to_fade=percentiles_to_fade,
             filename_suffix=filename_suffix,
+            share_x_axis=share_x_axis,
+            share_y_axis=share_y_axis,
         )
         return None
 
@@ -1040,14 +1046,16 @@ def distributional_plots_per_row(
         )
 
         # Create a figure with subplots for each country. Share both axes so peak
-        # heights are directly comparable between countries — mirrors the
-        # share_y_axis / share_x_axis behavior of distributional_plots.
+        # Share both axes by default so peak heights and x-range are directly
+        # comparable across rows. For mixed-spread comparisons (e.g. Ethiopia
+        # vs the United States) the caller can pass share_y_axis=False to let
+        # each country auto-scale its own y.
         fig, axes = plt.subplots(
             nrows=len(hue_order),
             ncols=1,
             figsize=(width / 100, height / 100),
-            sharex=True,
-            sharey=True,
+            sharex=share_x_axis,
+            sharey=share_y_axis,
         )
 
         for ax, country in zip(axes, hue_order):
@@ -1249,6 +1257,8 @@ def _distributional_plots_year_rows(
     add_fade_in_tails: bool = True,
     percentiles_to_fade: List[float] = [1, 99],
     filename_suffix: str = "",
+    share_x_axis: bool = True,
+    share_y_axis: bool = True,
 ) -> None:
     """
     Private helper for ``distributional_plots_per_row(row_by="year")``: one country
@@ -1328,8 +1338,8 @@ def _distributional_plots_year_rows(
         nrows=len(years),
         ncols=1,
         figsize=(width / 100, height / 100 * len(years)),
-        sharex=True,
-        sharey=True,
+        sharex=share_x_axis,
+        sharey=share_y_axis,
     )
     if len(years) == 1:
         axes = [axes]
