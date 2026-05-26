@@ -1207,7 +1207,9 @@ def distributional_plots_per_row(
                 fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
             )
             _add_figure_spanning_vline_label(
-                fig, axes, ipl,
+                fig,
+                axes,
+                ipl,
                 f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
             )
         if add_world_median == "line":
@@ -1220,7 +1222,9 @@ def distributional_plots_per_row(
                 linewidth=0.8,
             )
             _add_figure_spanning_vline_label(
-                fig, axes, world_median_year,
+                fig,
+                axes,
+                world_median_year,
                 f"World median:\n${world_median_year:.{dollar_decimals}f}",
             )
 
@@ -1387,7 +1391,11 @@ def _distributional_plots_year_rows(
         # IPL and high-income labels are constant across rows and rendered once
         # in the figure margin (below). World-median varies per year so its label
         # stays in the top row inline.
-        if ax is axes[0] and add_world_median == "line" and world_median_year is not None:
+        if (
+            ax is axes[0]
+            and add_world_median == "line"
+            and world_median_year is not None
+        ):
             ax.text(
                 x=world_median_year,
                 y=ax.get_ylim()[1],
@@ -1438,7 +1446,9 @@ def _distributional_plots_year_rows(
             fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
         )
         _add_figure_spanning_vline_label(
-            fig, axes, ipl,
+            fig,
+            axes,
+            ipl,
             f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
         )
     if add_high_income_pl == "line":
@@ -1446,7 +1456,9 @@ def _distributional_plots_year_rows(
             fig, axes, high_income_pl, color="lightgrey", linestyle=":", linewidth=0.8
         )
         _add_figure_spanning_vline_label(
-            fig, axes, high_income_pl,
+            fig,
+            axes,
+            high_income_pl,
             f"High-income\nPoverty Line:\n${high_income_pl:.{dollar_decimals}f}",
         )
 
