@@ -1014,9 +1014,11 @@ def distributional_plots_per_row(
     else:
         filename = "multiple_countries"
 
-    # Define the income period values
-    period_factor = PERIOD_VALUES[period]["factor"]
-    log_ticks = PERIOD_VALUES[period]["log_ticks"]
+    # Define the income period values. PERIOD_VALUES mixes int factors with
+    # list log_ticks under the same dict, so cast each lookup back to its
+    # concrete type.
+    period_factor = cast(int, PERIOD_VALUES[period]["factor"])
+    log_ticks = cast(List[int], PERIOD_VALUES[period]["log_ticks"])
     dollar_decimals = 2 if period == "day" else 0
 
     data[x] = data[x] * period_factor
@@ -1202,15 +1204,13 @@ def distributional_plots_per_row(
 
         plt.tight_layout()
 
+        reference_labels: list[tuple[float, str]] = []
         if add_ipl == "line":
             _add_figure_spanning_vline(
                 fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
             )
-            _add_figure_spanning_vline_label(
-                fig,
-                axes,
-                ipl,
-                f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
+            reference_labels.append(
+                (ipl, f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}")
             )
         if add_world_median == "line":
             _add_figure_spanning_vline(
@@ -1221,12 +1221,13 @@ def distributional_plots_per_row(
                 linestyle=":",
                 linewidth=0.8,
             )
-            _add_figure_spanning_vline_label(
-                fig,
-                axes,
-                world_median_year,
-                f"World median:\n${world_median_year:.{dollar_decimals}f}",
+            reference_labels.append(
+                (
+                    world_median_year,
+                    f"World median:\n${world_median_year:.{dollar_decimals}f}",
+                )
             )
+        _add_figure_spanning_vline_labels(fig, axes, reference_labels)
 
         # Remove the clipping of the figure
         for o in fig.findobj():
@@ -1441,26 +1442,25 @@ def _distributional_plots_year_rows(
 
     # Lay out first so axes positions are stable before placing the spanning lines.
     fig.tight_layout()
+    reference_labels: list[tuple[float, str]] = []
     if add_ipl == "line":
         _add_figure_spanning_vline(
             fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
         )
-        _add_figure_spanning_vline_label(
-            fig,
-            axes,
-            ipl,
-            f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}",
+        reference_labels.append(
+            (ipl, f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}")
         )
     if add_high_income_pl == "line":
         _add_figure_spanning_vline(
             fig, axes, high_income_pl, color="lightgrey", linestyle=":", linewidth=0.8
         )
-        _add_figure_spanning_vline_label(
-            fig,
-            axes,
-            high_income_pl,
-            f"High-income\nPoverty Line:\n${high_income_pl:.{dollar_decimals}f}",
+        reference_labels.append(
+            (
+                high_income_pl,
+                f"High-income\nPoverty Line:\n${high_income_pl:.{dollar_decimals}f}",
+            )
         )
+    _add_figure_spanning_vline_labels(fig, axes, reference_labels)
 
     for o in fig.findobj():
         o.set_clip_on(False)
@@ -2268,60 +2268,70 @@ def _add_figure_spanning_vline(fig, axes, x, **kwargs) -> None:
     fig.add_artist(line)
 
 
-def _add_figure_spanning_vline_label(fig, axes, x, text) -> None:
-    """Place a label for a figure-spanning vertical reference line near the
-    top of the topmost subplot, anchored at data x.
+def _add_figure_spanning_vline_labels(fig, axes, labels) -> None:
+    """Place a batch of figure-spanning reference-line labels at the same
+    vertical level. ``labels`` is an iterable of ``(x, text)`` tuples.
 
-    The label sits *inside* axes[0] hanging from its top edge when there's
-    visual room (curve density at x is small relative to ylim), or *above*
-    axes[0] in the figure margin when the topmost curve is too tall at that x
-    to avoid overlap. Sweden 1820 at the IPL is an example of the first case;
-    Ethiopia at the IPL is an example of the second.
+    If any label's x lands in a region where the topmost curve leaves less
+    than half the axes height free above it (e.g. Ethiopia at the IPL), ALL
+    labels in the batch are placed *above* axes[0] in the figure margin so
+    they line up. Otherwise (e.g. Sweden 1820 at the IPL) they all hang from
+    the top edge of axes[0].
     """
     from matplotlib.text import Text
     from matplotlib.transforms import blended_transform_factory
 
+    label_list = list(labels)
+    if not label_list:
+        return
+
     ax = axes[0]
-    inside_room = True
+    use_outside = False
     if ax.lines:
         xs = np.asarray(ax.lines[0].get_data()[0])
         ys = np.asarray(ax.lines[0].get_data()[1])
         if xs.size and ys.size:
             order = np.argsort(xs)
-            y_at_x = float(np.interp(x, xs[order], ys[order]))
             ylim_max = ax.get_ylim()[1]
-            # Allow the label inside only if the curve at x leaves ≥50% of
-            # axes height free above it for the rotated label to hang into.
-            if ylim_max > 0 and y_at_x > 0.5 * ylim_max:
-                inside_room = False
+            for x, _ in label_list:
+                y_at_x = float(np.interp(x, xs[order], ys[order]))
+                if ylim_max > 0 and y_at_x > 0.5 * ylim_max:
+                    use_outside = True
+                    break
 
-    if inside_room:
-        trans = blended_transform_factory(ax.transData, ax.transAxes)
-        ax.text(
-            x=x,
-            y=1.0,
-            s=text,
-            transform=trans,
-            color="grey",
-            rotation=90,
-            verticalalignment="top",
-            horizontalalignment="left",
-            fontsize=8,
-        )
-    else:
-        trans = blended_transform_factory(ax.transData, fig.transFigure)
-        label = Text(
-            x=x,
-            y=ax.get_position().y1 + 0.005,
-            text=text,
-            transform=trans,
-            color="grey",
-            rotation=90,
-            verticalalignment="bottom",
-            horizontalalignment="left",
-            fontsize=8,
-        )
-        fig.add_artist(label)
+    for x, text in label_list:
+        if use_outside:
+            trans = blended_transform_factory(ax.transData, fig.transFigure)
+            label = Text(
+                x=x,
+                y=ax.get_position().y1 + 0.005,
+                text=text,
+                transform=trans,
+                color="grey",
+                rotation=90,
+                verticalalignment="bottom",
+                horizontalalignment="left",
+                fontsize=8,
+            )
+            fig.add_artist(label)
+        else:
+            trans = blended_transform_factory(ax.transData, ax.transAxes)
+            ax.text(
+                x=x,
+                y=1.0,
+                s=text,
+                transform=trans,
+                color="grey",
+                rotation=90,
+                verticalalignment="top",
+                horizontalalignment="left",
+                fontsize=8,
+            )
+
+
+def _add_figure_spanning_vline_label(fig, axes, x, text) -> None:
+    """Single-label convenience wrapper around :func:`_add_figure_spanning_vline_labels`."""
+    _add_figure_spanning_vline_labels(fig, axes, [(x, text)])
 
 
 def draw_complete_area_under_curve(
