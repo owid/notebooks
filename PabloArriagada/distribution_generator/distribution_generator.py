@@ -267,6 +267,10 @@ def run() -> None:
             survey_based=False,
             width=1500,
             height=400,
+            add_multiple_lines_day=[3],
+            fill=False,
+            add_ipl="line",
+            add_world_median=None,
         )
         distributional_plots(
             data=df_percentiles,
@@ -286,6 +290,10 @@ def run() -> None:
             preferred_welfare_type="income",
             width=1500,
             height=400,
+            add_multiple_lines_day=[3],
+            fill=False,
+            add_ipl="line",
+            add_world_median=None,
         )
 
     distributional_plots_per_row(
@@ -516,6 +524,7 @@ def distributional_plots(
     preferred_welfare_type: Literal["income", "consumption", None] = None,
     add_ipl: Literal["line", "area", None] = "line",
     add_world_median: Literal["line", "area", None] = "line",
+    add_high_income_pl: Literal["line", "area", None] = None,
     add_multiple_lines_day: List[float] = None,
     width: int = WIDTH,
     height: int = HEIGHT,
@@ -582,9 +591,11 @@ def distributional_plots(
     else:
         filename_multiple_areas = "none"
 
-    # Define the income period values
-    period_factor = PERIOD_VALUES[period]["factor"]
-    log_ticks = PERIOD_VALUES[period]["log_ticks"]
+    # Define the income period values. PERIOD_VALUES mixes int factors with
+    # list log_ticks under the same dict, so cast each lookup back to its
+    # concrete type.
+    period_factor = cast(int, PERIOD_VALUES[period]["factor"])
+    log_ticks = cast(List[int], PERIOD_VALUES[period]["log_ticks"])
     # Cents only make sense at the daily scale; monthly and yearly values are
     # large enough that the decimal noise is distracting (matches pen_parade).
     dollar_decimals = 2 if period == "day" else 0
@@ -770,15 +781,13 @@ def distributional_plots(
                 linestyle=":",
                 linewidth=0.8,
             )
-            plt.text(
-                x=ipl,  # x-coordinate for the text
-                y=plt.ylim()[1]
-                * 0.99,  # y-coordinate for the text, positioned near the top of the plot
-                s=f"International Poverty Line: ${ipl:.{dollar_decimals}f}",  # Text string to display
-                color="grey",  # Color of the text
-                rotation=90,  # Rotate the text 90 degrees
-                verticalalignment="top",  # Align the text vertically at the top
-                fontsize=8,  # Font size of the text
+            _styled_reference_label(
+                kde_plot,
+                ipl,
+                plt.ylim()[1],
+                title="International Poverty Line",
+                value=f"${ipl:.{dollar_decimals}f} per {period}",
+                ha="right",
             )
         elif add_ipl == "area":
             draw_area_under_curve(
@@ -795,20 +804,42 @@ def distributional_plots(
                 linestyle=":",
                 linewidth=0.8,
             )
-            plt.text(
-                x=world_median_year,
-                y=plt.ylim()[1] * 0.99,
-                s=f"World median: ${world_median_year:.{dollar_decimals}f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                fontsize=8,
+            _styled_reference_label(
+                kde_plot,
+                world_median_year,
+                plt.ylim()[1],
+                title="World median",
+                value=f"${world_median_year:.{dollar_decimals}f} per {period}",
+                ha="left",
             )
         elif add_world_median == "area" and df_main_indicators is not None:
             draw_area_under_curve(
                 kde_plot=kde_plot,
                 number_of_countries=number_of_countries,
                 values=[world_median_year],
+            )
+
+        high_income_pl = POVERTY_LINE_HIGH_INCOME * period_factor
+        if add_high_income_pl == "line":
+            plt.axvline(
+                x=high_income_pl,
+                color="lightgrey",
+                linestyle=":",
+                linewidth=0.8,
+            )
+            _styled_reference_label(
+                kde_plot,
+                high_income_pl,
+                plt.ylim()[1],
+                title="High-income poverty line",
+                value=f"${high_income_pl:.{dollar_decimals}f} per {period}",
+                ha="left",
+            )
+        elif add_high_income_pl == "area":
+            draw_area_under_curve(
+                kde_plot=kde_plot,
+                number_of_countries=number_of_countries,
+                values=[high_income_pl],
             )
 
         if add_multiple_lines_day is not None:
@@ -1204,13 +1235,18 @@ def distributional_plots_per_row(
 
         plt.tight_layout()
 
-        reference_labels: list[tuple[float, str]] = []
+        reference_labels: list[tuple[float, str, str, str]] = []
         if add_ipl == "line":
             _add_figure_spanning_vline(
                 fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
             )
             reference_labels.append(
-                (ipl, f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}")
+                (
+                    ipl,
+                    "International Poverty Line",
+                    f"${ipl:.{dollar_decimals}f} per {period}",
+                    "right",
+                )
             )
         if add_world_median == "line":
             _add_figure_spanning_vline(
@@ -1224,7 +1260,9 @@ def distributional_plots_per_row(
             reference_labels.append(
                 (
                     world_median_year,
-                    f"World median:\n${world_median_year:.{dollar_decimals}f}",
+                    "World median",
+                    f"${world_median_year:.{dollar_decimals}f} per {period}",
+                    "left",
                 )
             )
         _add_figure_spanning_vline_labels(fig, axes, reference_labels)
@@ -1397,15 +1435,14 @@ def _distributional_plots_year_rows(
             and add_world_median == "line"
             and world_median_year is not None
         ):
-            ax.text(
-                x=world_median_year,
-                y=ax.get_ylim()[1],
-                s=f"World median:\n${world_median_year:.{dollar_decimals}f}",
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                horizontalalignment="left",
-                fontsize=8,
+            _styled_reference_label(
+                ax,
+                world_median_year,
+                ax.get_ylim()[1],
+                title="World median",
+                value=f"${world_median_year:.{dollar_decimals}f} per {period}",
+                ha="left",
+                box_alignment=(0.0, 1.0),
             )
 
         ax.text(
@@ -1442,13 +1479,18 @@ def _distributional_plots_year_rows(
 
     # Lay out first so axes positions are stable before placing the spanning lines.
     fig.tight_layout()
-    reference_labels: list[tuple[float, str]] = []
+    reference_labels: list[tuple[float, str, str, str]] = []
     if add_ipl == "line":
         _add_figure_spanning_vline(
             fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
         )
         reference_labels.append(
-            (ipl, f"International\nPoverty Line:\n${ipl:.{dollar_decimals}f}")
+            (
+                ipl,
+                "International Poverty Line",
+                f"${ipl:.{dollar_decimals}f} per {period}",
+                "right",
+            )
         )
     if add_high_income_pl == "line":
         _add_figure_spanning_vline(
@@ -1457,7 +1499,9 @@ def _distributional_plots_year_rows(
         reference_labels.append(
             (
                 high_income_pl,
-                f"High-income\nPoverty Line:\n${high_income_pl:.{dollar_decimals}f}",
+                "High-income poverty line",
+                f"${high_income_pl:.{dollar_decimals}f} per {period}",
+                "left",
             )
         )
     _add_figure_spanning_vline_labels(fig, axes, reference_labels)
@@ -1803,7 +1847,7 @@ def pen_parade(
                     linewidth=0.8,
                 )
 
-            # International poverty line
+            # International Poverty Line
             axhline_over_curve(ipl)
             reference_ticks.append((ipl, f"← ${ipl:.{dollar_decimals}f} per {period}"))
 
@@ -2232,18 +2276,40 @@ def draw_area_under_curve(
             # Obtain the line of the kde_plot
             line = kde_plot.lines[i]
 
-            # Obtain the x and y data of the line
-            x_line, y_line = line.get_data()
+            # Obtain the x and y data of the line. Coerce to ndarray because
+            # `Line2D.get_data` returns whatever was originally set — sometimes
+            # a plain list — and the `<=` comparison below requires array math.
+            x_line = np.asarray(line.get_data()[0], dtype=float)
+            y_line = np.asarray(line.get_data()[1], dtype=float)
 
-            # interpolate=True extends the fill to the exact x where the `where`
-            # condition flips, rather than ending at the nearest KDE grid point.
+            # Build the polygon explicitly so it terminates at exactly x=value.
+            # matplotlib's `where=(x_line <= value)` with `interpolate=True` only
+            # interpolates `y1` vs `y2` crossings, not the where boundary on x —
+            # so without this manual construction the polygon snaps to the last
+            # grid point ≤ value, leaving a visible gap between the fill edge
+            # and the reference line at x=value.
+            order = np.argsort(x_line)
+            xs_sorted = x_line[order]
+            ys_sorted = y_line[order]
+            if xs_sorted.size == 0 or value <= xs_sorted[0]:
+                continue
+            inside = xs_sorted < value
+            if inside.any():
+                fill_xs = np.append(xs_sorted[inside], value)
+                fill_ys = np.append(
+                    ys_sorted[inside],
+                    float(np.interp(value, xs_sorted, ys_sorted)),
+                )
+            else:
+                # Entire grid is at or past `value` — nothing to fill.
+                continue
             kde_plot.fill_between(
-                x=x_line,
-                y1=y_line,
-                where=(x_line <= value),
-                interpolate=True,
+                x=fill_xs,
+                y1=0,
+                y2=fill_ys,
                 alpha=0.3,
                 color=line.get_color(),
+                linewidth=0,
             )
 
     return None
@@ -2268,17 +2334,67 @@ def _add_figure_spanning_vline(fig, axes, x, **kwargs) -> None:
     fig.add_artist(line)
 
 
+def _styled_reference_label(
+    parent,
+    x,
+    y,
+    title: str,
+    value: str,
+    ha: str,
+    xycoords="data",
+    box_alignment=None,
+) -> None:
+    """Render a reference-line label as a bold *title* (one or more lines,
+    separated by ``\\n``) stacked above a regular-weight *value* line.
+
+    ``parent`` is any matplotlib artist container that accepts ``add_artist``
+    (an Axes or a Figure). ``x``/``y`` are in the coordinate system named by
+    ``xycoords`` ("data", "axes fraction", "figure fraction", etc.). ``ha``
+    determines the horizontal alignment of each text row and whether the
+    label sits to the left ("right") or to the right ("left") of the anchor.
+    """
+    from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
+
+    common = {
+        "color": "grey",
+        "fontsize": 8,
+        "ha": ha,
+        "multialignment": ha,
+    }
+    children = [
+        TextArea(line, textprops={**common, "fontweight": "bold"})
+        for line in title.split("\n")
+    ]
+    children.append(TextArea(value, textprops=common))
+    packer = VPacker(children=children, align=ha, pad=0, sep=2)
+    if box_alignment is None:
+        # Anchor by the bottom edge, and by the left or right edge depending on ha.
+        box_alignment = (1.0 if ha == "right" else 0.0, 0.0)
+    annotation = AnnotationBbox(
+        packer,
+        (x, y),
+        xycoords=xycoords,
+        box_alignment=box_alignment,
+        frameon=False,
+        pad=0,
+    )
+    parent.add_artist(annotation)
+
+
 def _add_figure_spanning_vline_labels(fig, axes, labels) -> None:
     """Place a batch of figure-spanning reference-line labels at the same
-    vertical level. ``labels`` is an iterable of ``(x, text)`` tuples.
+    vertical level. ``labels`` is an iterable of ``(x, title, value, ha)``
+    tuples — ``title`` is rendered bold (use ``\\n`` for multi-line titles)
+    and ``value`` is rendered regular weight on the line below. ``ha``
+    controls each label's horizontal alignment ("left" puts text to the
+    right of the line, "right" puts text to the left of the line).
 
     If any label's x lands in a region where the topmost curve leaves less
     than half the axes height free above it (e.g. Ethiopia at the IPL), ALL
-    labels in the batch are placed *above* axes[0] in the figure margin so
-    they line up. Otherwise (e.g. Sweden 1820 at the IPL) they all hang from
-    the top edge of axes[0].
+    labels in the batch are placed *above* axes[0] (anchored in figure
+    fraction y) so they line up. Otherwise (e.g. Sweden 1820 at the IPL)
+    they all hang from the top edge of axes[0].
     """
-    from matplotlib.text import Text
     from matplotlib.transforms import blended_transform_factory
 
     label_list = list(labels)
@@ -2293,45 +2409,40 @@ def _add_figure_spanning_vline_labels(fig, axes, labels) -> None:
         if xs.size and ys.size:
             order = np.argsort(xs)
             ylim_max = ax.get_ylim()[1]
-            for x, _ in label_list:
+            for x, *_ in label_list:
                 y_at_x = float(np.interp(x, xs[order], ys[order]))
                 if ylim_max > 0 and y_at_x > 0.5 * ylim_max:
                     use_outside = True
                     break
 
-    for x, text in label_list:
-        if use_outside:
-            trans = blended_transform_factory(ax.transData, fig.transFigure)
-            label = Text(
-                x=x,
-                y=ax.get_position().y1 + 0.005,
-                text=text,
-                transform=trans,
-                color="grey",
-                rotation=90,
-                verticalalignment="bottom",
-                horizontalalignment="left",
-                fontsize=8,
-            )
-            fig.add_artist(label)
-        else:
-            trans = blended_transform_factory(ax.transData, ax.transAxes)
-            ax.text(
-                x=x,
-                y=1.0,
-                s=text,
-                transform=trans,
-                color="grey",
-                rotation=90,
-                verticalalignment="top",
-                horizontalalignment="left",
-                fontsize=8,
-            )
+    if use_outside:
+        trans = blended_transform_factory(ax.transData, fig.transFigure)
+        y_anchor = ax.get_position().y1 + 0.005
+        parent = fig
+        xycoords = trans
+    else:
+        trans = blended_transform_factory(ax.transData, ax.transAxes)
+        y_anchor = 1.0
+        parent = ax
+        xycoords = trans
+
+    for x, title, value, ha in label_list:
+        _styled_reference_label(
+            parent,
+            x,
+            y_anchor,
+            title=title,
+            value=value,
+            ha=ha,
+            xycoords=xycoords,
+        )
 
 
-def _add_figure_spanning_vline_label(fig, axes, x, text) -> None:
+def _add_figure_spanning_vline_label(
+    fig, axes, x, title, value, ha: str = "left"
+) -> None:
     """Single-label convenience wrapper around :func:`_add_figure_spanning_vline_labels`."""
-    _add_figure_spanning_vline_labels(fig, axes, [(x, text)])
+    _add_figure_spanning_vline_labels(fig, axes, [(x, title, value, ha)])
 
 
 def draw_complete_area_under_curve(
