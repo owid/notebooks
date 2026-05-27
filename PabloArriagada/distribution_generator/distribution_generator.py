@@ -1,4 +1,6 @@
+import hashlib
 import textwrap
+import time
 from pathlib import Path
 from typing import List, Literal, cast
 
@@ -6,9 +8,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.lines import Line2D
 from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
+from matplotlib.patches import Patch
+from matplotlib.transforms import blended_transform_factory
 
 PARENT_DIR = Path(__file__).parent.absolute()
+
+# The source feathers are large (the all-lognormal one is ~35M rows / ~80s to
+# download) and are re-fetched every run because the URLs carry `?nocache`. Cache
+# them on local disk and reuse the copy until it is older than CACHE_TTL_HOURS,
+# so repeated runs load in seconds while still refreshing periodically.
+CACHE_DIR = PARENT_DIR / ".cache"
+CACHE_TTL_HOURS = 24
 
 # Define International Poverty Line
 INTERNATIONAL_POVERTY_LINE = 3
@@ -21,6 +33,13 @@ PPP_VERSION = 2021
 
 # Define latest year
 LATEST_YEAR = 2026
+
+# Years kept in the slim local cache of the two big historical feathers (see
+# read_feather_cached). These must cover every year charted from each file — if
+# you add a chart for a new year, add it here so the cache re-slices to include
+# it (otherwise that chart gets empty data).
+HISTORICAL_CACHE_YEARS = [1820, 1920, 1980, LATEST_YEAR]
+ALL_LOGNORMAL_CACHE_YEARS = [1820, 1920, LATEST_YEAR]
 
 # Define width and height of the plot
 WIDTH = 1500
@@ -125,23 +144,32 @@ NATIONAL_LINES_URL = f"http://catalog.ourworldindata.org/garden/wb/{NATIONAL_LIN
 
 
 def run() -> None:
-    df_thousand_bins = pd.read_feather(THOUSAND_BINS_URL)
-    df_thousand_bins_historical = pd.read_feather(THOUSAND_BINS_HISTORICAL_URL)
-    df_thousand_bins_historical_all_lognormal = pd.read_feather(
-        THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL
+    df_thousand_bins = read_feather_cached(THOUSAND_BINS_URL)
+    # The two historical files are ~35M rows each; we only chart a handful of
+    # years, so cache just those (and drop the unused region_old column). The
+    # cold run still downloads the full file once; warm runs load a tiny slice.
+    df_thousand_bins_historical = read_feather_cached(
+        THOUSAND_BINS_HISTORICAL_URL,
+        years=HISTORICAL_CACHE_YEARS,
+        drop_columns=["region_old"],
     )
-    df_national_lines = pd.read_feather(NATIONAL_LINES_URL)
+    df_thousand_bins_historical_all_lognormal = read_feather_cached(
+        THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL,
+        years=ALL_LOGNORMAL_CACHE_YEARS,
+        drop_columns=["region_old"],
+    )
+    df_national_lines = read_feather_cached(NATIONAL_LINES_URL)
 
     # World Bank PIP dimensional tables → flat shapes the plotting code expects.
     # Percentiles: legacy table was filtered to ppp_version=2021; replicate by filtering here.
-    df_percentiles = pd.read_feather(PERCENTILES_URL)
+    df_percentiles = read_feather_cached(PERCENTILES_URL)
     df_percentiles = df_percentiles[
         df_percentiles["ppp_version"] == PPP_VERSION
     ].reset_index(drop=True)
 
     # Main indicators (used only for World aggregates): rebuild a flat per-(country, year)
     # frame from complete_series by selecting the right slice for each column family.
-    df_complete = pd.read_feather(COMPLETE_SERIES_URL)
+    df_complete = read_feather_cached(COMPLETE_SERIES_URL)
     base = (df_complete["ppp_version"] == PPP_VERSION) & (
         df_complete["welfare_type"] == "income or consumption"
     )
@@ -599,6 +627,45 @@ def run() -> None:
     )
 
 
+def read_feather_cached(
+    url: str,
+    years: List[int] | None = None,
+    drop_columns: List[str] | None = None,
+) -> pd.DataFrame:
+    """Read a feather from ``url``, caching a slimmed copy under ``CACHE_DIR``.
+
+    Re-downloads when the cached copy is missing or older than ``CACHE_TTL_HOURS``.
+    The source feathers are large (the all-lognormal one is ~35M rows) and carry
+    ``?nocache``, so without this every run re-fetches ~135s of data — and even a
+    full local cache still spends ~80s deserialising 35M rows. ``years`` and
+    ``drop_columns`` slim the cached copy to only what the charts use, so the cold
+    run downloads once but every warm run loads a <1M-row file in ~1s. The filter
+    is part of the cache key, so a different slice caches separately.
+    """
+    CACHE_DIR.mkdir(exist_ok=True)
+    # Key on the URL (without the ?nocache buster) plus the filter, so the path
+    # stays stable and distinct slices don't collide.
+    key_src = url.split("?")[0]
+    if years is not None:
+        key_src += f"|years={sorted(years)}"
+    if drop_columns is not None:
+        key_src += f"|drop={sorted(drop_columns)}"
+    key = hashlib.md5(key_src.encode()).hexdigest()[:16]
+    local = CACHE_DIR / f"{key}.feather"
+    if (
+        local.exists()
+        and (time.time() - local.stat().st_mtime) < CACHE_TTL_HOURS * 3600
+    ):
+        return pd.read_feather(local)
+    df = pd.read_feather(url)
+    if drop_columns is not None:
+        df = df.drop(columns=drop_columns, errors="ignore")
+    if years is not None:
+        df = df[df["year"].isin(years)].reset_index(drop=True)
+    df.to_feather(local)
+    return df
+
+
 def _subdivide_palette(data: pd.DataFrame, hue: str, subdivide_hue: str):
     """Build the colour scheme for a hierarchical stacked KDE.
 
@@ -1040,7 +1107,6 @@ def distributional_plots(
             # Stacking by the fine level (e.g. country) would yield a legend with
             # one entry per sub-band. Replace it with one entry per parent `hue`
             # group (e.g. region), coloured by the shared base colour.
-            from matplotlib.patches import Patch
 
             # seaborn renders stacked fills at alpha < 1; match the legend swatch
             # opacity to the rendered bands so the legend isn't bolder than the plot.
@@ -1402,7 +1468,6 @@ def distributional_plots_per_row(
 
             if survey_based:
                 # Add the year and welfare type to the plot
-                reporting_level = country_data["reporting_level"].iloc[0]
                 welfare_type = country_data["welfare_type"].iloc[0]
 
                 ax.text(
@@ -1921,7 +1986,6 @@ def _stacked_year_rows(
     _add_figure_spanning_vline_labels(fig, axes, reference_labels)
 
     # Region legend on the top row; match swatch opacity to the rendered fills.
-    from matplotlib.patches import Patch
 
     fill_alpha = (
         float(axes[0].collections[0].get_facecolor()[0][3])
@@ -2539,7 +2603,7 @@ def pen_parade(
         # Remove y-axis labels and ticks
         line_plot.set_ylabel("")
         line_plot.yaxis.set_label_position("right")
-        line_plot.set_xlabel(f"Percentage of the population")
+        line_plot.set_xlabel("Percentage of the population")
         line_plot.spines["top"].set_visible(False)
         line_plot.spines["right"].set_visible(False)
         line_plot.spines["bottom"].set_visible(False)
@@ -2761,9 +2825,6 @@ def _add_figure_spanning_vline(fig, axes, x, **kwargs) -> None:
     fraction y — so the line spans from the bottom of the last axes to the
     top of the first axes uninterrupted.
     """
-    from matplotlib.lines import Line2D
-    from matplotlib.transforms import blended_transform_factory
-
     trans = blended_transform_factory(axes[0].transData, fig.transFigure)
     y_top = axes[0].get_position().y1
     y_bottom = axes[-1].get_position().y0
@@ -2790,8 +2851,6 @@ def _styled_reference_label(
     determines the horizontal alignment of each text row and whether the
     label sits to the left ("right") or to the right ("left") of the anchor.
     """
-    from matplotlib.offsetbox import AnnotationBbox, TextArea, VPacker
-
     common = {
         "color": "grey",
         "fontsize": 8,
@@ -2832,8 +2891,6 @@ def _add_figure_spanning_vline_labels(fig, axes, labels) -> None:
     fraction y) so they line up. Otherwise (e.g. Sweden 1820 at the IPL)
     they all hang from the top edge of axes[0].
     """
-    from matplotlib.transforms import blended_transform_factory
-
     label_list = list(labels)
     if not label_list:
         return
