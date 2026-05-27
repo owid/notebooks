@@ -365,6 +365,30 @@ def run() -> None:
         share_x_axis=True,
     )
 
+    # Same hierarchical region/country stack, but with the three years stacked
+    # as rows in a single figure (shared x and y) instead of one SVG per year.
+    distributional_plots_per_row(
+        data=df_thousand_bins_historical,
+        df_main_indicators=None,
+        x="avg",
+        weights="pop",
+        log_scale=True,
+        multiple="stack",
+        hue="region",
+        subdivide_hue="country",
+        years=[1820, 1980, LATEST_YEAR],
+        common_norm=True,
+        period="month",
+        survey_based=False,
+        add_ipl="line",
+        add_high_income_pl="line",
+        row_by="year",
+        width=1150,
+        height=260,
+        share_y_axis=True,
+        share_x_axis=True,
+    )
+
     # Pen parades
     pen_parade(
         data=df_percentiles,
@@ -514,6 +538,46 @@ def run() -> None:
     )
 
 
+def _subdivide_palette(data: pd.DataFrame, hue: str, subdivide_hue: str):
+    """Build the colour scheme for a hierarchical stacked KDE.
+
+    Returns ``(region_order, region_palette, palette)`` where ``region_order`` is
+    the parent groups (``hue``, e.g. region) sorted alphabetically, each given one
+    base colour in ``region_palette``, and ``palette`` maps every sub-level value
+    (``subdivide_hue``, e.g. country) to its parent's colour so a region reads as
+    one colour block.
+    """
+    region_order = sorted(data[hue].dropna().unique())
+    region_palette = dict(
+        zip(region_order, sns.color_palette(n_colors=len(region_order)))
+    )
+    palette = {}
+    for region in region_order:
+        for member in data[data[hue] == region][subdivide_hue].dropna().unique():
+            palette[member] = region_palette[region]
+    return region_order, region_palette, palette
+
+
+def _subdivide_order(
+    frame: pd.DataFrame,
+    hue: str,
+    subdivide_hue: str,
+    weights: str,
+    region_order: List[str],
+) -> List[str]:
+    """Sub-level values grouped by parent ``hue`` (region order fixed), sorted
+    within each group by descending population so the largest sits at the top of
+    the stack and the smallest at the bottom. seaborn stacks the first hue_order
+    entry at the top, so descending population = largest first."""
+    pops = frame.groupby([hue, subdivide_hue], observed=True)[weights].sum()
+    ordered: List[str] = []
+    for region in region_order:
+        if region not in pops.index.get_level_values(0):
+            continue
+        ordered.extend(pops.loc[region].sort_values(ascending=False).index.tolist())
+    return ordered
+
+
 def distributional_plots(
     data: pd.DataFrame,
     df_main_indicators: pd.DataFrame,
@@ -603,37 +667,18 @@ def distributional_plots(
     palette = None
     fill_kwargs: dict = {}
     region_palette: dict = {}
-
-    def _subdivide_order(frame: pd.DataFrame) -> List[str]:
-        """Members grouped by parent `hue` (region order fixed), sorted within
-        each group by descending population so the largest sits at the top of
-        the stack and the smallest at the bottom. seaborn stacks the first
-        hue_order entry at the top, so descending population = largest first."""
-        pops = frame.groupby([hue, subdivide_hue], observed=True)[weights].sum()
-        ordered: List[str] = []
-        for region in region_order:
-            if region not in pops.index.get_level_values(0):
-                continue
-            ordered.extend(
-                pops.loc[region].sort_values(ascending=False).index.tolist()
-            )
-        return ordered
+    region_order: List[str] = []
 
     if subdivide_hue is not None:
-        # Parent (hue) groups, alphabetically; each gets one base colour.
-        region_order = sorted(data[hue].dropna().unique())
-        region_palette = dict(
-            zip(region_order, sns.color_palette(n_colors=len(region_order)))
+        region_order, region_palette, palette = _subdivide_palette(
+            data, hue, subdivide_hue
         )
-        # One colour per country, inherited from its region. The actual stack
-        # order is recomputed per year (by population) inside the loop; this
-        # pre-loop order only feeds the share_y pre-pass, where order is
-        # irrelevant to the total stack height.
-        palette = {}
-        for region in region_order:
-            for member in data[data[hue] == region][subdivide_hue].dropna().unique():
-                palette[member] = region_palette[region]
-        plot_hue_order = _subdivide_order(data)
+        # The actual stack order is recomputed per year (by population) inside the
+        # loop; this pre-loop order only feeds the share_y pre-pass, where order
+        # is irrelevant to the total stack height.
+        plot_hue_order = _subdivide_order(
+            data, hue, subdivide_hue, weights, region_order
+        )
         seaborn_hue = subdivide_hue
         # Hairline white outlines turn the shared-colour block into visible
         # per-member bands without introducing a second colour dimension.
@@ -813,7 +858,9 @@ def distributional_plots(
         # For the hierarchical stack, order each region's countries by this
         # year's population (largest on top). Other modes keep the fixed order.
         current_hue_order = (
-            _subdivide_order(data_year) if subdivide_hue is not None else plot_hue_order
+            _subdivide_order(data_year, hue, subdivide_hue, weights, region_order)
+            if subdivide_hue is not None
+            else plot_hue_order
         )
 
         # Plot a kde with seaborn
@@ -1064,6 +1111,7 @@ def distributional_plots_per_row(
     filename_suffix: str = "",
     share_x_axis: bool = True,
     share_y_axis: bool = True,
+    subdivide_hue: str = None,
 ) -> None:
     """
     Plot distributional data with seaborn, with each distribution in a separate row.
@@ -1076,6 +1124,31 @@ def distributional_plots_per_row(
     ``hue_order[0]``. Axes share both x and y, so peak heights are directly
     comparable across years. Use this when comparing one country across time.
     """
+    if row_by == "year" and subdivide_hue is not None:
+        _stacked_year_rows(
+            data=data,
+            x=x,
+            weights=weights,
+            hue=hue,
+            subdivide_hue=subdivide_hue,
+            years=years,
+            log_scale=log_scale,
+            multiple=multiple,
+            common_norm=common_norm,
+            gridsize=gridsize,
+            period=period,
+            add_ipl=add_ipl,
+            add_high_income_pl=add_high_income_pl,
+            width=width,
+            height=height,
+            add_fade_in_tails=add_fade_in_tails,
+            percentiles_to_fade=percentiles_to_fade,
+            filename_suffix=filename_suffix,
+            share_x_axis=share_x_axis,
+            share_y_axis=share_y_axis,
+        )
+        return None
+
     if row_by == "year":
         _distributional_plots_year_rows(
             data=data,
@@ -1604,6 +1677,212 @@ def _distributional_plots_year_rows(
 
     fig.savefig(
         PARENT_DIR / f"{country}_per_year_row_log_{log_scale}{filename_suffix}.svg",
+        bbox_inches="tight",
+    )
+    plt.close(fig)
+
+
+def _stacked_year_rows(
+    data: pd.DataFrame,
+    x: str,
+    weights: str,
+    hue: str,
+    subdivide_hue: str,
+    years: List[int],
+    log_scale: bool = True,
+    multiple: str = "stack",
+    common_norm: bool = True,
+    gridsize: int = 200,
+    period: Literal["day", "month", "year"] = "day",
+    add_ipl: Literal["line", "area", None] = "line",
+    add_high_income_pl: Literal["line", "area", None] = None,
+    width: int = WIDTH,
+    height: int = HEIGHT,
+    add_fade_in_tails: bool = True,
+    percentiles_to_fade: List[float] = [1, 99],
+    filename_suffix: str = "",
+    share_x_axis: bool = True,
+    share_y_axis: bool = True,
+) -> None:
+    """Private helper for ``distributional_plots_per_row(row_by="year",
+    subdivide_hue=...)``: the all-countries hierarchical stack (stack by
+    ``subdivide_hue``, colour by parent ``hue``) laid out one row per year,
+    sharing both axes. Mirrors ``distributional_plots(subdivide_hue=...)`` but
+    stacked as rows in a single figure instead of one SVG per year.
+    """
+    period_factor = cast(int, PERIOD_VALUES[period]["factor"])
+    log_ticks = cast(List[int], PERIOD_VALUES[period]["log_ticks"])
+    dollar_decimals = 2 if period == "day" else 0
+    ipl = INTERNATIONAL_POVERTY_LINE * period_factor
+    high_income_pl = POVERTY_LINE_HIGH_INCOME * period_factor
+
+    data = data[data["year"].isin(years)].copy()
+    data[x] = data[x] * period_factor
+
+    region_order, region_palette, palette = _subdivide_palette(data, hue, subdivide_hue)
+
+    def _fade(sub: pd.DataFrame) -> pd.DataFrame:
+        if not add_fade_in_tails:
+            return sub
+        if "percentile" in sub.columns:
+            pq, bounds = "percentile", percentiles_to_fade
+        elif "quantile" in sub.columns:
+            pq, bounds = "quantile", [p * 10 for p in percentiles_to_fade]
+        else:
+            return sub
+        return sub[(sub[pq] > bounds[0]) & (sub[pq] < bounds[1])]
+
+    # Pre-pass: shared x range = union across years of each year's pooled data,
+    # extended by cut*bw in log10 space (mirrors the other share_x_axis logic).
+    x_axis_range: tuple | None = None
+    if log_scale:
+        x_min, x_max = float("inf"), float("-inf")
+        for year in years:
+            sub = _fade(data[data["year"] == year])
+            if not len(sub):
+                continue
+            v = np.log10(sub[x].to_numpy(dtype=float))
+            w = sub[weights].to_numpy(dtype=float)
+            mean_v = float(np.average(v, weights=w))
+            std_v = float(np.sqrt(max(np.average((v - mean_v) ** 2, weights=w), 0.0)))
+            w_sum, w_sq = float(w.sum()), float((w * w).sum())
+            n_eff = (w_sum * w_sum / w_sq) if w_sq > 0 else 1.0
+            bw = std_v * n_eff ** (-1 / 5) if n_eff > 0 else 0.0
+            cut = 3  # seaborn default
+            x_min = min(x_min, float(sub[x].min()) / 10 ** (cut * bw))
+            x_max = max(x_max, float(sub[x].max()) * 10 ** (cut * bw))
+        if x_min < float("inf"):
+            x_axis_range = (x_min, x_max)
+
+    clip_param = (
+        (np.log(x_axis_range[0]), np.log(x_axis_range[1]))
+        if log_scale and x_axis_range is not None
+        else None
+    )
+
+    fig, axes = plt.subplots(
+        nrows=len(years),
+        ncols=1,
+        figsize=(width / 100, height / 100 * len(years)),
+        sharex=share_x_axis,
+        sharey=share_y_axis,
+    )
+    if len(years) == 1:
+        axes = [axes]
+
+    for ax, year in zip(axes, years):
+        data_year = _fade(data[data["year"] == year])
+        # Stack the countries of each region (largest population on top), all
+        # sharing their region's colour, with hairline white separators.
+        order = _subdivide_order(data_year, hue, subdivide_hue, weights, region_order)
+        sns.kdeplot(
+            data=data_year,
+            x=x,
+            weights=weights,
+            fill=True,
+            log_scale=log_scale,
+            hue=subdivide_hue,
+            hue_order=order,
+            palette=palette,
+            multiple=multiple,
+            legend=False,
+            common_norm=common_norm,
+            gridsize=gridsize,
+            clip=clip_param,
+            linewidth=0.1,
+            edgecolor="white",
+            ax=ax,
+        )
+        if x_axis_range is not None:
+            ax.set_xlim(*x_axis_range)
+        # Year label at the top-left of each row.
+        ax.text(
+            x=x_axis_range[0] if x_axis_range is not None else 1.0,
+            y=ax.get_ylim()[1],
+            s=str(year),
+            color="black",
+            va="top",
+            ha="left",
+            fontsize=11,
+            fontweight="bold",
+        )
+        ax.set_ylabel("")
+        ax.yaxis.set_ticks([])
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+        ax.axhline(y=0, color="gray", linewidth=0.5)
+        if ax is not axes[-1]:
+            ax.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
+
+    if log_scale:
+        ticks = (
+            [t for t in log_ticks if x_axis_range[0] <= t <= x_axis_range[1]]
+            if x_axis_range is not None
+            else log_ticks
+        )
+        axes[-1].set_xticks(ticks)
+        axes[-1].get_xaxis().set_major_formatter(
+            plt.FuncFormatter(lambda v, _: f"${v:g}")
+        )
+    if x_axis_range is not None:
+        axes[-1].set_xlim(*x_axis_range)
+    axes[-1].set_xlabel(f"Income or consumption ({period})")
+
+    # Lay out first so axes positions are stable before placing the spanning lines.
+    fig.tight_layout()
+
+    reference_labels: list[tuple[float, str, str, str]] = []
+    if add_ipl == "line":
+        _add_figure_spanning_vline(
+            fig, axes, ipl, color="lightgrey", linestyle=":", linewidth=0.8
+        )
+        reference_labels.append(
+            (
+                ipl,
+                "International Poverty Line",
+                f"${ipl:.{dollar_decimals}f} per {period}",
+                "right",
+            )
+        )
+    if add_high_income_pl == "line":
+        _add_figure_spanning_vline(
+            fig, axes, high_income_pl, color="lightgrey", linestyle=":", linewidth=0.8
+        )
+        reference_labels.append(
+            (
+                high_income_pl,
+                "High-income poverty line",
+                f"${high_income_pl:.{dollar_decimals}f} per {period}",
+                "left",
+            )
+        )
+    _add_figure_spanning_vline_labels(fig, axes, reference_labels)
+
+    # Region legend on the top row; match swatch opacity to the rendered fills.
+    from matplotlib.patches import Patch
+
+    fill_alpha = (
+        float(axes[0].collections[0].get_facecolor()[0][3])
+        if len(axes[0].collections)
+        else 1.0
+    )
+    handles = [
+        Patch(facecolor=region_palette[region], label=region, alpha=fill_alpha)
+        for region in region_order
+    ]
+    axes[0].legend(
+        handles=handles,
+        title=hue.capitalize(),
+        loc="upper left",
+        bbox_to_anchor=(0.8, 0.8),
+        fontsize=7,
+    )
+
+    for o in fig.findobj():
+        o.set_clip_on(False)
+
+    fig.savefig(
+        PARENT_DIR / f"all_countries_per_year_row_log_{log_scale}{filename_suffix}.svg",
         bbox_inches="tight",
     )
     plt.close(fig)
