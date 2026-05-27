@@ -58,11 +58,40 @@ PERIOD_VALUES = {
     "day": {"factor": 1, "log_ticks": [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]},
     "month": {
         "factor": 30,
-        "log_ticks": [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000],
+        # Includes 1, 2, 5 at the low end so the stacked charts (which keep the
+        # full distribution down to ~$1/month) get labelled ticks there. Every
+        # tick site filters these to the visible x-range, so charts that don't
+        # reach the low end (e.g. country comparisons) won't show them.
+        "log_ticks": [
+            1,
+            2,
+            5,
+            10,
+            20,
+            50,
+            100,
+            200,
+            500,
+            1000,
+            2000,
+            5000,
+            10000,
+            20000,
+        ],
     },
     "year": {
         "factor": 365,
+        # Low-end ticks (1, 2, 5, 10, 20, 50) mirror the month scale so the
+        # stacked charts get labelled ticks where the full distribution reaches.
+        # Every tick site filters these to the visible x-range, so charts that
+        # don't reach the low end won't show them.
         "log_ticks": [
+            1,
+            2,
+            5,
+            10,
+            20,
+            50,
             100,
             200,
             500,
@@ -1077,12 +1106,10 @@ def distributional_plots(
             # Restrict ticks to the visible range. Calling set_xticks with values
             # past the current xlim makes matplotlib widen the axis to fit them,
             # which silently breaks share_x_axis (xlim jumps to the last tick).
-            if x_axis_range is not None:
-                ticks = [
-                    t for t in log_ticks if x_axis_range[0] <= t <= x_axis_range[1]
-                ]
-            else:
-                ticks = log_ticks
+            # When there's no shared range, fall back to the autoscaled xlim so
+            # low ticks (1, 2, 5) only appear on charts that actually reach them.
+            lo, hi = x_axis_range if x_axis_range is not None else kde_plot.get_xlim()
+            ticks = [t for t in log_ticks if lo <= t <= hi]
             kde_plot.set_xticks(ticks)
             # Add dollar sign prefix to tick labels with integer formatting
             kde_plot.get_xaxis().set_major_formatter(
@@ -1421,9 +1448,12 @@ def distributional_plots_per_row(
             )
 
             if log_scale:
-                # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
+                # Customize x-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.,
+                # filtered to the visible range so low ticks only appear where the
+                # data reaches them (otherwise set_xticks would widen the axis).
                 ax.set_xscale("log")
-                ax.set_xticks(log_ticks)
+                lo, hi = ax.get_xlim()
+                ax.set_xticks([t for t in log_ticks if lo <= t <= hi])
                 # Add dollar sign prefix to tick labels with integer formatting
                 ax.get_xaxis().set_major_formatter(
                     plt.FuncFormatter(lambda x, p: f"${x:.0f}")
@@ -2209,9 +2239,12 @@ def pen_parade(
             )
 
         if log_scale:
-            # Customize y-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.
+            # Customize y-axis ticks to show 1, 2, 5, 10, 20, 50, 100, etc.,
+            # filtered to the visible range so low ticks only appear where the
+            # data reaches them (otherwise set_yticks would widen the axis).
             line_plot.set_yscale("log")
-            line_plot.set_yticks(log_ticks)
+            lo, hi = line_plot.get_ylim()
+            line_plot.set_yticks([t for t in log_ticks if lo <= t <= hi])
             line_plot.get_yaxis().set_major_formatter(plt.ScalarFormatter())
         else:
             line_plot.get_yaxis().set_major_formatter(plt.ScalarFormatter())
