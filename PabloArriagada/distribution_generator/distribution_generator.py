@@ -363,6 +363,7 @@ def run() -> None:
         # add_multiple_lines_day=[3, 30],
         share_y_axis=True,
         share_x_axis=True,
+        add_fade_in_tails=False,
     )
 
     # Same hierarchical region/country stack, but with the three years stacked
@@ -387,7 +388,59 @@ def run() -> None:
         height=260,
         share_y_axis=True,
         share_x_axis=True,
+        add_fade_in_tails=False,
     )
+
+    # Same stacked charts (per-year SVGs + the multi-row figure) for the other
+    # region groupings, alongside the default `region` ones above. A filename
+    # suffix keeps each grouping's outputs separate.
+    for region_column in ["owid_region", "mpd_region"]:
+        distributional_plots(
+            data=df_thousand_bins_historical,
+            df_main_indicators=None,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="stack",
+            hue=region_column,
+            hue_order=None,
+            subdivide_hue="country",
+            years=[1820, 1980, LATEST_YEAR],
+            legend=True,
+            common_norm=True,
+            period="month",
+            survey_based=False,
+            add_ipl="line",
+            add_world_median=None,
+            add_high_income_pl="line",
+            share_y_axis=True,
+            share_x_axis=True,
+            add_fade_in_tails=False,
+            filename_suffix=f"_{region_column}",
+        )
+        distributional_plots_per_row(
+            data=df_thousand_bins_historical,
+            df_main_indicators=None,
+            x="avg",
+            weights="pop",
+            log_scale=True,
+            multiple="stack",
+            hue=region_column,
+            subdivide_hue="country",
+            years=[1820, 1980, LATEST_YEAR],
+            common_norm=True,
+            period="month",
+            survey_based=False,
+            add_ipl="line",
+            add_high_income_pl="line",
+            row_by="year",
+            width=1150,
+            height=260,
+            share_y_axis=True,
+            share_x_axis=True,
+            add_fade_in_tails=False,
+            filename_suffix=f"_{region_column}",
+        )
 
     # Pen parades
     pen_parade(
