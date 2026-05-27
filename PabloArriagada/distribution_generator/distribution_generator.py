@@ -343,19 +343,25 @@ def run() -> None:
 
     # Stacked distributions with common density estimate
     distributional_plots(
-        data=df_thousand_bins,
-        df_main_indicators=df_main_indicators,
+        data=df_thousand_bins_historical,
+        df_main_indicators=None,
         x="avg",
         weights="pop",
         log_scale=True,
         multiple="stack",
         hue="region",
         hue_order=None,
-        years=[LATEST_YEAR],
+        years=[1820, 1980, LATEST_YEAR],
         legend=True,
         common_norm=True,
-        period="day",
+        period="month",
         survey_based=False,
+        add_ipl="line",
+        add_world_median=None,
+        add_high_income_pl="line",
+        # add_multiple_lines_day=[3, 30],
+        share_y_axis=True,
+        share_x_axis=True,
     )
 
     # Pen parades
@@ -553,6 +559,7 @@ def distributional_plots(
     """
 
     # Filter the data with the hue and hue_order
+    number_of_countries = 1
     if hue_order is not None:
         data = data[data[hue].isin(hue_order)].reset_index(drop=True)
 
@@ -584,6 +591,15 @@ def distributional_plots(
         filename = "_".join(hue_order)
     else:
         filename = "multiple_countries"
+
+    # Order passed to seaborn for the stack and its legend. When no explicit
+    # hue_order is given (e.g. the all-regions stack), sort the hue values
+    # alphabetically so both the stacked bands and the legend read A→Z instead
+    # of seaborn's arbitrary encounter order. The original `hue_order` (None) is
+    # kept for the filename logic above.
+    plot_hue_order = hue_order
+    if plot_hue_order is None:
+        plot_hue_order = sorted(data[hue].dropna().unique())
 
     # Define multiple_areas, depending on the add_multiple_lines_day
     if add_multiple_lines_day is not None:
@@ -689,7 +705,7 @@ def distributional_plots(
                     fill=False,
                     log_scale=log_scale,
                     hue=hue,
-                    hue_order=hue_order,
+                    hue_order=plot_hue_order,
                     multiple=multiple,
                     legend=False,
                     common_norm=common_norm,
@@ -756,7 +772,7 @@ def distributional_plots(
             fill=fill,
             log_scale=log_scale,
             hue=hue,
-            hue_order=hue_order,
+            hue_order=plot_hue_order,
             multiple=multiple,
             legend=legend,
             common_norm=common_norm,
@@ -866,7 +882,7 @@ def distributional_plots(
             kde_plot.legend_.set_title(hue.capitalize())
         else:
             # For each plot, write the name of the country at the middle of the distribution, bottom
-            for country in hue_order:
+            for country in plot_hue_order:
                 country_data = data_year[data_year[hue] == country]
                 year_to_write = country_data["year"].iloc[0] if survey_based else year
                 plt.text(
