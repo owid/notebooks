@@ -351,6 +351,7 @@ def run() -> None:
         multiple="stack",
         hue="region",
         hue_order=None,
+        subdivide_hue="country",
         years=[1820, 1980, LATEST_YEAR],
         legend=True,
         common_norm=True,
@@ -542,6 +543,7 @@ def distributional_plots(
     share_y_axis: bool = False,
     share_x_axis: bool = False,
     filename_suffix: str = "",
+    subdivide_hue: str = None,
 ) -> None:
     """
     Plot distributional data with seaborn, with multiple options for customization.
@@ -592,14 +594,58 @@ def distributional_plots(
     else:
         filename = "multiple_countries"
 
-    # Order passed to seaborn for the stack and its legend. When no explicit
-    # hue_order is given (e.g. the all-regions stack), sort the hue values
-    # alphabetically so both the stacked bands and the legend read A→Z instead
-    # of seaborn's arbitrary encounter order. The original `hue_order` (None) is
-    # kept for the filename logic above.
-    plot_hue_order = hue_order
-    if plot_hue_order is None:
-        plot_hue_order = sorted(data[hue].dropna().unique())
+    # Order/colour passed to seaborn. By default we stack by `hue` (e.g. region).
+    # When `subdivide_hue` is set (e.g. "country"), we instead stack by that finer
+    # level but colour every sub-band with its parent `hue`'s colour, so each
+    # region reads as one colour block striped into per-country bands by thin
+    # white separators. `region_palette` is kept for the custom region legend.
+    seaborn_hue = hue
+    palette = None
+    fill_kwargs: dict = {}
+    region_palette: dict = {}
+
+    def _subdivide_order(frame: pd.DataFrame) -> List[str]:
+        """Members grouped by parent `hue` (region order fixed), sorted within
+        each group by descending population so the largest sits at the top of
+        the stack and the smallest at the bottom. seaborn stacks the first
+        hue_order entry at the top, so descending population = largest first."""
+        pops = frame.groupby([hue, subdivide_hue], observed=True)[weights].sum()
+        ordered: List[str] = []
+        for region in region_order:
+            if region not in pops.index.get_level_values(0):
+                continue
+            ordered.extend(
+                pops.loc[region].sort_values(ascending=False).index.tolist()
+            )
+        return ordered
+
+    if subdivide_hue is not None:
+        # Parent (hue) groups, alphabetically; each gets one base colour.
+        region_order = sorted(data[hue].dropna().unique())
+        region_palette = dict(
+            zip(region_order, sns.color_palette(n_colors=len(region_order)))
+        )
+        # One colour per country, inherited from its region. The actual stack
+        # order is recomputed per year (by population) inside the loop; this
+        # pre-loop order only feeds the share_y pre-pass, where order is
+        # irrelevant to the total stack height.
+        palette = {}
+        for region in region_order:
+            for member in data[data[hue] == region][subdivide_hue].dropna().unique():
+                palette[member] = region_palette[region]
+        plot_hue_order = _subdivide_order(data)
+        seaborn_hue = subdivide_hue
+        # Hairline white outlines turn the shared-colour block into visible
+        # per-member bands without introducing a second colour dimension.
+        fill_kwargs = {"linewidth": 0.1, "edgecolor": "white"}
+    else:
+        # When no explicit hue_order is given (e.g. the all-regions stack), sort
+        # the hue values alphabetically so both the stacked bands and the legend
+        # read A→Z instead of seaborn's arbitrary encounter order. The original
+        # `hue_order` (None) is kept for the filename logic above.
+        plot_hue_order = hue_order
+        if plot_hue_order is None:
+            plot_hue_order = sorted(data[hue].dropna().unique())
 
     # Define multiple_areas, depending on the add_multiple_lines_day
     if add_multiple_lines_day is not None:
@@ -704,7 +750,7 @@ def distributional_plots(
                     weights=weights,
                     fill=False,
                     log_scale=log_scale,
-                    hue=hue,
+                    hue=seaborn_hue,
                     hue_order=plot_hue_order,
                     multiple=multiple,
                     legend=False,
@@ -764,6 +810,12 @@ def distributional_plots(
         else:
             clip_param = x_axis_range
 
+        # For the hierarchical stack, order each region's countries by this
+        # year's population (largest on top). Other modes keep the fixed order.
+        current_hue_order = (
+            _subdivide_order(data_year) if subdivide_hue is not None else plot_hue_order
+        )
+
         # Plot a kde with seaborn
         kde_plot = sns.kdeplot(
             data=data_year,
@@ -771,13 +823,15 @@ def distributional_plots(
             weights=weights,
             fill=fill,
             log_scale=log_scale,
-            hue=hue,
-            hue_order=plot_hue_order,
+            hue=seaborn_hue,
+            hue_order=current_hue_order,
+            palette=palette,
             multiple=multiple,
             legend=legend,
             common_norm=common_norm,
             gridsize=gridsize,
             clip=clip_param,
+            **fill_kwargs,
         )
 
         # Set x-axis range immediately after plotting, before drawing areas
@@ -874,7 +928,30 @@ def distributional_plots(
                 values=scaled_lines,
             )
 
-        if legend:
+        if legend and subdivide_hue is not None:
+            # Stacking by the fine level (e.g. country) would yield a legend with
+            # one entry per sub-band. Replace it with one entry per parent `hue`
+            # group (e.g. region), coloured by the shared base colour.
+            from matplotlib.patches import Patch
+
+            # seaborn renders stacked fills at alpha < 1; match the legend swatch
+            # opacity to the rendered bands so the legend isn't bolder than the plot.
+            fill_alpha = (
+                float(kde_plot.collections[0].get_facecolor()[0][3])
+                if len(kde_plot.collections)
+                else 1.0
+            )
+            handles = [
+                Patch(facecolor=region_palette[region], label=region, alpha=fill_alpha)
+                for region in region_order
+            ]
+            kde_plot.legend(
+                handles=handles,
+                title=hue.capitalize(),
+                loc="upper left",
+                bbox_to_anchor=(0.8, 0.8),
+            )
+        elif legend:
             # Move the legend inside the plot
             kde_plot.legend_.set_bbox_to_anchor((0.8, 0.8))
             kde_plot.legend_.set_loc("upper left")
