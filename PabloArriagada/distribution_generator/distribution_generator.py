@@ -41,6 +41,13 @@ LATEST_YEAR = 2026
 HISTORICAL_CACHE_YEARS = [1820, 1920, 1980, LATEST_YEAR]
 ALL_LOGNORMAL_CACHE_YEARS = [1820, 1920, LATEST_YEAR]
 
+# Subdivision (e.g. per-country) separator styling on the hierarchical stacked
+# charts: each band's edge is its region's own colour at full opacity (no
+# darkening). The seaborn stacked fill renders the face at alpha 0.75, so the
+# fully-opaque same-hue edge reads as a subtle separator without introducing a
+# second colour dimension.
+SUBDIVIDE_EDGE_LINEWIDTH = 0.3
+
 # Define width and height of the plot
 WIDTH = 1500
 HEIGHT = 750
@@ -706,6 +713,20 @@ def _subdivide_order(
     return ordered
 
 
+def _apply_subdivide_edges(ax: plt.Axes) -> None:
+    """For a hierarchical stacked KDE (``subdivide_hue``), set each band's edge
+    to its own face colour at full opacity. The seaborn stacked fill renders the
+    face at alpha 0.75, so the fully-opaque same-hue edge reads as a subtle
+    separator without introducing a second colour dimension."""
+    for coll in ax.collections:
+        face = np.asarray(coll.get_facecolor(), dtype=float)
+        if face.size == 0:
+            continue
+        r, g, b = (float(face[0, i]) for i in range(3))
+        coll.set_edgecolor((r, g, b, 1.0))
+        coll.set_linewidth(SUBDIVIDE_EDGE_LINEWIDTH)
+
+
 def distributional_plots(
     data: pd.DataFrame,
     df_main_indicators: pd.DataFrame,
@@ -808,9 +829,11 @@ def distributional_plots(
             data, hue, subdivide_hue, weights, region_order
         )
         seaborn_hue = subdivide_hue
-        # Hairline white outlines turn the shared-colour block into visible
-        # per-member bands without introducing a second colour dimension.
-        fill_kwargs = {"linewidth": 0.1, "edgecolor": "white"}
+        # Per-country separators are drawn after plotting (see
+        # _apply_subdivide_edges) as each band's region colour at full opacity —
+        # they sit on the shared 0.75-alpha colour block as subtle subdivisions
+        # without introducing a second colour dimension.
+        fill_kwargs = {"linewidth": SUBDIVIDE_EDGE_LINEWIDTH}
     else:
         # When no explicit hue_order is given (e.g. the all-regions stack), sort
         # the hue values alphabetically so both the stacked bands and the legend
@@ -1008,6 +1031,8 @@ def distributional_plots(
             clip=clip_param,
             **fill_kwargs,
         )
+        if subdivide_hue is not None:
+            _apply_subdivide_edges(kde_plot)
 
         # Set x-axis range immediately after plotting, before drawing areas
         # This ensures all subsequent drawing operations respect the axis limits
@@ -1900,7 +1925,8 @@ def _stacked_year_rows(
     for ax, year in zip(axes, years):
         data_year = _fade(data[data["year"] == year])
         # Stack the countries of each region (largest population on top), all
-        # sharing their region's colour, with hairline white separators.
+        # sharing their region's colour; separators are each band's region
+        # colour at full opacity, applied after plotting (_apply_subdivide_edges).
         order = _subdivide_order(data_year, hue, subdivide_hue, weights, region_order)
         sns.kdeplot(
             data=data_year,
@@ -1916,10 +1942,10 @@ def _stacked_year_rows(
             common_norm=common_norm,
             gridsize=gridsize,
             clip=clip_param,
-            linewidth=0.1,
-            edgecolor="white",
+            linewidth=SUBDIVIDE_EDGE_LINEWIDTH,
             ax=ax,
         )
+        _apply_subdivide_edges(ax)
         if x_axis_range is not None:
             ax.set_xlim(*x_axis_range)
         # Year label at the top-left of each row.
