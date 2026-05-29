@@ -40,6 +40,9 @@ LATEST_YEAR = 2026
 # it (otherwise that chart gets empty data).
 HISTORICAL_CACHE_YEARS = [1820, 1920, 1980, LATEST_YEAR]
 ALL_LOGNORMAL_CACHE_YEARS = [1820, 1920, LATEST_YEAR]
+# Years kept from the `incomes` table — only the year(s) we annotate on the
+# extrapolated pen parade. Extending this list will re-slice the cache.
+INCOMES_CACHE_YEARS = [LATEST_YEAR]
 
 # Subdivision (e.g. per-country) separator styling on the hierarchical stacked
 # charts: each band's edge is its region's own colour at full opacity (no
@@ -146,6 +149,7 @@ THOUSAND_BINS_HISTORICAL__ALL_LOGNORMAL_URL = f"{EXTERNAL_BASE}/historical_pover
 
 PERCENTILES_URL = f"{EXTERNAL_BASE}/world_bank_pip/percentiles.feather?nocache"
 COMPLETE_SERIES_URL = f"{EXTERNAL_BASE}/world_bank_pip/complete_series.feather?nocache"
+INCOMES_URL = f"{EXTERNAL_BASE}/world_bank_pip/incomes.feather?nocache"
 
 NATIONAL_LINES_URL = f"http://catalog.ourworldindata.org/garden/wb/{NATIONAL_LINES_VERSION}/harmonized_national_poverty_lines/harmonized_national_poverty_lines.feather?nocache"
 
@@ -224,6 +228,44 @@ def run() -> None:
     )
     df_main_indicators = pd.concat(
         [df_main_indicators, country_extras], ignore_index=True
+    )
+
+    # Build a parallel df_main_indicators that uses PIP's extrapolated 2026
+    # medians for the four reference countries annotated on the World pen parade
+    # (Norway, USA, Sweden, UK). The World curve is itself a PIP-extrapolated
+    # estimate for LATEST_YEAR, so sourcing the country reference values from
+    # the same intra/extrapolated rows keeps the annotation year consistent with
+    # the curve year — instead of falling back to each country's most-recent
+    # actual-survey median (which might be several years older). The `incomes`
+    # table is the only one that carries the `table` (intra/extrapolated)
+    # dimension at country-summary level (`median` is not per-decile).
+    df_incomes = read_feather_cached(INCOMES_URL, years=INCOMES_CACHE_YEARS)
+    pen_annotation_countries = ["Norway", "United States", "Sweden", "United Kingdom"]
+    extrapolated_country_medians = (
+        df_incomes[
+            (df_incomes["ppp_version"] == PPP_VERSION)
+            & (df_incomes["table"] == "Income or consumption intra/extrapolated")
+            & (df_incomes["welfare_type"] == "income or consumption")
+            & (df_incomes["period"] == "day")
+            & (df_incomes["country"].isin(pen_annotation_countries))
+            & (df_incomes["year"] == LATEST_YEAR)
+        ]
+        .dropna(subset=["median"])
+        .drop_duplicates(subset=["country", "year"])[["country", "year", "median"]]
+        .reset_index(drop=True)
+    )
+    # Stitch onto a copy of df_main_indicators, overriding the existing rows
+    # for those four countries at LATEST_YEAR. World aggregates and other
+    # countries are untouched.
+    df_main_indicators_extrapolated = df_main_indicators[
+        ~(
+            df_main_indicators["country"].isin(pen_annotation_countries)
+            & (df_main_indicators["year"] == LATEST_YEAR)
+        )
+    ]
+    df_main_indicators_extrapolated = pd.concat(
+        [df_main_indicators_extrapolated, extrapolated_country_medians],
+        ignore_index=True,
     )
 
     df_national_lines.loc[
@@ -510,6 +552,28 @@ def run() -> None:
         period="month",
         survey_based=False,
         cut_percentile=95,
+    )
+
+    # Same World pen parade, but with the four country median reference lines
+    # sourced from PIP's extrapolated LATEST_YEAR estimate instead of each
+    # country's most-recent actual-survey median.
+    pen_parade(
+        data=df_percentiles,
+        df_main_indicators=df_main_indicators_extrapolated,
+        x="percentile",
+        y="thr",
+        weights=None,
+        log_scale=False,
+        hue="country",
+        hue_order=["World"],
+        years=[LATEST_YEAR],
+        fill=True,
+        legend=False,
+        add_lines=True,
+        period="month",
+        survey_based=False,
+        cut_percentile=95,
+        filename_suffix="_extrapolated",
     )
 
     pen_parade(
@@ -2154,6 +2218,7 @@ def pen_parade(
     width: int = WIDTH_PEN,
     height: int = HEIGHT_PEN,
     cut_percentile: float = 100,
+    filename_suffix: str = "",
 ) -> None:
     """
     Plot Pen parades (percentiles vs. income) with seaborn, with multiple options for customization.
@@ -2780,7 +2845,7 @@ def pen_parade(
 
         fig.set_size_inches(width / 100, height / 100)
         fig.savefig(
-            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen.svg",
+            f"{PARENT_DIR}/{filename}_{year}_survey_{survey_based}_log_{log_scale}_fill_{fill}_pen{filename_suffix}.svg",
             bbox_inches="tight",
         )
         plt.close(fig)
