@@ -21,11 +21,12 @@ df<- df %>%
 
 df$case_rate <- as.numeric(df$case_rate)
 
-# The latest years come from CDC's provisional weekly data, which can still be revised.
-provisional_years <- sort(unique(df$year[grepl("provisional", df$source)]))
+# The latest years come from CDC's preliminary counts, which can still be revised and assign cases to years by rash onset.
+provisional_years <- sort(unique(df$year[grepl("preliminary|provisional", df$source)]))
 caption <- if (length(provisional_years) > 0) {
   paste0("Note: ", paste(range(provisional_years), collapse = "\u2013"),
-         " figures are provisional counts from the CDC's weekly notifiable disease data and may be revised.")
+         " figures are preliminary CDC counts and may be revised. They count cases by when the rash began;",
+         " earlier years mostly count them by when they were reported.")
 } else {
   NULL
 }
