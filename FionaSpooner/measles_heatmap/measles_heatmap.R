@@ -6,7 +6,9 @@ library(extrafont)
 font_import(prompt = FALSE)  # Automatically import fonts without asking
 source('themes.R')
 
-df <- read.csv('https://catalog.ourworldindata.org/external/health/latest/measles_state_level/measles.csv')
+# Set MEASLES_DATA to a local copy (e.g. an ETL build) to plot it instead of the published catalog file.
+data_url <- Sys.getenv("MEASLES_DATA", "https://catalog.ourworldindata.org/external/health/latest/measles_state_level/measles.csv")
+df <- read.csv(data_url)
 colnames(df) <- c("country", "year", "cases", "source", "case_rate")
 df<- df %>% 
   filter(country != "American Samoa") %>%
@@ -18,6 +20,16 @@ df<- df %>%
   filter(year > 1929) 
 
 df$case_rate <- as.numeric(df$case_rate)
+
+# The latest years come from CDC's preliminary counts, which can still be revised and assign cases to years by rash onset.
+provisional_years <- sort(unique(df$year[grepl("preliminary|provisional", df$source)]))
+caption <- if (length(provisional_years) > 0) {
+  paste0("Note: ", paste(range(provisional_years), collapse = "\u2013"),
+         " figures are preliminary CDC counts and may be revised. They count cases by when the rash began;",
+         " earlier years mostly count them by when they were reported.")
+} else {
+  NULL
+}
 
 df$case_rate_log <- log10(df$case_rate + 1)  # +1 to avoid log(0)
 
@@ -41,7 +53,8 @@ p <- ggplot(df, aes(x = year, y = country, fill = case_rate_log)) +
   labs(
     title = "Measles cases per 100,000 people",
     x = "Year",
-    y = "Country"
+    y = "Country",
+    caption = caption
   ) +
   theme(axis.text.x = element_text(hjust = 1)) +
   scale_y_discrete(limits = rev) +
